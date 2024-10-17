@@ -1,0 +1,98 @@
+@model Signatory
+
+<div class="block__title">
+    <header>@ViewData["Title"]</header>
+</div>
+
+<div class="block__body">
+
+    <h4 class="font-weight-700 mb-3">English Name</h4>
+
+    <div class="row form-group">
+        <div class="col-4">
+            <input class="form-control" asp-for="FirstNameEn" type="text">
+            <label>First Name<span class="text-danger">*</span></label>
+        </div>
+        
+        <div class="col-4">
+            <input class="form-control" asp-for="MiddleNameEn" type="text">
+            <label>Middle Name</label>
+        </div>
+
+        <div class="col-4">
+            <input class="form-control" asp-for="LastNameEn" type="text">
+            <label>Last Name<span class="text-danger">*</span></label>
+        </div>
+    </div>
+
+    <h4 class="font-weight-700 mb-3">Thai Name</h4>
+
+    <div class="row form-group">
+        <div class="col-4">
+            <input class="form-control" asp-for="FirstNameTh" type="text">
+            <label>First Name<span class="text-danger">*</span></label>
+        </div>
+        
+        <div class="col-4">
+            <input class="form-control" asp-for="MiddleNameTh" type="text">
+            <label>Middle Name</label>
+        </div>
+
+        <div class="col-4">
+            <input class="form-control" asp-for="LastNameTh" type="text">
+            <label>Last Name<span class="text-danger">*</span></label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" asp-for="PositionEn" type="text">
+        <label>English Position<span class="text-danger">*</span></label>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" asp-for="PositionTh" type="text">
+        <label>Thai Position<span class="text-danger">*</span></label>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" asp-for="Remark" type="text">
+        <label>Remark</label>
+    </div>
+
+    <h4 class="font-weight-700 mb-3">Signatory Image</h4>
+    @if (!string.IsNullOrEmpty(Model?.SignImageURL))
+    {
+        <div class="row form-group col-12">
+            <img class="w-300" src="@Model.SignImageURL">
+        </div>
+    }
+
+    <div class="row form-group">
+        <div class="input-group col-9">
+            <input class="form-control m-r-15" asp-for="SignImageURL" type="hidden">
+            <input class="form-control m-r-15" id="filename" type="text">
+            <input type="file" id="UploadFile" name="UploadFile" onchange="onSelectFile(this, 0);" />
+            <a class="btn btn--primary mb-0 align-self-end" onclick="document.getElementById('UploadFile').click();">
+                <i class="la la-file-upload"></i> Browse
+            </a>
+        </div>
+
+        <div class="form-check align-self-end col-3">
+            <input class="form-check-input" asp-for="IsActive" type="checkbox">
+            <label class="mb-0" for="IsActive">Active</label>
+        </div>
+    </div>
+
+<div class="block__action container">
+    <div class="block__action-row">
+        <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+        <a class="btn btn-mw-120 btn--cancel" asp-action="Index">Cancel</a>
+    </div>
+</div>
+
+<script>
+    function onSelectFile(control, index) 
+    {
+        $("#filename").val(control.files[0].name);
+    }
+</script>

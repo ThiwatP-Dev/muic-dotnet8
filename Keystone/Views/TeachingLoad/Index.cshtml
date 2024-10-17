@@ -1,0 +1,378 @@
+@model PagedResult<InstructorWorkStatus>
+@{ 
+    ViewData["Title"] = "Teaching Load";
+}
+
+<div id="teaching-load-accordion1" class="panel-group">
+    <div class="block block--underline">
+        <div class="block__title collapsed" data-toggle="collapse" data-parent="#teaching-load-accordion1" data-target="#teaching-load-accordion1-1">
+            <header>Teaching Load</header>
+            <div class="tools">
+                <div class="btn-group">
+                    <a class="btn btn--white btn--circle">
+                        <i class="la la-angle-down"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div id="teaching-load-accordion1-1" class="collapse show" aria-expanded="true">
+            <div class="block__body">
+                <form asp-controller="TeachingLoad" asp-action="Index" class="form-horizontal" method="GET">
+                    <div class="row">
+                        <div class="col-md-6 col-lg-4 m-b-5">
+                            <div class="form-group">
+                                <select asp-for="Criteria.TermId" asp-items="@ViewBag.Terms" class="chosen-select form-control">
+                                    <option selected="true" disabled="disabled">Select</option>
+                                    <option value="1">1/2018</option>
+                                    <option value="2">2/2018</option>
+                                </select>
+                                <label>Term</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-4 m-b-5">
+                            <div class="form-group">
+                                <h4 class="font-size-default m-y-4">Division</h4>
+                                <select id="teaching-load-faculty" class="chosen-select form-control js-cascade-faculty" 
+                                    asp-for="Criteria.FacultyId" asp-items="ViewBag.Faculties" multiple tabindex="-1" data-placeholder="Select">
+                                    <option value="1">Information Technology</option>
+                                    <option value="2">Science and Technology</option>
+                                    <option value="3">Engineering</option>
+                                    <option value="4">Arts</option>
+                                    <option value="5">Law</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-4 m-b-5">
+                            <div class="form-group">
+                                <h4 class="font-size-default m-y-4">Major</h4>
+                                <select id="teaching-load-department" class="chosen-select form-control js-cascade-department" 
+                                    asp-for="Criteria.DepartmentId" asp-items="ViewBag.Departments" multiple tabindex="-1" data-placeholder="Select">
+                                    <option value="1">Major of Biology</option>
+                                    <option value="2">Major of Environmental Science</option>
+                                    <option value="3">Major of Environmental Engineering</option>
+                                    <option value="4">Major of Philosophy</option>
+                                    <option value="5">Major of Chemistry</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 col-lg-4">
+                            <label>Instructor Academic Level</label>
+                            <div class="row">
+                                <div class="col-4 form-check">
+                                    <input id="instructor-academic-level-1" class="form-check-input" type="checkbox">
+                                    <label for="instructor-academic-level-1">Bachelor</label>
+                                </div>
+                                <div class="col-4 form-check">
+                                    <input id="instructor-academic-level-2" class="form-check-input" type="checkbox">
+                                    <label for="instructor-academic-level-2">Master</label>
+                                </div>
+                                <div class="col-4 form-check">
+                                    <input id="instructor-academic-level-3" class="form-check-input" type="checkbox">
+                                    <label for="instructor-academic-level-3">Doctor</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8 col-lg-8 m-b-5">
+                            <div class="form-group">
+                                <h4 class="font-size-default m-y-4">Instructor</h4>
+                                <select id="teaching-load-instructor" class="chosen-select form-control" 
+                                    multiple tabindex="-1" data-placeholder="Select">
+                                    <option value="1">Mr. Glen R.</option>
+                                    <option value="2">Dr. Joseph J.</option>
+                                    <option value="3">Asst.Prof.Dr. Jirapun D.</option>
+                                    <option value="4">Assoc.Prof.Dr. Vissnu P.</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 col-lg-4">
+                            <label>Course Academic Level</label>
+                            <div class="row">
+                                <div class="col-4 form-check">
+                                    <input id="course-level-1" class="form-check-input" type="checkbox">
+                                    <label for="course-level-1">Bachelor</label>
+                                </div>
+                                <div class="col-4 form-check">
+                                    <input id="course-level-2" class="form-check-input" type="checkbox">
+                                    <label for="course-level-2">Master</label>
+                                </div>
+                                <div class="col-4 form-check">
+                                    <input id="course-level-3" class="form-check-input" type="checkbox">
+                                    <label for="course-level-3">Doctor</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8 col-lg-8 m-b-5">
+                            <div class="form-group">
+                                <h4 class="font-size-default m-y-4">Course</h4>
+                                <select id="teaching-load-course" class="chosen-select form-control" 
+                                asp-for="Criteria.CourseId" asp-items="@ViewBag.Courses" multiple tabindex="-1" data-placeholder="Please Select">
+                                    <option value="1">English I</option>
+                                    <option value="2">English II</option>
+                                    <option value="3">English III</option>
+                                    <option value="4">ART DIRECTION</option>
+                                    <option value="5">ADVERTISING MEDIA PLANNING</option>
+                                    <option value="6">ADVERTISING CREATIVE STRATEGY</option>
+                                    <option value="7">BUILDING TECHNOLOGY AND CONSTRUCTION I</option>
+                                    <option value="8">BUILDING TECHNOLOGY AND CONSTRUCTION II</option>
+                                    <option value="9">BUILDING TECHNOLOGY AND CONSTRUCTION III</option>
+                                    <option value="10">BUILDING TECHNOLOGY AND CONSTRUCTION IV</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4">
+                            <label>Employment Type</label>
+                            <div class="row">
+                                <div class="col-4 form-check">
+                                    <input id="employment-type-1" class="form-check-input" type="checkbox">
+                                    <label for="employment-type-1">Full-Time</label>
+                                </div>
+                                <div class="col-4 form-check">
+                                    <input id="employment-type-2" class="form-check-input" type="checkbox">
+                                    <label for="employment-type-2">Part-Time</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8 col-lg-8 align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary m-y-15" type="submit">
+                                <i class="la la-search mr-2"></i>
+                                <span class="bold">Search</span>
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset m-y-15 js-reset-btn" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="block block--underline">
+    <div class="block__title text-left">
+        <header>Search Result (0)</header>
+        <div class="tools">
+            <a class='btn btn--primary' asp-action="Create">
+                <i class="la la-plus mr-1 font-weight-800"></i> Add Teaching Load
+            </a>
+        </div>
+    </div>
+	<!--end .block-head -->
+	<div class="block__body table-responsive">
+        <form>
+            <table id="teaching-load-footable" class="table table-bordered text-uppercase m-0" data-show-toggle="true" data-toggle-column="last">
+                <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th class="text-center">Code</th>
+                        <th>Instructor</th>
+                        <th>Employment Type</th>
+                        <th class="no-sort">Admin</th>
+                        <th class="text-right">Lec. Hour</th>
+                        <th class="text-center" data-breakpoints="all" data-title="Teaching Load"></th>
+                        <th class="text-center" data-breakpoints="all" data-title="Extra Teaching Load"></th>
+                        <th class="text-center" data-breakpoints="all" data-title="Professional"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="text-nowrap">753</td>
+                        <td class="text-nowrap">610143</td>
+                        <td>Ms. Nattaporn T.</td>
+                        <td>Full-Time</td>
+                        <td>Archarn</td>
+                        <td class="text-nowrap">180</td>
+                        <td>
+                            <table id="tl-normal" class="table font-size-12 text-uppercase m-0">
+                                <tr>
+                                    <th class="text-left text-nowarp">Course</th>
+                                    <th class="text-center">No. of Sec.</th>
+
+                                    <th class="text-center">Lec.</th>
+                                    <th class="text-center">ACC.</th>
+                                    <th class="text-center">Lab</th>
+                                    <th class="text-center">Prac.</th>
+                                    <th class="text-center">Lab Com</th>
+                                    <th class="text-center">Intern</th>
+                                    <th class="text-center">Eve Prog.</th>
+
+                                    <th class="text-center">Remark</th>
+                                </tr>
+                                <tr>
+                                    <td class="text-left">
+                                        <p>LV2102</p>
+                                        <p>LV3102</p>
+                                        <p>LV3205</p>
+                                        <p>LV3206</p>
+                                        <p>pc4311</p>
+                                        <p>total</p>
+                                    <td class="text-center">
+                                        <p>1</p>
+                                        <p>1</p>
+                                        <p>1</p>
+                                        <p>1</p>
+                                        <p>1</p>
+                                        <p>6</p>
+                                    </td>
+
+                                    <td class="text-right text-nowrap">
+                                        <p>45.00</p>
+                                        <p>45.00</p>
+                                        <p>45.00</p>
+                                        <p>-</p>
+                                        <p>-</p>
+                                        <p>180.00</p>
+                                    </td>
+                                    <td class="text-right text-nowrap"><p>-</p> <p>-</p> <p>-</p> <p>-</p> <p>-</p> <p>-</p></td></td>
+                                    <td class="text-right text-nowrap"><p>-</p> <p>-</p> <p>-</p> <p>-</p> <p>-</p> <p>-</p></td></td>
+                                    <td class="text-right text-nowrap"><p>-</p> <p>-</p> <p>-</p> <p>-</p> <p>-</p> <p>-</p></td></td>
+                                    <td class="text-right text-nowrap"><p>-</p> <p>-</p> <p>-</p> <p>-</p> <p>-</p> <p>-</p></td></td>
+                                    <td class="text-right text-nowrap"><p>-</p> <p>-</p> <p>-</p> <p>-</p> <p>-</p> <p>-</p></td></td>
+                                    <td class="text-right text-nowrap"><p>-</p> <p>-</p> <p>-</p> <p>-</p> <p>-</p> <p>-</p></td></td>
+
+                                    <td class="text-danger">
+                                        <p>"Under-construction"</p>
+                                        <p>"Under-construction"</p>
+                                        <p>"Under-construction"</p>
+                                        <p>"Under-construction"</p>
+                                        <p>"Under-construction"</p>
+                                        <p>"Under-construction"</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td>
+                            <table id="tl-extra" class="table font-size-12 text-uppercase m-0">
+                                <tr>
+                                    <th class="text-left text-nowrap">Course</th>
+                                    <th class="text-center">No. of Sec.</th>
+
+                                    <th class="text-center">Day Prog.</th>
+                                    <th class="text-center">Part Time</th>
+                                    <th class="text-center">ACC.</th>
+                                    <th class="text-center">Indvdl</th>
+                                    <th class="text-center">Lab</th>
+                                    <th class="text-center">Prac.</th>
+                                    <th class="text-center">Lab Com</th>
+                                    <th class="text-center">Intern</th>
+
+                                    <th class="text-center">Remark</th>
+                                </tr>
+                                <tr id="tl-extra-data">
+                                    <td class="text-left">
+                                        <p>LV2102</p>
+                                        <p>LV3102</p>
+                                        <p>LV3205</p>
+                                        <p>LV3206</p>
+                                        <p>pc4311</p>
+                                        <p>total</p>
+                                    <td class="text-center">
+                                        <p>1</p>
+                                        <p>1</p>
+                                        <p>1</p>
+                                        <p>1</p>
+                                        <p>1</p>
+                                        <p>6</p>
+                                    </td>
+
+                                    <td class="text-right text-nowrap">
+                                        <p>-</p>
+                                        <p>-</p>
+                                        <p>-</p>
+                                        <p>45.00</p>
+                                        <p>45.00</p>
+                                        <p>90.00</p>
+                                    </td>
+                                    <td class="text-right text-nowrap"><p>-</p> <p>-</p> <p>-</p> <p>-</p> <p>-</p> <p>-</p></td>
+                                    <td class="text-right text-nowrap"><p>-</p> <p>-</p> <p>-</p> <p>-</p> <p>-</p> <p>-</p></td>
+                                    <td class="text-right text-nowrap"><p>-</p> <p>-</p> <p>-</p> <p>-</p> <p>-</p> <p>-</p></td>
+                                    <td class="text-right text-nowrap"><p>-</p> <p>-</p> <p>-</p> <p>-</p> <p>-</p> <p>-</p></td>
+                                    <td class="text-right text-nowrap"><p>-</p> <p>-</p> <p>-</p> <p>-</p> <p>-</p> <p>-</p></td>
+                                    <td class="text-right text-nowrap"><p>-</p> <p>-</p> <p>-</p> <p>-</p> <p>-</p> <p>-</p></td>
+                                    <td class="text-right text-nowrap"><p>-</p> <p>-</p> <p>-</p> <p>-</p> <p>-</p> <p>-</p></td>
+
+                                    <td class="text-danger">
+                                        <p>"Under-construction"</p>
+                                        <p>"Under-construction"</p>
+                                        <p>"Under-construction"</p>
+                                        <p>"Under-construction"</p>
+                                        <p>"Under-construction"</p>
+                                        <p>"Under-construction"</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td>
+                            <table id="tl-professional" class="table font-size-12 text-uppercase m-0">
+                                <tr>
+                                    <th class="text-left text-nowrap">Course</th>
+                                    <th class="text-center">No. of Sec.</th>
+
+                                    <th class="text-center">Reg.Lec.</th>
+                                    <th class="text-center">Reg.Lab</th>
+                                    <th class="text-center">Ext.Lec.</th>
+                                    <th class="text-center">Ext.Lab</th>
+
+                                    <th class="text-center">Remark</th>
+                                </tr>
+                                <tr id="tl-prof-data">
+                                    <td class="text-left">
+                                        <p>LV2102</p>
+                                        <p>LV3102</p>
+                                        <p>LV3205</p>
+                                        <p>LV3206</p>
+                                        <p>pc4311</p>
+                                        <p>total</p>
+                                    <td class="text-center">
+                                        <p>1</p>
+                                        <p>1</p>
+                                        <p>1</p>
+                                        <p>1</p>
+                                        <p>1</p>
+                                        <p>6</p>
+                                    </td>
+
+                                    <td class="text-right text-nowrap"><p>-</p> <p>-</p> <p>-</p> <p>-</p> <p>-</p> <p>-</p></td>
+                                    <td class="text-right text-nowrap"><p>-</p> <p>-</p> <p>-</p> <p>-</p> <p>-</p> <p>-</p></td>
+                                    <td class="text-right text-nowrap"><p>-</p> <p>-</p> <p>-</p> <p>-</p> <p>-</p> <p>-</p></td>
+                                    <td class="text-right text-nowrap"><p>-</p> <p>-</p> <p>-</p> <p>-</p> <p>-</p> <p>-</p></td>
+
+                                    <td class="text-danger">
+                                        <p>"Under-construction"</p>
+                                        <p>"Under-construction"</p>
+                                        <p>"Under-construction"</p>
+                                        <p>"Under-construction"</p>
+                                        <p>"Under-construction"</p>
+                                        <p>"Under-construction"</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="content-changed text-right pt-2 d-none">
+                <button type="submit" class="btn btn--primary btn-mw-120">Save</button>
+            </div>
+        </form>
+    </div>
+	<!--end .block-body -->
+</div>
+
+@section Modals {
+    <partial name="_WarningModal" />
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/teaching-load-edit.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('#teaching-load-footable').footable();
+        })
+    </script>
+}

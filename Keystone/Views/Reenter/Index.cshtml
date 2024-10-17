@@ -1,0 +1,144 @@
+@model ReenterViewModel
+@{
+    ViewData["Title"] = "Re-Enter Student";
+    var index = 1;
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+
+<div class="row">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+        <ul class="d-flex flex-md-row align-items-md-center float-right">
+            <li class="list-inline-item mx-3 mb-0">
+                <a class="btn btn--primary" asp-action="Create" asp-route-returnUrl="@contextPath">
+                    <i class="la la-plus mr-1 font-weight-800"></i> Add Student
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__body">
+                <form asp-controller="Reenter" asp-action="Index" class="form-horizontal" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group m-b-30">
+                        <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Academic Level</label>
+                        </div>
+                        <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="ViewBag.Faculties">
+                                <option selected value="">Select</option>
+                            </select>    
+                            <label>Division</label>
+                        </div>
+                        <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentId" asp-items="ViewBag.Departments">
+                                <option selected value="">Select</option>
+                            </select>    
+                            <label>Major</label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group m-b-10">
+                        <div class="col-2">
+                            <input class="form-control" asp-for="Criteria.StartStudentBatch" type="number">
+                            <label>Batch From</label>
+                        </div>
+                        <div class="col-2">
+                            <input class="form-control" asp-for="Criteria.EndStudentBatch" type="number">
+                            <label>Batch To</label>
+                        </div>
+                        <div class="col-2">
+                            <input class="form-control" asp-for="Criteria.PreviousCode" type="text">
+                            <label>Previous Code</label>
+                        </div>
+                        <div class="col-2">
+                            <select class="chosen-select form-control" asp-for="Criteria.Type" asp-items="ViewBag.ReenterTypes">
+                                <option selected value="">All</option>
+                            </select>
+                            <label>Type</label>
+                        </div>
+                        <div class="col-4 text-right align-self-end">
+                            <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="row">
+        <div class="col-12">
+            <div class="block block--underline">
+                <div class="block__title">
+                    <header>Search Result (@(Model.StudentDetails.Any() ? Model?.StudentDetails.Count() : 0))</header>
+                </div>
+
+                <div class="block__body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-uppercase table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">#</th>
+                                    <th class="text-center">Student Id</th>
+                                    <th>Name</th>
+                                    <th>Division</th>
+                                    <th>Major</th>
+                                    <th class="text-center">Type</th>
+                                    <th class="text-center">Current Student Id</th>
+                                    <th class="text-nowrap text-center no-sort">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="js-items">
+                                @if (Model != null && Model.StudentDetails.Any())
+                                {
+                                    @foreach (var item in Model.StudentDetails)
+                                    {
+                                        <tr>
+                                            <td>@index</td>
+                                            <td>@item.StudentCode</td>
+                                            <td>@item.StudentName</td>
+                                            <td>@item.Faculty</td>
+                                            <td>@item.Department</td>
+                                            <td>@item.Type</td>
+                                            <td>@item.CurrentStudentCode</td>
+                                            <td class="text-nowrap td-actions">
+                                                <a asp-controller="Student"
+                                                   asp-action="Details"
+                                                   asp-route-code="@item.CurrentStudentCode"
+                                                   asp-route-returnUrl="@contextPath">
+                                                    <i class="la la-info info"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        ++index;
+                                    }
+                                }
+                                else
+                                {
+                                    <tr class="text-danger">
+                                        <td colspan="8">No Data</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>  
+    </div>
+    @(await Component.InvokeAsync<PagerViewComponent>(Model))
+</section>

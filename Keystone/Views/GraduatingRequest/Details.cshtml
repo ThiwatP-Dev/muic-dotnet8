@@ -1,0 +1,287 @@
+@model GraduatingRequestViewModel
+@{
+    ViewData["Title"] = "Graduating Request - " + @Model.Student.FullNameEn;
+    var returnUrl = (string)ViewBag.ReturnUrl;
+}
+
+@if (!string.IsNullOrEmpty(returnUrl))
+{
+    <div class="row">
+        <div class="ks-page-header col-lg-12">
+            <h2 class="ks-page-header__title">
+                <a class="btn-back" href="@returnUrl">
+                    <i class="la la-angle-double-left mr-1"></i>Back
+                </a>
+            </h2>
+        </div>
+    </div>
+}
+
+<section>
+    <div class="row">
+        <div class="col-12">
+            <div class="panel-group">
+                <div class="block block--underline">
+                    <div class="block__title">
+                        <header class="ks-page-header__title">Student Information</header>
+                    </div>
+                    <div class="block__body" style="position: relative;">
+                        <div class="row form-group">
+                            <div class="col-2">
+                                <img class="w-120 h-120 img-cover" src="@(Model.Student.ProfileImageURL == null ? "/images/default-profile-m.png" : Model.Student.ProfileImageURL)">
+                            </div>
+                            <div class="col-10">
+                                <div class="row form-group">
+                                    <div class="col-2">
+                                        <div class="form-control-label d-flex align-items-center"><b>Code</b></div>
+                                        <div class="form-control-plaintext">@Model.Student.Code</div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-control-label d-flex align-items-center"><b>Name</b></div>
+                                        <div class="form-control-plaintext">@Model.Student.FullNameEn</div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="form-control-label d-flex align-items-center"><b>Status</b></div>
+                                        <div class="form-control-plaintext">@Model.Student.StudentStatusText</div>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col-2">
+                                        <div class="form-control-label d-flex align-items-center"><b>GPA</b></div>
+                                        <div class="form-control-plaintext">@Model.Student.AcademicInformation.GPA</div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-control-label d-flex align-items-center"><b>Advisor</b></div>
+                                        <div class="form-control-plaintext">@Model.Student.AcademicInformation.Advisor?.FullNameEn</div>
+                                    </div>
+                                     <div class="col-4">
+                                        <div class="form-control-label d-flex align-items-center"><b>Credit Completed</b></div>
+                                        <div class="form-control-plaintext">@Model.Student.AcademicInformation.CreditComp</div>
+                                    </div>
+                                </div>
+                            </div>    
+                        </div>
+
+                        <hr>
+
+                        <div class="row form-group">
+                            <div class="col-4">
+                                <div class="form-control-label d-flex align-items-center"><b>Division</b></div>
+                                <div class="form-control-plaintext">@Model.Student.AcademicInformation.Faculty.NameEn</div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-control-label d-flex align-items-center"><b>Major</b></div>
+                                <div class="form-control-plaintext">@Model.Student.AcademicInformation.Department.NameEn</div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-control-label d-flex align-items-center"><b>Credit Completed</b></div>
+                                <div class="form-control-plaintext">@Model.Student.AcademicInformation.CreditComp</div>
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-4">
+                                <div class="form-control-label d-flex align-items-center"><b>Curriculum</b></div>
+                                <div class="form-control-plaintext">@Model.Student.AcademicInformation.CurriculumVersion?.Curriculum?.NameEn</div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-control-label d-flex align-items-center"><b>Curriculum Version</b></div>
+                                <div class="form-control-plaintext">@Model.Student.AcademicInformation.CurriculumVersion?.NameEn</div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-control-label d-flex align-items-center"><b>Curriculum Version Credit</b></div>
+                                <div class="form-control-plaintext">@Model.Student.AcademicInformation.CurriculumVersion?.TotalCredit</div>
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <div class="section-title"><h4>Specialization Information</h4></div>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover w-100x">
+                                        <thead>
+                                            <tr>
+                                                <th>Type</th>
+                                                <th>Name</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (Model.SpecializationGroups != null && Model.SpecializationGroups.Any())
+                                            {
+                                                foreach (var specializationGroup in Model.SpecializationGroups) 
+                                                {
+                                                    <tr>
+                                                        <td>@specializationGroup?.TypeText</td>
+                                                        <td>@specializationGroup?.NameEn</td>
+                                                    </tr>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <tr>
+                                                    <td colspan="2" class="text-center">
+                                                        <i class="text-danger">No Data</i>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end .block -->
+            </div>
+        </div>
+        <!-- End General Information -->
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-lg-12">
+        <div class="block block--underline">
+            <div class="block__title text-left height-3">
+                <header class="ks-page-header__title">Request Information</header>
+            </div>
+            @* <div class="block__title">
+                <header>
+                    <h4 class="ks-page-header__title">Request Information</h3>
+                </header>
+            </div> *@
+            <div class="block__body">
+                <div class="row form-group">
+                    <div class="col-3">
+                        <div class="form-control-label d-flex align-items-center">Request Date</div>
+                        <div class="form-control-plaintext">@Model.GraduatingRequest.RequestedDateText</div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-control-label d-flex align-items-center"><b>Request Channel</b></div>
+                        <div class="form-control-plaintext">@Model.GraduatingRequest.ChannelText</div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-control-label d-flex align-items-center"><b>Telephone</b></div>
+                        <div class="form-control-plaintext">@Model.GraduatingRequest.Telephone</div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-control-label d-flex align-items-center"><b>Email</b></div>
+                        <div class="form-control-plaintext">@Model.GraduatingRequest.Email</div>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-3">
+                        <div class="form-control-label d-flex align-items-center"><b>Expected Graduation Term</b></div>
+                        <div class="form-control-plaintext">@Model.GraduatingRequest.ExpectedTermText</div>
+                    </div>
+                    @* <div class="col-3">
+                        <div class="form-control-label d-flex align-items-center"><b>Confirm Graduation Term</b></div>
+                        <div class="form-control-plaintext">@Model.GraduatingRequest.ConfirmGraduatedTerm?.TermText</div>
+                    </div> *@
+                    <div class="col-3">
+                        <div class="form-control-label d-flex align-items-center"><b>Published</b></div>
+                        <div class="form-control-plaintext"><partial name="_BooleanResult" model="@Model.IsPublish"/></div>
+                    </div>
+                    @* <div class="col-3">
+                        <div class="form-control-label d-flex align-items-center"><b>Remark</b></div>
+                        <div class="form-control-plaintext">@Model.GraduatingRequest.Remark</div>
+                    </div> *@
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="block pt-3 px-2">
+        <div class="tabs-scroller float-left"><i class="la la-angle-double-left"></i></div>
+        <div class="tabs-scroller float-right"><i class="la la-angle-double-right"></i></div>
+        <div class="nav-tabs-wrapper">
+            <ul class="nav nav-tabs ks-tabs" role="tablist">
+                <li class="nav-item">
+                    <a id="nav-link-0" class="nav-link active" href="#nav-tab-0" data-toggle="tab">
+                        Status
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a id="nav-link-1" class="nav-link" href="#nav-tab-1" data-toggle="tab">
+                        Course Prediction
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a id="nav-link-2" class="nav-link" href="#nav-tab-2" data-toggle="tab">
+                        Course Group Modification
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a id="nav-link-3" class="nav-link" href="#nav-tab-3" data-toggle="tab">
+                        Curriculum Verification
+                    </a>
+                </li>
+               
+                <li class="nav-item">
+                    <a id="nav-link-4" class="nav-link" href="#nav-tab-4" data-toggle="tab">
+                        Specialization Group
+                    </a>
+                </li> 
+
+                <li class="nav-item">
+                    <a id="nav-link-5" class="nav-link" href="#nav-tab-5" data-toggle="tab">
+                        Graduation
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="tab-content">
+            <div id="nav-tab-0" class="tab-pane fadeIn faster animated show active" role="tabpanel">
+                <partial name="~/Views/GraduatingRequest/_Status.cshtml">
+            </div>
+
+            <div id="nav-tab-1" class="tab-pane fadeIn faster animated" role="tabpanel">
+                <partial name="~/Views/GraduatingRequest/_CourseInformation.cshtml">
+            </div>
+
+            <div id="nav-tab-2" class="tab-pane fadeIn faster animated" role="tabpanel">
+                <partial name="~/Views/GraduatingRequest/_CourseGrouping.cshtml">
+            </div>
+
+            <div id="nav-tab-3" class="tab-pane fadeIn faster animated" role="tabpanel">
+                <partial name="~/Views/GraduatingRequest/_CurriculumVerification.cshtml">
+            </div>
+            
+            <div id="nav-tab-4" class="tab-pane fadeIn faster animated" role="tabpanel">
+                <partial name="~/Views/GraduatingRequest/_SpecializationGroup.cshtml">
+            </div>
+
+            <div id="nav-tab-5" class="tab-pane fadeIn faster animated" role="tabpanel">
+                <partial name="~/Views/GraduatingRequest/_Graduation.cshtml">
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Modals {
+    <partial name="~/Views/GraduatingRequest/_ChangeStatusModal.cshtml">
+    <partial name="~/Views/GraduatingRequest/_CoursePredictionModal.cshtml">
+    <partial name="_ChangeCourseGroupModal" model="new CourseGroupingViewModel()">
+    <partial name="_AddGroupingCourseModal" model="new CourseGroupingViewModel()">
+    <partial name="_DeleteRowConfirmModals">
+    <partial name="_DeleteConfirmModals">
+    <partial name="_DeleteConfirm">
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/graduating-detail.js"></script>
+    <script type="text/javascript" src="~/js/pages/grading-curriculum-export.js"></script>
+    <script type="text/javascript" src="~/js/pages/tabs.js"></script>
+    <script>
+        $(document).ready(function() {
+            var tab = '#nav-link-' + getUrlParameter('tabIndex');
+            $(tab).tab('show'); 
+        });
+    </script>
+}

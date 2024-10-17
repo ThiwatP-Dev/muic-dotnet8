@@ -1,0 +1,122 @@
+@model CurriculumVersionStructureViewModel
+@{
+	ViewData["Title"] = "Curriculum Version Structure by Student";
+}
+
+<section class="row">
+    <div class="ks-page-header col-lg-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</div>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search @ViewData["Title"]</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="CurriculumVersionReport" asp-action="StructureByStudent" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group">
+                        <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-academic-level" asp-for="StudentId" asp-items="@ViewBag.Students" data-placeholder="Select">
+                                <option value="" selected disabled>Select</option>
+                            </select>
+                            <label>Student<span class="text-danger">*</span></label>
+                            <span class="text-danger" asp-validation-for="AcademicLevelId"></span>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-12 align-self-end text-right text-nowrap">
+                            <button class="btn btn--primary btn-mw-120 m-r-5" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset js-reset-btn" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+			</div>
+		</div>
+	</div>
+</section>
+
+@if(Model != null)
+{
+	<div class="block block--underline">
+		<div class="block__title">
+			<header>
+				<h3 class="ks-page-header__title">@Model.CurriculumVersion</h3>
+			</header>
+		</div>
+		<div class="block__body">
+			<div class="row form-group m-b-30">
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Academic Level</div>
+					<div class="form-control-plaintext">@Model.AcademicLevel</div>
+				</div>
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Division</div>
+					<div class="form-control-plaintext">@Model.Department</div>
+				</div>
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Major</div>
+					<div class="form-control-plaintext">@Model.Faculty</div>
+				</div>
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Curriculum</div>
+					<div class="form-control-plaintext">@Model.Curriculum</div>
+				</div>
+			</div>
+
+			<div class="row form-group m-b-30">
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Implemented Term</div>
+					<div class="form-control-plaintext">@Model.ImplementedTerm</div>
+				</div>
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Opened Term</div>
+					<div class="form-control-plaintext">@Model.OpenedTerm</div>
+				</div>
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Closed Term</div>
+					<div class="form-control-plaintext">@Model.ClosedTerm</div>
+				</div>
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Minimum Term</div>
+					<div class="form-control-plaintext">@Model.MinimumTerm</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="d-flex flex-column">
+		@foreach(var courseGroup in Model.CourseGroups)
+		{
+			<div class="block block--underline" id="parents-@courseGroup.CourseGroupId">
+				<div class="block__title">
+					<header>@courseGroup.Name (@courseGroup.TotalCredit @(courseGroup.TotalCredit > 1 ? "Credits" : "Credit"))</header>
+					<div class="tools pr-4">
+						<a class="btn btn--white btn--circle" data-toggle="collapse" data-parent="#parents-@courseGroup.CourseGroupId" data-target="#accordion-@courseGroup.CourseGroupId-1">
+							<i class="la la-angle-down"></i>
+						</a>
+					</div>
+				</div>
+				<div class="block__body color-info">  
+					@courseGroup.Description
+					<div id="accordion-@courseGroup.CourseGroupId-1" class="collapse">
+						<hr class="p-y-0">
+						@{
+							var htmlString = "";
+							htmlString = UIHelper.GetChildCourseGroup(courseGroup, htmlString);
+							@Html.Raw(htmlString)
+						}
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+}

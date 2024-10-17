@@ -1,0 +1,45 @@
+@model List<ReceiptPrintLog>
+@{
+    var index = 1;
+}
+
+<div id="modalWrapper-receipt-log">
+    <div class="block__title text-left">
+        <header class="p-a-20 w-100x">Reprint Receipt Log: <span id="js-receipt-id">@ViewBag.ReceiptNumber</span></header>
+    </div>
+
+    <div class="block mb-0">
+        <div class="block__body">
+            <div class="table-responsive mb-4">
+                <table class="table table-bordered m-0">
+                    <thead>
+                        <tr>
+                            <th class="text-center w-50">#</th>
+                            <th>Reprinted By</th>
+                            <th class="text-center">Reprinted Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td rowspan="2">@index</td>
+                                <td>@item.PrintedBy</td>
+                                <td>@item.PrintedAtText</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">Remark: @item.Remark</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="block__action">
+            <div class="block__action-row">
+                <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-mw-120 btn--white rounded">Close</a>
+            </div>
+        </div>
+    </div>
+</div> 

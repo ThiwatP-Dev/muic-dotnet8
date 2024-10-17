@@ -1,0 +1,22 @@
+@model ExemptedExaminationScoreDetail
+@{ 
+    ViewData["Title"] = "Edit Exempted Examination Score"; 
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <form class="ks-form container" asp-controller="ExemptedExaminationScore" asp-action="Edit" method="POST">
+                <partial name="_Form">
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Modals {
+    <partial name="_DeleteRowConfirmModals">
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/admission-exempted.js"></script>
+}

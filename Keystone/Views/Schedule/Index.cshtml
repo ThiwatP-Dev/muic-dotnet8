@@ -1,0 +1,178 @@
+@model PagedResult<ScheduleViewModel>
+@{ 
+    ViewData["Title"] = "Schedule";
+    var recordNumber = Model?.FirstRowOnPage;
+}
+
+<section class="row">
+    <div class="col-12">
+        <div id="schedule-accordion1" class="panel-group">
+            <div class="block block--underline">
+                <div class="block__title collapsed" data-toggle="collapse" data-parent="#schedule-accordion1" data-target="#schedule-accordion1-1">
+                    <header>Search Schedule</header>
+                    <div class="tools">
+                        <div class="btn-group">
+                            <a class="btn btn--white btn--circle">
+                                <i class="la la-angle-down"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="schedule-accordion1-1" class="collapse show" aria-expanded="true">
+                    <div class="block__body">
+                        <form asp-controller="Schedule" asp-action="Index" class="form-horizontal" method="GET">
+                            @Html.AntiForgeryToken()
+                            <div class="row form-group m-b-30">
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Academic Level</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="ViewBag.Terms">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Term</label>
+                                </div>
+                                <div class="col-3">
+                                    <h4 class="font-size-default m-y-4">Course Level</h4>
+                                    <select class="chosen-select form-control" asp-for="Criteria.AcademicLevelIds" asp-items="ViewBag.AcademicLevels" data-placeholder="Select" multiple></select>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control" asp-for="Criteria.IsEvening" asp-items="ViewBag.Programs">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Program</label>
+                                </div>
+                            </div>
+
+                            <div class="row form-group m-b-30">
+                                <div class="col-3">
+                                    <h4 class="font-size-default m-y-4">Campus</h4>
+                                    <select class="chosen-select form-control" asp-for="Criteria.CampusIds" asp-items="ViewBag.Campuses" data-placeholder="Select" multiple></select>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="ViewBag.Faculties">
+                                        <option selected>Select</option>
+                                    </select>
+                                    <label>Division</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentId" asp-items="ViewBag.Departments">
+                                        <option selected>Select</option>
+                                    </select>
+                                    <label>Major</label>
+                                </div>
+                                <div class="col-3">
+                                    <h4 class="font-size-default m-y-4">Instructor</h4>
+                                    <select class="chosen-select form-control" asp-for="Criteria.InstructorIds" asp-items="ViewBag.Instructors" data-placeholder="Select" multiple></select>
+                                </div>
+                            </div>
+
+                            <div class="row form-group m-b-30">
+                                <div class="col-6">
+                                    <h4 class="font-size-default m-y-4">Course</h4>
+                                    <select class="chosen-select form-control js-cascade-multiple-course" asp-for="Criteria.CourseIds" asp-items="ViewBag.Courses" data-placeholder="Select" multiple></select>
+                                </div>
+                                <div class="col-6">
+                                    <h4 class="font-size-default m-y-4">Section</h4>
+                                    <select class="chosen-select form-control js-cascade-multiple-section" asp-for="Criteria.SectionNumbers" asp-items="ViewBag.Sections" data-placeholder="Select" multiple></select>
+                                </div>
+                            </div>
+
+                            <div class="row form-group mb-0">
+                                <div class="col-12 text-right align-self-end">
+                                    <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">
+                                        <i class="la la-search mr-2"></i>
+                                        <span class="bold">Search</span>
+                                    </button>
+                                    <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                        Reset
+                                    </button>
+                                </div> 
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.RowCount ?? 0))</header>
+            </div>
+
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table class="table table-bordered w-100x js-report-table">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th>Code</th>
+                                <th>Course</th>
+                                <th class="text-center">Sec.</th>
+                                <th class="text-center">Day</th>
+                                <th class="text-center">Time</th>
+                                <th>Room</th>
+                                <th class="width-220">Instructor</th>
+                                <th class="text-center ">Midterm</th>
+                                <th class="text-center">Final</th>
+                                <th class="text-center">Status</th>
+                                <th>Remark</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Results)
+                            {
+                                <tr class="@(item.IsClosed ? "bg-danger-pastel" : "")">
+                                    <td>@recordNumber</td>
+                                    <td>@item.CourseCode</td>
+                                    <td>@item.CourseName</td>
+                                    <td>@item.Section</td>
+                                    <td>
+                                        <partial name="_StringLoop" model="@item.ScheduleTimes.Select(x => x.DayOfWeek).ToList()" />
+                                    </td>
+                                    <td>
+                                        <partial name="_StringLoop" model="@item.ScheduleTimes.Select(x => x.Time).ToList()" />
+                                    </td>
+                                    <td>
+                                        <partial name="_StringLoop" model="@item.ScheduleTimes.Select(x => x.Room).ToList()" />
+                                    </td>
+                                    <td>
+                                        <partial name="_StringLoop" model="@item.ScheduleTimes.Select(x => x.InstructorNameEn).ToList()" />
+                                    </td>
+                                    <td>
+                                        @item.MidtermDate
+                                        <br>
+                                        @item.MidtermTime
+                                    </td>
+                                    <td>
+                                        @item.FinalDate
+                                        <br>
+                                        @item.FinalTime
+                                    </td>
+                                    <td>
+                                        @if (item.IsClosed)
+                                        {
+                                            <span class="ks-label bg-danger">Closed</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @item.Remark
+                                    </td>
+                                </tr>
+                                recordNumber++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

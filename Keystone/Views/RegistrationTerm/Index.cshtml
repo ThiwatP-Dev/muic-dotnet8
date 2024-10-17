@@ -1,0 +1,132 @@
+@model RegistrationTermViewModel
+@{
+	ViewData["Title"] = "Registration Term";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+    var recordNumber = 1;
+}
+<div class="row">
+    <div class="ks-page-header col-lg-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+        <ul class="d-flex flex-md-row align-items-md-center float-right">
+            <li class="list-inline-item mx-3 mb-0">
+                <a class='btn btn--primary' asp-action="Create" asp-route-returnUrl="@contextPath">
+                    <i class="la la-plus mr-1 font-weight-800"></i> Add Registration Term
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<section>
+    <div class="block block--underline">
+        <div class="block__body">
+            <form asp-action="Index">
+                <div class="row form-group mb-0">
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-academic-level" asp-for="AcademicLevelId" asp-items="@ViewBag.AcademicLevels">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Academic Level<span class="text-danger">*</span></label>
+                    </div>
+
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-term" asp-for="TermId" asp-items="@ViewBag.Terms">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Term</label>
+                    </div>
+
+                    <div class="col align-self-end text-right">
+                        <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">
+                            <i class="la la-search mr-2"></i>Search
+                        </button>
+                        <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                            Reset
+                        </button>
+                        <input name="returnUrl" value="@contextPath" hidden>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@if(Model != null)
+{
+    <section class="row">
+        <div class="col-12">
+            <div class="block block--underline">
+                <div class="block__title">
+                    <header>Search Result (@(Model?.RegistrationTermDetails?.Count ?? 0))</header>
+                </div>
+                
+                <div class="block__body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover w-100x">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">#</th>
+                                    <th>Started At</th>
+                                    <th>Ended At</th>
+                                    <th>Expired At</th>
+                                    <th>Academic Level</th>
+                                    <th>Term</th>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th class="text-center">Status</th>
+                                    <th class="text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.RegistrationTermDetails.Any())
+                                {
+                                    @foreach (var item in Model.RegistrationTermDetails) 
+                                    {
+                                        <tr>
+                                            <td>@recordNumber</td>
+                                            <td>@item.StartedAtText</td>
+                                            <td>@item.EndedAtText</td>
+                                            <td>@item.ExpiredAtText</td>
+                                            <td>@item.AcademicLevelNameEn</td>
+                                            <td>@item.TermText</td>
+                                            <td>@item.Name</td>
+                                            <td>@item.Type</td>
+                                            <td>
+                                                <partial name="_BooleanActive" model="@item.IsActive">
+                                            </td>
+                                            <td class="text-nowrap td-actions">
+                                                <a asp-controller="RegistrationTerm" asp-action="Edit" asp-route-Id="@item.Id" asp-route-returnUrl="@contextPath">
+                                                    <i class="la la-edit edit"></i>
+                                                </a>
+                                                <a data-toggle="modal" 
+                                                data-target="#delete-confirm-modal"
+                                                data-controller="RegistrationTerm" 
+                                                data-action="Delete" 
+                                                data-value="@item.Id">
+                                                    <i class="la la-trash delete"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        recordNumber++;
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="10">
+                                            <i class="text-danger">No Data</i>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+@section Modals {
+    <partial name="_DeleteConfirmModals">
+}

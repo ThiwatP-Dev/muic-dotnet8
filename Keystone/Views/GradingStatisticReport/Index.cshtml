@@ -1,0 +1,275 @@
+@model GradingStatisticReportViewModel
+@{
+    ViewData["Title"] = "Grading Statistic Report";
+}
+
+<section>
+    <div class="block block--underline">
+        <div class="block__title">
+            <header>Grading Statistic Report</header>
+        </div>
+
+        <div class="block__body">
+            <form class="form-horizontal" asp-controller="GradingStatisticReport" asp-action="Index" method="GET">
+                @Html.AntiForgeryToken()
+                <div class="row form-group m-b-30">
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels" data-placeholder="Select">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Academic Level<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="ViewBag.Terms" data-placeholder="Select">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Term<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3">
+                        @* <select class="chosen-select form-control" asp-for="Criteria.Type" asp-items="ViewBag.ReportTypes" data-placeholder="Select">
+                            <option selected disabled>Select</option>
+                        </select> *@
+                        <select class="chosen-select form-control" asp-for="Criteria.Type" data-placeholder="Select">
+                            <option selected value="c">Classified by Course</option>
+                        </select>
+                        <label>Report Type<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control" asp-for="Criteria.IsShowPercentage" asp-items="ViewBag.YesNoAnswer">
+                        </select>
+                        <label>Display Percentage</label>
+                    </div>
+                </div>
+
+                <div class="row form-group m-b-30">
+                    <div class="col-9">
+                        <select class="chosen-select form-control" asp-for="Criteria.CurriculumVersionId" asp-items="ViewBag.CurriculumVersions" data-placeholder="Select">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Curriculum Version<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3">
+                        <h4 class="font-size-default m-y-4">Admission Types</h4>
+                        <select class="chosen-select form-control" asp-for="Criteria.AdmissionTypeIds"
+                                asp-items="@ViewBag.AdmissionTypes" data-placeholder="Select" multiple></select>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col text-right align-self-end text-nowrap">
+                        <button class="btn btn--primary btn-mw-120 mb-0 m-r-5" type="submit">
+                            <i class="la la-search mr-2"></i>Search
+                        </button>
+                        <button class="btn btn-mw-120 btn--white mb-0 js-reset-btn" type="reset">
+                            Reset
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+	</div>
+</section>
+
+<section>
+    <div class="block block--underline">
+        <div class="block__title">
+            <div class="row">
+                <div class="col-6">
+                    <header>Search Result (@Model.TotalRecord)</header>
+                </div>
+            </div>
+        </div>
+
+        @if (Model.Criteria.Type == "c")
+        {
+            <partial name="_ByCourse" model="@Model"/>
+        }
+        else 
+        {
+            @* <div class="block__body">
+                <div class="table-responsive">
+                    <table class="table table-bordered m-0 js-report-table w-100x">
+                        @if (Model.Criteria.Type == "d")
+                        {
+                            var gradingReport = Model.Results[0] ?? null;
+                            <thead>
+                                <tr>
+                                    <th class="text-center">#</th>
+                                    <th>Division</th>
+                                    <th>Major</th>
+                                    @foreach (var item in gradingReport.GradeHeader)
+                                    {
+                                        <th class="text-center">@item</th>
+                                        <th class="text-center">%</th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.Results.Any())
+                                {
+                                    foreach (var item in Model.Results)
+                                    {
+                                        <tr>
+                                            <td rowspan="@(item.GradingStatisticDepartments.Count + 1)">@recordNumber</td>
+                                            <td rowspan="@(item.GradingStatisticDepartments.Count + 1)">@item.Faculty</td>
+                                        </tr>
+                                        @foreach (var department in item.GradingStatisticDepartments)
+                                        {
+                                            <tr>
+                                                <td>@department.Department</td>
+                                                @for (int i = 0; i < @gradingReport.GradeHeader.Count; i++)
+                                                {
+                                                    var isEqual = false;
+                                                    for (int j = 0; j < department.GradingStatisticReportCounts.Count; j++)
+                                                    {
+                                                        if (department.GradingStatisticReportCounts[j].Grade == @gradingReport.GradeHeader[i])
+                                                        {
+                                                            <td class="text-center">@department.GradingStatisticReportCounts[j].StudentCount</td>
+                                                            <td class="text-center">@department.GradingStatisticReportCounts[j].PercentageText</td>
+                                                            isEqual = true;
+                                                        }
+                                                    }
+
+                                                    if (!isEqual) {
+                                                        <td class="text-center">0</td>
+                                                        <td class="text-center">0</td>
+                                                    }
+                                                }
+                                            </tr>
+                                        }
+                                        recordNumber++;
+                                    }
+                                }
+                            </tbody>
+                        }
+
+                        else if (Model.Criteria.Type == "c")
+                        {
+                            var gradingReport = Model.Results[0] ?? null;
+                            <thead>
+                                <tr>
+                                    <th class="text-center">#</th>
+                                    <th>Code</th>
+                                    <th>Name</th>
+                                    <th>Credit</th>
+                                    @foreach (var item in @gradingReport.GradeHeader)
+                                    {
+                                        <th class="text-center">@item</th>
+                                        if (Model.Criteria.IsShowPercentage)
+                                        {
+                                            <th class="text-center">%</th>
+                                        }
+                                    }
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.Results.Any())
+                                {
+                                    foreach (var item in Model.Results)
+                                    {
+                                        <tr>
+                                            <td>@recordNumber</td>
+                                            <td>@item.CourseCode</td>
+                                            <td>@item.CourseName</td>
+                                            <td>@item.Credit</td>
+                                            @for (int i = 0; i < @gradingReport.GradeHeader.Count; i++)
+                                            {
+                                                var isEqual = false;
+                                                for (int j = 0; j < item.GradingStatisticReportCounts.Count; j++)
+                                                {
+                                                    if (item.GradingStatisticReportCounts[j].Grade == @gradingReport.GradeHeader[i])
+                                                    {
+                                                        <td class="text-center">@item.GradingStatisticReportCounts[j].StudentCount</td>
+                                                        if (Model.Criteria.IsShowPercentage)
+                                                        {
+                                                            <td class="text-center">@item.GradingStatisticReportCounts[j].PercentageText</td>
+                                                        }
+                                                        isEqual = true;
+                                                    }
+                                                }
+
+                                                if (!isEqual) {
+                                                    <td class="text-center">0</td>
+                                                    <td class="text-center">0</td>
+                                                }
+                                            }
+                                            
+                                            <td class="text-center">@item.GradingStatisticReportCounts.Sum(x => x.StudentCount)</td>
+                                        </tr>
+                                        recordNumber++;
+                                    }
+                                }
+                            </tbody>
+                            <tfoot>
+                                @if (Model != null && Model.Results.Any())
+                                {
+                                    <tr>
+                                        <td class="text-right" colspan="4"><b>Total</b></td>
+                                        @for (int i = 0; i < gradingReport.GradeHeader.Count; i++)
+                                        {
+                                            <td class="text-center">
+                                                <b>@Model.Results.SelectMany(x => x.GradingStatisticReportCounts).Where(x => x.Grade == gradingReport.GradeHeader[i]).Sum(x => x.StudentCount)</b>
+                                            </td>
+                                            <td></td>
+                                        }
+                                        <td class="text-center">
+                                            <b>@Model.Results.SelectMany(x => x.GradingStatisticReportCounts).Sum(x => x.StudentCount)</b>
+                                        </td>
+                                    </tr>
+                                }
+                            </tfoot>
+                        }
+
+                        else if (Model.Criteria.Type == "a")
+                        {
+                            var gradingReport = Model.Results[0] ?? null;
+                            <thead>
+                                <tr>
+                                    <th class="text-center">#</th>
+                                    <th>Division</th>
+                                    @foreach (var item in @gradingReport.GradeHeader)
+                                    {
+                                        <th class="text-center">@item</th>
+                                        <th class="text-center">%</th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.Results.Any())
+                                {
+                                    foreach (var item in Model.Results)
+                                    {
+                                        <tr>
+                                            <td>@recordNumber</td>
+                                            <td>@item.Faculty</td>
+                                            @for (int i = 0; i < @gradingReport.GradeHeader.Count; i++)
+                                            {
+                                                var isEqual = false;
+                                                for (int j = 0; j < item.GradingStatisticReportCounts.Count; j++)
+                                                {
+                                                    if (item.GradingStatisticReportCounts[j].Grade == @gradingReport.GradeHeader[i])
+                                                    {
+                                                        <td class="text-center">@item.GradingStatisticReportCounts[j].StudentCount</td>
+                                                        <td class="text-center">@item.GradingStatisticReportCounts[j].PercentageText</td>
+                                                        isEqual = true;
+                                                    }
+                                                }
+
+                                                if (!isEqual) {
+                                                    <td class="text-center">0</td>
+                                                    <td class="text-center">0</td>
+                                                }
+                                            }
+                                        </tr>
+                                        recordNumber++;
+                                    }
+                                }
+                            </tbody>
+                        }
+                    </table>
+                </div>
+            </div> *@
+        }
+    </div>
+</section>

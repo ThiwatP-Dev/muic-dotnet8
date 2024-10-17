@@ -1,0 +1,180 @@
+@model StudentProbationViewModel
+@{ 
+    ViewData["Title"] = "Probation Student Report by Term";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="ProbationRetireByTermReport" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group">
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Academic Level<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="ViewBag.Faculties">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Faculty</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentId" asp-items="ViewBag.Departments">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Department</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.Status" asp-items="ViewBag.StudentStatuses"></select>
+                            <label>Student Status</label>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.StartTermId" asp-items="ViewBag.Terms">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Start Term<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.EndTermId" asp-items="ViewBag.Terms">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>End Term<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.GPAFrom" type="number">
+                            <label>GPA From<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.GPATo" type="number">
+                            <label>GPA To<span class="text-danger">*</span></label>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.StartStudentBatch" type="number">
+                            <label>Batch From</label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.EndStudentBatch" type="number">
+                            <label>To</label>
+                        </div>
+                    </div>
+                    
+                    <div class="row form-group">
+                        <div class="col-12 align-self-end text-right text-nowrap">
+                            <button class="btn btn--primary btn-mw-120 m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="button">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (Model != null)
+{
+    <section class="row">
+        <div class="col-12">
+            <form id="export-excel-form" class="form-horizontal" asp-controller="ProbationRetireByTermReport" asp-action="ExportExcel" method="POST">
+                @Html.AntiForgeryToken()
+                <div class="block block--underline">
+                    <div class="block__title">
+                        <header>Student List (@Model?.Students?.Count())</header>
+                        <header class="float-right">
+                            <button class="btn btn--primary mb-0" type="submit">Export Excel</button>
+                        </header>
+                    </div>
+
+                    <div class="block__body">
+                        <div class="table-responsive">
+                            <div class="row form-group">
+                                <div class="col-3">
+                                    <div class="form-control-label d-flex align-items-center">Remark</div>
+                                    <div class="form-control-plaintext">X = Studying</div>
+                                </div>
+                            </div>
+                            <table class="table table-bordered table-hover w-100x">
+                                <thead>
+                                    <tr>
+                                        <th>Code</th>
+                                        <th>Name</th>
+                                        <th>Major</th>
+                                        <th>Curriculum</th>
+                                        <th>Advisor</th>
+                                        <th class="text-center">CGPA</th>
+                                        @for (int i = 0; i < Model.Terms.Count; i++) 
+                                        {
+                                            <th class="text-center">@Model.Terms[i].TermText</th>
+                                            <input asp-for="Terms[i].AcademicTerm" type="hidden">
+                                            <input asp-for="Terms[i].AcademicYear" type="hidden">
+                                        }
+                                    </tr>
+                                </thead>
+                                <tbody class="js-items">
+                                    @for (int i = 0; i < Model.Students.Count; i++)
+                                    {
+                                        <tr>
+                                            <td>@Model.Students[i].StudentCode</td>
+                                            <td>@Model.Students[i].StudentFullName</td>
+                                            <td>@Model.Students[i].DepartmentCode</td>
+                                            <td>@Model.Students[i].CurriculumVersionNameEn</td>
+                                            <td>@Model.Students[i].AdvisorName</td>
+                                            <td class="text-center">@String.Format("{0:N2}",(Math.Truncate(@Model.Students[i].StudentGPA * 100) / 100))</td>
+                                            @for (int j = 0; j < Model.Students[i].TermGPAs.Count; j++)
+                                            {
+                                                if (Model.Students[i].TermGPAs[j].IsProbation)
+                                                {
+                                                    <td>
+                                                        <span class="text-danger">@Model.Students[i].TermGPAs[j].DisplayText</span>
+                                                    </td>
+                                                }
+                                                else 
+                                                {
+                                                    <td>@Model.Students[i].TermGPAs[j].DisplayText</td>
+                                                }
+
+                                                <input asp-for="Students[i].TermGPAs[j].DisplayText" type="hidden">
+                                            }
+                                        </tr>
+
+                                        <input asp-for="Students[i].StudentCode" type="hidden">
+                                        <input asp-for="Students[i].StudentTitle" type="hidden">
+                                        <input asp-for="Students[i].StudentFirstName" type="hidden">
+                                        <input asp-for="Students[i].StudentMidName" type="hidden">
+                                        <input asp-for="Students[i].StudentLastName" type="hidden">
+                                        <input asp-for="Students[i].DepartmentCode" type="hidden">
+                                        <input asp-for="Students[i].CurriculumVersionNameEn" type="hidden">
+                                        <input asp-for="Students[i].AdvisorName" type="hidden">
+                                        <input asp-for="Students[i].StudentGPA" type="hidden">
+                                    }
+
+                                    <input name="returnUrl" value="@contextPath" type="hidden">
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="block__action-row">
+                            <button class="btn btn--primary mb-0" type="submit">Export Excel</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/probation-retire-by-term-report.js"></script>
+}

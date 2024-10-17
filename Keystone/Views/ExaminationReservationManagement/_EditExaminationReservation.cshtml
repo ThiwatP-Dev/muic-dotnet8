@@ -1,0 +1,111 @@
+@model ExaminationReservation
+
+<div class="block block--underline mb-0">
+    <div class="block__title">
+		<header>Edit @Model?.Section?.Course?.CourseAndCredit Section: @Model?.Section?.Number</header>
+	</div>
+
+    <div class="block__body">
+        <form asp-controller="ExaminationReservationManagement" asp-action="Edit" method="POST">
+            <div class="row form-group">
+                <div class="col-12">
+                    <select class="chosen-select form-control js-status" asp-for="Status" asp-items="ViewBag.ReservationStatuses">
+                        <option selected disabled>Select</option>
+                    </select>
+                    <label>Status</label>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <div class="col-12">
+                    <select class="chosen-select form-control" asp-for="RoomId" asp-items="ViewBag.Rooms">
+                        <option selected disabled>Select</option>
+                    </select>
+                    <label>Room<span class="text-danger">*</span></label>
+                    <span class="text-danger help-block" asp-validation-for="RoomId"></span>
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-12">
+                    <select class="chosen-select form-control" asp-for="InstructorId" asp-items="ViewBag.Instructors">
+                        <option selected disabled>Select</option>
+                    </select>
+                    <label>Instructor<span class="text-danger">*</span></label>
+                    <span class="text-danger help-block" asp-validation-for="InstructorId"></span>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <div class="col-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" asp-for="AbsentInstructor">
+                        <label for="AbsentInstructor">Absent/Join other section</label>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" asp-for="UseProctor">
+                        <label for="UseProctor">Use Proctor</label>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <input class="form-control" asp-for="TotalProctor" type="number">
+                    <label>Proctor</label>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <div class="col-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" asp-for="AllowBooklet">
+                        <label for="AllowBooklet">Allow Booklet</label>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" asp-for="AllowCalculator">
+                        <label for="AllowCalculator">Allow Calculator</label>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" asp-for="AllowOpenbook">
+                        <label for="AllowOpenbook">Open book</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <div class="col-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" asp-for="AllowAppendix">
+                        <label for="AllowAppendix">Allow Appendix</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <div class="col-12">
+                    <input class="form-control" asp-for="ProctorRemark" type="text">
+                    <label>Proctor Remark</label>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <div class="col-12">
+                    <input class="form-control" asp-for="StudentRemark" type="text">
+                    <label>Student Remark</label>
+                </div>
+            </div>
+
+            <input asp-for="Id" hidden>
+            <input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+            <div class="block__action">
+                <div class="block__action-row">
+                    <button class="btn btn-mw-120 btn--primary js-button-save" type="submit">Save</button>
+                    <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-mw-120 btn--cancel rounded">Close</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

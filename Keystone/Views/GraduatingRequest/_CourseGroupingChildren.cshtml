@@ -1,0 +1,127 @@
+@model List<CourseGroupViewModel>
+
+@if (Model != null)
+{
+    @foreach (var courseGroup in Model)
+    {
+        <div class="row text-right m-b-10">
+            <div class="col-12">
+                <a data-toggle="modal"
+                   data-target="#add-grouping-course"
+                   data-group-id="@courseGroup.CourseGroupId"
+                   data-request-id="@courseGroup.GraduatingRequestId"
+                   data-table-id="grouping-curriculum-export-@courseGroup.Sequence">
+                    <button class="btn btn-mw-120 btn--primary mb-0">Add Course</button>
+                </a>
+            </div>
+        </div>
+        <table id="grouping-curriculum-export-@courseGroup.Sequence" class="table table-bordered table-hover w-100x">
+            <thead>
+                <tr>
+                    <th colspan="8">@courseGroup.FullPathName (@courseGroup.RequiredCreditCompleted @(courseGroup.RequiredCreditCompleted > 1 ? "Credits" : "Credit"))</th>
+                </tr>
+            </thead>
+            @if (courseGroup.DescriptionEn != "" && courseGroup.DescriptionEn != null)
+            {
+                <tr>
+                    <th colspan="8">@courseGroup.DescriptionEn</th>
+                </tr>
+            }
+
+            @if (courseGroup.Courses != null && courseGroup.Courses.Any())
+            {
+                <thead>
+                    <tr>
+                        <th class="w-150">Course Code</th>
+                        <th>Course Name</th>
+                        <th>Course Equivalent</th>
+                        <th class="w-150">Course Credit</th>
+                        <th class="w-150">Passing Grade</th>
+                        <th class="w-250">Move Course Group</th>
+                        <th>Remark</th>
+                        <th class="text-center w-100">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="body-course">
+                    @if (courseGroup.Courses != null)
+                    {
+                        foreach (var course in courseGroup.Courses) 
+                        {
+                            <tr class="@(course.IsAddManually ? "color-success" : course.IsDisabled ? "color-danger" : "")">
+                                <td>@course.CourseCode</td>
+                                <td>@course.CourseNameEn</td>
+                                <td>@course.CourseEquivalentName</td>
+                                <td>@course.CreditText</td>
+                                <td>@course.RequiredGradeName</td>
+                                <td class="js-show-move-group">@course.MoveCourseGroup</td>
+                                <td class="js-show-course-group-remark">@course.Remark</td>
+                                <td class="text-center text-nowrap td-actions">
+                                    @if (course.IsAddManually)
+                                    {
+                                        <a data-toggle="modal" 
+                                           data-target="#confirm-delete-modal" 
+                                           data-controller="GraduatingRequest"
+                                           data-action="DeleteManuallyCourse" 
+                                           data-modification-id="@course.CourseModificationId"
+                                           data-request-id="@courseGroup.GraduatingRequestId">
+                                            <i class="la la-trash delete"></i>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a data-toggle="modal"
+                                            data-target="#change-course-group"
+                                            data-group-id="@courseGroup.CourseGroupId"
+                                            data-course-id="@course.CourseId"
+                                            data-version-id="@courseGroup.CurriculumVersionId"
+                                            data-remark="@course.Remark"
+                                            data-move-id="@course.MoveCourseGroupId"
+                                            data-request-id="@courseGroup.GraduatingRequestId">
+                                            <i class="la la-edit edit"></i>
+                                        </a>
+                                        <a class="js-disable-course"
+                                           data-modification-id="@course.CourseModificationId"
+                                           data-request-id="@courseGroup.GraduatingRequestId"
+                                           data-group-id="@courseGroup.CourseGroupId"
+                                           data-course-id="@course.CourseId"
+                                           data-move-course-id="@course.MoveCourseGroupId"
+                                           data-disable="@course.IsDisabled">
+                                            <i class="@(course.IsDisabled ? "la la-check info" : "la la-times info")"></i>
+                                        </a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="8" class="text-center">
+                                <i class="text-danger">No Data</i>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            }
+            else 
+            {
+                <thead>
+                    <tr>
+                        <th class="w-150"></th>
+                        <th></th>
+                        <th class="w-150"></th>
+                        <th class="w-150"></th>
+                        <th class="w-100"></th>
+                        <th class="w-150"></th>
+                        <th class="w-150"></th>
+                        <th class="w-100"></th>
+                    </tr>
+                </thead>
+            }
+        </table>
+        @if (courseGroup.Children != null && courseGroup.Children.Any())
+        {
+            <partial name="_CourseGroupingChildren" model="@courseGroup.Children" />
+        }
+    }
+}

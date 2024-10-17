@@ -1,0 +1,31 @@
+@model WithdrawalViewModel
+
+<section>
+    <div class="block mb-3">
+        <div class="block__body">
+            <form asp-controller="Withdrawal" asp-action="Create" asp-route-tabIndex="1">
+                <input id="return-url" asp-for="ReturnUrl" type="hidden">
+                <input class="js-cascade-term" asp-for="TermId" type="hidden">
+                <input asp-for="AcademicLevelId" type="hidden">
+
+                <div class="row form-group mb-0">
+                    <div class="col-3">
+                        <input id="js-search-student-id" class="form-control js-suggestion" asp-for="StudentCode" student-id="0">
+                        <label>Student Code<span class="text-danger">*</span></label>
+                    </div>
+                    
+                    <div class="col-3 align-self-end">
+                        <button class="btn btn-mw-120 btn--primary mb-0" type="submit">
+                            <i class="la la-search mr-2"></i>Search
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<div id="flash-message-1"></div>
+<section id="js-withdrawal-student-content">
+    <partial name="_ByStudentDetails" model="Model.WithdrawByStudent">
+</section>

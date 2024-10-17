@@ -1,0 +1,38 @@
+@model List<CourseGroupViewModel>
+@if (Model != null && Model.Any())
+{
+    foreach (var courseGroup in Model)
+    {
+        <div class="col-12">
+            <div class="curriculum" id="parents-@courseGroup.CourseGroupId">
+                <div class="curriculum__header">
+                    <header class="mr-auto">
+                        <h4 class="d-flex flex-column">
+                            <span class="font-weight-700">
+                                @courseGroup.NameEn
+                            </span>
+                        </h4>
+                    </header>
+
+                    <div class="d-flex align-self-end">
+                        <a class="btn btn--white btn--circle" 
+                            data-toggle="collapse" 
+                            data-parent="#parents-@courseGroup.CourseGroupId" 
+                            data-target="#accordion-@courseGroup.CourseGroupId-1">
+                            <i class="la la-angle-down"></i>
+                        </a>
+                    </div>
+                </div>
+                <div id="accordion-@courseGroup.CourseGroupId-1" class="collapse">
+                    <div class="curriculum__content">
+                        @{
+                            var htmlString = "";
+                            string html = UIHelper.GetCourseGroupRegistration(courseGroup, htmlString);
+                            @Html.Raw(html)
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}

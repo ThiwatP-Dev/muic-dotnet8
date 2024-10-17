@@ -1,0 +1,68 @@
+@model PermissionViewModel
+
+<section>
+    <div class="block mb-3">
+        <div class="block__body">
+            <div class="row form-group">
+                <div class="col-10">
+                    <select id="js-select-role" asp-items="ViewBag.Roles" class="chosen-select form-control" name="RoleId" data-placeholder="Select">
+                        <option selected disabled>Select</option>
+                    </select>
+                    <label>Role</label>
+                </div>
+                <div class="col-2 align-self-center">
+                    <a id="js-add-role" class="btn btn-mw-120 btn--primary">
+                        <i class="la la-plus mr-1 font-weight-800"></i> Add
+                    </a>
+                </div>
+            </div>
+            <div id="js-role-members">
+                <table id="js-roles" class="table table-bordered table-hover w-100x">
+                     <thead>
+                        <tr>
+                            <th class="text-center">Role</th>
+                            <th class="text-center w-250">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Roles == null || !Model.Roles.Any())
+                        {
+                            <tr>
+                                <td>
+                                    <span class="js-show-role"></span>
+                                    <input class="js-get-roleId" name="Roles[0].Id" type="hidden">
+                                    <input class="js-get-roleName" name="Roles[0].Name" type="hidden">
+                                </td>
+
+                                <td class="td-actions text-nowrap">
+                                    <a href="#!" class="js-del-row" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                        <i class="la la-trash delete"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            for (int i = 0; i < Model.Roles.Count ; ++i)
+                            {
+                                <tr>
+                                    <td>
+                                        <span class="js-show-role">@Model.Roles[i].Name</span>
+                                        <input class="js-get-roleId" name="Roles[@i].Id" type="hidden" value="@Model.Roles[i].Id">
+                                        <input class="js-get-roleName" name="Roles[@i].Name" type="hidden" value="@Model.Roles[i].Name">
+                                    </td>
+
+                                    <td class="td-actions text-nowrap">
+                                        <a href="#!" class="js-del-row" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                            <i class="la la-trash delete"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>

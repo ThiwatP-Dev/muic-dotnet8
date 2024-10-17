@@ -1,0 +1,171 @@
+@model SchoolRevenueSummaryViewModel
+@{
+    ViewData["Title"] = "School Revenue Summary";
+    int feeIndex = 1;
+    int studentIndex = 1;
+    string feeName = string.Empty;
+    string feeIndexText = string.Empty;
+    string courseCodeAndName = string.Empty;
+}
+
+<div class="row">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</div>
+
+<section>
+    <div class="block block--underline">
+        <form asp-controller="SchoolRevenueSummary" asp-action="Index" class="form-horizontal" method="GET">
+            @Html.AntiForgeryToken()
+            <div class="block__body d-print-none">
+                <div class="row form-group">
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-academic-level" asp-items="ViewBag.AcademicLevels" asp-for="Criteria.AcademicLevelId">
+                            <option selected>Select</option>
+                        </select>
+                        <label>Academic Level<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-term" asp-items="ViewBag.Terms" asp-for="Criteria.TermId">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Term<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control js-single-date js-check-date" asp-for="Criteria.UpdatedFrom" type="text" autocomplete="off">
+                        <label>Date From</label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control js-single-date js-check-date" asp-for="Criteria.UpdatedTo" type="text" autocomplete="off">
+                        <label>To</label>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-4">
+                        <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="ViewBag.Faculties" data-placeholder="Select">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label><b>Student Faculty</b><span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-4">
+                        <select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentId" asp-items="ViewBag.Departments" data-placeholder="Select">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Major</label>
+                    </div>
+                    <div class="col-4">
+                        <select class="chosen-select form-control js-cascade-course-faculty" asp-for="Criteria.CourseFacultyId" asp-items="ViewBag.Faculties" data-placeholder="Select">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label><b>Course Faculty</b></label>
+                    </div>
+                </div>
+                
+                <div class="row form-group">
+                    <div class="col-4">
+                        <h4 class="font-size-default m-y-4">Courses</h4>
+                        <select class="chosen-select form-control js-cascade-multiple-course" asp-for="Criteria.CourseIds"
+                                asp-items="@ViewBag.Courses" data-placeholder="Select" multiple></select>
+                    </div>
+                    <div class="col-4">
+                        <h4 class="font-size-default m-y-4">Fee Item</h4>
+                        <select class="chosen-select form-control" asp-for="Criteria.FeeItemIds" asp-items="ViewBag.FeeItems" data-placeholder="All" multiple></select>
+                    </div>
+                    <div class="col-4 pr-0 pl-4 align-self-end text-nowrap">
+                        <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">
+                            <i class="la la-search mr-2"></i>
+                            <span class="bold">Search</span>
+                        </button>
+                        <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                            Reset
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">                
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table id="js-course-list" class="table table-bordered table-hover w-100x mb-0">
+                        <thead>
+                            <tr>
+                                <th class="text-center">No.</th>
+                                <th>School / Program / Revenue Type</th>
+                                <th>Subject code and title</th>
+                                <th class="text-center">No. of student</th>
+                                <th>ID code and name of student</th>
+                                <th class="text-right">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Results.Any())
+                            {
+                                foreach (var faculty in Model.Results.GroupBy(x => x.FacultyName))
+                                {
+                                    <tr class="table-secondary">
+                                        <td></td>
+                                        <td colspan="5"><b>@faculty.Key</b></td>
+                                    </tr>
+                                    feeIndex = 1;
+                                    foreach (var fee in faculty.GroupBy(x => x.FeeName))
+                                    {
+                                        feeName = fee.Key;
+                                        feeIndexText = feeIndex.ToString();
+                                        foreach (var course in fee.GroupBy(x => x.CourseCode))
+                                        {
+                                            courseCodeAndName = course.FirstOrDefault().CodeAndName;
+                                            studentIndex = 1;
+                                            foreach (var student in course.GroupBy(x => x.StudentCode))
+                                            {
+                                                <tr>
+                                                    <td>@feeIndexText</td>
+                                                    <td>@feeName</td>
+                                                    <td>@courseCodeAndName</td>
+                                                    <td>@studentIndex</td>
+                                                    <td>@student.FirstOrDefault().StudentCodeAndName</td>
+                                                    <td>@student.Sum(x => x.Amount)</td>
+                                                </tr>
+
+                                                feeIndexText = string.Empty;
+                                                feeName = string.Empty;
+                                                courseCodeAndName = string.Empty;
+                                                studentIndex++;
+                                            }
+                                        }
+
+                                        <tr class="table-active">
+                                            <td colspan="2"></td>
+                                            <td colspan="3" class="text-center"><b>Subtotal</b></td>
+                                            <td class="text-right"><b>@fee.Sum(x => x.Amount).ToString("#,##0.00")</b></td>
+                                        </tr>
+
+                                        feeIndex++;
+                                    }
+                                }
+
+                                <tr class="table-active">
+                                    <td colspan="2"></td>
+                                    <td colspan="3" class="text-center"><b>Grand Total</b></td>
+                                    <td class="text-right"><b>@Model.Results.Sum(x => x.Amount).ToString("#,##0.00")</b></td>
+                                </tr>
+                            }
+                            else 
+                            {
+                                <tr>
+                                    <td colspan="6"><i class="text-danger">No Data</i></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

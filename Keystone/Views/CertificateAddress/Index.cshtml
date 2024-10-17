@@ -1,0 +1,111 @@
+@model CertificateAddressViewModel
+@{ 
+    ViewData["Title"] = "Certificate Address"; 
+    var index = 1;
+}
+
+<div class="row">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</div>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="CertificateAddress" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group m-b-30">
+                        <div class="col-2">
+                            <input class="form-control js-single-date" asp-for="Criteria.StartedAt" type="text" autocomplete="off">
+                            <label>Date From<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-2">
+                            <input class="form-control js-single-date" asp-for="Criteria.EndedAt" type="text" autocomplete="off">
+                            <label>Date To<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-4">
+                            <select class="chosen-select form-control" asp-for="Criteria.DistributionMethodId" asp-items="ViewBag.DistributionMethods">
+                                <option selected value="">All</option>
+                            </select>
+                            <label>Distribute Method</label>
+                        </div>
+                        <div class="col-4">
+                            <select class="chosen-select form-control" asp-for="Criteria.Status" asp-items="ViewBag.Statuses" data-placeholder="Select"></select>
+                            <label>Status<span class="text-danger">*</span></label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-12 align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.Results?.Count() ?? 0))</header>
+            </div>
+
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table class="table table-bordered m-0 js-report-table w-100x">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th>Certificate</th>
+                                <th class="text-center">Request Date</th>
+                                <th class="text-center">Code</th>
+                                <th>Student</th>
+                                <th>Email</th>
+                                <th>Address</th>
+                                <th class="text-center">Phone</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Results.Any())
+                            {
+                                foreach (var item in Model.Results) 
+                                {
+                                    <tr>
+                                        <td>@index</td>
+                                        <td>@item.Certificate</td>
+                                        <td>@item.CreatedAt</td>
+                                        <td>@item.StudentCode</td>
+                                        <td>@item.StudentName</td>
+                                        <td>@item.Email</td>
+                                        <td>@item.Address</td>
+                                        <td>@item.TelephoneNumber</td>
+                                    </tr>
+                                    ++index;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="8" class="text-center">
+                                        <i class="text-danger">No Data</i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

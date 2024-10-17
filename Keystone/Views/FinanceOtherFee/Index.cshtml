@@ -1,0 +1,154 @@
+@model PagedResult<FinanceOtherFeeViewModel>
+@{ 
+    ViewData["Title"] = "Finance Other Fee";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+    var recordNumber = Model?.FirstRowOnPage;
+}
+
+<div class="row">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+        <ul class="d-flex flex-md-row align-items-md-center float-right">
+            <li class="list-inline-item mx-3 mb-0">
+                <a class='btn btn--primary' asp-action="Create" data-value="Criteria.AcademicLevelId" asp-route-returnUrl="@contextPath">
+                    <i class="la la-plus mr-1 font-weight-800"></i> Add Finance Other Fee
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Finance Other Fee</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="FinanceOtherFee" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group m-b-30">
+                        <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Academic Level<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="ViewBag.Terms">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Term<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-4">
+                            <select class="chosen-select form-control" asp-for="Criteria.FeeItemId" asp-items="ViewBag.FeeItems">
+                                <option selected>Select</option>
+                            </select>
+                            <label>Fee Item</label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group mb-0">
+                        <div class="col-4">
+                            <input class="form-control" asp-for="Criteria.Code" type="text">
+                            <label>Student Code</label>
+                        </div>
+                        <div class="col-2">
+                            <input class="form-control js-single-date" asp-for="Criteria.CreatedFrom" type="text">
+                            <label>Paid Date From</label>
+                        </div>
+                        <div class="col-2">
+                            <input class="form-control js-single-date" asp-for="Criteria.CreatedTo" type="text">
+                            <label>Paid Date To</label>
+                        </div>
+                        <div class="col-4 align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.RowCount ?? 0))</header>
+            </div>
+
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover w-100x">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center">Student Code</th>
+                                <th>Name</th>
+                                <th>Fee Item</th>
+                                <th class="text-right">Amount</th>
+                                <th class="text-center">Paid Date</th>
+                                <th>Invoice Number</th>
+                                <th>Receipt Number</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Results.Any())
+                            {
+                                foreach (var item in Model.Results) 
+                                {
+                                    <tr>
+                                        <td>@recordNumber</td>
+                                        <td>@item.StudentCode</td>
+                                        <td>@item.StudentName</td>
+                                        <td>@item.FeeItem</td>
+                                        <td>@item.TotalAmount</td>
+                                        <td>@item.CreatedAt</td>
+                                        <td>@item.InvoiceNumber</td>
+                                        <td>@item.ReceiptNumber</td>
+                                        <td class="text-nowrap td-actions">
+                                            @*<a>
+                                                <i class="la la-info info"></i>
+                                            </a>*@
+                                            @if (item.Id > 0)
+                                            {
+                                                <a asp-controller="FinanceOtherFee"
+                                               asp-action="Preview"
+                                               asp-route-Id="@item.Id"
+                                               asp-route-returnUrl="@contextPath">
+                                                    <i class="la la-print info"></i>
+                                                </a>
+                                            }
+                                        </td>
+                                    </tr>
+                                    recordNumber++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="9">
+                                        <i class="text-danger">No Data</i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @(await Component.InvokeAsync<PagerViewComponent>(Model))
+    </div>
+</section>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/finance-other-fee.js"></script>
+}

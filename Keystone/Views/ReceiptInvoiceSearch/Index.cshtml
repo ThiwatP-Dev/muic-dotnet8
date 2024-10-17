@@ -1,0 +1,223 @@
+@model ReceiptInvoiceSearchViewModel
+@{ 
+    ViewData["Title"] = "Receipt Invoice Search";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+    var index = 1;
+}
+
+<section>
+    <div class="col-12">
+        <div class="ks-page-header col-lg-12">
+            <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+        </div>
+        <div class="block block--underline">
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="ReceiptInvoiceSearch" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group m-b-30">
+                        <div class="col-3">
+                            <select class="chosen-select form-control"  data-placeholder="Select"
+                                    asp-for="Criteria.Type" asp-items="ViewBag.Types"></select>
+                            <label>Type<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-academic-level" data-placeholder="Select"
+                                    asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Academic Level<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-term" data-placeholder="Select"
+                                    asp-for="Criteria.TermId" asp-items="ViewBag.Terms">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Term<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.ReceiptInvoiceType" asp-items="ViewBag.ReceiptInvoiceTypes">
+                                <option selected value="">All</option>
+                            </select>
+                            <label>Type</label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group m-b-30">
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.CodeAndName" type="text">
+                            <label>Number</label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.Code" type="text">
+                            <label>Student Code</label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.FirstName" type="text">
+                            <label>Student Name</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.PaidStatus" asp-items="ViewBag.YesNoAnswer">
+                                <option selected value="">All</option>
+                            </select>
+                            <label>Paid</label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group m-b-30">
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.PrintStatus" asp-items="ViewBag.YesNoAnswer">
+                                <option selected value="">All</option>
+                            </select>
+                            <label>Printed (For Receipt)</label>
+                        </div>
+                        <div class="col-9 align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__body"> 
+                <div class="table-responsive js-render-nicescroll">
+                    <table class="table table-bordered table-hover js-report-table w-100x">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center">Date</th>
+                                <th>Number</th>
+                                <th>Student Code</th>
+                                <th>Student Name</th>
+                                <th class="text-right">Amount</th>
+                                <th class="text-right">Scholarship</th>
+                                <th class="text-right">Total Amount</th>
+                                <th class="text-center">Type</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-nowrap text-center no-sort">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Results.Any())
+                            {
+                                foreach (var item in Model.Results)
+                                {
+                                    <tr>
+                                        <td>@index</td>
+                                        <td>@item.CreatedAtText</td>
+                                        <td>@item.Number</td>
+                                        <td>@item.StudentCode</td>
+                                        <td>@item.StudentFullName</td>
+                                        <td>@item.AmountText</td>
+                                        <td>@item.ScholarshipPayAmountText</td>
+                                        <td>@item.TotalAmountText</td>
+                                        <td>@item.TypeText</td>
+                                        @if (Model?.Criteria?.Type == "i")
+                                        {
+                                             <td>
+                                                @if (item.IsCancel)
+                                                {
+                                                    <span class="ks-label bg-danger">Cancel</span>
+                                                }
+                                                else if (item.IsPaid)
+                                                {
+                                                    <span class="ks-label bg-success">Paid</span>
+                                                }
+                                                else 
+                                                {
+                                                    <span class="ks-label bg-danger">UnPaid</span>
+                                                }
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                             <td>
+                                                @if (item.IsCancel)
+                                                {
+                                                    <span class="ks-label bg-danger">Cancel</span>
+                                                }
+                                                else 
+                                                {
+                                                    <span class="ks-label bg-success">Active</span>
+                                                }
+                                            </td>
+                                        }
+
+                                        <td class="text-center td-actions">
+                                            @switch (Model.Criteria.Type)
+                                            {
+                                                case "r":
+                                                    <a class="js-receipt-detail"
+                                                        data-toggle="modal"
+                                                        data-target="#js-receipt-details-modal"
+                                                        data-type="receipt-details"
+                                                        data-receipt-id="@item.Id">
+                                                        <i class="la la-info info"></i>
+                                                    </a>
+                                                    <a asp-controller="Receipt"
+                                                        asp-action="ReceiptPreview"
+                                                        asp-route-Id="@item.Id"
+                                                        asp-route-returnUrl="@contextPath">
+                                                        <i class="la la-print info"></i>
+                                                    </a>
+                                                    <a class="js-copy-receipt"
+                                                       data-toggle="modal"
+                                                       data-target="#js-receipt-details-modal"
+                                                       data-type="transaction"
+                                                       data-receipt-id="@item.Id">
+                                                        <i class="la la-copy edit"></i>
+                                                    </a>
+                                                    break;
+                                                case "i":
+                                                    <a class="js-invoice-detail"
+                                                        data-toggle="modal"
+                                                        data-target="#js-invoice-details-modal"
+                                                        data-value="@item.Id">
+                                                        <i class="la la-info info"></i>
+                                                    </a>
+                                                    <a asp-controller="Invoice"
+                                                        asp-action="InvoicePreview"
+                                                        asp-route-Id="@item.Id"
+                                                        asp-route-returnUrl="@contextPath">
+                                                        <i class="la la-print info"></i>
+                                                    </a>
+                                                    break;
+                                            }
+                                        </td>
+                                    </tr>
+                                    ++index;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td class="text-center" colspan="9">
+                                        <i class="text-danger">No Data</i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Modals {
+    <partial name="~/Views/Registration/Receipt/_DetailsModal.cshtml" model="new Receipt()"/>
+    <partial name="~/Views/Registration/Invoice/_DetailsModal.cshtml" model="new Invoice()"/>
+}
+
+@section Scripts {
+    <script src="~/js/pages/receipt-invoice-search.js"></script>
+}

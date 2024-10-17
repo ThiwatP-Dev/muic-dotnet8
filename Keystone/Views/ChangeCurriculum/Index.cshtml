@@ -1,0 +1,64 @@
+@model StudentTransferViewModel
+@{ 
+    ViewData["Title"] = "Change Curriculum";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+
+@if (!string.IsNullOrEmpty(ViewBag.ReturnUrl))
+{
+    <div class="row">
+        <div class="ks-page-header col-lg-12">
+            <a class="btn-back" href="@ViewBag.ReturnUrl">
+                <i class="la la-angle-double-left mr-1"></i>Back
+            </a>
+        </div>
+    </div>
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>@ViewData["Title"]</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="ChangeCurriculum" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group mb-0">
+                        <div class="col-6 align-self-center">
+                            <input class="form-control .js-cascade-student-code" asp-for="StudentCode" type="text">
+                            <label>Student Code<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-6 text-nowrap align-self-end">
+                            <button class="btn btn--primary btn-mw-120 m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                @if (Model != null)
+                {
+                    <hr>
+                    <form class="form-horizontal" asp-controller="ChangeCurriculum" asp-action="MatchCourses" method="POST">
+                        <input name="returnUrl" value="@contextPath" type="hidden">
+                        <partial name="Curriculums/_ChangeCurriculum" model="@Model" />
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+
+@section Modals {
+  <partial name="_DeleteRowConfirmModals" />
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/change-curriculum.js"></script>
+}

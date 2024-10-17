@@ -1,0 +1,98 @@
+@model PermissionViewModel
+@{
+    ViewData["Title"] = "Manage User Permission";
+}
+
+<div class="row">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</div>
+
+<div class="block block--underline">
+    <div class="block__title">
+        <header>Search User</header>
+    </div>
+    <div class="block__body text-left height-3">
+        <form method="GET">
+            <div class="row form-group mb-3">
+                <div class="col-md-4">
+                    <select class="chosen-select form-control" asp-for="UserId" asp-items="@ViewBag.Users">
+                        <option selected disabled>Select</option>
+                    </select>
+                    <label>Username<span class="text-danger">*</span></label>
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-mw-120 btn--primary m-y-15">
+                        <i class="la la-search mr-2"></i>Search
+                    </button>
+                </div>
+            </div>
+        </form>
+        <hr>
+        <div class="row form-group mb-0">
+            <div class="col-md-4">
+                <div class="form-control-label d-flex align-items-center">Name</div>
+                <div class="form-control-plaintext">@(Model?.User?.FullnameTH ?? "N/A")</div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-control-label d-flex align-items-center">Username</div>
+                <div class="form-control-plaintext">@(Model?.User?.UserName ?? "N/A")</div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-control-label d-flex align-items-center">Phone Number</div>
+                <div class="form-control-plaintext">@(Model?.User?.PhoneNumber ?? "N/A")</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model != null)
+{
+    <div id="role-details" class="row">
+        <div class="col-12">
+            <div class="tabs-scroller float-left"><i class="la la-angle-double-left"></i></div>
+            <div class="tabs-scroller float-right"><i class="la la-angle-double-right"></i></div>
+            <div class="nav-tabs-wrapper">
+                <ul class="nav nav-tabs ks-tabs" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#nav-tab-0" id="nav-link-0" data-toggle="tab">
+                            Role
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#nav-tab-1" id="nav-link-1" data-toggle="tab">
+                            Permission
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <form method="POST">
+                <div class="tab-content" id="role-details-tab-content">
+                    <div class="tab-pane show active" id="nav-tab-0" role="tabpanel">
+                        <partial name="_UserRole"/>
+                    </div>
+                    <div class="tab-pane" id="nav-tab-1" role="tabpanel">
+                        <partial name="_Permission"/>
+                    </div>
+                </div>
+
+                <div class="text-right">
+                    <button type="submit" class="btn btn-mw-120 btn--primary">Save</button>
+                    <a asp-action="Index" class="btn btn-mw-120 btn--cancel">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+}
+
+@section Modals {
+    <partial name="_DeleteRowConfirmModals" />
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/tabs.js"></script>
+    <script type="text/javascript" src="~/js/pages/permission.js"></script>
+    <script type="text/javascript" src="~/js/pages/user-role.js"></script>
+}

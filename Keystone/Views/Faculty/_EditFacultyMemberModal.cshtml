@@ -1,0 +1,13 @@
+@model FacultyDirector
+
+<div id="edit-faculty-member" class="modal fadeIn animated" tabindex="-1" role="dialog"
+     aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <form class="modalWrapper-faculty-member" asp-controller="Faculty" asp-action="EditFacultyMember" method="POST">
+                @Html.AntiForgeryToken()
+                <partial name="_FacultyMemberForm" />
+            </form>
+        </div>
+    </div>
+</div>

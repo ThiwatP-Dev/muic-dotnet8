@@ -1,0 +1,240 @@
+@model RegistrationResultWithAmountAndCreditReportViewModel
+@{
+    ViewData["Title"] = "Fee Report by Student";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+    List<KeyValuePair<string, List<long>>> feeColumn = new List<KeyValuePair<string, List<long>>>()
+    {
+        //From FeeItem
+        new KeyValuePair<string, List<long>> ("Tuition" , new List<long>{1}),
+        new KeyValuePair<string, List<long>> ("Education Fee" , new List<long>{13}),
+        new KeyValuePair<string, List<long>> ("Insurance Fee" , new List<long>{15}),
+        new KeyValuePair<string, List<long>> ("Trimester Lump Sum Tution Fees" , new List<long>{7,9,10,11,33}),
+        new KeyValuePair<string, List<long>> ("Add/Drop Fee" , new List<long>{21}),
+        new KeyValuePair<string, List<long>> ("Late Registration Fee" , new List<long>{24}),
+        new KeyValuePair<string, List<long>> ("Late Payment Fee" , new List<long>{17}),
+        new KeyValuePair<string, List<long>> ("Scholarship" , new List<long>{ KeystoneLibrary.Providers.ReceiptProvider.SPECIAL_FEE_TYPE_ID_SCHOLARSHIP}),
+
+    };
+}
+
+<section class="d-print-none">
+    <div class="block block--underline">
+        <div class="block__title">
+            <header>@ViewData["Title"]</header>
+        </div>
+        <form class="form-horizontal" asp-controller="FeeReport" asp-action="PivotByStudent" method="POST">
+            @Html.AntiForgeryToken()
+            <div class="block__body">
+                <div class="row form-group m-b-30">
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-academic-level"
+                                asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels"
+                                data-placeholder="Select">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Academic Level<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId"
+                                asp-items="ViewBag.Terms" data-placeholder="Select">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Term<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-faculty"
+                                asp-for="Criteria.FacultyId" asp-items="ViewBag.Faculties"
+                                data-placeholder="Select">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Division</label>
+                    </div>
+                    <div class="col-3">
+                        <h4 class="font-size-default m-y-4">Major</h4>
+                        <select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentIds"
+                                asp-items="ViewBag.Departments" data-placeholder="Select" multiple>
+                        </select>
+
+                    </div>
+                </div>
+
+                <div class="row form-group m-b-30">
+                    @*<div class="col-3">
+                    <label>Fee Group</label>
+                    <select class="chosen-select form-control" asp-for="Criteria.FeeGroupIds"
+                    asp-items="ViewBag.FeeGroups" data-placeholder="Select" multiple>
+                    </select>
+                    </div>*@
+                    <div class="col-3">
+                        <select class="chosen-select form-control" asp-for="Criteria.InvoiceType" asp-items="ViewBag.InvoiceType">
+                            <option value="unconfirm">Unconfirmed</option>
+                        </select>
+                        <label>Type</label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control" asp-for="Criteria.IsPaidAdmissionFee" asp-items="ViewBag.PaidStatuses"></select>
+                        <label>Paid Status</label>
+                    </div>
+                    <div class="col align-self-end text-right text-nowrap">
+                        <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit" name="ActionType" value="Export" onclick="this.form.submitted=this.value;">
+                            <i class="la la-file-excel mr-2"></i>Save as Excel
+                        </button>
+                        <button class="btn btn--primary btn-mw-120 m-r-5 mb-0" type="submit"  name="ActionType" value="Preview">
+                            <i class="la la-search mr-2"></i>Preview
+                        </button>
+                        <a class="btn btn-mw-120 btn--reset js-reset-btn mb-0" href="Index">
+                            Resets
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+@if (Model != null && Model.ReportItems != null)
+{
+<section class="row">
+    <div class="col-12">
+        <form class="form-horizontal js-pivot-form" asp-controller="FeeReport" asp-action="ExportExcel" method="POST">
+            <div class="block block--underline">
+                <div class="block__title d-print-none">
+                    <header>Search Result (@(Model?.ReportItems?.Count ?? 0))</header>
+        @*            <header class="float-right">
+                        <input name="page" value="s" type="hidden">
+                        <input name="returnUrl" value="@contextPath" type="hidden">
+                        <button class="btn btn--primary mb-0" type="submit">Export Excel</button>
+                    </header>*@
+                </div>
+                <div class="block__body">
+                    @if (Model != null)
+                    {
+                        <div class="row">
+                            <div class="col-12 m-t-0">
+                                <header>
+                                    <h4 class="text-center"><b>@ViewData["Title"]</b></h4>
+                                </header>
+                                <div class="block__body">
+                                    <div class="table-responsive">
+                                        <table id="js-pivot-by-student" class="table table-bordered table-hover w-100x">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center">#</th>
+                                                    <th>Term</th>
+                                                    <th>Code</th>
+                                                    <th>Name</th>
+                                                    <th>Division</th>
+                                                    <th>Major</th>
+                                                    <th>Invoice Number</th>
+                                                    <th>Invoice Date</th>
+                                                    @for (int i = 0; i < feeColumn.Count; i++)
+                                                    {
+                                                        <th>@feeColumn[i].Key</th>
+                                                        <input name="Fees[@i].FeeName" value="@feeColumn[i].Key" hidden>
+                                                    }
+                                                    <th>Others</th>
+                                                    <th>Total Amount</th>
+                                                    <th>Paid Method</th>
+                                                    <th>Paid Status</th>
+                                                    <th>Payment Date</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @if (Model != null && Model.ReportItems != null)
+                                                {
+                                                    for (int i = 0; i < Model.ReportItems.Count; i++)
+                                                    {
+                                                        var otherAmount = ((Model.ReportItems[i].Items.Where(x => !feeColumn.SelectMany(y => y.Value).Contains(x.FeeItemId) ).Sum(x => x.Amount)- Model.ReportItems[i].Items.Sum(x => x.DiscountAmount)).ToString(StringFormat.Money));
+                                                        <tr>
+                                                            <td>@(i+1)</td>
+                                                            <td>@Model.ReportItems[i].Term</td>
+                                                            <td>@Model.ReportItems[i].StudentCode</td>
+                                                            <td>@Model.ReportItems[i].StudentTitleEn @Model.ReportItems[i].StudentFirstNameEn @Model.ReportItems[i].StudentLastNameEn</td>
+                                                            <td>@Model.ReportItems[i].Faculty</td>
+                                                            <td>@Model.ReportItems[i].Department</td>
+                                                            <td>@Model.ReportItems[i].InvoiceNumber</td>
+                                                            <td>@Model.ReportItems[i].InvoiceDateText</td>
+                                                            @for (int j = 0; j < feeColumn.Count; j++)
+                                                            {
+                                                                var amount = Model.ReportItems[i].Items.Where(x => feeColumn[j].Value.Contains(x.FeeItemId)).Sum(x => x.Amount).ToString(StringFormat.Money);
+                                                                <td class="text-right">@amount</td>
+                                                                <input name="ReportItems[@i].Items[@j].AmountText" value="@amount" hidden>
+                                                            }
+                                                            <td class="text-right">@otherAmount</td>
+                                                            <td class="text-right">@Model.ReportItems[i].TotalAmount.ToString(StringFormat.Money)</td>
+                                                            <td>@Model.ReportItems[i].InvoicePaymentMethod</td>
+                                                            <td>
+                                                                @if (Model.ReportItems[i].IsPaid)
+                                                                {
+                                                                    <span class="ks-label bg-success">Paid</span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span class="ks-label bg-danger">UnPaid</span>
+                                                                }
+                                                            </td>
+                                                            <td>@Model.ReportItems[i].LastPaymentDateText</td>
+                                                        </tr>
+
+                                                        <input asp-for="ReportItems[i].Term" hidden>
+                                                        <input asp-for="ReportItems[i].StudentCode" hidden>
+                                                        <input asp-for="ReportItems[i].StudentTitleEn" hidden>
+                                                        <input asp-for="ReportItems[i].StudentFirstNameEn" hidden>
+                                                        <input asp-for="ReportItems[i].StudentLastNameEn" hidden>
+                                                        <input asp-for="ReportItems[i].Faculty" hidden>
+                                                        <input asp-for="ReportItems[i].Department" hidden>
+                                                        <input asp-for="ReportItems[i].InvoiceNumber" hidden>
+                                                        <input asp-for="ReportItems[i].InvoiceDateTime" hidden>
+                                                        <input asp-for="ReportItems[i].InvoicePaymentMethod" hidden>
+                                                        <input asp-for="ReportItems[i].IsPaid" hidden>
+                                                        <input asp-for="ReportItems[i].LastPaymentDate" hidden>
+                                                        <input name="ReportItems[@i].TotalAmount" value="@Model.ReportItems[i].TotalAmount" hidden>
+                                                        <input name="ReportItems[@i].OtherTotalAmount" value="@otherAmount" hidden>
+                                                    }
+                                                }
+                                            </tbody>
+                                            @if (Model != null && Model.ReportItems != null)
+                                            {
+                                                var totalOtherAmount = ((Model.ReportItems.SelectMany(x => x.Items).Where(x => !feeColumn.SelectMany(y => y.Value).Contains(x.FeeItemId)).Sum(x => x.Amount) - Model.ReportItems.SelectMany(x => x.Items).Sum(x => x.DiscountAmount)).ToString(StringFormat.Money));
+                                                var totalAmount = Model.ReportItems.Sum(x => x.TotalAmount).ToString(StringFormat.Money);
+                                                <tfoot>
+                                                    <tr>
+                                                        <td colspan="8">Total @Model.ReportItems.Count records</td>
+                                                        @for (int i = 0; i < feeColumn.Count; i++)
+                                                        {
+                                                            var totalFeeAmount = Model.ReportItems.SelectMany(x => x.Items).Where(x => feeColumn[i].Value.Contains(x.FeeItemId)).Sum(x => x.Amount).ToString(StringFormat.Money);
+                                                            <td class="text-right">@totalFeeAmount</td>
+                                                            <input name="Fees[@i].Amount" value="@totalFeeAmount" hidden>
+                                                        }
+
+                                                        <td class="text-right">@totalOtherAmount</td>
+                                                        <td class="text-right">@totalAmount</td>
+                                                        <td colspan="3"></td>
+
+                                                        <input name="OtherTotalAmount" value="@totalOtherAmount" hidden>
+                                                        <input name="TotalAmount" value="@totalAmount" hidden>
+                                                    </tr>
+                                                </tfoot>
+                                            }
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="page-break"></span>
+                        <hr class="my-3" />
+                    }
+                    else
+                    {
+                        <div class="d-block text-center">
+                            <i class="text-danger">No Data</i>
+                        </div>
+                    }
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+}
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/pivot-by-student.js"></script>
+}

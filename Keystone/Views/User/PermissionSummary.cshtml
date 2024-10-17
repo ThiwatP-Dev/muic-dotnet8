@@ -1,0 +1,134 @@
+@model PermissionViewModel
+@{
+    ViewData["Title"] = "User Permission Summary";
+}
+
+<div class="row">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</div>
+
+<div class="block block--underline">
+    <div class="block__title">
+        <header>Search User</header>
+    </div>
+    <div class="block__body text-left height-3">
+        <form method="GET">
+            <div class="row form-group mb-3">
+                <div class="col-md-4">
+                    <select class="chosen-select form-control" asp-for="UserId" asp-items="@ViewBag.Users">
+                        <option selected disabled>Select</option>
+                    </select>
+                    <label>Username<span class="text-danger">*</span></label>
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-mw-120 btn--primary m-y-15">
+                        <i class="la la-search mr-2"></i>Search
+                    </button>
+                </div>
+            </div>
+        </form>
+        <hr>
+        <div class="row form-group mb-0">
+            <div class="col-md-4">
+                <div class="form-control-label d-flex align-items-center">Name</div>
+                <div class="form-control-plaintext">@(Model?.User?.FullnameTH ?? "N/A")</div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-control-label d-flex align-items-center">Username</div>
+                <div class="form-control-plaintext">@(Model?.User?.UserName ?? "N/A")</div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-control-label d-flex align-items-center">Phone Number</div>
+                <div class="form-control-plaintext">@(Model?.User?.PhoneNumber ?? "N/A")</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model != null && Model.Menus != null)
+{
+    <form>
+        <section class="row">
+            <div class="col-lg-12">
+                <div class="block block--underline">
+                    <div class="block__title">
+                        <header>Permission Summary</header>
+                    </div>
+                    <div class="block__body">
+                        <table class="table table-hover w-100x">
+                            <thead>
+                                <tr>
+                                    <th>Menu Group</th>
+                                    <th>Menu Subgroup</th>
+                                    <th>Menu</th>
+                                    <th class="text-nowarp text-center no-sort w-300">Permission</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < Model.Menus.Count; i++)
+                                {
+                                    int j = 0;
+                                    <tr>
+                                        <th>
+                                            <span class="font-weight-700">@Model.Menus[i].GroupName</span>
+                                        </th>
+                                        <th>
+                                            <span class="font-weight-700">@Model.Menus[i].SubgroupName</span>
+                                        </th>
+                                        <th>
+                                            <span class="font-weight-700">@Model.Menus[i].Name</span>
+                                        </th>
+                                        <th class="p-1">
+                                            <div class="input-group d-flex justify-content-center">
+                                                <input id="read-item_@i" class="form-check-input js-read-items" 
+                                                       type="checkbox" asp-for="@Model.Menus[i].IsReadAble" disabled />
+                                                <label class="mb-0 mr-5"> Read</label>
+                                                <input id="write-item_@i" class="form-check-input js-write-items" 
+                                                       type="checkbox" asp-for="@Model.Menus[i].IsWriteAble" disabled/>
+                                                <label class="mb-0"> Write</label>
+                                            </div>
+                                        </th>
+                                    </tr>
+
+                                    if (Model.Menus[i].Tabs != null)
+                                    {
+                                        for (j = 0; j < Model.Menus[i].Tabs.Count; j++)
+                                        {
+                                            <tr>
+                                                <td>
+                                                </td>
+                                                <td>
+                                                </td>
+                                                <td>
+                                                    <span class="ml-4">@Model.Menus[i].Tabs[j].Name</span>
+                                                </td>
+                                                <td>
+                                                    <div class="input-group d-flex justify-content-center">
+                                                        <input hidden name="Menus[@i].Tabs[@j].Name" value="@Model.Menus[i].Tabs[j].Name" />
+                                                        <input hidden asp-for="@Model.Menus[i].Tabs[@j].Id" />
+                                                        <input id="read-item_@i-@j" class="form-check-input js-read-items"
+                                                               type="checkbox" asp-for="@Model.Menus[i].Tabs[j].IsReadAble" disabled/>
+                                                        <label class="mb-0 mr-5" for="read-item_@i-@j"> Read</label>
+                                                        <input id="write-item_@i-@j" class="form-check-input js-write-items" 
+                                                               type="checkbox" asp-for="@Model.Menus[i].Tabs[j].IsWriteAble" disabled/>
+                                                        <label class="mb-0" for="write-item_@i-@j"> Write</label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>         
+            </div>
+        </section>
+    </form>
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/permission.js"></script>
+}

@@ -1,0 +1,61 @@
+@model GradeManagementViewModel
+@{
+    var index_i = 0;
+}
+
+<input type="hidden" id="graph-count" value="@Model.SelectedStandardGradingGroups.Count">
+
+@foreach (var studentScore in Model.SelectedStandardGradingGroups)
+{                                    
+    <input type="hidden" asp-for="@Model.SelectedStandardGradingGroups[@index_i].GradeTemplateId">
+    <div class="row">
+        <div class="col-3">
+            <div id="grading-curve-@index_i">
+                <table id="js-grade-table-@index_i" class="table table-bordered m-a-0">
+                    <thead>
+                        <tr>
+                            <th class="w-100 text-center">Min</th>
+                            <th class="w-100 text-center">Max</th>
+                            <th class="w-100 text-center">Grade</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @if (studentScore.StandardGradingScores.Any())
+                    {
+                        var index_j = 0;
+                        @foreach(var gradingScore in studentScore.StandardGradingScores.OrderByDescending(x => x.Maximum))
+                        {
+                            <tr>
+                                <td class="text-center">
+                                    <span>@gradingScore.Minimum</span>
+                                    <input type="hidden" class="form-control__table js-grade-score js-grade-score-@index_i text-center" asp-for="@Model.SelectedStandardGradingGroups[@index_i].StandardGradingScores[index_j].Minimum" value="@gradingScore.Minimum" data-score="min">
+                                </td>
+                                <td class="text-center">
+                                    <span>@gradingScore.Maximum</span>
+                                    <input type="hidden" class="form-control__table js-grade-score js-grade-score-@index_i text-center" asp-for="@Model.SelectedStandardGradingGroups[@index_i].StandardGradingScores[index_j].Maximum" value="@gradingScore.Maximum" data-score="max">
+                                </td>   
+                                <td class="text-center">
+                                    <span class="font-weight-700 js-grade-title">@gradingScore.Grade.Name</span>
+                                    <input asp-for="@Model.SelectedStandardGradingGroups[@index_i].StandardGradingScores[index_j].GradeId" type="hidden" value="@gradingScore.GradeId">
+                                    <input type="hidden" class="js-grade-weight" asp-for="@Model.SelectedStandardGradingGroups[@index_i].StandardGradingScores[index_j].Grade.Weight" value="@gradingScore.Grade.Weight">
+                                </td>
+                            </tr>
+                            ++index_j;
+                        }
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-9">
+            <div class="block chart">
+                <canvas id="grade-chart-@index_i" class="block__body"
+                        data-chart-title="Grade Distribution"
+                        data-axis-x-title="Percentage"
+                        data-axis-y-title="Number of Students">
+                </canvas>
+            </div>
+        </div>
+    </div>
+    ++index_i;
+}

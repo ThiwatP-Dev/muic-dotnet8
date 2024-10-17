@@ -1,0 +1,97 @@
+@model Section
+
+<div class="block block--underline mb-0">
+    <div class="block__title">
+		<header>Change Main Instructor</header>
+	</div>
+
+    <div class="block__body">
+        <form asp-controller="CourseToBeOffered" asp-action="ChangeMainInstructor" method="POST">
+            <div class="row form-group">
+                <div class="col-12">
+                    <select class="chosen-select form-control" asp-for="MainInstructorId" asp-items="ViewBag.Instructors">
+                        <option selected disabled>Select</option>
+                    </select>
+                    <label>Main Instructor</label>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <h4>Change Section Detail Instructor <small></small></h4>
+                    <table class="table table-bordered m-0">
+                        <thead>
+                            <tr>
+                                <th class="text-center w-50">#</th>
+                                <th class="text-center w-125">Day</th>
+                                <th class="text-center w-125">Start Time</th>
+                                <th class="text-center w-125">End Time</th>
+                                <th>Instructor</th>
+                                <th>Remark</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.SectionDetails != null && Model.SectionDetails.Any())
+                            {
+                                @for (int i = 0; i < Model.SectionDetails.Count(); i++)
+                                {
+                                    <tr>
+                                        <td>@(i + 1)</td>
+                                        <td>
+                                            <select class="chosen-select form-control chosen-single js-default-select"
+                                                    asp-for="@Model.SectionDetails[i].Day" asp-items="@ViewBag.Dayofweeks" disabled>
+                                                <option selected value="-1">Select</option>
+                                            </select>
+                                            <input asp-for="@Model.SectionDetails[i].Day" value="@Model.SectionDetails[i].Day" type="hidden">
+                                        </td>
+
+                                        <td class="w-125 form-group">
+                                            <input class="form-control__table text-center js-time-mask"
+                                                   asp-for="@Model.SectionDetails[i].StartTimeNullAble" disabled>
+                                            <input asp-for="@Model.SectionDetails[i].StartTimeNullAble" value="@Model.SectionDetails[i].StartTimeNullAble" type="hidden">
+                                        </td>
+
+                                        <td class="w-125 form-group">
+                                            <input class="form-control__table text-center js-time-mask"
+                                                   asp-for="@Model.SectionDetails[i].EndTimeNullAble" disabled>
+                                            <input asp-for="@Model.SectionDetails[i].EndTimeNullAble" value="@Model.SectionDetails[i].EndTimeNullAble" type="hidden">
+                                        </td>
+                                        <td>
+                                            <select class="chosen-select form-control chosen-single js-period-instructor" asp-for="@Model.SectionDetails[i].InstructorId"
+                                                    asp-items="@ViewBag.Instructors" data-placeholder="Select">
+                                                <option selected value="">Select</option>
+                                            </select>
+                                          @*   <input asp-for="@Model.SectionDetails[i].InstructorId" value="@Model.SectionDetails[i].InstructorId" type="hidden"> *@
+                                        </td>
+                                        <td>
+                                            <input class="form-control__table" asp-for="@Model.SectionDetails[i].Remark" type="text" disabled>
+                                            <input asp-for="@Model.SectionDetails[i].Id" value="@Model.SectionDetails[i].Id" type="hidden">
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td class="text-center" colspan="6">
+                                        <i class="text-danger">No data</i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+            </div>
+
+
+            <input asp-for="Id" hidden>
+            <input name="returnUrl" value="@ViewBag.ReturnUrl" hidden>
+
+            <div class="block__action">
+                <div class="block__action-row">
+                    <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+                    <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-mw-120 btn--cancel rounded">Close</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

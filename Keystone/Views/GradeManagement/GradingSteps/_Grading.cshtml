@@ -1,0 +1,41 @@
+@* @model GradeManagementViewModel
+
+<div class="block block--underline mb-0">
+    <div class="block__body">
+        <div class="row form-group">
+            <div class="col-12">
+                <div class="table-responsive mb-0">
+                    <table id="js-grade-table" class="table table-bordered m-0">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th class="text-center">GPA</th>
+                                <th class="text-center">Min</th>
+                                <th class="text-center">Max</th>
+                                <th class="text-center">Mean</th>
+                                <th class="text-center">Sd.</th>
+                                <th class="text-center">Withdrawal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th>Class Statistic</th>
+                                <td id="average-gpa" class="text-center"></td>
+                                <td id="min-score" >@(Model.GradingResult.Any() ? Model.GradingResult.Min(x => x.TotalScore) : 0)</td>
+                                <td id="max-score" >@(Model.GradingResult.Any() ? @Model.GradingResult.Max(x => x.TotalScore) : 0)</td>
+                                <td id="mean-score" >@(Model.GradingResult.Any() ? String.Format("{0:#.00}", @Model.GradingResult.Select(x => x.TotalScore).Average()) : "0")</td>
+                                <td id="sd-score" >@(Model.GradingResult.Any() ? (String.Format("{0:#.0000}", Math.Sqrt(@Model.GradingResult.Select(x => x.TotalScore)
+                                    .Average(v => Math.Pow(Convert.ToDouble(v) - Convert.ToDouble(Model.GradingResult.Average(x => x.TotalScore)), 2))))) : "0")</td>
+                                <td>@Model.GradingResult.Where(x => x.RegistrationCourse.Grade.Name == "W").Count()</td>                                 
+                                <td id="withdraw-count">@(Model.GradingResult.Where(x => x.RegistrationCourse != null && x.RegistrationCourse.Grade != null && x.RegistrationCourse.Grade.Name == "W")?.Count() ?? 0)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <section id="js-get-standard-grading"></section>
+        
+    </div>
+</div> *@

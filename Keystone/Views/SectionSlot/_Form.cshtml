@@ -1,0 +1,151 @@
+@model Section
+
+<div class="block__body">
+    <input asp-for="Id" type="hidden">
+    <input asp-for="CourseId" type="hidden">
+    <input asp-for="AcademicLevelId" type="hidden">
+    <input asp-for="TermId" type="hidden">
+
+    <div class="form-group">
+        <table id="js-table-period" class="table table-bordered m-0">
+            <thead>
+                <tr>
+                    <th class="text-center w-25">#</th>
+                    <th class="text-center w-125">Date</th>
+                    <th class="text-center w-25">Start</th>
+                    <th class="text-center w-25">End</th>
+                    <th class="w-175">Teaching Type</th>
+                    <th class="w-175">Room</th>
+                    <th>Instructor</th>
+                    <th class="text-center w-100">Status</th>
+                    <th>Remark</th>
+                    <th class="text-center w-25">Make Up</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="js-period">
+            @if (Model.SectionSlots != null && Model.SectionSlots.Any())
+            {
+                @for (int i = 0; i < Model.SectionSlots.Count(); i++)
+                {
+                    <tr class="period-table">
+                        <input class="js-section-detail-child" asp-for="@Model.SectionSlots[i].Id" type="hidden">
+                        <input asp-for="@Model.SectionSlots[i].SectionId" value="@Model.Id" type="hidden">
+                        <td>@(i+1)</td>
+                        <td>
+                            <input class="form-control__table js-single-date" asp-for="@Model.SectionSlots[i].Date" type="text" autocomplete="off">
+                        </td>
+                        <td class="w-125 form-group">
+                            <input class="form-control__table text-center js-time-mask"
+                                   asp-for="@Model.SectionSlots[i].StartTime" type="text" placeholder="hh:mm" >
+                        </td>
+                        <td class="w-125 form-group">
+                            <input class="form-control__table text-center js-time-mask"
+                                   asp-for="@Model.SectionSlots[i].EndTime" type="text" placeholder="hh:mm">
+                        </td>
+                        <td>
+                            <select class="chosen-select form-control chosen-single js-default-select"
+                                    asp-for="@Model.SectionSlots[i].TeachingTypeId" asp-items="@ViewBag.TeachingTypes">
+                            </select>
+                        </td>
+                        <td>
+                            <select class="chosen-select form-control chosen-single js-default-select"
+                                    asp-for="@Model.SectionSlots[i].RoomId" asp-items="@ViewBag.Rooms">
+                                <option selected value="">Select</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select class="chosen-select form-control chosen-single" asp-for="@Model.SectionSlots[i].InstructorId"
+                                    asp-items="@ViewBag.Instructors" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select class="chosen-select form-control chosen-single js-default-select"
+                                    asp-for="@Model.SectionSlots[i].Status" asp-items="@ViewBag.Status">
+                            </select>
+                        </td>
+                        <td>
+                            <input class="form-control__table" asp-for="@Model.SectionSlots[i].Remark" type="text">
+                        </td>
+                        <td>
+                            <partial name="_BooleanCheck" model="@Model.SectionSlots[i].IsMakeUpClass"></partial>
+                        </td>
+                        <td class="text-nowrap td-actions">
+                            <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                <i class="la la-trash delete"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr class="period-table">
+                    <input name="SectionSlots[0].SectionId" value="@Model.Id" type="hidden">
+                    <td>1</td>
+                    <td>
+                        <input class="form-control__table js-single-date" name="SectionSlots[0].Date" type="text" autocomplete="off">
+                    </td>
+                    <td class="w-125 form-group">
+                        <input class="form-control__table text-center js-time-mask"
+                                name="SectionSlots[0].StartTime" type="text" placeholder="hh:mm" >
+                    </td>
+                    <td class="w-125 form-group">
+                        <input class="form-control__table text-center js-time-mask"
+                                name="SectionSlots[0].EndTime" type="text" placeholder="hh:mm">
+                    </td>
+                    <td>
+                        <select class="chosen-select form-control__table chosen-single js-default-select"
+                                name="SectionSlots[0].TeachingTypeId" asp-items="@ViewBag.TeachingTypes">
+                        </select>
+                    </td>
+                    <td>
+                        <select class="chosen-select form-control__table chosen-single js-default-select"
+                                name="SectionSlots[0].RoomId" asp-items="@ViewBag.Rooms">
+                            <option selected value="">Select</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="chosen-select form-control__table chosen-single" name="SectionSlots[0].InstructorId"
+                                asp-items="@ViewBag.Instructors" data-placeholder="Select">
+                            <option selected value="">Select</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="chosen-select form-control__table chosen-single js-default-select"
+                                name="SectionSlots[0].Status" asp-items="@ViewBag.Status">
+                        </select>
+                    </td>
+                    <td>
+                        <input class="form-control__table" name="SectionSlots[0].Remark" type="text">
+                    </td>
+                    <td>
+                        <input id="checkbox0" class="form-check-input" name="SectionSlots[0].IsMakeUpClass" type="checkbox">
+                        <label for="checkbox0"></label>
+                    </td>
+                    <td class="text-nowrap td-actions">
+                        <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                            <i class="la la-trash delete"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+
+<div class="block__action container">
+    <div class="block__action-row">
+        <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+        <a class="btn btn-mw-120 btn--cancel" data-dismiss="modal" 
+           asp-controller="CourseToBeOffered" 
+           asp-action="Index"
+           asp-route-codeAndName="@Model.Course.Code"
+           asp-route-academicLevelId="@Model.Term.AcademicLevelId"
+           asp-route-termId="@Model.TermId">Cancel</a>
+    </div>
+</div>

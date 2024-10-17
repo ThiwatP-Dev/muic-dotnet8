@@ -1,0 +1,33 @@
+@model CertificationViewModel
+
+<partial name="_FormDetailsHeader" model="@Model">
+
+<div class="row form-group">
+    <div class="col-6">
+        <select class="chosen-select form-control js-cascade-academic-level" asp-for="AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+            <option selected disabled>Select</option>
+        </select>
+        <label>Academic Level<span class="text-danger">*</span></label>
+    </div>
+    <div class="col-6">
+        <input class="form-control" asp-for="DegreeName" type="text" autocomplete="off">
+        <label>Degree Name<span class="text-danger">*</span></label>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-6">
+        <select class="chosen-select form-control js-cascade-faculty" asp-for="FacultyId" asp-items="ViewBag.Faculties">
+            <option selected disabled>Select</option>
+        </select>
+        <label>Division<span class="text-danger">*</span></label>
+    </div>
+    <div class="col-6">
+        <select class="chosen-select form-control js-cascade-department" asp-for="DepartmentId" asp-items="ViewBag.Departments">
+            <option selected disabled>Select</option>
+        </select>
+        <label>Major<span class="text-danger">*</span></label>
+    </div>
+</div>
+
+<input asp-for="ErrorMessage" type="hidden">

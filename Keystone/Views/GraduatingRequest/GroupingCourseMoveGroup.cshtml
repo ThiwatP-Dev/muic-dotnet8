@@ -1,0 +1,109 @@
+@model GraduatingRequestViewModel
+@{
+    ViewData["Title"] = "Graduating Grouping Course Log " + @Model.Student.FullNameEn;
+    var searchReturnUrl = ViewBag.ReturnUrl;
+    var mainUrl = ViewBag.ReturnMainUrl;
+    var contextPath = $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+
+<section>
+    <div class="row">
+        <div class="ks-page-header col-lg-12">
+            <h2 class="ks-page-header__title">
+                <a class="btn-back" href="@searchReturnUrl">
+                    <i class="la la-angle-double-left mr-1"></i>Back
+                </a>
+            </h2>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="block block--underline">
+        <div class="block__title">
+            <header class="w-100x">
+                <div class="row">
+                    <div class="col-9 px-0 text-nowrap">
+                        <div class="d-flex align-items-center justify-content-sm-between">
+                            <h3 class="ks-page-header__title">@Model.Student.Code @Model.Student.FullNameEn</h3>
+                        </div>
+                    </div>
+                    <div class="col-3 px-0 text-right align-self-end">
+                        <button class="btn btn-mw-120 btn--primary" type="button" onclick="print();">Print</button>
+                    </div>
+                </div>
+            </header>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__body">
+                @if (Model.CourseGroups != null)
+                {
+                    <hr>
+                    <form id="js-form" class="form-horizontal" asp-controller="GraduatingRequest" asp-action="SaveGroupingCourseMoveGroup" method="POST">
+                        <input name="returnUrl" value="@searchReturnUrl" hidden>
+                        <input name="returnMainUrl" value="@mainUrl" hidden>
+                        <div class="row form-group">
+                            <input asp-for="CourseGroupingLogId" type="hidden">
+                            <input asp-for="GraduatingRequestId" type="hidden">
+                            <input asp-for="IsPublish" type="hidden">
+                            <input asp-for="IsPrint" type="hidden">
+
+                            @for (var groupIndex = 0; groupIndex < Model.CourseGroups.Count; groupIndex++)
+                            {
+                                <div class="col-6 mb-2">
+                                    <input asp-for="@Model.CourseGroups[groupIndex].CourseGroupId" type="hidden" />
+                                    <input asp-for="@Model.CourseGroups[groupIndex].CourseGroupName" type="hidden" />
+                                    <h4 class="font-weight-700 mb-3">@Model.CourseGroups[groupIndex].CourseGroupName</h4>
+                                    <ul id="js-course-group-@groupIndex" class="list-sortable" data-id="@Model.CourseGroups[groupIndex].CourseGroupId">
+                                        @for (var courseIndex = 0; courseIndex < Model.CourseGroups[groupIndex].Courses.Count; courseIndex++)
+                                        {
+                                            <li>
+                                                <span class="td-actions">
+                                                    @Html.Raw(Model.CourseGroups[groupIndex].Courses[courseIndex].CourseCodeAndName)
+                                                    <a class="js-del-li" href="#!" data-toggle="modal" data-target="#delete-li-confirm-modal" style="color: rgba(52, 40, 104, 0.4)">
+                                                        <i class="la la-trash delete"></i>
+                                                    </a>
+                                                    <br/>
+                                                    @Html.Raw(Model.CourseGroups[groupIndex].Courses[courseIndex].GradeName)
+                                                </span>
+                                                <input class="js-course-id" asp-for="@Model.CourseGroups[groupIndex].Courses[@courseIndex].CourseId" type="hidden" />
+                                                <input asp-for="@Model.CourseGroups[groupIndex].Courses[@courseIndex].CourseCode" type="hidden" />
+                                                <input class="js-course-name-@Model.CourseGroups[groupIndex].Courses[@courseIndex].CourseId" asp-for="@Model.CourseGroups[groupIndex].Courses[@courseIndex].CourseName" type="hidden" />
+                                                <input asp-for="@Model.CourseGroups[groupIndex].Courses[@courseIndex].CourseGroupId" type="hidden" />
+                                                <input asp-for="@Model.CourseGroups[groupIndex].Courses[@courseIndex].EquivalentCourseId" type="hidden" />
+                                                @for (int i = 0; i < Model.CourseGroups[groupIndex].Courses[courseIndex].RegistrationCourseIds.Count; i++)
+                                                {
+                                                    <input asp-for="@Model.CourseGroups[groupIndex].Courses[@courseIndex].RegistrationCourseIds[i]" type="hidden" />
+                                                }
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="form-group text-right mb-0">
+                            <button class="btn btn-mw-120 btn--primary" type="button" onclick="saveForm();">Save</button>
+                            <button class="btn btn-mw-120 btn--primary" type="button" onclick="publishForm();">Publish</button>
+                            <a href="@ViewBag.ReturnUrl" class="btn btn-mw-120 btn--cancel">Cancel</a>
+                        </div>
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Modals {
+    <partial name="_DeleteListConfirmModals">
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/course-categorize.js"></script>
+    <script type="text/javascript" src="~/js/pages/graduating-request.js"></script>
+}

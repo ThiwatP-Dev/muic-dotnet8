@@ -1,0 +1,72 @@
+@model List<CloseSectionStudentList>
+@{
+    ViewData["Title"] = "Student Detail";
+    var index = 1;
+}
+
+<div class="row">
+    <div class="ks-page-header col-12">
+        <a class="btn-back" href="@ViewBag.ReturnUrl">
+            <i class="la la-angle-double-left mr-1"></i>Back
+        </a>
+    </div>
+</div>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>@ViewData["Title"]</header>
+            </div>
+
+            <div class="block__body">
+                <div class="row form-group">
+                    <div class="col-4">
+                        <select class="chosen-select form-control js-master-joint-select">
+                            <option selected value="">All</option>
+                            <option value="master">Master</option>
+                            <option value="joint">Joint</option>
+                        </select>
+                        <label>Master/Joint</label>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover m-0 js-report-table w-100x js-student-list">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center">Code</th>
+                                <th>Name</th>
+                                <th>Course</th>
+                                <th>Division</th>
+                                <th>Major</th>
+                                <th>Email</th>
+                                <th class="text-center">Payment Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model) 
+                            {
+                                <tr>
+                                    <td>@index</td>
+                                    <td>@item.StudentCode</td>
+                                    <td>@item.StudentFullName</td>
+                                    <td>@item.FullCourse</td>
+                                    <td>@item.Division</td>
+                                    <td>@item.Major</td>
+                                    <td>@item.Email</td>
+                                    <td>@(item.PaymentStatus ? "Paid" : "Unpaid")</td>
+                                </tr>
+                                index++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/close-section.js"></script>
+}

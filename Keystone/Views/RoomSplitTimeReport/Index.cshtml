@@ -1,0 +1,168 @@
+@model PagedResult<RoomSplitTimeReportViewModel>
+@{ 
+    ViewData["Title"] = "Room by Time Count Report"; 
+    var recordNumber = Model?.FirstRowOnPage;
+}
+
+<div class="row">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</div>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="RoomSplitTimeReport" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group m-b-30">
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-campus" asp-for="Criteria.CampusId" asp-items="ViewBag.Campuses">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Campus</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-building" asp-for="Criteria.BuildingId" asp-items="ViewBag.Buildings">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Building</label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.Floor" type="text">
+                            <label>Floor</label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.CodeAndName" type="text">
+                            <label>Room</label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group m-b-30">
+                        <div class="col-3">
+                            <input class="form-control js-single-date" asp-for="Criteria.StartedAt" type="text" autocomplete="off">
+                            <label>Date From<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control js-single-date" asp-for="Criteria.EndedAt" type="text" autocomplete="off">
+                            <label>Date To<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.Type" asp-items="ViewBag.UsingTypes">
+                                <option selected value="">All</option>
+                            </select>
+                            <label>Using Type</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.IsMakeUp" asp-items="ViewBag.Answers"></select>
+                            <label>Make Up</label>
+                        </div>
+                    </div>
+                    
+                    <div class="row form-group">
+                        <div class="col-12 align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.RowCount ?? 0))</header>
+            </div>
+
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover js-report-table w-100x">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th>Building</th>
+                                <th>Room</th>
+                                <th>Type</th>
+                                <th>Term</th>
+                                <th class="text-center">Date</th>
+                                <th class="text-center">Day</th>
+                                <th class="text-center">Make up</th>
+                                <th class="text-center">Time</th>
+                                <th class="text-center">08:00</th>
+                                <th class="text-center">09:00</th>
+                                <th class="text-center">10:00</th>
+                                <th class="text-center">11:00</th>
+                                <th class="text-center">12:00</th>
+                                <th class="text-center">13:00</th>
+                                <th class="text-center">14:00</th>
+                                <th class="text-center">15:00</th>
+                                <th class="text-center">16:00</th>
+                                <th class="text-center">17:00</th>
+                                <th class="text-center">18:00</th>
+                                <th class="text-center">19:00</th>
+                                <th class="text-center">20:00</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Results.Any())
+                            {
+                                foreach (var item in Model.Results)
+                                {
+                                    <tr>
+                                        <td>@recordNumber</td>
+                                        <td>@item.Building</td>
+                                        <td>@item.Room</td>
+                                        <td>@item.UsingType</td>
+                                        <td>@item.Term</td>
+                                        <td>@item.DateText</td>
+                                        <td>@item.DayOfWeek</td>
+                                        <td>
+                                            <partial name="_BooleanResult" model="@item.IsMakeUp">
+                                        </td>
+                                        <td>@item.TimeText</td>
+                                        <td>@item.Eight</td>
+                                        <td>@item.Nine</td>
+                                        <td>@item.Ten</td>
+                                        <td>@item.Eleven</td>
+                                        <td>@item.Twelve</td>
+                                        <td>@item.Thirteen</td>
+                                        <td>@item.Fourteen</td>
+                                        <td>@item.Fifteen</td>
+                                        <td>@item.Sixteen</td>
+                                        <td>@item.Seventeen</td>
+                                        <td>@item.Eighteen</td>
+                                        <td>@item.Nineteen</td>
+                                        <td>@item.Twenty</td>
+                                    </tr>
+                                    recordNumber++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="22">
+                                        <i class="text-danger">No Data</i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @(await Component.InvokeAsync<PagerViewComponent>(Model))
+    </div>
+</section>
+
+@section Scripts {
+    <script src="~/js/pages/ajax-cascading/building-cascade.js"></script>
+}

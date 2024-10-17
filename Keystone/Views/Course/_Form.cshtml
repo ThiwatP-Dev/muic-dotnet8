@@ -1,0 +1,220 @@
+@model Course
+
+<div class="block__title">
+    <header>@ViewData["Title"]</header>
+</div>
+
+<div class="block__body">
+    <div class="form-group">
+        <input class="form-control" asp-for="Code">
+        <label>Code<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="Code"></span>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" asp-for="NameEn">
+        <label>English Name<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="NameEn"></span>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" asp-for="NameTh">
+        <label>Thai Name<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="NameTh"></span>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" asp-for="ShortNameEn">
+        <label>Short English Name</label>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" asp-for="ShortNameTh">
+        <label>Short Thai Name</label>
+    </div>
+
+    <div class="section-title mb-3">
+        <h4>Course Name on Transcript</h4>
+    </div>
+
+    <div class="row form-group">
+		<div class="col-4">
+            <input class="form-control" asp-for="TranscriptNameEn1" maxlength="30">
+            <label>English Name 1 (30 characters)<span class="text-danger">*</span></label>
+            <span class="text-danger help-block" asp-validation-for="TranscriptNameEn1"></span>
+		</div>
+		<div class="col-4">
+			<input class="form-control" asp-for="TranscriptNameEn2" maxlength="30">
+            <label>English Name 2 (30 characters)</label>
+		</div>
+		<div class="col-4">
+			<input class="form-control" asp-for="TranscriptNameEn3" maxlength="30">
+            <label>English Name 3 (30 characters)</label>
+		</div>
+    </div>
+
+    <div class="row form-group">
+		<div class="col-4">
+            <input class="form-control" asp-for="TranscriptNameTh1" maxlength="25">
+            <label>Thai Name 1 (25 characters)<span class="text-danger">*</span></label>
+            <span class="text-danger help-block" asp-validation-for="TranscriptNameTh1"></span>
+		</div>
+		<div class="col-4">
+			<input class="form-control" asp-for="TranscriptNameTh2" maxlength="25">
+            <label>Thai Name 2 (25 characters)</label>
+		</div>
+		<div class="col-4">
+			<input class="form-control" asp-for="TranscriptNameTh3" maxlength="25">
+            <label>Thai Name 3 (25 characters)</label>
+		</div>
+    </div>
+
+    <div class="form-group">
+        <select class="chosen-select form-control js-cascade-academic-level" asp-for="AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+            <option selected disabled>Select</option>
+        </select>
+        <label for="AcademicLevelId">Academic Level</label>
+    </div>
+
+    <div class="form-group">
+        <select class="chosen-select form-control js-cascade-faculty" asp-for="FacultyId" asp-items="ViewBag.Faculties">
+            <option selected disabled>Select</option>
+        </select>
+        <label for="FacultyId">Division</label>
+    </div>
+
+    <div class="form-group">
+        <select class="chosen-select form-control js-cascade-department" asp-for="DepartmentId" asp-items="ViewBag.Departments">
+            <option selected value="">Select</option>
+        </select>
+        <label for="DepartmentId">Major</label>
+    </div>
+
+    <div class="form-group">
+        <select class="chosen-select form-control" asp-for="TeachingTypeId" asp-items="ViewBag.TeachingTypes">
+            <option selected disabled>Select</option>
+        </select>
+        <label for="TeachingTypeId">Teaching Type</label>
+    </div>
+
+    <div class="form-group">
+        <select class="chosen-select form-control" asp-for="GradeTemplateId" asp-items="ViewBag.GradeTemplates">
+            <option selected disabled>Select</option>
+        </select>
+        <label>Grade Templates</label>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" asp-for="DescriptionEn" type="text">
+        <label>English Description</label>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" asp-for="DescriptionTh" type="text">
+        <label>Thai Description</label>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" asp-for="MinimumSeat" type="number" min=0>
+        <label>Minimum Seat<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="MinimumSeat"></span>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-lg-4">
+            <input class="form-control" asp-for="Credit" type="number" min=0>
+            <label>Credit<span class="text-danger">*</span></label>
+            <span class="text-danger help-block" asp-validation-for="Credit"></span>
+        </div>
+
+        <div class="col-lg-4">
+            <input class="form-control" asp-for="RegistrationCredit" type="number" min=0>
+            <label>Registration Credit<span class="text-danger">*</span></label>
+            <span class="text-danger help-block" asp-validation-for="RegistrationCredit"></span>
+        </div>
+
+        <div class="col-lg-4">
+            <input class="form-control" asp-for="PaymentCredit" type="number" min=0>
+            <label>Payment Credit<span class="text-danger">*</span></label>
+            <span class="text-danger help-block" asp-validation-for="PaymentCredit"></span>
+        </div>
+    </div>
+    
+    <div class="row form-group">
+        <div class="col-lg-3">
+            <input class="form-control" asp-for="Hour" type="number" min=0>
+            <label>Hour</label>
+        </div>
+        <div class="col-lg-3">
+            <input class="form-control" asp-for="Lecture" type="number" min=0>
+            <label>Lecture</label>
+        </div>
+        <div class="col-lg-3">
+            <input class="form-control" asp-for="Lab" type="number" min=0>
+            <label>Lab</label>
+        </div>
+        <div class="col-lg-3">
+            <input class="form-control" asp-for="Other" type="number" min=0>
+            <label>Other</label>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-lg-12">
+            <h4 class="font-size-default m-y-4">Excluding Native Language</h4>
+            <select class="chosen-select form-control" asp-for="ExcludingNativeLanguageIds"
+                    asp-items="@ViewBag.Languages" data-placeholder="Select" multiple></select>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-check">
+            <input class="form-check-input" asp-for="IsShowInTranscript" type="checkbox">
+            <label for="IsShowInTranscript">Show Transcript</label>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-check">
+            <input class="form-check-input" asp-for="IsCalculateCredit" type="checkbox">
+            <label for="IsCalculateCredit">Calculate Credit</label>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-check">
+            <input class="form-check-input" asp-for="IsIntensiveCourse" type="checkbox">
+            <label for="IsIntensiveCourse">Intensive Course</label>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-check">
+            <input class="form-check-input" asp-for="IsSectionGroup" type="checkbox">
+            <label for="IsSectionGroup">Section Group</label>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-check">
+            <input class="form-check-input" asp-for="IsAllowAddNewSection" type="checkbox">
+            <label for="IsAllowAddNewSection">Is currently allow to be added in Course to be Offered </label>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-check">
+            <input class="form-check-input" asp-for="IsActive" type="checkbox">
+            <label for="IsActive">Active</label>
+        </div>
+    </div>
+</div>
+
+<input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+
+<div class="block__action container">
+    <div class="block__action-row">
+        <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+        <a class="btn btn-mw-120 btn--cancel" href="@ViewBag.ReturnUrl">Cancel</a>
+    </div>
+</div>

@@ -1,0 +1,183 @@
+@model Student
+
+@{
+    var model = Model.StudentAddresses;
+    var tabPermission = Model.TabPermissions?.FirstOrDefault(x => x.Tab.ToUpper() == "ADDRESS");
+    var isEditable = tabPermission?.IsWritable  ?? false;
+}
+
+<section class="ks-address-info">
+    <div class="block block--underline no-shadow h-100x m-b-30">
+        <div class="block__title">
+            <header>Address Information</header>
+            <div class="tools">
+                @if (isEditable)
+                {
+                    <a class="btn btn-mw-120 btn--primary" 
+                   href="#"
+                   data-toggle="modal" 
+                   data-target="#create-modal-address">
+                        <i class="la la-plus mr-1 font-weight-800"></i> Add
+                    </a>
+                }
+            </div>
+        </div>
+
+        <div class="block__body">
+            @foreach (var item in model)
+            {
+                @if (item.Type == "c")
+                {
+                    <div class="section-title">
+                        <span>
+                            <h4>Current Address</h4>
+                        </span>
+
+                        <span class="text-nowarp text-center td-actions">
+                            @if (isEditable)
+                            {
+                                <a data-toggle="modal"
+                               data-target="#edit-address-modal"
+                               data-value="@item.Id">
+                                    <i class="la la-edit edit"></i>
+                                </a>
+                                <a data-toggle="modal" 
+                               data-target="#delete-confirm-modal"
+                               data-controller="Address"
+                               data-action="Delete"
+                               data-value="@item.Id">
+                                    <i class="la la-trash delete"></i>
+                                </a>
+                            }
+                        </span>   
+                    </div>
+                }
+                else 
+                {
+                    <div class="section-title">
+                        <span>
+                            <h4>Permanent Address</h4>
+                        </span>
+
+                        <span class="text-nowarp text-center td-actions">
+                            @if (isEditable)
+                            {
+                                <a data-toggle="modal"
+                               data-target="#edit-address-modal"
+                               data-value="@item.Id">
+                                    <i class="la la-edit edit"></i>
+                                </a>
+                                <a data-toggle="modal" 
+                               data-target="#delete-confirm-modal"
+                               data-controller="Address"
+                               data-action="Delete"
+                               data-value="@item.Id">
+                                    <i class="la la-trash delete"></i>
+                                </a>
+                            }
+                        </span>
+                    </div>
+                }
+                <input name="item.Id" type="hidden" value="@item.Id">
+                <input name="item.StudentId" type="hidden" value="@item.StudentId">
+                <input name="item.Type" type="hidden" value="@item.Type">
+
+                <div class="row form-group">
+                    <div class="col-md-12 align-self-center">
+                        <div class="form-control-label d-flex align-items-center">English Address 1</div>
+                        <div class="form-control-plaintext">@item.AddressEn1</div>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-12 align-self-center">
+                        <div class="form-control-label d-flex align-items-center">English Address 2</div>
+                        <div class="form-control-plaintext">@item.AddressEn2</div>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-md-12 align-self-center">
+                        <div class="form-control-label d-flex align-items-center">Thai Address 1</div>
+                        <div class="form-control-plaintext">@item.AddressTh1</div>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-12 align-self-center">
+                        <div class="form-control-label d-flex align-items-center">Thai Address 2</div>
+                        <div class="form-control-plaintext">@item.AddressTh2</div>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-md-2 align-self-center">
+                        <div class="form-control-label d-flex align-items-center">House Number</div>
+                        <div class="form-control-plaintext">@item.HouseNumber</div>
+                    </div>
+                    <div class="col-md-2 align-self-center">
+                        <div class="form-control-label d-flex align-items-center">Moo</div>
+                        <div class="form-control-plaintext">@item.Moo</div>
+                    </div>
+                    <div class="col-md-2 align-self-center">
+                        <div class="form-control-label d-flex align-items-center">English Soi</div>
+                        <div class="form-control-plaintext">@item.SoiEn</div>
+                    </div>
+                    <div class="col-md-2 align-self-center">
+                        <div class="form-control-label d-flex align-items-center">English Road</div>
+                        <div class="form-control-plaintext">@item.RoadEn</div>
+                    </div>
+                    <div class="col-md-2 align-self-center">
+                        <div class="form-control-label d-flex align-items-center">Thai Soi</div>
+                        <div class="form-control-plaintext">@item.SoiTh</div>
+                    </div>
+                    <div class="col-md-2 align-self-center">
+                        <div class="form-control-label d-flex align-items-center">Thai Road</div>
+                        <div class="form-control-plaintext">@item.RoadTh</div>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-2 align-self-center">     
+                        <div class="form-control-label d-flex align-items-center">Country</div>
+                        <div class="form-control-plaintext">@item.Country?.NameEn</div>     
+                    </div>
+                    @if (item.Country != null && item.Country.NameEn.ToLower().Contains("thai"))
+                    {
+                        <div class="col-md-2 align-self-center">     
+                            <div class="form-control-label d-flex align-items-center">Province</div>
+                            <div class="form-control-plaintext">@item.Province?.NameEn</div>     
+                        </div>
+                        <div class="col-md-2 align-self-center">        
+                            <div class="form-control-label d-flex align-items-center">District</div>
+                            <div class="form-control-plaintext">@item.District?.NameEn</div>     
+                        </div>
+                        <div class="col-md-2 align-self-center">     
+                            <div class="form-control-label d-flex align-items-center">Sub-District</div>
+                            <div class="form-control-plaintext">@item.Subdistrict?.NameEn</div>     
+                        </div>                        
+                    }
+                    else
+                    {
+                        <div class="col-md-2 align-self-center"> 
+                            <div class="form-control-label d-flex align-items-center">State</div>
+                            <div class="form-control-plaintext">@item.State?.NameEn</div>  
+                        </div>
+                        <div class="col-md-2 align-self-center"> 
+                            <div class="form-control-label d-flex align-items-center">City</div>
+                            <div class="form-control-plaintext">@item.City?.NameEn</div>  
+                        </div>
+                    }
+                    <div class="col-md-2 align-self-center"> 
+                        <div class="form-control-label d-flex align-items-center">Zip Code</div>
+                        <div class="form-control-plaintext">@item.ZipCode</div>  
+                    </div>
+                    <div class="col-md-2 align-self-center"> 
+                        <div class="form-control-label d-flex align-items-center">Tel.</div>
+                        <div class="form-control-plaintext">@item.TelephoneNumber</div>  
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<partial name="~/Views/Student/Address/_CreateModal.cshtml" model="@(Model == null ? new StudentAddress() : new StudentAddress{ StudentId = (Guid)ViewData["StudentId"]})">
+<partial name="~/Views/Student/Address/_EditModal.cshtml" model="new StudentAddress()">      

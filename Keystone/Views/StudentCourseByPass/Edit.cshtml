@@ -1,0 +1,30 @@
+﻿@model StudentCourseByPassViewModel
+@{ 
+    ViewData["Title"] = "Edit Student Course By Pass"; 
+}
+
+<section class="row">
+    <div class="col-12">
+        <form class="form-horizontal" asp-controller="StudentCourseByPass" asp-action="Edit" method="POST">
+            @Html.AntiForgeryToken()
+            <partial name="_Form">
+        </form>
+    </div>
+</section>
+
+@section Modals {
+    <partial name="_DeleteRowConfirmModals">
+}
+
+@section Scripts {
+    <script>
+        $(document).ready( function() {
+            var table = new RowAddAble({
+                TargetTable: "#js-add-course",
+                TableTitle: 'Course',
+                ButtonTitle: 'Course'
+            });
+            table.RenderButton();
+        });
+    </script>
+}

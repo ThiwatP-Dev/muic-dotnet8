@@ -1,0 +1,147 @@
+@model StudyRoomSummaryReportViewModel
+@{
+    ViewData["Title"] = "Study Room Summary Report";
+}
+
+<section id="data-table-v1" class="row">
+    <div class="col-md-12 col-md-12">
+        <div class="panel-group">
+            <div class="block block--underline d-print-none">
+                <div class="block__title">
+                    <header>@ViewData["Title"]</header>
+                    <ul class="d-flex flex-md-row align-items-md-center float-right">
+                        <li class="list-inline-item mx-3 mb-0 d-print-none">
+                            <a class="btn btn--primary" onclick="window.print()">
+                                <i class="la la-print mr-1 font-weight-800"></i> Print
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="collapse show" aria-expanded="true">
+                    <div class="block__body">
+                        <form asp-controller="StudyRoomSummaryReport" asp-action="Index" class="form-horizontal" method="GET">
+                            @Html.AntiForgeryToken()
+
+                            <div class="row form-group m-b-30">
+                                <div class="col-2">
+                                    <input class="form-control" asp-for="Criteria.AcademicYear" type="number" min=0>
+                                    <label>Year<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-2">
+                                    <input class="form-control" asp-for="Criteria.AcademicTerm" type="number" min=0>
+                                    <label>Term<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-2">
+                                    <input type="text" class="form-control" asp-for="Criteria.YearFrom" value="@(DateTime.Now.Year)">
+                                    <label>Year From<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-2 js-check-month">
+                                    <select class="chosen-select form-control" asp-for="Criteria.MonthFrom" asp-items="ViewBag.Month" data-placeholder="Select">
+                                        <option selected value="">Select</option>
+                                    </select>
+                                    <label>Month From<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-2">
+                                    <input type="text" class="form-control" asp-for="Criteria.YearTo" value="@(DateTime.Now.Year)">
+                                    <label>Year To<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-2 js-check-month">
+                                    <select class="chosen-select form-control" asp-for="Criteria.MonthTo" asp-items="ViewBag.Month" data-placeholder="Select">
+                                        <option selected value="">Select</option>
+                                    </select>
+                                    <label>Month To<span class="text-danger">*</span></label>
+                                </div>
+                            </div>
+
+                            <div class="row form-group m-b-30">
+                                <div class="col-2">
+                                    <select class="chosen-select form-control" asp-for="Criteria.Type" asp-items="ViewBag.UsingTypes">
+                                        <option selected value="">All</option>
+                                    </select>
+                                    <label>Using Type<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-2">
+                                    <select class="chosen-select form-control js-cascade-campus" asp-for="Criteria.CampusId" asp-items="ViewBag.Campuses" data-placeholder="Select">
+                                        <option selected value="">Select</option>
+                                    </select>
+                                    <label>Campus</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-building" asp-for="Criteria.BuildingId" asp-items="ViewBag.Buildings" data-placeholder="Select">
+                                        <option selected value="">Select</option>
+                                    </select>
+                                    <label>Building</label>
+                                </div>
+                                <div class="col-2">
+                                    <h4 class="font-size-default m-y-4">Room</h4>
+                                    <select class="chosen-select form-control js-cascade-rooms" asp-for="Criteria.RoomIds" asp-items="ViewBag.Rooms" data-placeholder="Select" multiple></select>
+                                </div>
+                                <div class="col-3 align-self-end text-right">
+                                    <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                        <i class="la la-search mr-2"></i>Search
+                                    </button>
+                                    <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                        Reset
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="block block--underline">
+            <div class="block__title">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <header>Search Results (@(Model?.StudyRoomSummaryReports?.Count() ?? 0))</header>
+                    </div>
+                </div>
+            </div>
+
+            <div class="block__body text-left height-3">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover js-report-table w-100x">
+                        <thead>
+                            <tr>
+                                <th class="@(Model == null ? "text-center" : "")">Building Name</th>
+                                @if (Model != null)
+                                {
+                                    foreach(var monthYear in Model?.MonthYearList)
+                                    {
+                                        <th class="text-center">@monthYear</th>
+                                    }
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null)
+                            {
+                                foreach(var studyRoomSummaryReport in Model.StudyRoomSummaryReports)
+                                {
+                                    <tr>
+                                        <td>@studyRoomSummaryReport.BuildingName</td>
+                                        @foreach(var monthYear in Model?.MonthYearList)
+                                        {
+                                            <td>@(studyRoomSummaryReport.StudyRoomSummaries.SingleOrDefault(x => x.Month == monthYear)?.TotalHoursString ?? "-")</td>
+                                        }
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td>
+                                        <i class="text-danger">No Data</i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

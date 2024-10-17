@@ -1,0 +1,77 @@
+@model GraduatingRequestViewModel
+
+<div id="course-prediction-modal" class="modal fadeIn animated" tabindex="-1" role="dialog"
+     aria-hidden="true" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog modal-dialog-centered modal-lg" role="document" style="max-width: 1050px">
+		<div class="modal-content">
+			<form class="ks-form container py-0" asp-controller="GraduatingRequest" asp-action="SaveCoursePredictions" method="POST">
+			    <div class="block block--underline">
+                    <input type="hidden" name="GraduatingRequestId" value="@Model.GraduatingRequest.Id">
+                    <div class="block__body">
+                        <div class="form-group">
+                            <table id="js-course-prediction-table" class="table table-bordered m-0">
+                                <thead>
+                                    <tr>
+                                        <th>Term</th>
+                                        <th>Courses</th>
+                                        <th class="w-100">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.CoursePredictions != null && Model.CoursePredictions.Any())
+                                    {
+                                        @for (int i = 0; i < Model.CoursePredictions.Count(); i++)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @* <select class="chosen-select form-control js-cascade-term" asp-for="CoursePredictions[i].TermId" asp-items="ViewBag.Terms">
+                                                        <option selected>Select</option>
+                                                    </select> *@
+                                                </td>
+                                                <td>
+                                                    <select class="chosen-select form-control js-cascade-instructor" asp-for="CoursePredictions[i].CourseIdList" 
+                                                        asp-items="ViewBag.Courses" multiple data-placeholder="Select"></select>
+                                                </td>
+                                                <td class="td-actions text-center">
+                                                    <a class="js-del-row-now" href="#">
+                                                        <i class="la la-trash delete"></i>
+                                                    </a>
+                                                </td>
+                                                <input asp-for="CoursePredictions[i].Id" type="hidden">
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td>
+                                                <select class="chosen-select form-control js-cascade-term" name="CoursePredictions[0].TermId" asp-items="ViewBag.Terms">
+                                                    <option selected disabled>Select</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <select class="chosen-select form-control js-cascade-course" name="CoursePredictions[0].CourseIdList" 
+                                                    asp-items="ViewBag.Courses" multiple data-placeholder="Select"></select>
+                                            </td>
+                                            <td class="td-actions text-center">
+                                                <a class="js-del-row-now" href="#">
+                                                    <i class="la la-trash delete"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="block__action">
+                        <div class="block__action-row">
+                            <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+                            <a id="js-reset-data" class="btn btn-mw-120 btn--cancel rounded" href="javascript:void(0);" data-dismiss="modal">Close</a>
+                        </div>
+                    </div>
+			    </div>
+            </form>
+		</div>
+	</div>
+</div>

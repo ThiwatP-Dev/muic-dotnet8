@@ -1,0 +1,69 @@
+@model Topic
+
+<section>
+    <div class="block__title text-left height-3">
+        <header>@ViewData["Title"]</header>
+    </div>
+
+    <div class="block__body text-left height-3">
+        <div class="form-group">
+            <input asp-for="NameEn" type="text" class="form-control">
+            <label>English Name<span class="text-danger">*</span></label>
+            <span class="text-danger help-block" asp-validation-for="NameEn"></span>
+        </div>
+
+        <div class="form-group">
+            <input asp-for="NameTh" type="text" class="form-control">
+            <label>Thai Name<span class="text-danger">*</span></label>
+            <span class="text-danger help-block" asp-validation-for="NameTh"></span>
+        </div>
+
+        <div class="form-group">
+            <select asp-for="AcademicLevelId" asp-items="ViewBag.AcademicLevels" class="chosen-select form-control js-cascade-academic-level">
+                <option selected>Select</option>
+            </select>
+            <label for="AcademicLevelId">Academic Level</label>
+        </div>
+
+        <div class="form-group">
+            <select id="FacultyId" asp-for="FacultyId" asp-items="ViewBag.Faculties" class="chosen-select form-control js-cascade-faculty">
+                <option selected>Select</option>
+            </select>
+            <label for="FacultyId">Division</label>
+        </div>
+
+        <div class="form-group">
+            <select id="DepartmentId" asp-for="DepartmentId" asp-items="ViewBag.Departments" class="chosen-select form-control js-cascade-department">
+                <option selected>Select</option>
+            </select>
+            <label for="DepartmentId">Major</label>
+        </div>
+
+        <div class="form-group">
+            <select asp-for="ChannelId" asp-items="ViewBag.Channels" class="chosen-select form-control" data-placeholder="Select">
+                <option value="" disabled>Select</option>
+            </select>
+            <label for="ChannelId">Channel<span class="text-danger">*</span></label>
+            <span class="text-danger help-block" asp-validation-for="ChannelId"></span>
+        </div>
+
+        <div class="form-group">
+            <input asp-for="LogoUrl" type="text" class="form-control">
+            <label>Logo Url</label>
+        </div>
+
+        <div class="row">
+            <div class="form-check">
+                <input asp-for="IsActive" class="form-check-input" type="checkbox">
+                <label for="IsActive">Active</label>
+            </div>
+        </div>
+
+        <div class="block__action container">
+            <div class="block__action-row">
+                <button type="submit" class="btn btn-mw-120 btn--primary">Save</button>
+                <a asp-action="Index" class="btn btn-mw-120 btn--cancel">Cancel</a>
+            </div>
+        </div>
+    </div>
+</section>

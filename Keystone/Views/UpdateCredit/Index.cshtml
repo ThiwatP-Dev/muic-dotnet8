@@ -1,0 +1,226 @@
+@model UpdateCreditViewModel
+@{
+    ViewData["Title"] = "Update Credit Load";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+
+<section class="row">
+    <div class="col-12">
+        <div id="admission-student-accordion1" class="panel-group">
+            <div class="block block--underline">
+                <div class="block__title collapsed" data-toggle="collapse" data-parent="#admission-student-accordion1" data-target="#admission-student-accordion1-1">
+                    <header>@ViewData["Title"]</header>
+                    <div class="tools">
+                        <a class="btn btn--white btn--circle">
+                            <i class="la la-angle-down"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="admission-student-accordion1-1" class="collapse show" aria-expanded="true">
+                    <div class="block__body">
+                        <form class="form-horizontal" asp-controller="UpdateCredit" asp-action="Index" method="GET">
+                            @Html.AntiForgeryToken()
+                            <div class="row form-group m-b-30">
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="@ViewBag.AcademicLevels" data-placeholder="Select">
+                                        <option selected>Select</option>
+                                    </select>
+                                    <label>Academic Level<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="@ViewBag.Faculties" data-placeholder="Select">
+                                        <option selected>Select</option>
+                                    </select>
+                                    <label>Division</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentId" asp-items="@ViewBag.Departments" data-placeholder="Select">
+                                        <option selected>Select</option>
+                                    </select>
+                                    <label>Major</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-curriculum" asp-for="Criteria.CurriculumId" asp-items="@ViewBag.Curriculums" data-placeholder="Select">
+                                        <option selected>Select</option>
+                                    </select>
+                                    <label>Curriculum</label>
+                                </div>
+                            </div>
+
+                            <div class="row form-group m-b-30">
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-curriculum-version" asp-for="Criteria.CurriculumVersionId" asp-items="@ViewBag.CurriculumVersions" data-placeholder="Select">
+                                        <option selected>Select</option>
+                                    </select>
+                                    <label>Curriculum Version</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control" asp-for="Criteria.StudentStatus" asp-items="@ViewBag.Statuses" data-placeholder="All">
+                                    </select>
+                                    <label>Student Status</label>
+                                </div>
+                                <div class="col-3">
+                                    <input class="form-control" asp-for="Criteria.StartStudentBatch" type="number" min="0">
+                                    <label>Batch From</label>
+                                </div>
+                                <div class="col-3">
+                                    <input class="form-control" asp-for="Criteria.EndStudentBatch" type="number" min="0">
+                                    <label>Batch To</label>
+                                </div>
+                            </div>
+
+                            <div class="row form-group">
+                                <div class="col-3">
+                                    <input class="form-control" asp-for="Criteria.MinimumCreditFrom" type="number" min="0">
+                                    <label>Minimum Credit From</label>
+                                </div>
+                                <div class="col-3">
+                                    <input class="form-control" asp-for="Criteria.MinimumCreditTo" type="number" min="0">
+                                    <label>Minimum Credit To</label>
+                                </div>
+                                <div class="col-3">
+                                    <input class="form-control" asp-for="Criteria.MaximumCreditFrom" type="number" min="0">
+                                    <label>Maximum Credit From</label>
+                                </div>
+                                <div class="col-3">
+                                    <input class="form-control" asp-for="Criteria.MaximumCreditTo" type="number" min="0">
+                                    <label>Maximum Credit To</label>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-3">
+                                    <select class="chosen-select form-control" asp-for="Criteria.OrderBy">
+                                        <option value="c" selected>Student Code</option>
+                                        <option value="n">Student Name</option>
+                                    </select>
+                                    <label>Sort By</label>
+                                </div>
+                                <div class="col-3">
+                                    <input class="form-control js-single-student" asp-for="Criteria.Code">
+                                    <label>Student Code</label>
+                                </div>
+                                <div class="col align-self-end text-right">
+                                    <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                        <i class="la la-search mr-2"></i>Search
+                                    </button>
+                                    <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                        Reset
+                                    </button>
+                                </div>
+                            </div>
+                            <input name="returnUrl" value="@contextPath" type="hidden">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@if(Model.StudentUpdateCredits != null)
+{
+    <section class="row">
+        <div class="col-12">
+            <form class="form-horizontal" asp-controller="UpdateCredit" asp-action="Update" method="POST">
+                <div class="block block--underline">
+                    <div class="block__title">
+                        <header>Student List (@Model?.StudentUpdateCredits?.Count())</header>
+                    </div>
+                    <div class="block__body">
+                        <div class="row form-group">
+                            <div class="col-4">
+                                <input class="form-control" id="minimum-credit" asp-for="MinimumCredit" type="number" min="0">
+                                <label>Minimum Credit</label>
+                            </div>
+                            <div class="col-4">
+                                <input class="form-control" id="maximum-credit" asp-for="MaximumCredit" type="number" min="0">
+                                <label>Maximum Credit</label>
+                            </div>
+                            <div class="block__action-row">
+                                <input name="returnUrl" value="@contextPath" type="hidden">
+                                <input asp-for="Criteria.AcademicLevelId" type="hidden">
+                                <input asp-for="Criteria.FacultyId" type="hidden">
+                                <input asp-for="Criteria.DepartmentId" type="hidden">
+                                <input asp-for="Criteria.CurriculumId" type="hidden">
+                                <input asp-for="Criteria.CurriculumVersionId" type="hidden">
+                                <input asp-for="Criteria.Code" type="hidden">
+                                <input asp-for="Criteria.MinimumCreditFrom" type="hidden">
+                                <input asp-for="Criteria.MaximumCreditFrom" type="hidden">
+                                <input asp-for="Criteria.MinimumCreditTo" type="hidden">
+                                <input asp-for="Criteria.MaximumCreditTo" type="hidden">
+                                <button class="btn btn-mw-120 btn--primary" id="js-update-credit-submit" type="submit" disabled="true">Save</button>
+                            </div>
+                            <div class="col-4" id="message-warning" style="display: none;">
+                                <label><span class="text-danger">* Minimum must be less than or equal to maximum.</span></label>
+                            </div>
+                        </div>
+                        <div class="border js-render-nicescroll p-0 m-b-30">
+                            <table id="js-update-credit" class="table table-bordered w-100x">
+                                <thead class="scroll-header">
+                                    <tr>
+                                        <th class="w-100 text-center col">
+                                            @if(Model.StudentUpdateCredits.Count != 0)
+                                            {
+                                            <input id="checkAll" class="js-check-all" type="checkbox" checked="@((Model.StudentUpdateCredits.Count(x => x.IsChecked == "on") == Model.StudentUpdateCredits.Count()) && Model.StudentUpdateCredits.Count() > 0)">
+                                            }
+                                            else
+                                            {
+                                                <input id="checkAll" class="js-check-all" type="checkbox" checked="false" disabled="true">
+                                            }
+                                            <label for="checkAll"></label>
+                                            <div class="text-center">
+                                                <span class="js-item-count">(0)</span>
+                                            </div>
+                                        </th>
+                                        <th class="text-center w-150">Student Code</th>
+                                        <th>Name</th>
+                                        <th class="text-center w-100">Major</th>
+                                        <th>Curriculum Version</th>
+                                        <th class="text-center">Minimum Credit</th>
+                                        <th class="text-center">Maximum Credit</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="js-items" id="js-items">
+                                    @if(Model.StudentUpdateCredits.Count != 0)
+                                    {
+                                        for (int i = 0; i < Model.StudentUpdateCredits.Count; i++)
+                                        {
+                                            <tr class="js-suggestion-parent">
+                                                <td class="w-50">
+                                                    <input id="StudentUpdateCredits[@i]" class="form-check-input js-update-select" name="StudentUpdateCredits[@i].IsChecked" type="checkbox" value="@Model.StudentUpdateCredits[i].IsChecked" checked="@Model.StudentUpdateCredits[i].IsChecked">
+                                                    <label class="js-focus-item m-0" for="StudentUpdateCredits[@i]"></label> 
+                                                </td>
+                                                <td>@Model.StudentUpdateCredits[i].StudentCode</td>
+                                                <td>@Model.StudentUpdateCredits[i].FullNameEn</td>
+                                                <td>@Model.StudentUpdateCredits[i].Major</td>                                           
+                                                <td>@Model.StudentUpdateCredits[i].CurriculumVersion</td>                                           
+                                                <td>@Model.StudentUpdateCredits[i].MinimumCredit</td>                                           
+                                                <td>@Model.StudentUpdateCredits[i].MaximumCredit</td>                                           
+                                                <input asp-for="StudentUpdateCredits[i].AcademicInfomationId" type="hidden">
+                                            </tr>
+                                        }
+                                    } else {
+                                        <tr>
+                                            <td class="text-center" colspan="7">
+                                                <i class="text-danger">No data</i>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="block__action-row">
+                            <button class="btn btn-mw-120 btn--primary" id="js-update-credit-submit-2" type="submit" disabled="true">Save</button>
+                            <a class="btn btn-mw-120 btn--cancel" href="@ViewBag.ReturnUrl">Cancel</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+}
+    
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/update-credit.js"></script>
+}

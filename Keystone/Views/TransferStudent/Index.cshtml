@@ -1,0 +1,203 @@
+@model StudentTransferViewModel
+@{ 
+    ViewData["Title"] = "Transfer Student";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+    var i = 0;
+}
+
+@if (!string.IsNullOrEmpty(ViewBag.ReturnUrl))
+{
+    <div class="row">
+        <div class="ks-page-header col-lg-12">
+            <a class="btn-back" href="@ViewBag.ReturnUrl">
+                <i class="la la-angle-double-left mr-1"></i>Back
+            </a>
+        </div>
+    </div>
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>@ViewData["Title"]</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="TransferStudent" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group mb-0">
+                        <div class="col-3 align-self-center">
+                            <input class="form-control" asp-for="StudentCode" type="text">
+                            <label>Student Code<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3 align-self-center">
+                            <select class="chosen-select form-control" asp-for="TransferUniversityId" asp-items="ViewBag.TransferUniversities">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label for="TransferUniversityId">Transfer University<span class="text-danger">*</span></label>
+                            <span class="text-danger help-block" asp-validation-for="TransferUniversityId"></span>
+                        </div>
+                        <div class="col-6 text-nowrap align-self-end">
+                            <button class="btn btn--primary btn-mw-120 m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                @if (Model != null)
+                {
+                    <hr>
+                    <form class="form-horizontal" asp-controller="TransferStudent" asp-action="MatchCourses" method="POST">
+                        <input name="returnUrl" value="@contextPath" type="hidden">
+                        <div class="row form-group mb-2">
+                            <input asp-for="StudentId" type="hidden">
+                            <input asp-for="TransferUniversityId" type="hidden">
+                            <input asp-for="StudentCode" type="hidden">
+                            <input asp-for="StudentFirstName" type="hidden">
+                            <input asp-for="StudentLastName" type="hidden">
+
+                            <div class="col-3">
+                                <div class="form-control-label d-flex align-items-center">First Name</div>
+                                <div class="form-control-plaintext">@Model.StudentFirstName</div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-control-label d-flex align-items-center">Last Name</div>
+                                <div class="form-control-plaintext">@Model.StudentLastName</div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-control-label d-flex align-items-center">Academic Level</div>
+                                <div class="form-control-plaintext">@Model.AcademicLevel</div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-control-label d-flex align-items-center p-t-2">Changed Time</div>
+                                <div class="js-student-status form-control-plaintext">@Model.ChangedMajorCount</div>
+                            </div>
+                        </div>
+
+                        <div class="row form-group mb-2">
+                            <div class="col-3">
+                                <div class="form-control-label d-flex align-items-center">Division</div>
+                                <div class="form-control-plaintext">@Model.FacultyName</div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-control-label d-flex align-items-center p-t-2">Major</div>
+                                <div class="form-control-plaintext">@Model.DepartmentName</div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-control-label d-flex align-items-center p-t-2">Credit</div>
+                                <div class="js-student-status form-control-plaintext">@Model.Credit</div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-control-label d-flex align-items-center p-t-2">GPA</div>
+                                <div class="js-student-status form-control-plaintext">@Model.GPA</div>
+                            </div>
+                        </div>
+
+                        <div class="row form-group mb-2">
+                            <div class="col-12">
+                                <div class="form-control-label d-flex align-items-center">Current Curriculum</div>
+                                <div class="form-control-plaintext pb-0">Curriculum : @Model.CurriculumName</div>
+                                <div class="form-control-plaintext pt-0">Curriculum Version : @Model.CurriculumVersionName</div>
+                            </div>
+                        </div>
+
+                        <input asp-for="CurriculumId" type="hidden">
+                        <input asp-for="CurriculumVersionId" type="hidden">
+                            
+                        <hr>
+
+                        <div class="form-group">
+                            <table id="js-add-course" class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Term</th>
+                                        <th>Course</th>
+                                        <th class="text-center w-75">Grade</th>
+                                        <th class="text-center w-75">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.StudentCourses != null && Model.StudentCourses.Any()) 
+                                    {
+                                        foreach (var item in Model.StudentCourses)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <select class="chosen-select form-control" asp-for="StudentCourses[@i].TermId" asp-items="@ViewBag.Terms" data-placeholder="Select">
+                                                        <option value="" selected>Select</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <select class="chosen-select form-control" asp-for="StudentCourses[@i].CourseId" asp-items="@ViewBag.Courses" data-placeholder="Select">
+                                                        <option value="" selected>Select</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <select class="chosen-select form-control" asp-for="StudentCourses[@i].GradeId" asp-items="@ViewBag.Grades" data-placeholder="Select">
+                                                        <option value="" selected>Select</option>
+                                                    </select>
+                                                </td>
+                                                <td class="td-actions text-nowrap">
+                                                    <a class="js-del-row" href="#!" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                                        <i class="la la-trash delete"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            i++;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                                <td>
+                                                    <select class="chosen-select form-control" name="StudentCourses[0].TermId" asp-items="@ViewBag.Terms" data-placeholder="Select">
+                                                        <option value="" selected>Select</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <select class="chosen-select form-control" name="StudentCourses[0].CourseId" asp-items="@ViewBag.Courses" data-placeholder="Select">
+                                                        <option value="" selected>Select</option>
+                                                    </select>
+                                                </td>
+                                                <td>
+                                                    <select class="chosen-select form-control" name="StudentCourses[0].GradeId" asp-items="@ViewBag.Grades" data-placeholder="Select">
+                                                        <option value="" selected>Select</option>
+                                                    </select>
+                                                </td>
+                                                <td class="td-actions text-nowrap">
+                                                    <a class="js-del-row" href="#!" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                                        <i class="la la-trash delete"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-12 text-right mb-0 block__action">
+                                <button class="btn btn-mw-120 btn--primary" type="submit">Next</button>
+                                <a asp-action="Index" class="btn btn-mw-120 btn--cancel">Cancel</a>
+                            </div>
+                        </div>
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+
+@section Modals {
+  <partial name="_DeleteRowConfirmModals" />
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/change-curriculum.js"></script>
+}

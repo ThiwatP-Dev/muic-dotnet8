@@ -1,0 +1,82 @@
+@model SchedulePlanViewModel
+
+@for (int i = 0; i < Model.Schedules.Count; i++)
+{
+    <div id="schedule-details-accordion0" class="panel-group">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>
+                    <input id="schedule-selection[0]" data-schedule-detail-target="#schedule-details-accordion0-1"
+                           data-target="#schedule-0" data-title="Schedule 1"
+                           class="form-check-input js-group-registration-schedule-selection" name="schedule-selection"
+                           type="checkbox" value="2" checked="">
+                    <label class="mt-1 mb-0" for="schedule-selection[0]">
+                        <span id="js-group-registration-selection-schedule-title-0"
+                            class="ml-2 align-self-center font-weight-bold color-primary">Schedule @i</span>
+                    </label>
+                </header>
+                <div class="tools align-self-center">
+                    <div class="btn-group">
+                        <a class="btn btn--white btn--circle collapsed" data-toggle="collapse"
+                           data-parent="#schedule-details-accordion0" data-target="#schedule-details-accordion0-1"
+                           aria-expanded="false">
+                            <i class="la la-angle-down"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="block__body collapse" id="schedule-details-accordion0-1" aria-expanded="false" style="">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover table--sm js-section-table">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="w-50">Course</th>
+                                <th scope="col" class="w-50 text-center">Seat Limit</th>
+                                <th scope="col" class="w-50 text-center">Seat Avail.</th>
+                                <th scope="col" class="w-50 text-center">Seat Used.</th>
+                                <th scope="col" class="w-50 text-center">Day</th>
+                                <th scope="col" class="w-50 text-center">Time</th>
+                                <th scope="col" class="w-50 text-center">Room</th>
+                                <th scope="col" class="w-50">Instructor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int j = 0; j < Model.Schedules[i].Sections.Count; j++)
+                            {
+                                <tr class="">
+                                    <td class="section-header u-font-size-18">
+                                        <p class="my-1 class-lookup-title"> (@Model.Schedules[i].Sections[j].CourseCode
+                                            <span class="class-lookup-title-sub">@Model.Schedules[i].Sections[j].Number)</span>
+                                        </p>
+                                        <p class="my-1">@Model.Schedules[i].Sections[j].CourseName</p>
+                                    </td>
+                                    <td class="text-center">@Model.Schedules[i].Sections[j].SeatLimit</td>
+                                    <td class="text-center">@Model.Schedules[i].Sections[j].SeatAvailable</td>
+                                    <td class="text-center">@Model.Schedules[i].Sections[j].SeatUsed</td>
+                                    <td>
+                                        @foreach(var item in Model.Schedules[i].Sections[j].ClassSchedules)
+                                        {
+                                            <p class="my-1 text-center">@item.DayOfWeek</p>
+                                        }
+                                    </td>
+                                    <td>
+                                        @foreach(var item in Model.Schedules[i].Sections[j].ClassSchedules)
+                                        {
+                                           <p class="my-1 text-center">@item.StartTime - @item.EndTime</p>
+                                        }
+                                    </td>
+                                    <td>
+                                        <p class="my-1 text-uppercase text-center">CL201</p>
+                                    </td>
+                                    <td>
+                                        <p class="my-1">N/A</p>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+}

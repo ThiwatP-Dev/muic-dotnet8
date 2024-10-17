@@ -1,0 +1,10 @@
+@model ReportViewModel
+@{ 
+    ViewData["Title"] = "Certificate Preview";
+}
+
+<partial name="PdfPreview/_PreviewHeader" model="@Model" />
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/pdf-render/graduated-with-ceremony-at-en.js"></script>
+}

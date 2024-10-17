@@ -1,0 +1,202 @@
+@model PagedResult<VerificationLetter>
+@{ 
+    ViewData["Title"] = "Admission Verification";
+}
+
+<div class="row">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+        <ul class="d-flex flex-md-row align-items-md-center float-right">
+            <li class="list-inline-item mx-3 mb-0">
+                <a class='btn btn--primary' asp-action="Create">
+                    <i class="la la-plus mr-1 font-weight-800"></i> Add Verification
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Verification document</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="VerificationLetter" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group m-b-30">
+                        <div class="col-2">
+                            <input class="form-control" asp-for="Criteria.RunningNumber" type="text">
+                            <label>Ref. Number</label>
+                        </div>
+                        <div class="col-1">
+                            <input class="form-control" asp-for="Criteria.DocumentYear" type="text">
+                            <label>Year</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-academic-level" asp-items="ViewBag.AcademicLevels" data-placeholder="Select">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Academic Level</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-admission-term" asp-for="Criteria.TermId" asp-items="ViewBag.AdmissionTerms" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Admission Term</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-admission-round" asp-for="Criteria.AdmissionRoundId" asp-items="ViewBag.AdmissionRounds" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label class="text-nowrap">Admission Round</label>
+                        </div>
+                    </div>
+                    
+                    <div class="row form-group m-b-30">
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.StartStudentBatch" type="number">
+                            <label>Batch From</label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.EndStudentBatch" type="number">
+                            <label>To</label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.StudentCodeFrom" type="text">
+                            <label>Code From</label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.StudentCodeTo" type="text">
+                            <label>To</label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group m-b-0">
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-school-group" asp-for="Criteria.SchoolGroupId" asp-items="ViewBag.SchoolGroups" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>School Group</label>
+                        </div>
+                        <div class="col-5">
+                            <select class="chosen-select form-control js-cascade-previous-school" asp-for="Criteria.PreviousSchoolId" asp-items="ViewBag.PreviousSchools" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>School</label>
+                        </div>
+                        <div class="col-4 align-self-end text-right text-nowrap">
+                            <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.RowCount ?? 0))</header>
+            </div>
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover w-100x">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Ref. Number</th>
+                                <th>School Group</th>
+                                <th>School</th>
+                                <th>Batch From</th>
+                                <th>Batch To</th>
+                                <th>Student Code From</th>
+                                <th>Student Code To</th>
+                                <th>Sent Date</th>
+                                <th>Received Number</th>
+                                <th>Received Date</th>
+                                <th>Total Student</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Results.Any())
+                            {
+                                foreach (var item in Model.Results)
+                                {
+                                    <tr>
+                                        <td>@item.RunningNumberYear</td>
+                                        <td>@item.SchoolGroup?.NameEn</td>
+                                        <td>@item.PreviousSchool?.NameEn</td>
+                                        <td>@item.BatchFrom</td>
+                                        <td>@item.BatchTo</td>
+                                        <td>@item.StudentCodeFrom</td>
+                                        <td>@item.StudentCodeTo</td>
+                                        <td>@item.SentAtText</td>
+                                        <td>@item.ReceivedNumber</td>
+                                        <td>@item.ReceivedAtText</td>
+                                        <td>@item.VerificationStudents?.Count()</td>
+                                        <td>
+                                            <partial name="_BooleanActive" model="@item.IsActive">
+                                        </td>
+                                        <td class="td-actions text-nowrap">
+                                            <a asp-controller="VerificationLetter" asp-action="Preview" asp-route-id="@item.Id">
+                                                <i class="la la-print info"></i>
+                                            </a>
+                                            <a asp-controller="VerificationLetter" asp-action="Edit" asp-route-id="@item.Id">
+                                                <i class="la la-edit edit"></i>
+                                            </a>
+                                            <a data-toggle="modal"
+                                               data-target="#update-verification-modal"
+                                               data-value="@item.Id"
+                                               data-received-number="@item.ReceivedNumber"
+                                               data-received-at="@item.ReceivedAt"
+                                               data-reference-number="@item.RunningNumberYear">
+                                                <i class="la la-envelope-open-text warning"></i>
+                                            </a>
+                                            <a class="js-del-row"
+                                               data-toggle="modal"
+                                               data-target="#delete-confirm-modal"
+                                               data-controller="VerificationLetter" 
+                                               data-action="Delete" 
+                                               data-value="@item.Id">
+                                                <i class="la la-trash delete"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="13">
+                                        <i class="text-danger">No Data</i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Modals {
+    <partial name="_DeleteConfirmModals">
+    <partial name="_UpdateInformationModals">
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/ajax-cascading/school-cascade.js"></script>
+    <script type="text/javascript" src="~/js/pages/admission-verification.js"></script>
+}

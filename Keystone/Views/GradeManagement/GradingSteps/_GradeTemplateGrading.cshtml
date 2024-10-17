@@ -1,0 +1,38 @@
+@* @model GradeManagementViewModel
+@{
+    var index = 0;
+}
+
+<table id="js-grade-table" class="table table-bordered m-a-0">
+    <thead>
+        <tr>
+            <th class="w-100 text-center">Min</th>
+            <th class="w-100 text-center">Max</th>
+            <th class="w-100 text-center">Grade</th>
+        </tr>
+    </thead>
+    <tbody>
+    @if (Model != null && Model.GradingScoresCurve.Any())
+    {
+        @foreach(var gradingScore in Model.GradingScoresCurve)
+        {
+            <tr>
+                <td>
+                    <span>@gradingScore.Minimum</span>
+                    <input type="hidden" class="form-control__table js-grade-score text-center" asp-for="@Model.GradingScoresCurve[@index].Minimum" value="@gradingScore.Minimum" data-score="min">
+                </td>
+                <td>
+                    <span>@gradingScore.Maximum</span>
+                    <input type="hidden" class="form-control__table js-grade-score text-center" asp-for="@Model.GradingScoresCurve[@index].Maximum" value="@gradingScore.Maximum" data-score="max">
+                </td>   
+                <td class="text-center">
+                    <span class="font-weight-700 js-grade-title">@gradingScore.Grade.Name</span>
+                    <input asp-for="@Model.GradingScoresCurve[@index].GradeId" type="hidden" value="@gradingScore.GradeId">
+                    <input type="hidden" class="js-grade-weight" asp-for="@Model.GradingScoresCurve[@index].Grade.Weight" value="@gradingScore.Grade.Weight">
+                </td>
+            </tr>
+            ++index;
+        }
+    }
+    </tbody>
+</table> *@

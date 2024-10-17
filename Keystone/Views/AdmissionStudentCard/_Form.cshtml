@@ -1,0 +1,36 @@
+<header>
+    <h4 class="color-primary font-weight-700 m-b-30">ID Card Substitute Form</h4>
+</header>
+
+<div class="row form-group">
+    <div class="col-6">
+        <input id="pdf-student-name" class="form-control" value="@Model.FullNameEn">
+        <label>Name</label>
+    </div>
+    <div class="col-6">
+        <input id="pdf-adm-number" class="form-control">
+        <label>Adm. Number</label>
+    </div>
+</div>
+<div class="row form-group">
+    <div class="col-6">
+        <input id="pdf-valid-time" class="form-control js-date-time">
+        <label>Valid On</label>
+    </div>
+    <div class="col-6">
+        <input id="pdf-contact-time" class="form-control js-date-time">
+        <label>Contact Time</label>
+    </div>
+</div>
+
+<div class="row justify-content-between">
+    <div class="col-6 form-group">
+        <label class="font-size-default color-black">Student Image</label>
+        <input type="file" class="form-control-file" id="pdf-image">
+        <img src="~/images/default-profile-m.png" hidden>
+        <img src="~/images/logo-muic.png" hidden>
+    </div>
+    <div class="col-6 text-right align-self-center">
+        <button id="js-generate-report" class="btn btn-mw-120 btn--primary" type="button">Preview</button>
+    </div>
+</div>

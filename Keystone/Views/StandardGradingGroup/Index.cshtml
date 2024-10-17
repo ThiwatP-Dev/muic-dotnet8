@@ -1,0 +1,84 @@
+@model PagedResult<StandardGradingGroup>
+@{ 
+    ViewData["Title"] = "Standard Grade Group";
+    var recordNumber = Model?.FirstRowOnPage;
+}
+
+<section class="row">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+        <ul class="d-flex flex-md-row align-items-md-center float-right">
+            <li class="list-inline-item mx-3 mb-0">
+                <a class="btn btn--primary" asp-action="Create">
+                    <i class="la la-plus mr-1 font-weight-800"></i> Add Standard Grade
+                </a>
+            </li>
+        </ul>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-md-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.RowCount ?? 0))</header>
+            </div>
+            
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover w-100x">
+                        <thead>
+                            <tr>
+                                <th class="text-center w-25">#</th>
+                                <th>Name</th>
+                                <th>Grade Template</th>
+                                <th class="text-center w-50">Max</th>
+                                <th class="text-center w-50">Min</th>
+                                <th>Type</th>
+                                <th class="text-center w-50">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Results.Any())
+                            {
+                                foreach(var item in Model.Results)
+                                {
+                                    <tr>
+                                        <td>@recordNumber</td>
+                                        <td>@item.Name</td>
+                                        <td>@item.GradeTemplate?.Name</td>
+                                        <td>@item.Maximum</td>
+                                        <td>@item.Minimum</td>
+                                        <td>@item.TypeText</td>
+                                        <td class="text-nowrap td-actions">
+                                            <a asp-controller="StandardGradingGroup" asp-action="Edit" asp-route-id="@item.Id">
+                                                <i class="la la-edit edit"></i>
+                                            </a>
+                                            <a data-toggle="modal" 
+                                               data-target="#delete-confirm-modal" 
+                                               data-controller="StandardGradingGroup" 
+                                               data-value="@item.Id"
+                                               data-action="Delete">
+                                                <i class="la la-trash delete"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    recordNumber++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="7"><i class="text-danger">No Data</i></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @(await Component.InvokeAsync<PagerViewComponent>(Model))
+    </div>
+</section>
+
+<partial name="_DeleteConfirmModals" />

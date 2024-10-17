@@ -1,0 +1,56 @@
+@model List<RoomReservationSlotViewModel>
+
+<div class="block block--underline mb-0">
+    <div class="block__title">
+		<header>Cancel Room Slot Reservation</header>
+	</div>
+    <div class="block__body">
+        <form asp-controller="RoomReservationManagement" asp-action="CancelRoomSlot" method="POST">
+            
+            <div class="box-scroll__content border js-render-nicescroll p-0">
+                <table id="js-cancel-room-slot" class="table table-bordered m-0">
+                    <thead class="scroll-header">
+                        <tr>
+                            <th class="w-50 text-center col">
+                                <input id="checkAll" class="form-check-input js-check-all" type="checkbox" checked="@((Model.Count(x => x.IsChecked == "on") == Model.Count()) && Model.Count() > 0)">
+                                <label for="checkAll">Select All <span class="js-item-count">(@(Model?.Count() == null ? 0 : Model?.Count()))</span></label>
+                            </th>
+                            <th>Room</th>
+                            <th class="text-center">Day</th>
+                            <th class="text-center">Date</th>
+                            <th class="text-center">Time</th>
+                            <th class="text-center">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody class="js-items">
+                        @for (int i = 0; i < Model.Count; i++)
+                        {
+                            <tr class="js-suggestion-parent">
+                                <td class="w-50 text-center">
+                                    <input id="Model[@i]" class="form-check-input" name="[@i].IsChecked" type="checkbox" value="@Model[i].IsChecked" checked="@Model[i].IsChecked" disabled="@Model[i].IsCancel" >
+                                    <label class="js-focus-item m-0" for="Model[@i]"></label>
+                                </td>
+                                <td>@Model[i].RoomNameEn</td>                                            
+                                <td class="text-center">@Model[i].Dayofweek</td>                                            
+                                <td class="text-center">@Model[i].DateText</td>                                            
+                                <td class="text-center">@Model[i].Time</td>                                            
+                                <td class="text-center">
+                                    <partial name="_BooleanResult" model="@(!Model[i].IsCancel)">
+                                </td>                                            
+                                <input asp-for="@Model[i].Id" type="hidden">
+                                <input asp-for="@Model[i].RoomReservationId" type="hidden">
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+            <div class="block__action">
+                <div class="block__action-row">
+                    <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+                    <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-mw-120 btn--cancel rounded">Close</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

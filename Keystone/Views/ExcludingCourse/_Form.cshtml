@@ -1,0 +1,81 @@
+@model CourseExclusion
+
+<div class="block__title">
+    <header>@ViewData["Title"]</header>
+</div>
+
+<div class="block__body">
+    <div class="row form-group m-b-30">
+        <div class="col-4">
+            <select class="chosen-select form-control js-cascade-academic-level" asp-for="AcademicLevelId" asp-items="ViewBag.AcademicLevels" data-placeholder="Select">
+                <option selected disabled selected>Select</option>
+            </select>
+            <label>Academic Level<span class="text-danger" asp-validation-for="AcademicLevelId">*</span></label>
+        </div>
+        <div class="col-4">
+            <select class="chosen-select form-control js-cascade-curriculum" asp-for="CurriculumId" asp-items="ViewBag.Curriculums">
+                <option selected value="">Select</option>
+            </select>
+            <label>Curriculum</label>
+        </div>
+        <div class="col-4">
+            <select class="chosen-select form-control js-cascade-curriculum-version" asp-for="CurriculumVersionId" asp-items="ViewBag.CurriculumVersions">
+                <option selected disabled>Select</option>
+            </select>
+            <label>Curriculum Version<span class="text-danger" asp-validation-for="CurriculumVersionId">*</span></label>
+        </div>
+    </div>
+
+    <div class="row form-group m-b-30">
+        <div class="col-4">
+            <select class="chosen-select form-control js-cascade-curriculum-course" asp-for="CourseId" asp-items="ViewBag.CurriculumCourse">
+                <option selected value="">Select</option>
+            </select>
+            <label>Course<span class="text-danger">*</span></label>
+        </div>
+    </div>
+
+    @if (Model.Id == 0)
+    {
+        <div class="row form-group m-b-30">
+            <div class="col-12">
+                <label>Excluding Course<span class="text-danger" asp-validation-for="ExcludingCourseIds">*</span></label>
+                <select class="chosen-select form-control js-cascade-multiple-course" asp-for="ExcludingCourseIds" asp-items="ViewBag.ExcludingCourses" data-placeholder="Select" multiple>
+                    <option selected disabled></option>
+                </select>
+            </div>
+        </div>
+    }
+    else 
+    {
+        <div class="row form-group m-b-30">
+            <div class="col-12">
+                <select class="chosen-select form-control js-cascade-course" asp-for="ExcludingCourseId" asp-items="ViewBag.ExcludingCourses" data-placeholder="Select">
+                    <option selected disabled></option>
+                </select>
+                <label>Excluding Course<span class="text-danger">*</span></label>
+            </div>
+        </div>
+    }
+
+    <div class="form-group">
+        <input id="EffectivedAt" class="form-control js-single-date" asp-for="EffectivedAt" type="text" autocomplete="off">
+        <label>Effective Date<span class="text-danger" asp-for="EffectivedAt">*</span></label>
+    </div>
+
+    <div class="form-group">
+        <input id="ExpiredAt" class="form-control js-single-date" asp-for="EndedAt" type="text" autocomplete="off">
+        <label for="ExpiredAt">Expired Date</label>
+    </div>
+
+    <input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+    
+    <div class="block__action container">
+        <div class="block__action-row row">
+            <div class="col-12">
+                <button class="btn btn-mw-120 btn--primary" asp-route-returnUrl="@ViewBag.ReturnUrl" type="submit">Save</button>
+                <a class="btn btn-mw-120 btn--cancel" href="@ViewBag.ReturnUrl">Cancel</a>
+            </div>
+        </div>
+    </div>
+</div>

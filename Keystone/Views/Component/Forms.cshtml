@@ -1,0 +1,219 @@
+@{
+    ViewData["Title"] = "Forms";
+}
+
+<section class="row">
+    <div class="col-md-6 col-lg-6">
+        <em class="text-caption">Default Input Form</em>
+        <div class="block">
+            <div class="block__body">
+                <form>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="default1">
+                        <label for="default1">Default Input</label>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-6">
+        <em class="text-caption">Placeholder Input Form</em>
+        <div class="block">
+            <div class="block__body">
+                <form>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="placeholder1" placeholder="Input somthing here...">
+                        <label for="placeholder1">Placeholder Input</label>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-6">
+        <em class="text-caption">Textarea</em>
+        <div class="block">
+            <div class="block__body">
+                <form>
+                    <div class="form-group">
+                        <textarea class="form-control" name="textarea13" id="textarea1" rows="3" placeholder=""></textarea>
+                        <label for="textarea1">Textarea</label>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-6">
+        <em class="text-caption">Password</em>
+        <div class="block">
+            <div class="block__body">
+                <form>
+                    <div class="form-group">
+                        <input type="password" class="form-control" name="password" id="password" placeholder="" />
+                        <label for="password">Password</label>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-6">
+        <em class="text-caption">Checkboxes & Radios</em>
+        <div class="block">
+            <div class="block__body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                            <label for="defaultCheck1">Default checkbox</label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck2" checked>
+                            <label for="defaultCheck2">Default checkbox (Checked)</label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="disabledCheck1" disabled>
+                            <label for="disabledCheck1">Disabled checkbox</label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="disabledCheck2" disabled
+                                checked>
+                            <label for="disabledCheck2">Disabled checkbox (Checked)</label>
+                        </div>
+                    </div>
+                    <!--end checkboxes-->
+
+                    <div class="col-md-6">
+                        <div class="form-check">
+                            <input class="form-check-input primary" type="radio" name="your_radio_name" value="" id="defaultRadio1" checked>
+                            <label for="defaultRadio1">Default Radio 1</label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input primary" type="radio" name="your_radio_name" value="" id="defaultRadio2">
+                            <label for="defaultRadio2">Default Radio 2</label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input primary" type="radio" name="your_radio_name" value="" id="defaultRadio3">
+                            <label for="defaultRadio3">Default Radio 3</label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" value="" name="your_radio_name" id="disabledRadio1" disabled>
+                            <label for="disabledRadio1">Disabled Radio</label>
+                        </div>
+                    </div>
+                    <!--end radios-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end checboxes & radios-->
+    <div class="col-md-6 col-lg-6">
+        <em class="text-caption">Search in combo box</em>
+        <div class="block">
+            <div class="block__body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form>
+                             <div class="form-group">
+                                <select id="select1" name="select1" class="chosen-select form-control">
+                                    <option value="">&nbsp;</option>
+                                    <option value="30">30</option>
+                                    <option value="40">40</option>
+                                    <option value="50">50</option>
+                                    <option value="60">60</option>
+                                    <option value="70">70</option>
+                                </select>
+                                <label for="select1">Select</label>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="input-form-v1" class="row">
+    <div class="col-md-6 col-lg-6">
+        <em class="text-caption">Input Form</em>
+        <div class="block block--underline">
+            <div class="block__title text-left height-3">
+                <header>This is title header</header>
+            </div>
+            <div class="block__body text-left height-3">
+                <form id="js-form-v1" method="POST">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="regular1">
+                        <label for="regular1">Regular input</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="help1">
+                        <label for="help1">Input with Help</label>
+                        <p class="help-block">Help text</p>
+                    </div>
+                    <div class="form-group">
+                        <select id="select1" name="select1" class="form-control">
+                            <option value="">&nbsp;</option>
+                            <option value="30">30</option>
+                            <option value="40">40</option>
+                            <option value="50">50</option>
+                            <option value="60">60</option>
+                            <option value="70">70</option>
+                        </select>
+                        <label for="select1">Select</label>
+                    </div>
+                </form>
+            </div>
+            <!--end .block__body -->
+            <div class="block__action">
+                <div class="block__action-row">
+                    <a href="javascript:void(0);" class="btn btn-mw-120 btn--cancel">Cancel</a>
+                    <a href="#" onclick="$('#js-form-v1').submit()" class="btn btn-mw-120 btn--success">Ok</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end default form -->
+
+    <div class="col-md-6 col-lg-6">
+        <em class="text-caption">Input Form Validation</em>
+        <div class="block block--underline">
+            <div class="block__title text-left height-3">
+                <header>This is title header</header>
+            </div>
+            <div class="block__body text-left height-3">
+                <form id="js-form-v2">
+                    <div class="form-group has-warning">
+                        <input type="text" class="form-control" id="warning1">
+                        <label for="warning1">Warning input</label>
+                    </div>
+                    <div class="form-group has-success">
+                        <input type="text" class="form-control" id="success1">
+                        <label for="success1">Success input</label>
+                    </div>
+                    <div class="form-group has-error">
+                        <input type="text" class="form-control" id="error1">
+                        <label for="error1">Error input</label>
+                        <p class="help-block">Error help text</p>
+                    </div>
+                </form>
+            </div>
+            <!--end .block__body -->
+            <div class="block__action">
+                <div class="block__action-row">
+                    <a href="javascript:void(0);" class="btn btn-mw-120 btn--cancel">Cancel</a>
+                    <a href="#" onclick="$('#js-form-v2').submit()" class="btn btn-mw-120 btn--success">Ok</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end validation form -->
+</section>

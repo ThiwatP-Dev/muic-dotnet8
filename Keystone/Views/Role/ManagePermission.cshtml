@@ -1,0 +1,64 @@
+@model PermissionViewModel
+@{
+    ViewData["Title"] = "Role Permission";
+}
+
+<div class="row">
+    <div class="ks-page-header col-lg-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</div>
+
+<form method="GET">
+    <section class="row">
+        <div class="col-md-12">
+            <div class="block block--underline">
+                <div class="block__title">
+                    <header>Search Role</header>
+                </div>
+                <div class="block__body">
+                    <div class="row form-group mb-0">
+                        <div class="col-4">
+                            <select required class="chosen-select form-control" asp-for="RoleId" data-placeholder="Select" asp-items="@ViewBag.Roles">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Role<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-mw-120 btn--primary m-y-15">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                        </div>                  
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+
+@if (Model != null)
+{
+    <form method="POST">
+        <section class="row">
+            <div class="col-lg-12">
+                <div class="block block--underline">
+                    <div class="block__title">
+                        <header>Setup Permission</header>
+                    </div>
+                    <div class="block__body">
+                        <partial name="_Permission"/>
+                    </div>
+                </div>         
+            </div>
+        </section>
+
+        <div class="text-right">
+            <button type="submit" class="btn btn-mw-120 btn--primary">Save</button>
+            <a asp-action="Index" class="btn btn-mw-120 btn--cancel">Cancel</a>
+        </div>
+    </form>
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/permission.js"></script>
+}

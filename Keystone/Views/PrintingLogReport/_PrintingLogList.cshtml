@@ -1,0 +1,48 @@
+@model List<PrintingLog>
+@{
+    var index = 1;
+}
+    
+@if (Model != null && Model.Any())
+{
+    foreach (var item in Model)
+    {
+        <tr>
+            <td>@index</td>
+            <td>@item.PrintedAtText</td>
+            <td>@item.GenderText</td>
+            <td>@item.Document</td>
+            <td>@item.ReferenceNumber</td>
+            <td>@item.FullName</td>
+            <td>
+                <span class="js-edit-value">@item.TrackingNumber</span>
+                <input id="js-tracking-number" class="form-control__table text-center js-edit-input d-none" value="@item.TrackingNumber" data-default-value="@item.TrackingNumber">
+                <input id="js-printing-log-id" type="hidden" value="@item.Id">
+            </td>
+            <td>@item.Amount</td>
+            <td>
+                <partial name="_BooleanResult" model="@item.IsPaid">
+            </td>
+            <td class="td-actions text-center text-nowrap">
+                <a class="js-start-edit">
+                    <i class="la la-edit edit"></i>
+                </a>
+                <span class="js-quit-edit text-nowrap d-none">
+                    <a class="js-save-edit">
+                        <i class="la la-save edit"></i>
+                    </a>
+                    <a class="js-cancel-edit">
+                        <i class="la la-refresh default"></i>
+                    </a>
+                </span>
+            </td>
+        </tr>
+        ++index;
+    }
+}
+else
+{
+    <tr>
+        <td colspan="10">No Data</td>
+    </tr>
+}

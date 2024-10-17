@@ -1,0 +1,78 @@
+@model PagedResult<PreviousSchool>
+@{ 
+    var recordNumber = Model?.FirstRowOnPage;
+}
+
+<section class="row">
+	<div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">
+            <a class="btn-back" href="@ViewBag.ReturnUrl">
+                <i class="la la-angle-double-left"></i>
+            </a>
+            <span>School Group Details</span>
+        </h2>
+	</div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>@ViewData["Title"]</header>
+            </div>
+
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover w-100x">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center">Code</th>
+                                <th class="text-center">OHEC Code</th>
+                                <th>English Name</th>
+                                <th>Thai Name</th>
+                                <th>Country</th>
+                                <th>Province/State</th>
+                                <th>School Region</th>
+                                <th>School Type</th>
+                                <th class="text-center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Results.Any())
+                            {
+                                foreach (var item in Model.Results) 
+                                {
+                                    <tr>
+                                        <td>@recordNumber</td>
+                                        <td>@item.Code</td>
+                                        <td>@item.OHECCode</td>
+                                        <td>@item.NameEn</td>
+                                        <td>@item.NameTh</td>
+                                        <td>@item.Country?.NameEn</td>
+                                        <td>@(item.Province?.NameEn ?? item.State?.NameEn)</td>
+                                        <td>@item.SchoolTerritory?.NameEn</td>
+                                        <td>@item.SchoolType?.NameEn</td>
+                                        <td>
+                                            <partial name="_BooleanActive" model="@item.IsActive">
+                                        </td>
+                                    </tr>
+                                    recordNumber++;
+                                }
+                            }
+                            else 
+                            {
+                                <tr>
+                                    <td colspan="10">
+                                        <i class="text-danger">No Data</i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @(await Component.InvokeAsync<PagerViewComponent>(Model))
+    </div>
+</section>

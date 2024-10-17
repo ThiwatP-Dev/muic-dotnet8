@@ -1,0 +1,90 @@
+@model GraduatingRequestViewModel
+@{
+    var index = 1;
+    var courseProdictionIndex = 1;
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>
+                    <h3 class="ks-page-header__title">Registration Course (Term @Model.CurrentTerm)</h3>
+                </header>
+            </div>
+            <div class="block__body">
+                <table id="js-curriculum-search" class="table table-bordered m-0">
+                    <thead>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th class="text-center">Course Code</th>
+                            <th>Course Name</th>
+                            <th class="text-center">Credit</th>
+                            <th class="text-center">Grade</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach(var item in Model.RegistrationCourses) 
+                        {
+                            <tr>
+                                <td>@index</td>
+                                <td>@item.Course?.Code</td>
+                                <td>@item.Course?.NameEnAndCredit</td>
+                                <td>@item.Course?.Credit</td>
+                                <td>@item.GradeName</td>
+                            </tr>
+                            ++index;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>
+                    <h3 class="ks-page-header__title">Course Predition</h3>
+                </header>
+                @* <div class="tools">
+                    <a class="btn btn--primary mb-0"
+                        href="#" 
+                        data-toggle="modal" 
+                        data-target="#course-prediction-modal">
+                        <i class="la la-plus mr-1 font-weight-800"></i>Edit
+                    </a>
+                </div> *@
+            </div>
+            <div class="block__body">
+                <table id="js-curriculum-search" class="table table-bordered m-0">
+                    <thead>
+                        <tr>
+                            <th class="text-center w-80">#</th>
+                            <th class="w-150">Term</th>
+                            <th>Course Name</th>
+                            <th class="w-150">Total Credit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach(var item in Model.CoursePredictions) 
+                        {
+                            <tr>
+                                <td>@courseProdictionIndex</td>
+                                <td class="text-center">@item.Semester</td>
+                                <td>
+                                    @foreach (var course in item.Courses)
+                                    {
+                                        <span>@course.CourseAndCredit</span><br />
+                                    }
+                                </td>
+                                <td class="text-center">@item.TotalCredit</td>
+                            </tr>
+                            ++courseProdictionIndex;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>

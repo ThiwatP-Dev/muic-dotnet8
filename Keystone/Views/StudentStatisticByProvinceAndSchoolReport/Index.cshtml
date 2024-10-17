@@ -1,0 +1,267 @@
+@model PagedResult<StudentStatisticByProvinceAndSchoolReportViewModel>
+@{
+    ViewData["Title"] = "Statistic Student By Province And School Report";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+    var recordNumber = Model?.FirstRowOnPage;
+}
+
+<section>
+    <div class="block block--underline">
+        <div class="block__title">
+            <header>Statistic Student By Province And School Report</header>
+        </div>
+
+        <div class="block__body">
+            <form class="form-horizontal" asp-controller="StudentStatisticByProvinceAndSchoolReport" asp-action="Index" method="GET">
+                @Html.AntiForgeryToken()
+                <div class="row form-group">
+                    <div class="col-3">
+                        <select class="chosen-select form-control" asp-for="Criteria.Type" asp-items="ViewBag.Types" data-placeholder="Province"></select>
+                        <label>Search Type<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3">
+                        <h4 class="font-size-default m-y-4">Batch<span class="text-danger">*</span></h4>
+                        <select class="chosen-select form-control" asp-for="Criteria.Batches" asp-items="ViewBag.Batches" data-placeholder="Select" multiple></select>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control" asp-for="Criteria.SchoolTerritoryId" asp-items="ViewBag.SchoolTerritories" data-placeholder="Province">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>School Region</label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control" asp-for="Criteria.ProvinceId" asp-items="ViewBag.Provinces" data-placeholder="Province">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Province</label>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-3">
+                        <select class="chosen-select form-control" asp-for="Criteria.Language" asp-items="ViewBag.Languages" data-placeholder="English"></select>
+                        <label>Language<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-9 text-right align-self-end text-nowrap">
+                        <button class="btn btn--primary btn-mw-120 mb-0 m-r-5" type="submit">
+                            <i class="la la-search mr-2"></i>Search
+                        </button>
+                        <button class="btn btn-mw-120 btn--white mb-0 js-reset-btn" type="reset">
+                            Reset
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+	</div>
+
+    @if (Model != null)
+    {
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.RowCount ?? 0))</header>
+            </div>
+                
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table class="table table-bordered m-0 js-report-table w-100x">
+                        @if (Model.Criteria.Type == "p")
+                        {
+                            <thead>
+                                <tr>
+                                    <th class="text-center" rowspan="2">#</th>
+                                    <th rowspan="2">Region</th>
+                                    <th rowspan="2">Province</th>
+                                    <th class="text-center" colspan="@Model.Criteria.Batches.Count">Apply</th>
+                                    <th class="text-center" colspan="@Model.Criteria.Batches.Count">Intensive</th>
+                                    <th class="text-center" colspan="@Model.Criteria.Batches.Count">Study</th>
+                                </tr>
+                                <tr>
+                                    @if (ViewBag.HeaderBatches != null)
+                                    {
+                                        for (int i = 1; i <= 3; i++)
+                                        {
+                                            foreach (var item in ViewBag.HeaderBatches)
+                                            {
+                                                <th>@item</th>
+                                            }
+                                        }
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.Results.Any())
+                                {
+                                    var haveValue = false;
+                                    foreach (var item in Model.Results)
+                                    {
+                                        <tr>
+                                            <td>@recordNumber</td>
+                                            <td>@item.Territory</td>
+                                            <td>@item.Province</td>
+                                            @for (int i = 0; i < item.Criteria.Batches.Count; i++)
+                                            {
+                                                haveValue = false;
+                                                for (int j = 0; j < item.RegistrationStudentCounts.Count; j++)
+                                                {
+                                                    if (item.RegistrationStudentCounts[j].Batch == item.Criteria.Batches[i])
+                                                    {
+                                                        <td>@item.RegistrationStudentCounts[j].StudentCount</td>
+                                                        haveValue = true;
+                                                    }
+                                                }
+
+                                                if (!haveValue) {
+                                                    <td>0</td>
+                                                }
+                                            }
+
+                                            @for (int i = 0; i < item.Criteria.Batches.Count; i++)
+                                            {
+                                                haveValue = false;
+                                                for (int j = 0; j < item.IntensiveStudentCounts.Count; j++)
+                                                {
+                                                    if (item.IntensiveStudentCounts[j].Batch == item.Criteria.Batches[i])
+                                                    {
+                                                        <td>@item.IntensiveStudentCounts[j].StudentCount</td>
+                                                        haveValue = true;
+                                                    }
+                                                }
+
+                                                if (!haveValue) {
+                                                    <td>0</td>
+                                                }
+                                            }
+
+                                            @for (int i = 0; i < item.Criteria.Batches.Count; i++)
+                                            {
+                                                haveValue = false;
+                                                for (int j = 0; j < item.StudyStudentCounts.Count; j++)
+                                                {
+                                                    if (item.StudyStudentCounts[j].Batch == item.Criteria.Batches[i])
+                                                    {
+                                                        <td>@item.StudyStudentCounts[j].StudentCount</td>
+                                                        haveValue = true;
+                                                    }
+                                                }
+
+                                                if (!haveValue) {
+                                                    <td>0</td>
+                                                }
+                                            }
+                                        </tr>
+                                        recordNumber++;
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td class="text-center" colspan="8">
+                                            <i class="text-danger">No data</i>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        }
+                        else if (Model.Criteria.Type == "s")
+                        {
+                            <thead>
+                                <tr>
+                                    <th class="text-center" rowspan="2">#</th>
+                                    <th rowspan="2">Province</th>
+                                    <th rowspan="2">Previous School</th>
+                                    <th class="text-center" colspan="@Model.Criteria.Batches.Count">Apply</th>
+                                    <th class="text-center" colspan="@Model.Criteria.Batches.Count">Intensive</th>
+                                    <th class="text-center" colspan="@Model.Criteria.Batches.Count">Study</th>
+                                </tr>
+                                <tr>
+                                    @if (ViewBag.HeaderBatches != null)
+                                    {
+                                        for (int i = 1; i <= 3; i++)
+                                        {
+                                            foreach (var item in ViewBag.HeaderBatches)
+                                            {
+                                                <th>@item</th>
+                                            }
+                                        }
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.Results.Any())
+                                {
+                                    var haveValue = false;
+                                    foreach (var item in Model.Results)
+                                    {
+                                        <tr>
+                                            <td>@recordNumber</td>
+                                            <td>@item.Province</td>
+                                            <td>@item.SchoolName</td>
+                                            @for (int i = 0; i < item.Criteria.Batches.Count; i++)
+                                            {
+                                                haveValue = false;
+                                                @for (int j = 0; j < item.RegistrationStudentCounts.Count; j++)
+                                                {
+                                                    if (item.RegistrationStudentCounts[j].Batch == item.Criteria.Batches[i])
+                                                    {
+                                                        <td>@item.RegistrationStudentCounts[j].StudentCount</td>
+                                                        haveValue = true;
+                                                    }
+                                                }
+
+                                                if (!haveValue) {
+                                                    <td>0</td>
+                                                }
+                                            }
+                                            @for (int i = 0; i < item.Criteria.Batches.Count; i++)
+                                            {
+                                                haveValue = false;
+                                                @for (int j = 0; j < item.IntensiveStudentCounts.Count; j++)
+                                                {
+                                                    if (item.IntensiveStudentCounts[j].Batch == item.Criteria.Batches[i])
+                                                    {
+                                                        <td>@item.IntensiveStudentCounts[j].StudentCount</td>
+                                                        haveValue = true;
+                                                    }
+                                                }
+
+                                                if (!haveValue) {
+                                                    <td>0</td>
+                                                }
+                                            }
+                                            @for (int i = 0; i < item.Criteria.Batches.Count; i++)
+                                            {
+                                                haveValue = false;
+                                                @for (int j = 0; j < item.StudyStudentCounts.Count; j++)
+                                                {
+                                                    if (item.StudyStudentCounts[j].Batch == item.Criteria.Batches[i])
+                                                    {
+                                                        <td>@item.StudyStudentCounts[j].StudentCount</td>
+                                                        haveValue = true;
+                                                    }
+                                                }
+
+                                                if (!haveValue) {
+                                                    <td>0</td>
+                                                }
+                                            }
+                                        </tr>
+                                        recordNumber++;
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td class="text-center" colspan="8">
+                                            <i class="text-danger">No data</i>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</section>

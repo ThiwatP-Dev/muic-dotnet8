@@ -1,0 +1,175 @@
+@model PagedResult<ResignStudentViewModel>
+@{
+    ViewData["Title"] = "Resign Student";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+    var recordNumber = Model?.FirstRowOnPage;
+}
+
+<section class="d-print-none">
+    <div class="block block--underline">
+        <div class="block__title">
+            <header>Resign Student</header>
+            <div class="tools">
+                <ul class="d-flex flex-md-row align-items-md-center float-right">
+                    <li class="list-inline-item mx-3 mb-0">
+                        <a class="btn btn--primary" asp-controller="ResignStudent" asp-action="Create" asp-route-returnUrl="@contextPath">
+                            <i class="la la-plus mr-1 font-weight-800"></i> Add Resign Student
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <form class="form-horizontal" asp-controller="ResignStudent" asp-action="Index" method="GET">
+            @Html.AntiForgeryToken()
+            <div class="block__body">
+                <div class="row form-group m-b-30">
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels" data-placeholder="Select">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Academic Level<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="ViewBag.Terms" data-placeholder="Select">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Resign Term</label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control" asp-for="Criteria.Code" type="text">
+                        <label>Code</label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control" asp-for="Criteria.CodeAndName" type="text">
+                        <label>Name</label>
+                    </div>
+                </div>
+
+                <div class="row form-group m-b-30">
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId"
+                                asp-items="ViewBag.Faculties" data-placeholder="Select">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Division</label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentId" asp-items="ViewBag.Departments" data-placeholder="Select">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Major</label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control" asp-for="Criteria.StartStudentBatch" type="number">
+                        <label>Batch From</label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control" asp-for="Criteria.EndStudentBatch" type="number">
+                        <label>Batch To</label>
+                    </div>
+                </div>
+
+                <div class="row form-group m-b-30">
+                    <div class="col-6">
+                        <select class="chosen-select form-control" asp-for="Criteria.ResignReasonId"
+                                asp-items="ViewBag.ResignReasons" data-placeholder="Select">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Resign Reason</label>
+                    </div>
+                    <div class="col-6 align-self-end text-right text-nowrap">
+                        <button class="btn btn--primary btn-mw-120 m-r-5" type="submit">
+                            <i class="la la-search mr-2"></i>Search
+                        </button>
+                        <button class="btn btn-mw-120 btn--reset js-reset-btn" type="reset">
+                            Resets
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <form id="export-excel-form" class="form-horizontal" asp-controller="ResignStudent" asp-action="ExportExcel" method="POST">
+                    <header>Search Result (@(Model?.RowCount ?? 0))</header>
+                    @if(Model?.Results != null)
+                    {
+                        <div class="tools pr-4">
+                            <button id="js-export-excel" class="btn btn--primary mb-0" type="submit">
+                                Export Excel
+                            </button>
+                        </div>
+                        <input name="Criteria.AcademicLevelId" value="@Model.Criteria.AcademicLevelId" type="hidden">
+                        <input name="Criteria.FacultyId" value="@Model.Criteria.FacultyId" type="hidden">
+                        <input name="Criteria.DepartmentId" value="@Model.Criteria.DepartmentId" type="hidden">
+                        <input name="Criteria.StartStudentBatch" value="@Model.Criteria.StartStudentBatch" type="hidden">
+                        <input name="Criteria.EndStudentBatch" value="@Model.Criteria.EndStudentBatch" type="hidden">
+                        <input name="Criteria.Code" value="@Model.Criteria.Code" type="hidden">
+                        <input name="Criteria.CodeAndName" value="@Model.Criteria.CodeAndName" type="hidden">
+                        <input name="Criteria.ResignReasonId" value="@Model.Criteria.ResignReasonId" type="hidden">
+                        <input name="Criteria.TermId" value="@Model.Criteria.TermId" type="hidden">
+                        <input name="returnUrl" type="hidden" value="@contextPath">
+                    }
+                </form>
+            </div>
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover w-100x">
+                        <thead>
+                            <tr>
+                                <th class="w-50">#</th>
+                                <th>Code</th>
+                                <th>Full Name</th>
+                                <th>Division</th>
+                                <th>Major</th>
+                                <th>Effective Term</th>
+                                <th>Approve Date</th>
+                                <th>Resign Reason</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Results.Any())
+                            {
+                                foreach (var item in Model.Results) 
+                                {
+                                    <tr>
+                                        <td rowspan="2">@recordNumber</td>
+                                        <td>@item.StudentCode</td>
+                                        <td>@item.FullNameEn</td>
+                                        <td>@item.FacultyCodeAndName</td>
+                                        <td>@item.DepartmentCodeAndName</td>
+                                        <td>@item.EffectiveTerm</td>
+                                        <td>@item.ApprovedAtText</td>
+                                        <td>@item.ResignReason</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="7">@item.Remark</td>
+                                    </tr>
+                                    recordNumber++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="8" class="text-center">
+                                        <i class="text-danger">No Data</i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @(await Component.InvokeAsync<PagerViewComponent>(Model))
+    </div>
+</section>
+
+@section Scripts {
+    <script src="~/js/pages/resign-student.js"></script>
+}

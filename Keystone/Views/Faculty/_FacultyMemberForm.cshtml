@@ -1,0 +1,46 @@
+@model FacultyDirector
+
+<div class="block__title">
+    <header>@(Model.FacultyMemberId == 0 ? "Add" : "Edit") @(Model.Type == "pd" ? "Program Director" : "Chairman")</header>
+</div>
+
+<div class="block__body">
+    <div class="row form-group">
+        <div class="col-12">
+            <select class="chosen-select form-control" asp-for="InstructorId" asp-items="ViewBag.Instructors">
+                <option selected disabled>Select</option>
+            </select>
+            <label>@(Model.Type == "pd" ? "Program Director" : "Chairman")<span class="text-danger">*</span></label>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-12">
+            <select class="chosen-select form-control" asp-for="FilterCourseGroupId" asp-items="ViewBag.FilterCourseGroups">
+                <option selected value="">Select</option>
+            </select>
+            <label>Group of Courses</label>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-12">
+            <select class="chosen-select form-control" asp-for="FilterCurriculumVersionGroupId" asp-items="ViewBag.FilterCurriculumVersionGroups">
+                <option selected value="">Select</option>
+            </select>
+            <label>Group of Curriculum Versions</label>
+        </div>
+    </div>
+
+    <input asp-for="FacultyId" hidden>
+    <input asp-for="FacultyMemberId" hidden>
+    <input asp-for="Type" hidden>
+    <input name="returnUrl" value="@ViewBag.ReturnUrl" hidden>
+
+    <div class="block__action">
+        <div class="block__action-row">
+            <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+            <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-mw-120 btn--cancel rounded">Close</a>
+        </div>
+    </div>
+</div>

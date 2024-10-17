@@ -1,0 +1,22 @@
+@{ 
+    ViewData["Title"] = "Edit Section"; 
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <form class="ks-form container" asp-controller="CourseToBeOffered" asp-action="Edit" method="POST">
+                @Html.AntiForgeryToken()
+                <partial name="_Form"/>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Modals {
+    <partial name="_DeleteRowConfirmModals" />
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/course-offered.js"></script>
+}

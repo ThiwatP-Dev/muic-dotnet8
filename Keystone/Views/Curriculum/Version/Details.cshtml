@@ -1,0 +1,256 @@
+@model CurriculumVersionViewModel
+@{
+	ViewData["Title"] = @Model?.CurriculumVersion?.NameEn;
+}
+<section>
+	<div class="row">
+		<div class="ks-page-header col-12">
+			<h2 class="ks-page-header__title">
+				<a class="btn-back" asp-controller="Curriculum" asp-action="Details" asp-route-id="@(Model?.CurriculumVersion?.CurriculumId ?? 0)" asp-route-returnUrl="@ViewBag.ReturnUrl">
+					<i class="la la-angle-double-left mr-1"></i>Back
+				</a>
+			</h2>
+		</div>
+	</div>
+
+	<div class="block block--underline">
+		<div class="block__title">
+			<div class="row">
+				<div class="col-12">
+					<header>
+						<div class="d-block">
+							<span class="color-white font-size-14 badge bg-primary my-2 p-a-10">Curriculum Version Code : @Model?.CurriculumVersion?.Code</span>
+						</div>
+					</header>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<header>
+						<h3 class="ks-page-header__title my-2">@Model?.CurriculumVersion?.NameEn</h3>
+					</header>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-8">
+					<header>
+						<h4 class="ks-page-header__title my-2">@Model?.CurriculumVersion?.NameTh</h4>
+					</header>
+				</div>
+                <div class="col-4 d-flex justify-content-end align-items-end">
+					<div class="tools pa-1">
+						<span class="color-primary font-size-16">@(Model?.CurriculumVersion?.TotalCredit ?? 0) Credits</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="block__body">
+			<div class="row form-group">
+				<div class="col-6">
+					<div class="form-control-label d-flex align-items-center">English Degree Name</div>
+					<div class="form-control-plaintext">@Model?.CurriculumVersion?.DegreeNameEn</div>
+				</div>
+				<div class="col-6">
+					<div class="form-control-label d-flex align-items-center">Thai Degree Name</div>
+					<div class="form-control-plaintext">@Model?.CurriculumVersion?.DegreeNameTh</div>
+				</div>
+			</div>
+
+			<div class="row form-group">
+				<div class="col-6">
+					<div class="form-control-label d-flex align-items-center">English Abbreviation Degree</div>
+					<div class="form-control-plaintext">@Model?.CurriculumVersion?.DegreeAbbreviationEn</div>
+				</div>
+				<div class="col-6">
+					<div class="form-control-label d-flex align-items-center">Thai Abbreviation Degree</div>
+					<div class="form-control-plaintext">@Model?.CurriculumVersion?.DegreeAbbreviationTh</div>
+				</div>
+			</div>
+
+			<div class="row form-group">
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Academic Level</div>
+					<div class="form-control-plaintext">@Model?.CurriculumVersion?.Curriculum?.AcademicLevel?.NameEn</div>
+				</div>
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Implemented Term</div>
+					<div class="form-control-plaintext">@Model?.CurriculumVersion?.Term?.TermText</div>
+				</div>
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Opened Term</div>
+					<div class="form-control-plaintext">@Model?.CurriculumVersion?.OpenedTerm?.TermText</div>
+				</div>
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Closed Term</div>
+					<div class="form-control-plaintext">@Model?.CurriculumVersion?.ClosedTerm?.TermText</div>
+				</div>
+			</div>
+
+			<div class="row form-group">
+				<div class="col-2">
+					<div class="form-control-label d-flex align-items-center">Minimun Term</div>
+					<div class="form-control-plaintext">@Model?.CurriculumVersion?.MinimumTerm</div>
+				</div>
+				<div class="col-2">
+					<div class="form-control-label d-flex align-items-center">Maximum Term</div>
+					<div class="form-control-plaintext">@Model?.CurriculumVersion?.MaximumTerm</div>
+				</div>
+				<div class="col-2">
+					<div class="form-control-label d-flex align-items-center">Expect Credit</div>
+					<div class="form-control-plaintext">@Model?.CurriculumVersion?.ExpectCredit</div>
+				</div>
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Program</div>
+					<div class="form-control-plaintext">@Model?.CurriculumVersion?.AcademicProgram?.NameEn</div>
+				</div>
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Approved Date</div>
+					<div class="form-control-plaintext">@Model?.CurriculumVersion?.ApprovedDateText</div>
+				</div>
+			</div>
+			
+			<div class="row form-group">
+				<div class="col-6">
+					<div class="form-control-label d-flex align-items-center">Office of the Higher Education Commission Approved Date</div>
+					<div class="form-control-plaintext">@Model?.CurriculumVersion?.ApprovedDateText</div>
+				</div>
+				<div class="col-6">
+					<div class="form-control-label d-flex align-items-center">Lumpsum</div>
+					<div class="form-control-plaintext">
+						<partial name="_BooleanResult" model="@Model?.CurriculumVersion?.IsLumpsumPayment">
+					</div>
+				</div>
+			</div>
+			<div class="row form-group">
+				<div class="col-6">
+					<div class="form-control-label d-flex align-items-center">Remark</div>
+					<div class="form-control-plaintext">@Model?.CurriculumVersion?.Remark</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<!--end main info -->
+
+@* <section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Specialization Group</header>
+            </div>
+
+			<div class="block__body">
+				<form class="form-horizontal" asp-controller="CurriculumVersion" asp-action="Details" method="GET">
+					@Html.AntiForgeryToken()
+					<div class="row form-group mb-0">
+						<div class="col-4">
+							<select class="chosen-select form-control" name="minorId" asp-for="MinorId" asp-items="ViewBag.Minors">
+								<option selected>Select</option>
+							</select>
+							<label>Minor</label>
+						</div>
+						<div class="col-4">
+							<select class="chosen-select form-control" name="concentrationId" asp-for="ConcentrationId" asp-items="ViewBag.Concentrations">
+								<option selected>Select</option>
+							</select>
+							<label>Concentration</label>
+						</div>
+						<div class="col-4 align-self-end text-right">
+							<button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+								<i class="la la-search mr-2"></i>Search
+							</button>
+							<button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+								Reset
+							</button>
+						</div>
+					</div>
+				</form>
+			</div>
+        </div>
+    </div>
+</section> *@
+
+<section id="curriculum">
+	<div class="block pt-3 px-2">
+		<div class="tabs-scroller float-left"><i class="la la-angle-double-left"></i></div>
+		<div class="tabs-scroller float-right"><i class="la la-angle-double-right"></i></div>
+		<div class="nav-tabs-wrapper">
+			<ul class="nav nav-tabs ks-tabs" role="tablist">
+				<li class="nav-item">
+					<a id="nav-link-0" class="nav-link active" href="#nav-tab-0" data-toggle="tab">
+						Courses
+					</a>
+				</li>
+				<li class="nav-item">
+					<a id="nav-link-1" class="nav-link" href="#nav-tab-1" data-toggle="tab">
+						Study Plan
+					</a>
+				</li>
+				<li class="nav-item">
+					<a id="nav-link-2" class="nav-link" href="#nav-tab-2" data-toggle="tab">
+						Instructor
+					</a>
+				</li>
+				<li class="nav-item">
+					<a id="nav-link-3" class="nav-link" href="#nav-tab-3" data-toggle="tab">
+						Specialization Group
+					</a>
+				</li>
+				<li class="nav-item">
+					<a id="nav-link-4" class="nav-link" href="#nav-tab-4" data-toggle="tab">
+						Blacklist Courses
+					</a>
+				</li>
+				<li class="nav-item">
+					<a id="nav-link-5" class="nav-link" href="#nav-tab-5" data-toggle="tab">
+						Corequisite 
+					</a>
+				</li>
+				<li class="nav-item">
+					<a id="nav-link-6" class="nav-link" href="#nav-tab-6" data-toggle="tab">
+						Course Equivalent
+					</a>
+				</li>
+			</ul>
+		</div>
+		<div id="study-plan-tab-content" class="tab-content">
+			<div id="nav-tab-0" class="tab-pane fadeIn faster animated show active" role="tabpanel">
+				<partial name="~/Views/Curriculum/Version/_CurriculumItems.cshtml">
+			</div>
+			<!-- End Courses -->
+			<div id="nav-tab-1" class="tab-pane fadeIn faster animated" role="tabpanel">
+				<partial name="~/Views/Curriculum/Version/_StudyPlanItems.cshtml">
+			</div>
+			<!-- End Study Plan Info. -->
+			<div id="nav-tab-2" class="tab-pane fadeIn faster animated" role="tabpanel">
+				<partial name="~/Views/Curriculum/Version/_Instructors.cshtml" model="@Model.CurriculumVersion.CurriculumInstructors">
+			</div>
+			<!-- End Instructor -->
+			<!-- End Specialization Group -->
+			<div id="nav-tab-3" class="tab-pane fadeIn faster animated" role="tabpanel">
+				<partial name="~/Views/Curriculum/Version/_SpecializationGroup.cshtml" model="@Model.CurriculumVersion">
+			</div>
+			<div id="nav-tab-4" class="tab-pane fadeIn faster animated" role="tabpanel">
+				<partial name="~/Views/Curriculum/Version/_BlacklistCourses.cshtml" model="@Model.CurriculumVersion">
+			</div>
+			<div id="nav-tab-5" class="tab-pane fadeIn faster animated" role="tabpanel">
+				<partial name="~/Views/Curriculum/Version/_Corequisite.cshtml" model="@Model">
+			</div>
+			<div id="nav-tab-6" class="tab-pane fadeIn faster animated" role="tabpanel">
+				<partial name="~/Views/Curriculum/Version/_CourseEquivalent.cshtml" model="@Model">
+			</div>
+			<!-- End Blacklist Courses -->
+		</div>
+	</div>
+</section>
+<!--end tab info -->
+
+@section Modals {
+	<partial name="_DeleteConfirmModals">
+	<partial name="_DeleteRowConfirmModals">
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/tabs.js"></script>
+	<script type="text/javascript" src="~/js/pages/curriculum-details.js"></script>
+}

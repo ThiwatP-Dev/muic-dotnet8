@@ -1,0 +1,139 @@
+@model Receipt
+@{
+    var index = 1;
+}
+
+<div id="modalWrapper">
+    <div class="block__title">
+        <div class="row">
+            <div class="col-md-4">
+                <header>Receipt: <span id="js-invoice-id">@Model?.Number</span></header>
+            </div>
+            <div class="col-md-4 text-center">
+                <header>Term: <span>@Model?.Term?.TermText</span></header>
+            </div>
+            <div class="col-md-4 text-right">
+                <header>Date: @Model?.CreatedAtText</header>
+            </div>   
+        </div>
+        
+    </div>
+
+    <div class="block mb-0">
+        <div id="js-receipt-details-content" class="block__body">
+            <div class="row form-group mb-3">
+                <div class="col-md-6 col-xl-6">
+                    <div class="form-control-label d-flex align-items-center">Code</div>
+                    <div class="form-control-plaintext">@Model?.Student?.Code</div>
+                </div>
+                <div class="col-md-6 col-xl-6">
+                    <div class="form-control-label d-flex align-items-center">Name</div>
+                    <div class="form-control-plaintext">@Model?.Student?.FullNameEn</div>
+                </div>
+                @* <div class="col-md-4 col-xl-4">
+                    <div class="form-control-label d-flex align-items-center">Tax Number</div>
+                    <div class="form-control-plaintext">@Model?.TaxNumber</div>
+                </div> *@
+            </div>
+
+            <div class="row form-group mb-3">
+                <div class="col-md-6 col-xl-6">
+                    <div class="form-control-label d-flex align-items-center">Registration Type</div>
+                    <div class="form-control-plaintext">@Model?.RoundText</div>
+                </div>
+                <div class="col-md-6 col-xl-6">
+                    <div class="form-control-label d-flex align-items-right">Payment Method</div>
+                </div>
+            </div>
+            <div class="row form-group mb-3">
+                <div class="col-md-3 col-xl-3">
+                    <div class="form-control-label d-flex align-items-center">Emailed Date</div>
+                    <div class="form-control-plaintext">@Model?.EmailedAtText</div>
+                </div>
+                <div class="col-md-3 col-xl-3">
+                    <div class="form-control-label d-flex align-items-center">By</div>
+                    <div class="form-control-plaintext">@Model?.EmailedBy</div>
+                </div>
+                <div class="col-md-3 col-xl-3">
+                    <div class="form-control-label d-flex align-items-center">Printed Date</div>
+                    <div class="form-control-plaintext">@Model?.PrintedAtText</div>
+                </div>
+                <div class="col-md-3 col-xl-3">
+                    <div class="form-control-label d-flex align-items-center">By</div>
+                    <div class="form-control-plaintext">@Model?.PrintedByFullName</div>
+                </div>
+            </div>
+
+            @* <div class="row form-group mb-3">
+                <div class="col-md-4 col-xl-4">
+                    <div class="form-control-label d-flex align-items-right">VAT</div>
+                    <div class="form-control-plaintext">
+                        <partial name="_BooleanResult" model="@Model?.IsVAT" />
+                    </div>
+                </div>
+            </div> *@
+
+            <div class="row mb-3">
+                <table class="table table-bordered m-0">
+                    <thead>
+                         <tr>
+                            <th class="text-center">#</th>
+                            <th>Fee Item</th>
+                       @*     <th class="text-center">Type</th>*@
+                            <th class="text-right">Amount</th>
+                            <th class="text-right">Scholarship</th>
+                            <th class="text-right">Waive</th>
+                            <th class="text-right">Total Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.ReceiptItems)
+                        {
+                            <tr>
+                                <td class="text-center">@index</td>
+                                <td>
+                                    <b>@(string.IsNullOrEmpty(item.FeeItemName) ? item.InvoiceItem.FeeItem?.NameEn : item.FeeItemName) @(string.IsNullOrEmpty(item.InvoiceItem.Course?.CodeAndCredit) ? "" : "for " + item.InvoiceItem.Course.CodeAndCredit + "(" + item.InvoiceItem.Section?.Number +")")</b><br>
+                                       @if (item.InvoiceItem.Course != null) 
+                                           {
+                                               @($"{ item.InvoiceItem.Course?.NameEn }")
+                                           }
+                                </td>
+                  @*              <td class="text-center text-uppercase">@item.TypeText</td>*@
+                                <td class="text-right">@item.AmountText</td>
+                                <td class="text-right">@item.ScholarshipAmountText</td>
+                                <td class="text-right">@item.DiscountAmountText</td>
+                                <td class="text-right">@item.TotalAmountText</td>
+                                
+                            </tr>
+                            ++index;
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td class="text-right border-right-0 font-weight-600" colspan="5">Amount : </td>
+                            <td class="text-right border-right-0 border-left-0">@Model?.AmountText</td>
+                        </tr>
+                        <tr>
+                            <td class="text-right border-right-0 font-weight-600" colspan="5">Discount : </td>
+                            <td class="text-right border-right-0 border-left-0">@Model?.AllDiscountAmountText</td>
+                        </tr>
+                        <tr>
+                            <td class="text-right border-right-0 font-weight-600" colspan="5">Scholarship : </td>
+                            <td class="text-right border-right-0 border-left-0">@Model?.ScholarshipAmountText</td>
+                        </tr>
+                        <tr>
+                            <td class="text-right border-right-0 font-weight-600" colspan="5">Total Amount : </td>
+                            <td class="text-right border-right-0 border-left-0">@Model?.TotalAmountText</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="block__action">
+        <div class="block__action-row">
+            <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-mw-120 btn--cancel rounded">Close</a>
+        </div>
+    </div>
+</div>

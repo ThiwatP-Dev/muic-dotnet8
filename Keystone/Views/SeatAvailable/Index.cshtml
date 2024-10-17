@@ -1,0 +1,236 @@
+@model SeatAvailableViewModel
+@{ 
+    ViewData["Title"] = "Seat Available";
+}
+
+<section class="row">
+    <div class="col-12">
+        <div id="seat-available-accordion1">
+            <div class="block block--underline">
+                <div class="block__title collapsed" data-toggle="collapse" data-parent="#seat-available-accordion1" data-target="#seat-available-accordion1-1">
+                    <header>Seat Available</header>
+                    <div class="tools">
+                        <div class="btn-group">
+                            <a class="btn btn--white btn--circle">
+                                <i class="la la-angle-down"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="seat-available-accordion1-1" class="collapse show" aria-expanded="true">
+                    <div class="block__body">
+                        <form class="form-horizontal" asp-controller="SeatAvailable" asp-action="Index" method="Get">
+                            @Html.AntiForgeryToken()
+                            <div class="row form-group m-b-30">
+                                <div class="col-3">
+                                    <select id="AcademicLevelId" class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Academic Level<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-3">
+                                    <select id="TermId" class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="ViewBag.Terms">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Term<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-3">
+                                    <select id="FacultyId" class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="ViewBag.Faculties">
+                                        <option selected value="">Select</option>
+                                    </select>
+                                    <label>Division</label>
+                                </div>
+                                <div class="col-3">
+                                    <select id="DepartmentId" class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentId" asp-items="ViewBag.Departments">
+                                        <option selected value="">Select</option>
+                                    </select>
+                                    <label>Major</label>
+                                </div>
+                            </div>
+
+                            <div class="row form-group mb-0">
+                                <div class="col-3">
+                                    <input class="form-control" asp-for="Criteria.CodeAndName" type="text">
+                                    <label>Course</label>
+                                </div>
+                                <div class="col-3">
+                                    <input class="form-control" asp-for="Criteria.SectionNumber" type="text">
+                                    <label>Section Number</label>
+                                </div>
+                                <div class="col-2 align-self-end">
+                                    <div class="form-check pl-0">
+                                        <input class="form-check-input" asp-for="Criteria.IsWithdrawal" type="checkbox">
+                                        <label class="mb-0" for="Criteria_IsWithdrawal">Withdrawal</label>
+                                    </div>
+                                </div>
+                                <div class="col-4 align-self-end text-right">
+                                    <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                        <i class="la la-search mr-2"></i>Search
+                                    </button>
+                                    <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                                        Reset
+                                    </button>
+                                </div>                                
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (Model != null && Model.Criteria != null)
+{
+    <section class="row">
+        <div class="col-12">
+            <div class="block block--underline">
+                <div class="block__title">
+                    <header>Search Result ( @(Model.Courses.Count()) )</header>
+                </div>
+                <div class="block__body">
+                    <div class="table-responsive">
+                        <table id="js-course-seat" class="table table-bordered m-0">
+                            @if (Model.Criteria.IsWithdrawal)
+                            {
+                                <thead>
+                                    <tr>
+                                        <th class="w-410">Course</th>
+                                        <th class="text-center w-125">Section</th>
+                                        <th class="text-center w-75">Seat Available</th>
+                                        <th class="text-center w-75">Seat Used</th>
+                                        <th class="text-center w-75">Seat Limit</th>
+                                        <th class="text-center w-75">Withdrawal</th>
+                                        @* <th class="text-center w-75">Seat Left</th> *@
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if(Model.Courses.Any() || Model.Courses.Count() > 0)
+                                    {
+                                        @foreach(var item in Model.Courses)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <b>@item.CourseCodeAndCredit</b><br>
+                                                    <b>@item.CourseName</b><br>
+                                                    @item.MainInstructorFullNameEn
+                                                </td>
+                                                <td>
+                                                    @item.SectionNumber<br>
+                                                    @item.SectionTypes
+                                                </td>
+                                                <td class="w-75">
+                                                    <div>@item.SeatAvailable</div>
+                                                </td>
+                                                <td>@item.SeatUsed</td>
+                                                <td class="w-125">
+                                                    <div>@item.SeatLimit</div>
+                                                </td>
+                                                <td>@item.SeatWithdraw</td> 
+                                                @* <td>@item.SeatLeft</td> *@
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td class="text-center" colspan="6">
+                                                <i class="text-danger">No data</i>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            }
+                            else
+                            {
+                                <thead>
+                                    <tr>
+                                        <th class="w-410">Course</th>
+                                        <th class="text-center w-180">Section</th>
+                                        <th class="text-center w-75">Seat Available</th>
+                                        <th class="text-center w-75">Seat Used</th>
+                                        <th class="text-center w-75">Seat Limit</th>
+                                        <th class="text-center w-75">Seat Payment</th>
+                                        <th class="w-75">CoInstructor</th>
+                                        <th class="text-nowarp text-center w-100">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if(Model.Courses.Any() || Model.Courses.Count() > 0)
+                                    {
+                                        @foreach(var item in Model.Courses)
+                                        {
+                                            <tr rowspan="2" class="h-64">
+                                                <td>
+                                                    <b>@item.CourseCodeAndCredit</b><br>
+                                                    <b>@item.CourseName</b><br>
+                                                    @item.MainInstructorFullNameEn
+                                                </td>
+                                                <td>
+                                                    @item.SectionNumber<br>
+                                                    @item.SectionTypes
+                                                </td>
+                                                <td class="js-edit-element w-75">
+                                                    <div id="seat-available-value">@item.SeatAvailable</div>
+                                                    <input id="seat-available" value="@item.SeatAvailable" data-default-value="@item.SeatAvailable" class="form-control__table" type="number" min=0 hidden>
+                                                </td>
+                                                <td>@item.SeatUsed</td>
+                                                <td class="js-edit-element w-125">
+                                                    <div id="seat-limit-value" class="js-edit-value">@item.SeatLimit</div>
+                                                    <input id="seat-limit" value="@item.SeatLimit" data-default-value="@item.SeatLimit" class="form-control__table js-edit-input d-none" type="number" min=0>
+                                                </td>
+                                                <td>@item.SeatPayment</td>
+                                                <td>
+                                                    @if (item.Instructors.Any())
+                                                    {
+                                                        <partial name="_StringLoop" model="@item.Instructors" />    
+                                                    }
+                                                    else
+                                                    {
+                                                        <p>N/A</p>
+                                                    }
+                                                </td>
+                                                <td rowspan="2" class="text-nowrap td-actions w-100">
+                                                    <a class="js-start-edit" data-section-id="@item.SectionId">
+                                                        <i class="la la-edit edit"></i>
+                                                    </a>
+                                                    <div class="js-quit-edit d-none">
+                                                        <a class="js-save-edit mr-2">
+                                                            <i class="la la-save edit"></i>
+                                                        </a>
+                                                        <a class="js-cancel-edit">
+                                                            <i class="la la-refresh delete"></i>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr id="remark-@item.SectionId">
+                                                <td colspan="7" class="text-left">
+                                                    <div id="section-remark-value" class="js-edit-value"><b>Remark: </b>@item.Remark</div>
+                                                    <b class="js-edit-input d-none">Remark: </b><input id="section-remark" value="@item.Remark" data-default-value="@item.Remark" class="form-control__table js-edit-input d-none" type="text">
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td class="text-center" colspan="8">
+                                                <i class="text-danger">No data</i>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            }
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/seat-available.js"></script>
+}

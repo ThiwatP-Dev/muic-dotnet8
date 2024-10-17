@@ -1,0 +1,19 @@
+@model RegistrationConfiguration
+@{
+    ViewData["Title"] = "Create Registration Configuration";
+}
+
+<section id="data-table-form-v1" class="row">
+    <div class="col-lg-12">
+        <div class="block block--underline">
+            <form class="ks-form container" asp-controller="RegistrationConfiguration" asp-action="Create" method="post">
+                @Html.AntiForgeryToken()
+                <partial name="_Form"/>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/registration-configuration.js"></script>
+}

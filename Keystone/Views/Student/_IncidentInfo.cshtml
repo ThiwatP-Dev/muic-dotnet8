@@ -1,0 +1,240 @@
+@model Student
+
+@{
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+
+    var tabPermission = Model.TabPermissions?.FirstOrDefault(x => x.Tab.ToUpper() == "INCIDENT");
+    var isEditable = tabPermission?.IsWritable  ?? false;
+}
+
+<section class="ks-incident-info">
+    <form class="form-horizontal" asp-controller="Student" asp-action="EditIncidentStatuses" method="POST">
+        <div class="block no-shadow h-100x mn-h-50vh m-b-30">
+            <div class="block__body">
+                <div class="section-title">
+                    <h4>Lock</h4>
+                </div>
+                <div class="row form-group">
+                    <div class="col-3 align-self-center">
+                        <div class="form-check">
+                            <input id="IsRegistrationLock" class="form-check-input" name="IsRegistrationLock" type="checkbox" checked="@Model.IsRegistrationLock" disabled="true">
+                            <label for="IsRegistrationLock">Registration</label>
+                        </div>
+                    </div>
+                    <div class="col-3 align-self-center">
+                        <div class="form-check">
+                            <input id="IsPaymentLock" class="form-check-input" name="IsPaymentLock" type="checkbox" checked="@Model.IsPaymentLock" disabled="true">
+                            <label for="IsPaymentLock">Payment</label>
+                        </div>
+                    </div>
+                    <div class="col-3 align-self-center">
+                        <div class="form-check">
+                            <input id="IsSignInLock" class="form-check-input" name="IsSignInLock" type="checkbox" checked="@Model.IsSignInLock" disabled="true">
+                            <label for="IsSignInLock">Sign In</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-title d-flex justify-content-between align-items-end">
+                    <h4>Incident</h4>
+                    <div class="tools">
+                        @if (isEditable)
+                        {
+                            <a class="btn btn-mw-120 btn--primary"
+                           href="#" 
+                           data-toggle="modal" 
+                           data-target="#create-modal-incident">
+                                <i class="la la-plus mr-1 font-weight-800"></i> Add
+                            </a>
+                        }
+                    </div>
+                </div>
+                <div class="table-responsive mb-3">
+                    <h3 class="text-danger">@TempData["ErrorMessage"]</h3>
+                    <table id="js-incident-lock" class="table table-bordered table-hover w-100x">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th>Incident</th>
+                                <th class="text-center">Term</th>
+                                <th class="text-center">Registration</th>
+                                <th class="text-center">Payment</th>
+                                <th class="text-center">Sign In</th>
+                                <th class="">Approved By</th>
+                                <th class="text-center">Approved At</th>
+                                <th>Locked By</th>
+                                <th class="text-center">Locked At</th>
+                                <th class="text-nowarp text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if(Model.StudentIncidents != null && Model.StudentIncidents.Any())
+                            {
+                                var i = 0;
+                                foreach(var item in @Model.StudentIncidents)
+                                {
+                                    if (item.IsActive)
+                                    {
+                                        <tr>
+                                            <td class="text-center">
+                                                @(i+1)
+                                                <input name="StudentIncidents[@i].Id" type="hidden" value="@item.Id">
+                                                <input name="StudentIncidents[@i].StudentId" type="hidden" value="@item.StudentId">
+                                                <input name="StudentIncidents[@i].TermId" type="hidden" value="@item.TermId">
+                                                <input name="StudentIncidents[@i].IncidentId" type="hidden" value="@item.IncidentId">
+                                                <input name="StudentIncidents[@i].UpdatedBy" type="hidden" value="@item.UpdatedBy">
+                                                <input name="StudentIncidents[@i].UpdatedAt" type="hidden" value="@item.UpdatedAt">
+                                                <input name="StudentIncidents[@i].ApprovedBy" type="hidden" value="@item.ApprovedBy">
+                                            </td>
+                                            <td class="js-incident">@item.Incident.NameEn</td>
+                                            <td>@item.Term.TermText</td>
+                                            @* @if(item.CreatedBy == Model.StudentIncidents[i].UserId)
+                                            {
+                                                <td class="text-center">
+                                                    <input id="StudentIncidents[@i].LockedRegistration" class="form-check-input js-checkbox" asp-for="@item.LockedRegistration" name="StudentIncidents[@i].LockedRegistration" type="checkbox">
+                                                    <label for="StudentIncidents[@i].LockedRegistration"></label>
+                                                </td>
+                                                <td class="text-center">
+                                                    <input id="StudentIncidents[@i].LockedPayment" class="form-check-input js-checkbox" asp-for="@item.LockedPayment" name="StudentIncidents[@i].LockedPayment" type="checkbox">
+                                                    <label for="StudentIncidents[@i].LockedPayment"></label>
+                                                </td>
+                                                <td class="text-center">
+                                                    <input id="StudentIncidents[@i].LockedSignIn" class="form-check-input js-checkbox" asp-for="@item.LockedSignIn" name="StudentIncidents[@i].LockedSignIn" type="checkbox">
+                                                    <label for="StudentIncidents[@i].LockedSignIn"></label>
+                                                </td>
+                                            }
+                                            else
+                                            { *@
+                                            <td class="text-center">
+                                                <input id="StudentIncidents[@i].LockedRegistration" class="form-check-input js-checkbox" asp-for="@item.LockedRegistration" name="StudentIncidents[@i].LockedRegistration" type="checkbox" disabled>
+                                                <label for="StudentIncidents[@i].LockedRegistration"></label>
+                                            </td>
+                                            <td class="text-center">
+                                                <input id="StudentIncidents[@i].LockedPayment" class="form-check-input js-checkbox" asp-for="@item.LockedPayment" name="StudentIncidents[@i].LockedPayment" type="checkbox" disabled>
+                                                <label for="StudentIncidents[@i].LockedPayment"></label>
+                                            </td>
+                                            <td class="text-center">
+                                                <input id="StudentIncidents[@i].LockedSignIn" class="form-check-input js-checkbox" asp-for="@item.LockedSignIn" name="StudentIncidents[@i].LockedSignIn" type="checkbox" disabled>
+                                                <label for="StudentIncidents[@i].LockedSignIn"></label>
+                                            </td>
+                                            @* } *@
+                                            <td class="text-center">@item.ApprovedBy</td>
+                                            <td class="text-center">@item.ApprovedAtText</td>
+                                            <td class="text-center">@item.CreatedByFullNameEn</td>
+                                            <td class="text-center">@item.CreatedAtText</td>
+                                            <td class="text-nowrap text-center td-actions">
+                                                @if(item.CreatedBy == Model.StudentIncidents[i].UserId)
+                                                {
+                                                    <a data-toggle="modal" 
+                                                    class="js-unlock"
+                                                    data-target="#update-confirm-modal" 
+                                                    data-controller="StudentIncident" 
+                                                    data-value="@item.Id" 
+                                                    data-return-url="@contextPath"
+                                                    title="Unlock"
+                                                    data-action="Unlock">
+                                                    <i class="la la-unlock-alt edit"></i>
+                                                    </a>
+                                                    <a data-toggle="modal" 
+                                                    class="js-delete"
+                                                    data-target="#delete-confirm-modal" 
+                                                    data-controller="StudentIncident" 
+                                                    data-value="@item.Id" 
+                                                    data-return-url="@contextPath"
+                                                    title="delete"
+                                                    data-action="Delete">
+                                                    <i class="la la-trash delete"></i>
+                                                    </a>
+                                                }
+                                            </td>
+                                        </tr>
+                                        ++i;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="11">
+                                        <i class="text-danger">No Data</i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="section-title">
+                    <h4>Log</h4>
+                </div>
+                <div class="table-responsive">
+                    <table id="js-incident-log" class="table table-bordered table-hover w-100x">
+                        <thead>
+                            <tr>
+                                <th rowspan="2" class="text-center">#</th>
+                                <th rowspan="2">Incident</th>
+                                <th rowspan="2" class="text-center">Term</th>
+                                <th colspan="3" class="text-center">Locked</th>
+
+                                <th rowspan="2" class="">Approved By</th>
+                                <th rowspan="2" class="text-center">Approved At</th>
+                                <th rowspan="2" class="">Locked By</th>
+                                <th rowspan="2" class="text-center">Locked At</th>
+                                <th rowspan="2" class="">Unlocked By</th>
+                                <th rowspan="2" class="text-center">Unlocked At</th>
+                            </tr>
+                            <tr>
+                                <th class="text-center">Registration</th>
+                                <th class="text-center">Payment</th>
+                                <th class="text-center">Sign In</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.StudentIncidentLogs != null && Model.StudentIncidentLogs.Any())
+                            {
+                                var i = 1;
+                                foreach (var item in Model.StudentIncidentLogs)
+                                {
+                                    <tr>
+                                        <td>@i</td>
+                                        <td>@item.Incident.NameEn</td>
+                                        <td>@item.Term.TermText</td>
+                                        <td >
+                                            <partial name="_BooleanResult" model="@item.LockedRegistration" />
+                                        </td>
+                                        <td class="text-center">
+                                            <partial name="_BooleanResult" model="@item.LockedPayment" />
+                                        </td>
+                                        <td>
+                                            <partial name="_BooleanResult" model="@item.LockedSignIn" />
+                                        </td>
+                                        <td>@item.ApprovedBy</td>
+                                        <td>@item.ApprovedAtText</td>
+                                        <td>@item.LockedBy</td>
+                                        <td>@item.LockedAtText</td>
+                                        <td>@item.UnlockedBy</td>
+                                        <td>@item.UnlockedAtText</td>
+                                    </tr>
+                                    i++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="12" class="text-center">
+                                        <i class="text-danger">No Data</i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <input asp-for="Id" type="hidden">
+    </form>
+</section>
+
+<partial name="~/Views/Student/Incident/_CreateModal.cshtml" 
+         model='@(ViewData["StudentId"].ToString() == Guid.Empty.ToString() ? new StudentIncident()
+         : new StudentIncident { StudentId = (Guid)ViewData["StudentId"] })'>

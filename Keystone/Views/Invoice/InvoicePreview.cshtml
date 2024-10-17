@@ -1,0 +1,34 @@
+@model ReportViewModel
+@{ 
+    ViewData["Title"] = "Registration Invoice Preview";
+    var invoicePreview = Model.Body as InvoiceViewModel;
+}
+
+<div class="row">
+    <div class="ks-page-header col-lg-12">
+        <a class="btn-back" href="@ViewBag.ReturnUrl">
+            <i class="la la-angle-double-left mr-1"></i>Back
+        </a>
+    </div>
+</div>
+
+<img id="js-muic-logo" src="~/images/logo-muic-url.png" hidden>
+
+<partial name="_PdfPreview" model="@Model">
+
+<section>
+    <form asp-controller="Invoice" asp-action="SaveInvoicePreview" method="POST">
+        <input name="model.InvoiceId" type="hidden" value="@invoicePreview.InvoiceId">
+        <input name="model.PrintedAt" type="hidden" value="@invoicePreview.PrintedAt">
+        <input name="model.AcademicLevelId" type="hidden" value="@invoicePreview.AcademicLevelId">
+        <input name="model.TermId" type="hidden" value="@invoicePreview.TermId">
+        <input name="model.StudentCode" type="hidden" value="@invoicePreview.StudentCode">
+        <div class="block__action-row pr-0">
+            <button class="btn btn-mw-120 btn--success" type="submit">Finish</button>
+        </div>
+    </form>
+</section>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/pdf-render/registration-invoice.js"></script>
+}

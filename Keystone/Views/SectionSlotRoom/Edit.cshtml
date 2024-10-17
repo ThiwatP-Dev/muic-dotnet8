@@ -1,0 +1,158 @@
+@model Section
+
+<section id="data-table-form-v1" class="row">
+    <div class="col-lg-12">
+        <div class="block block--underline">
+            <form class="ks-form container" asp-controller="SectionSlotRoom" asp-action="Edit" method="post">
+                @Html.AntiForgeryToken()
+
+                <div class="block__title">
+                    <header>@Model?.Course?.CodeAndName Section: @Model.Number</header>
+                </div>
+
+                <div class="block__body">
+                    <div class="row">
+                        <div class="col-2">
+                            <div class="form-control-label d-flex align-items-center"><b>Seat Limit: </b>&nbsp; @Model.SeatLimit</div>
+                        </div>
+                        <div class="col-2">
+                            <div class="form-control-label d-flex align-items-center"><b>Planning Seat: </b>&nbsp; @Model.PlanningSeat</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="block__body">
+                    <div class="form-group">
+                        <input asp-for="Id" type="hidden">
+                        <input asp-for="CourseId" type="hidden">
+                        <input asp-for="TermId" type="hidden">
+                        <table class="table table-bordered table-hover w-100x">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">#</th>
+                                    <th class="text-center">Day</th>
+                                    <th class="text-center">Time</th>
+                                    <th>Instructor</th>
+                                    <th>Teching Type</th>
+                                    <th>Room</th>
+                                    <th>Remark</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.SectionDetails.Any())
+                                {
+                                    for (int i = 0 ; i < Model.SectionDetails.Count ; ++i)
+                                    {
+                                        <tr>
+                                            <input asp-for="@Model.SectionDetails[i].SectionId" type="hidden">
+                                            <input asp-for="@Model.SectionDetails[i].Id" type="hidden">
+                                            <input asp-for="@Model.SectionDetails[i].Day" type="hidden">
+                                            <input asp-for="@Model.SectionDetails[i].StartTime" type="hidden">
+                                            <input asp-for="@Model.SectionDetails[i].EndTime" type="hidden">
+                                            <td>@(i + 1)</td>
+                                            <td>@Model.SectionDetails[i].Dayofweek</td>
+                                            <td>@Model.SectionDetails[i].Time</td>
+                                            <td>@Model.MainInstructor?.CodeAndName</td>
+                                            <td>@Model.SectionDetails[i].TeachingType?.NameEn</td>
+                                            <td>@Model.SectionDetails[i].Room?.NameEn</td>
+                                            <td>@Model.SectionDetails[i].Remark</td>
+                                            <td>
+                                                <select class="chosen-select form-control chosen-single js-default-select"
+                                                        asp-for="@Model.SectionDetails[i].RoomId" asp-items="@ViewBag.RoomList[i]">
+                                                    <option selected value="">Select Room</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="7">
+                                            <i class="text-danger">No Data</i>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <hr/>
+                <div class="block__title">
+                    <header>Section Slot</header>
+                </div>
+                        
+                <div class="block__body">
+                    <div class="form-group">
+                        <table class="table table-bordered table-hover w-100x">
+                            <thead>
+                                <tr>
+                                    <th class="text-center w-50">#</th>
+                                    <th class="text-center">Date</th>
+                                    <th class="text-center">Day</th>
+                                    <th class="text-center">Start Time</th>
+                                    <th class="text-center">End Time</th>
+                                    <th>Room</th>
+                                    <th>Teaching Type</th>
+                                    <th>Instructor</th>
+                                    <th>Remark</th>
+                                    <th class="text-center w-25">Make Up</th>
+                                    <th class="text-center">Status</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if(Model.SectionSlots != null)
+                                {
+                                    @for (int i = 0; i < Model.SectionSlots.Count(); i++)
+                                    {
+                                        <tr>
+                                            <td>@(i+1)</td>
+                                            <td>@Model.SectionSlots[i].DateText</td>
+                                            <td>@Model.SectionSlots[i].Dayofweek</td>
+                                            <td class="w-125">@Model.SectionSlots[i].StartTimeText</td>
+                                            <td class="w-125">@Model.SectionSlots[i].EndTimeText</td>
+                                            <td>@Model.SectionSlots[i].Room?.NameEn</td>
+                                            <td>@Model.SectionSlots[i].TeachingType?.NameEn</td>
+                                            <td>@Model.SectionSlots[i].Instructor?.CodeAndName</td>
+                                            <td>@Model.SectionSlots[i].Remark</td>
+                                            <td>
+                                                <partial name="_BooleanCheck" model="@Model.SectionSlots[i].IsMakeUpClass">
+                                            </td>
+                                            <td>
+                                                <partial name="_SectionSlotStatus" model="@Model.SectionSlots[i].StatusText"></partial>
+                                            </td>
+                                            <td class="text-nowrap td-actions">
+                                                <a data-toggle="modal"
+                                                data-target="#edit-section-slot-room"
+                                                data-value="@Model.SectionSlots[i].Id">
+                                                    <i class="la la-edit edit"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="block__action container">
+                    <div class="block__action-row">
+                        <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+                        <a class="btn btn-mw-120 btn--cancel" href="@ViewBag.ReturnUrl">Cancel</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Modals {
+    <partial name="_EditModal" model="new SectionSlot()" />
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/section-slot-room.js"></script>
+}

@@ -1,0 +1,102 @@
+@model List<GradingStatus>
+@{
+    var i = 1;
+}
+<div class="block block--underline mb-0">
+    <div class="block__title">
+        <header class="color-primary">
+            Records
+        </header>
+        <div class="tools">
+            <a class="btn btn-mw-120 btn--primary mb-0" asp-action="Create" asp-route-termId="@ViewBag.TermId">
+                <i class="la la-plus mr-1"></i> Add
+            </a>
+        </div>
+    </div>
+    <div class="block__body">
+        <div class="form-group mb-0">
+            <div class="table-responsive">
+                <table class="table table-bordered m-0">
+                    <thead>
+                        <tr>
+                            <th class="text-center w-50">#</th>
+                            <th>Course</th>
+                            <th class="text-center">Section</th>
+                            <th class="text-center w-75">Allocation</th>
+                            <th class="text-center w-75">Scoring</th>
+                            <th class="text-center w-75">Grading</th>
+                            <th class="text-center w-125">Barcode</th>
+                            <th class="text-center w-75">Published</th>
+                            <th class="text-center w-125">Barcode Number</th>
+                            <th>Last Update</th>
+                            <th class="text-center w-75">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Any())
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="text-center">@i</td>
+                                    <td>
+                                        <span class="text-nowrap">@item.CourseNames</span>
+                                    </td>
+                                    <td>
+                                        <span class="text-nowrap">@item.SectionNumbers</span>
+                                    </td>
+                                    <td>
+                                        <partial name="_BooleanResult" model="@item.IsAllocated">
+                                    </td>
+                                    <td>
+                                        <partial name="_BooleanResult" model="@item.IsScored">
+                                    </td>
+                                    <td>
+                                        <partial name="_BooleanResult" model="@item.IsGraded">
+                                    </td>
+                                    <td>
+                                        <partial name="_BooleanResult" model="@item.IsBarcodeGenereated">
+                                    </td>
+                                    <td>
+                                        <partial name="_BooleanResult" model="@item.IsPublished">
+                                    </td>
+                                    <td>@item.Barcode</td>
+                                    <td class="text-nowrap">@item.LastUpdate</td>
+                                    <td class="text-nowrap td-actions">
+                                        <a asp-action="Report"
+                                           asp-route-allocationId="@item.AllocationId"
+                                           asp-route-courseIds="@item.CourseIds">
+                                            <i class="la la-print info"></i>
+                                        </a>
+                                        @if (!item.IsPublished)
+                                        {
+                                            <a asp-action="Edit" asp-route-allocationId="@item.AllocationId">
+                                                <i class="la la-edit edit"></i>
+                                            </a>
+                                        }
+                                        <a data-toggle="modal" 
+                                            data-target="#delete-confirm-modal" 
+                                            asp-controller="GradeManagement" 
+                                            asp-action="Delete" 
+                                            asp-route-Id="@item.AllocationId">
+                                            <i class="la la-trash delete"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                ++i;
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="11">
+                                    <i class="text-danger">No Data</i>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

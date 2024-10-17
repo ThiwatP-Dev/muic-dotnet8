@@ -1,0 +1,187 @@
+@model Invoice
+@{
+    var index = 1;
+}
+
+<div class="block__title">
+    <div class="row">
+        <div class="col-md-4">
+            <header>Invoice: <span id="js-invoice-id">@Model?.Number</span></header>
+        </div>
+        <div class="col-md-4 text-center">
+            <header>Term: <span>@Model?.Term?.TermText</span></header>
+        </div>
+        <div class="col-md-4 text-right">
+            <header>Date: @Model?.CreatedAtText</header>
+        </div>   
+    </div>
+</div>
+<div class="block mb-0">
+    <div id="js-receipt-details-content" class="block__body">
+        <div class="row form-group mb-3">
+            <div class="col-md-6 col-xl-4">
+                <div class="form-control-label d-flex align-items-center">Code</div>
+                <div class="form-control-plaintext">@Model?.Student?.Code</div>
+            </div>
+            <div class="col-md-6 col-xl-4">
+                <div class="form-control-label d-flex align-items-center">Name</div>
+                <div class="form-control-plaintext">@Model?.Student?.FullNameEn</div>
+            </div>
+            <div class="col-md-6 col-xl-4">
+                <div class="form-control-label d-flex align-items-center">Student Fee Type</div>
+                <div class="form-control-plaintext">@Model?.Student?.StudentFeeType?.NameEn</div>
+            </div>
+        </div>
+
+        @* <div class="row form-group mb-3">
+            <div class="col-md-6 col-xl-6">
+                <div class="form-control-label d-flex align-items-center">Term</div>
+                <div class="form-control-plaintext">@Model?.Term?.TermText</div>
+            </div>
+        </div> *@
+
+        <div class="row form-group mb-3">
+            <div class="col-md-6 col-xl-4">
+                <div class="form-control-label d-flex align-items-center">Student Fee Group</div>
+                <div class="form-control-plaintext">@Model?.Student?.StudentFeeGroup?.Name</div>
+            </div>
+            <div class="col-md-6 col-xl-4">
+                <div class="form-control-label d-flex align-items-center">Admission Type</div>
+                <div class="form-control-plaintext">@Model?.Student?.AdmissionInformation?.AdmissionType?.NameEn</div>
+            </div>
+            <div class="col-md-12 col-xl-4">
+                <div class="form-control-label d-flex align-items-center">Registration Type</div>
+                <div class="form-control-plaintext">@Model?.TypeText</div>
+            </div>
+        </div>
+
+        <div class="row form-group mb-3">
+            <table class="table table-bordered m-0 w-100x">
+                <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th>Fee Item</th>
+                        <th class="text-right">Amount</th>
+                        <th class="text-right">Scholarship</th>                            
+                        <th class="text-right">Waive</th>
+                        <th class="text-right">Total Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.InvoiceItems != null && Model.InvoiceItems.Any())
+                    {
+                        foreach (var item in Model.InvoiceItems)
+                        {
+                            <tr>
+                                <td class="text-center">@index</td>
+                                <td>
+                                    <b>@(string.IsNullOrEmpty(item.FeeItemName) ? item.FeeItem.NameEn : item.FeeItemName) @(string.IsNullOrEmpty(item.Course?.CodeAndCredit) ? "" : "for " + item.Course.CodeAndCredit + "(" + item.Section?.Number + $") {(Model.IsAddDrop.HasValue && Model.IsAddDrop.Value ? (item.TotalAmount < 0 ? " (Drop)" : " (Add)") : "")}")</b><br>
+                                        @if (item.Course != null) 
+                                        {
+                                        @($"{item.Course?.NameEn}")
+                                        }
+                                </td>
+                                <td class="text-right">@item.AmountText</td>
+                                <td class="text-right">@item.ScholarshipAmountText</td>
+                                <td class="text-right">@item.DiscountAmountText</td>
+                                <td class="text-right">@item.TotalAmountText</td>
+                            </tr>
+                            @if (!string.IsNullOrEmpty(item.DiscountRemark))
+                            {
+                                <tr>
+                                    <td colspan="6" class="text-left">Waive Remark : @item.DiscountRemark</td>
+                                </tr>
+                            }
+                            ++index;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td class="text-center" colspan="6">
+                                <i class="text-danger">No Data</i>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td class="text-right border-right-0 font-weight-600" colspan="5">Amount : </td>
+                        <td class="text-right border-right-0 border-left-0">@Model?.AmountText</td>
+                    </tr>
+                    <tr>
+                        <td class="text-right border-right-0 font-weight-600" colspan="5">Scholarship : </td>
+                        <td class="text-right border-right-0 border-left-0">@Model?.ScholarshipAmountText</td>
+                    </tr>
+                    <tr>
+                        <td class="text-left border-right-0 border-left-0" colspan="4">Remark : @Model?.DiscountRemark</td>
+                        <td class="text-right border-right-0 font-weight-600">Discount : </td>
+                        <td class="text-right border-right-0 border-left-0">@Model?.AllDiscountAmountText</td>
+                    </tr>
+                    <tr>
+                        <td class="text-right border-right-0 font-weight-600" colspan="5">Total Amount : </td>
+                        <td class="text-right border-right-0 border-left-0">@Model?.TotalAmountText </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+         <div class="row form-group">
+            <div class="col-md-6 col-xl-4">
+                <div class="form-control-label d-flex align-items-center">Reference 1</div>
+                <div class="form-control-plaintext"><a asp-controller="PaymentLogReport"
+                                                        asp-action="Index"
+                                                        asp-route-criteria.UpdatedFrom="@(Model?.CreatedAt.ToString("dd/MM/yyyy") ?? DateTime.MinValue.ToString("dd/MM/yyyy"))"
+                                                        asp-route-criteria.UpdatedTo="@(DateTime.Now.ToString("dd/MM/yyyy"))"
+                                                        asp-route-criteria.ReferenceNumber="@Model?.Reference1"
+                                                        >
+                                                        @Model?.Reference1
+                                                    </a></div>
+            </div>
+            <div class="col-md-6 col-xl-4">
+                <div class="form-control-label d-flex align-items-center">Reference 2</div>
+                <div class="form-control-plaintext">@Model?.Reference2</div>
+            </div>
+            <div class="col-md-6 col-xl-4">
+                @*<div class="form-control-label d-flex align-items-center">Reference 3</div>
+                <div class="form-control-plaintext">@Model?.Reference3</div>*@
+            </div>
+         </div>
+         <div class="row form-group">
+              <div class="col-md-6 col-xl-4">
+                <div class="form-control-label d-flex align-items-center">Invoice Expired At (for student QR Payment)</div>
+                <div class="form-control-plaintext">
+                    @(Model?.PaymentExpireAt?.ToString("dd/MM/yyyy") ?? "N/A")
+                </div>
+            </div>      
+            
+            <div class="col-md-6 col-xl-4">
+                <div class="form-control-label d-flex align-items-center">Invoice Status</div>
+                <div class="form-control-plaintext">
+                    @if (Model.IsCancel)
+                    {
+                           <span class="ks-label bg-danger">Cancel</span>
+                    }
+                      else if (Model.IsPaid)
+                        {
+                            <span class="ks-label bg-success">Paid</span>
+                        }
+                        else
+                        {
+                            <span class="ks-label bg-danger">UnPaid</span>
+                        }
+                 
+                </div>
+            </div>
+            @if (Model.IsCancel)
+            {
+                  <div class="col-md-6 col-xl-4">
+                    <div class="form-control-label d-flex align-items-center">Cancel Remark</div>
+                    <div class="form-control-plaintext">
+                        @Model.CancelRemark
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>

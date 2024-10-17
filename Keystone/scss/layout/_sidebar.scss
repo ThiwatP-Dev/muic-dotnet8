@@ -1,0 +1,343 @@
+/*------------------------------------
+    Sidebar
+------------------------------------*/
+
+%active-tracker {
+    color: inherit;
+    background-color: rgba($white-light, $alpha: .2);
+    border-top: 1px solid rgba($white-light, $alpha: .3);
+    border-bottom: 1px solid rgba($white-light, $alpha: .3);
+}
+
+@-webkit-keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+ 
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+ 
+.fadeOut {
+    -webkit-animation-name: fadeOut;
+    animation-name: fadeOut;
+}
+
+.ks-sidebar {
+    position: fixed;
+    z-index: 1002;
+    top: 0;
+    width: 50px;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-size: 0.52857rem;
+    letter-spacing: .65px;
+    //@include transition-all;
+    
+    &--has-border {
+        border: 1px solid #f7f7f7 !important;
+    }
+
+    &__toggler {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        padding: 0 .75rem;
+        min-height: 50px;
+        z-index: 1;
+
+        > button {
+            padding-left: 0;
+            padding-right: 5px;
+            color: $white;
+        }
+    }
+
+    &__section {
+        position: relative;
+        z-index: 1;
+
+        &.expanded {
+            span.menu-title,
+            button.navbar-toggler {
+                display: block;
+            }
+        }
+
+        &:nth-child(1) {
+            z-index: 5;
+        }
+        &:nth-child(2) {
+            z-index: 4;
+        }
+        &:nth-child(3) {
+            z-index: 3;
+        }
+        &:nth-child(4) {
+            z-index: 2;
+        }
+        &:nth-child(5) {
+            z-index: 1;
+        }
+
+        > .navbar {
+            padding-left: 0;
+            padding-right: 0;
+
+            > .container {
+                width: 100%;
+                padding-left: 0;
+                padding-right: 0;
+                -webkit-box-orient: vertical;
+                -webkit-box-direction: normal;
+                -ms-flex-direction: column;
+                flex-direction: column;
+            }
+
+            > .navbar-collapse {
+                -webkit-box-orient: vertical;
+                -webkit-box-direction: normal;
+                -ms-flex-direction: column;
+                flex-direction: column;
+            }
+        }
+    }
+
+    .ks-logo {
+        display: none;
+        mix-blend-mode: screen;
+        background-blend-mode: screen;
+
+        > img {
+            object-fit: cover;
+            height: 40px;
+        }
+    }
+}
+
+.ks-nav-menu {
+    max-height: calc(100vh - 100px);
+    overflow-y: scroll;
+    &::-webkit-scrollbar {
+        width: 5px;
+        background-color: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+        border: 1px solid $primary;
+        background-color: $secondary;
+    }
+    
+    > li {
+        display: flex;
+        justify-content: space-between;
+        height: min-content;
+        padding: 0 .75rem;
+        border-top: 1px solid transparent;
+        border-bottom: 1px solid transparent;
+        
+        /*&.sign-out {
+            > a:hover {
+                @extend %active-tracker;
+            }
+
+            &.active > a {
+                @extend %active-tracker;
+            }
+        }
+        
+        &:not(:first-child) {
+
+            > a:hover {
+                @extend %active-tracker;
+            }
+
+            &.active > a {
+                @extend %active-tracker;
+            }
+        }
+
+        &:first-child {
+
+            > a:hover {
+                color: inherit;
+            }
+
+        }*/
+
+        &.active,
+        &:hover {
+            @extend %active-tracker;
+        }
+    
+        a {
+            display: flex;
+            align-items: center;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            color: inherit;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+
+            i {
+                display: block;
+                width: 25px;
+                text-align: center;
+            }
+
+            span.menu-title {
+                margin-left: 1rem;
+                display: none;
+            }
+
+            h4 {
+                margin: 0;
+                font-size: 0.65rem;
+            }
+        }
+
+        button.navbar-toggler {
+            color: $white;
+            display: none;
+            padding: 0 .25rem;
+
+            &.collapsed {
+                > i {
+                    transform: rotate(90deg);
+                }
+            }
+        }
+
+        &.collapsing {
+            transition: none;
+            
+            :only-child {
+                display: none;
+            }
+        }
+    }
+
+    .nav-sub-item {
+        padding-left: calc(25px + .75rem);
+        background-color: rgba($secondary, .1);
+
+        .nav-link-item {
+            font-size: 14px;
+            text-overflow: ellipsis;
+        }
+    }
+}
+
+.ks-mini-sidebar {
+    position: fixed;
+    z-index: 100;
+    top: 0;
+    left: 2.92857rem;
+    height: 100%;
+    width: 240px;
+    background-color: $white-lighter;
+    visibility: hidden;
+
+    > .side-navbar {
+        position: relative;
+        z-index: 999;
+        display: block;
+        height: 100%;
+        padding: 0;
+        min-width: 240px;
+        max-width: 240px;
+        color: $white;
+        
+        a {
+            visibility: hidden;
+
+            &[data-toggle="collapse"]:before {
+                position: absolute;
+                top: 50%;
+                right: 20px;
+                display: inline-block;
+                font-family: "Font Awesome 5 Free";
+                font-size: .9rem;
+                font-weight: 900;
+                transform: translateY(-50%);
+                content: "\f104";
+            }
+
+            &[aria-expanded="true"] {
+                margin: 0 10px 0 10px;
+                background: transparent;
+                border-radius: 4px 4px 0 0;
+
+                &:before {
+                    content: '\f107';
+                }
+            }
+
+            i {
+                display: inline-block;
+                margin-right: 10px;
+                color: $primary;
+                font-size: 1.2rem;
+                visibility: hidden;
+                transition: none;
+            }
+        }
+
+        ul {
+            padding: 10px 0;
+
+            a {
+                display: block;
+                padding: 7px 10px;
+                margin: 0 10px 0 10px;
+                font-weight: 500;              
+                text-decoration: none;
+            }
+
+            li ul li a.active {
+                color: $primary;
+            }
+
+            ul {
+                margin: 0 10px 0 10px;
+                background: transparent;
+                border-radius: 0 0 4px 4px;        
+
+                a {
+                    padding-left: 31px;
+                    font-size: .9rem;
+                }
+                    
+            }
+        }
+    }
+    
+    &.expanded {
+        visibility: visible;
+
+        a {
+            position: relative;
+            color: $black_50;
+            font-size: 1rem;
+            visibility: inherit;
+            transition: color 0.3s,background 0.3s;
+        }
+
+        i {
+            visibility: visible !important;
+        }
+    }
+}

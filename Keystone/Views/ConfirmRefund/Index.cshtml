@@ -1,0 +1,148 @@
+@model PagedResult<ConfirmRefundViewModel>
+@{ 
+    ViewData["Title"] = "Confirm Refund";
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>@ViewData["Title"]</header>
+            </div>
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="ConfirmRefund" asp-action="Index" method="GET">
+                    <div class="row form-group mb-0">
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-academic-level"
+                                    asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Academic Level<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="@ViewBag.Terms" data-placeholder="Select">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Term<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.IsExcludeBalanceInvoice" asp-items="ViewBag.ExcludeBalanceInvoices"></select>
+                            <label>Balance Invoice Mode</label>
+                        </div>
+                        <div class="col-3 align-self-end text-right text-nowrap">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <a id="js-reset-btn" class="btn btn-mw-120 btn--reset" asp-action="Index">Reset</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <form asp-controller="ConfirmRefund" asp-action="Edit" method="POST">
+                @Html.AntiForgeryToken()
+                <div class="block__title">
+                    <div class="row form-group mb-0 pl-3 pr-4">
+                        <div class="col-12 align-self-end text-right text-nowrap">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="block__body">
+                    <div class="table-responsive unset-overflow">
+                        <table id="js-confirm-refund" class="table table-bordered w-100x">
+                            <thead>
+                                <tr>
+                                    <th class="w-25 text-center no-print">
+                                        <input id="checkAll" class="js-check-all" type="checkbox">
+                                        <label class="mt-2 mb-0 m-l-2" for="checkAll"></label>
+                                    </th>
+                                    <th>Invoice</th>
+                                    <th>Code</th>
+                                    <th>Name</th>
+                                    <th class="text-right">Amount</th>
+                                    <th class="text-center no-print">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="js-items">
+                                @if (Model != null && Model.Results != null && Model.Results.Any())
+                                {
+                                    for (int i = 0; i < Model.Results.Count; i++)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @if (Model.Results[i].IsChecked)
+                                                {
+                                                    <input id="Results[@i]" class="form-check-input" name="Results[@i].IsChecked" type="checkbox" value="true" checked>
+                                                }
+                                                else
+                                                {
+                                                    <input id="Results[@i]" class="form-check-input" name="Results[@i].IsChecked" type="checkbox" value="true">
+                                                }
+                                                
+                                                <label class="js-focus-item m-0" for="Results[@i]"></label> 
+
+                                                <input name="Results[i].IsChecked" type="hidden" value="false">
+                                                <input asp-for="Results[i].InvoiceId" type="hidden">
+                                                <input asp-for="Results[i].InvoiceNumber" type="hidden">
+                                                <input asp-for="Results[i].StudentCode" type="hidden">
+                                                <input asp-for="Results[i].StudentName" type="hidden">
+                                                <input asp-for="Results[i].Amount" type="hidden">
+                                            </td>
+                                            <td>@Model.Results[i].InvoiceNumber</td>
+                                            <td>@Model.Results[i].StudentCode</td>
+                                            <td>@Model.Results[i].StudentName</td>
+                                            <td>@Model.Results[i].AmountText</td>
+                                            <td class="text-nowrap td-actions">
+                                                <a class="js-invoice-detail"
+                                                    data-toggle="modal"
+                                                    data-target="#js-invoice-details-modal"
+                                                    data-value="@Model.Results[i].InvoiceId">
+                                                    <i class="la la-info info"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td class="text-center" colspan="6">
+                                            <i class="text-danger">No data</i>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <input asp-for="Criteria.AcademicLevelId" type="hidden">
+                <input asp-for="Criteria.TermId" type="hidden">
+
+                <div class="block__action container">
+                    <div class="block__action-row">
+                        <button type="submit" class="btn btn-mw-120 btn--primary">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Modals {
+    <partial name="~/Views/Registration/Invoice/_DetailsModal.cshtml" model="new Invoice()"/>
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/confirm-refund.js"></script>
+}

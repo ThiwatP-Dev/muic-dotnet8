@@ -1,0 +1,129 @@
+@model PagedResult<BatchCondition>
+@{ 
+    ViewData["Title"] = "Batch Condition";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+    var recordNumber = Model?.FirstRowOnPage;
+}
+
+<section class="row">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Batch Condition</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="BatchCondition" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+
+                    <div class="row form-group">
+                        <div class="col-9">
+                            <input class="form-control" asp-for="Criteria.StartStudentBatch" type="text">
+                            <label>Batch</label>
+                        </div>
+                        <div class="col-3 align-self-end text-right text-nowrap">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" asp-action="Index" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.RowCount ?? 0))</header>
+                <div class="tools pr-4">
+                    <a class="btn btn--primary btn-mw-120 mb-0 m-r-5" asp-action="Create" asp-route-returnUrl="@contextPath">
+                        <i class="la la-plus mr-1 font-weight-800"></i> Add Batch Condition
+                    </a>
+                </div>
+            </div>
+            
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover js-datatable-export-excel w-100x">
+                        <thead>
+                            <tr>
+                                <th class="text-center w-75">#</th>
+                                <th class="text-center w-75">Id</th>
+                                <th>Batch</th>
+                                <th>Description</th>
+                                <th class="text-center">Expired Date</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center no-print">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @if (Model != null && Model.Results.Any())
+                        {
+                            foreach (var item in Model.Results) 
+                            {
+                                <tr>
+                                    <td>@recordNumber</td>
+                                    <td>@item.Id</td>
+                                    <td>@item.Batch</td>
+                                    <td>@item.Description</td>
+                                    <td>@item.ExpiredAtText</td>
+                                    <td>
+                                        <partial name="_BooleanActive" model="@item.IsActive" />
+                                    </td>
+                                    <td class="text-nowrap td-actions">
+                                        <a asp-controller="BatchCondition"
+                                           asp-action="Edit"
+                                           asp-route-Id="@item.Id"
+                                           asp-route-returnUrl="@contextPath"
+                                           title="Edit">
+                                            <i class="la la-edit edit"></i>
+                                        </a>
+                                        <a data-toggle="modal" 
+                                           data-target="#delete-confirm-modal" 
+                                           asp-action="Delete"
+                                           asp-route-Id="@item.Id"
+                                           asp-route-returnUrl="@contextPath"
+                                           title="Delete">
+                                            <i class="la la-trash delete"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                recordNumber++;
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="9">
+                                    <i class="text-danger">No Data</i>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @(await Component.InvokeAsync<PagerViewComponent>(Model))
+    </div>
+</section>
+
+@section Modals {
+    <partial name="_DeleteConfirmModals">
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/datatable-export-excel.js"></script>
+}

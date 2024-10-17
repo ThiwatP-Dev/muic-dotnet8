@@ -1,0 +1,113 @@
+@model FullScholarshipRegistrationResultViewModel
+
+<div class="row">
+    <div class="ks-page-header col-lg-12">
+        <h2 class="ks-page-header__title">
+            <a class="btn-back" href="@ViewBag.ReturnUrl">
+                <i class="la la-angle-double-left mr-1"></i>Back
+            </a>
+        </h2>
+    </div>
+</div>
+
+<section>
+    <div class="col-lg-12">
+        <div class="block block--underline">
+            @if (Model != null && Model.Invoices.Any())
+            {
+                <form asp-controller="FullScholarshipRegistration" asp-action="Paid" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="block__body">
+                        <div class="row form-group">
+                            <div class="col-lg-12">
+                                <h2 class="ks-page-header__title">@Model.StudentCode @Model.StudentFullName</h2>
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-5">
+                                <div class="form-control-plaintext">Scholarship : @Model.ScholarshipName</div>
+                            </div>
+                            <div class="col-7">
+                                <div class="form-control-plaintext">Balance : @Model.BalanceText</div>
+                            </div>
+                        </div>
+                        @foreach (var invoice in Model.Invoices)
+                        {
+                            var index = 1;
+                            <div class="row form-group mb-3">
+                                <div class="col-5">
+                                    <div class="form-control-plaintext">Invoice Number : @invoice.Number</div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="form-control-plaintext">Date : @invoice.CreatedAtText</div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-control-plaintext">Type : @invoice.TypeText</div>
+                                </div>
+                            </div>
+
+                            <div class="table-responsive js-render-nicescroll">
+                                <table class="table table-bordered table-hover w-100x">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">#</th>
+                                            <th>Fee Item</th>
+                                            <th>Course</th>
+                                            <th class="text-center">Section</th>
+                                            <th class="text-right">Amount</th>
+                                            <th class="text-center">Paid</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in invoice.InvoiceItems)
+                                        {
+                                            <tr>
+                                                <td>@index</td>
+                                                <td>@item.FeeItem.NameEn</td>
+                                                <td>@item.Course?.CourseAndCredit</td>
+                                                <td>@item.Section?.Number</td>
+                                                <td>@item.TotalAmountText</td>
+                                                <td>
+                                                    <partial name="_BooleanResult" model="@item.IsPaid" />
+                                                </td>
+                                            </tr>
+                                            index++;
+                                        }
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="4" class="text-right">Total</td>
+                                            <td class="text-right"><b>@invoice.TotalAmountText</b></td>
+                                            <td></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        }
+
+                        <div class="row form-group mb-5">
+                            <div class="col-12 text-right">
+                                <span><b>Grand Total : @Model.TotalAmountText</b></span>
+                            </div>
+                        </div>
+
+                        <input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+                        <input asp-for="@Model.InvoiceIds" type="hidden">
+
+                        <div class="row form-group">
+                        <div class="col-12 text-right">
+                            @if (Model.Invoices.Any(x => !x.IsPaid))
+                            {
+                                <button class="btn btn-mw-120 btn--primary" type="submit">Paid</button>
+                            }
+                            
+                            <a class="btn btn-mw-120 btn--cancel" href="@ViewBag.ReturnUrl">Cancel</a>
+                        </div>
+                    </div>
+                    </div>
+                </form>
+            }
+        </div>
+    </div>
+</section>

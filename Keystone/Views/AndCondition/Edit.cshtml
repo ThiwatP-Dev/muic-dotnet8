@@ -1,0 +1,19 @@
+@model AndCondition
+@{ 
+    ViewData["Title"] = "Edit And Condition"; 
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <form class="ks-form container" asp-controller="AndCondition" asp-action="Edit" method="POST">
+                @Html.AntiForgeryToken()
+                <partial name="_Form"/>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/condition-type-id.js"></script>
+}

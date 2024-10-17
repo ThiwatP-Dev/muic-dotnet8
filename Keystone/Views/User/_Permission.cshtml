@@ -1,0 +1,71 @@
+@model PermissionViewModel
+
+<table class="table table-hover w-100x">
+    <thead>
+        <tr>
+            <th>Menu Group</th>
+            <th>Menu Subgroup</th>
+            <th>Menu</th>
+            <th class="text-nowarp text-center no-sort w-300">Permission</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.Menus.Count; i++)
+        {
+            int j = 0;
+            <tr>
+                <td>
+                    <span class="font-weight-700">@Model.Menus[i].GroupName</span>
+                </td>
+                <td>
+                    <span class="font-weight-700">@Model.Menus[i].SubgroupName</span>
+                </td>
+                <td>
+                    <span class="font-weight-700">@Model.Menus[i].Name</span>
+                </td>
+                <td class="p-1">
+                    <div class="input-group d-flex justify-content-center">
+                        <input hidden name="Menus[@i].Id" value="@Model.Menus[i].Id" />
+                        <input hidden name="Menus[@i].Name" value="@Model.Menus[i].Name" />
+                        <input hidden name="Menus[@i].GroupName" value="@Model.Menus[i].GroupName" />
+                        <input hidden name="Menus[@i].SubgroupName" value="@Model.Menus[i].SubgroupName" />
+                        <input id="read-item_@i" class="form-check-input js-read-items" data-group="read-@i"
+                        data-item="@j" type="checkbox" asp-for="@Model.Menus[i].IsReadAble" />
+                        <label class="mb-0 mr-5" for="read-item_@i"> Read</label>
+                        <input id="write-item_@i" class="form-check-input js-write-items" data-group="write-@i"
+                        data-item="@j" type="checkbox" asp-for="@Model.Menus[i].IsWriteAble" />
+                        <label class="mb-0" for="write-item_@i"> Write</label>
+                    </div>
+                </td>
+            </tr>
+
+            if (Model.Menus[i].Tabs != null)
+            {
+                for (j = 0; j < Model.Menus[i].Tabs.Count; j++)
+                {
+                    <tr>
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                            <span class="ml-4">@Model.Menus[i].Tabs[j].Name</span>
+                        </td>
+                        <td>
+                            <div class="input-group d-flex justify-content-center">
+                                <input hidden name="Menus[@i].Tabs[@j].Name" value="@Model.Menus[i].Tabs[j].Name" />
+                                <input hidden asp-for="@Model.Menus[i].Tabs[@j].Id" />
+                                <input id="read-item_@i-@j" class="form-check-input js-read-items" data-group="read-@i"
+                                data-item="@(j+1)" type="checkbox" asp-for="@Model.Menus[i].Tabs[j].IsReadAble" />
+                                <label class="mb-0 mr-5" for="read-item_@i-@j"> Read</label>
+                                <input id="write-item_@i-@j" class="form-check-input js-write-items" data-group="write-@i"
+                                data-item="@(j+1)" type="checkbox" asp-for="@Model.Menus[i].Tabs[j].IsWriteAble" />
+                                <label class="mb-0" for="write-item_@i-@j"> Write</label>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+        }
+    </tbody>
+</table>

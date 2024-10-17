@@ -1,0 +1,161 @@
+@{ 
+    ViewData["Title"] = "Match Student Fee Group";
+}
+
+<section class="row">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</section>
+
+<section class="block block--underline">
+    <div class="block__title">
+        <header>Search Student</header>
+    </div>
+    
+    <div class="block__body">
+        <form class="form-horizontal" asp-controller="MatchStudentFeeGroup" asp-action="Index" method="POST">
+            <div class="row form-group">
+                <div class="col-3">
+                    <select class="chosen-select form-control js-cascade-academic-level"
+                            asp-items="ViewBag.AcademicLevels" data-placeholder="Select">
+                        <option selected disabled>Select</option>
+                    </select>
+                    <label>Academic Level<span class="text-danger">*</span></label>
+                </div>
+                <div class="col-3">
+                    <select class="chosen-select form-control js-cascade-admission-round"
+                            asp-items="ViewBag.AddmissionRounds" data-placeholder="Select">
+                        <option selected disabled>Select</option>
+                    </select>
+                    <label>Admission Round<span class="text-danger">*</span></label>
+                </div>
+                <div class="col-3">
+                    <input class="form-control" type="text">
+                    <label>Batch Start</label>
+                </div>
+                <div class="col-3">
+                    <input class="form-control" type="text">
+                    <label>End</label>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <div class="col-3">
+                    <select class="chosen-select form-control js-cascade-faculty" asp-items="ViewBag.Faculties"
+                            data-placeholder="Select">
+                        <option selected value="">Select</option>
+                    </select>
+                    <label>Division<label>
+                </div>
+                <div class="col-3">
+                    <select class="chosen-select form-control js-cascade-department" asp-items="ViewBag.Departments" data-placeholder="Select">
+                        <option selected value="">Select</option>
+                    </select>
+                    <label>Major</label>
+                </div>
+                <div class="col-3">
+                    <select class="chosen-select form-control" asp-items="ViewBag.Curriculums" data-placeholder="Select">
+                        <option selected value="">Select</option>
+                    </select>
+                    <label>Curriculum<label>
+                </div>
+                <div class="col-3">
+                    <select class="chosen-select form-control" asp-items="ViewBag.CurriculumVersions" data-placeholder="Select">
+                        <option selected value="">Select</option>
+                    </select>
+                    <label>Curriculum Version</label>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <div class="col-3">
+                    <select class="chosen-select form-control" asp-items="ViewBag.Nationalities" data-placeholder="Select">
+                        <option selected value="">Select</option>
+                    </select>
+                    <label>Nationality</label>
+                </div>
+                <div class="col-3">
+                    <select class="chosen-select form-control" asp-items="ViewBag.StudentFeeTypes" data-placeholder="Select"></select>
+                    <label>Student Fee Type</label>
+                </div>
+                <div class="col-6 text-right align-self-end">
+                    <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                        <i class="la la-search mr-2"></i>Search
+                    </button>
+                    <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                        Reset
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+<section class="block block--underline">
+    <div class="block__body">
+        <form id="js-macth-form" class="form-horizontal" asp-controller="MatchStudentFeeGroup" asp-action="Matching" method="POST">
+            <div class="row form-group mb-3">
+                <div class="col-6">
+                    <select id="js-get-fee-group" class="chosen-select form-control" asp-items="ViewBag.StudentFeeGroup" data-placeholder="Select">
+                        <option selected value="">Select</option>
+                    </select>
+                    <label class="font-weight-700">Student Fee Group<label>
+                </div>
+            </div>
+
+            <div class="form-group table-responsive">
+                <header class="font-weight-700 mb-2">Student List</header>
+                <table id="js-term-fee-list" class="table table-bordered table-hover m-0">
+                    <thead>
+                        <tr>
+                            <th class="w-25 text-center">
+                                <input id="check-all" class="js-check-all" name="select-item" type="checkbox">
+                                <label class="form-check-input" for="check-all"></label>
+                            </th>
+                            <th class="text-center">Code</th>
+                            <th>Name</th>
+                            <th>Division</th>
+                            <th>Major</th>
+                            <th>Curriculum Version</th>
+                            <th class="text-center">Nationality</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <input id="check0" type="checkbox">
+                                <label class="form-check-input" for="check0"></label>
+                            </td>
+                            <td>0000000</td>
+                            <td>item.FullNameEn</td>
+                            <td>item.Faculty</td>
+                            <td>item.Department</td>
+                            <td>item.CurriculumVersion</td>
+                            <td>item.Nationality</td>
+                        </tr>           
+                    </tbody>
+                </table>
+            </div>
+
+            <input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+
+            <div class="block__action-row pb-0">
+                <button class="btn btn-mw-120 btn--primary m-r-5 mb-0"
+                        data-toggle="modal"
+                        data-target="#match-confirm-modal"
+                        data-form-id="#js-macth-form"
+                        type="button">Save</button>
+                <a class="btn btn-mw-120 btn--cancel mb-0" href="@ViewBag.ReturnUrl">Cancel</a>
+            </div>
+        </form>
+    </div>
+</section>
+
+@section Modals {
+    <partial name="_MatchConfirmModals">
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/match-student-fee-group.js"></script>
+}

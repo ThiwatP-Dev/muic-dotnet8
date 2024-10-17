@@ -1,0 +1,59 @@
+@model Instructor
+@{
+    ViewData["Profile"] = (Model?.ProfileImageURL == null) ? "../images/img100x100.jpg" : Model.ProfileImageURL;
+    ViewData["Title"] = $"{ Model?.Code } - { Model?.FirstNameEn } { Model?.LastNameEn }";
+    ViewData["SubTitle"] = $"{ Model?.InstructorWorkStatus?.Faculty?.NameEn} - { Model?.InstructorWorkStatus?.Department?.NameEn }";
+    ViewData["LastUpdate"] = Model?.LastUpdate;
+}
+
+<section id="instructor" class="row">
+    <div class="col-md-12">
+        <div class="tabs-scroller float-left"><i class="la la-angle-double-left"></i></div>
+        <div class="tabs-scroller float-right"><i class="la la-angle-double-right"></i></div>
+        <div class="nav-tabs-wrapper">
+            <ul class="nav nav-tabs ks-tabs" role="tablist">
+                <li class="nav-item">
+                    <a id="nav-link-0" class="nav-link active" href="#nav-tab-0" data-toggle="tab">
+                        General
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a id="nav-link-1" class="nav-link" href="#nav-tab-1" data-toggle="tab">
+                        Work Status
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a id="nav-link-2" class="nav-link" href="#nav-tab-2" data-toggle="tab">
+                        Teaching Status
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="tab-content" id="instructor-profile-tab-content">
+                <div class="tab-pane fadeIn faster animated show active" id="nav-tab-0" role="tabpanel">
+                    <partial name="_GeneralInfo" />
+                </div>
+                <!-- End General Info -->
+                <div class="tab-pane fadeIn faster animated" id="nav-tab-1" role="tabpanel">
+                    <partial name="_WorkStatusInfo" />
+                </div>
+                <!-- End Work Status Info. -->
+                <div class="tab-pane fadeIn faster animated" id="nav-tab-2" role="tabpanel">
+                    <partial name="_TeachingStatusInfo" />
+                </div>
+                <!-- End Teaching Status Info. -->
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/tabs.js"></script>
+    <script>
+        $(document).ready(function() {
+            var tab = '#nav-link-' + getUrlParameter('tabIndex');
+            $(tab).tab('show'); 
+        });
+    </script>
+}

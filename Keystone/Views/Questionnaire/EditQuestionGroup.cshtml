@@ -1,0 +1,14 @@
+@model Questionnaire
+@{
+    ViewData["Title"] = $"Edit { Model.NameEn } | Questionnaire Form";
+}
+
+<div class="questionnaire">
+    <form method="POST" asp-action="EditQuestionGroup">
+        <partial name="_Questionnaire" model="@Model" />
+    </form>
+</div>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/questionnaire/questionnaire-form.js"></script>
+}

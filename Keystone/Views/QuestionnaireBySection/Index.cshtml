@@ -1,0 +1,218 @@
+@model QuestionnaireByInstructorAndSectionViewModel
+@{ 
+    ViewData["Title"] = "Questionnaire By Section"; 
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+    var noDataColSpan = 1;
+    var index = 1;
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Questionnaire By Section</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="QuestionnaireBySection" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group m-b-30">
+                        <div class="col-2">
+                            <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Academic Level<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-2">
+                            <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="ViewBag.Terms">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Term<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-8">
+                            <select class="chosen-select form-control js-cascade-course" asp-for="Criteria.CourseId" asp-items="ViewBag.Courses">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Course<span class="text-danger">*</span></label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-section" asp-for="Criteria.SectionId" asp-items="ViewBag.Sections">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Section<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-8 align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        @if (Model != null && Model.Header != null)
+        {
+            <form class="form-horizontal export-excel-form" asp-controller="QuestionnaireBySection" asp-action="ExportExcel" method="POST">
+                <div class="block block--underline">
+                    <div class="block__title">
+                        <header>Search Result (@(Model?.Students?.Count ?? 0))</header>
+                        <header class="float-right">
+                            <button class="btn btn--primary mb-0 js-export-excel" type="submit">Export Excel</button>
+                        </header>
+                    </div>
+
+                    <div class="block__body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover w-100x">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center" rowspan="2">No.</th>
+                                        @if (Model != null && Model.Header.Any())
+                                        {
+                                            var i = 0;
+                                            foreach (var group in Model.Header)
+                                            {
+                                                if (group.Questions.All(x => x.Type == "s"))
+                                                {
+                                                    <th rowspan="2" colspan="@group.Questions.Count"><div class="text-center">@group.GroupName</div></th>
+                                                }
+                                                else
+                                                {
+                                                    <th colspan="@group.Questions.Count"><div class="text-center">@group.GroupName</div></th>
+                                                }
+
+                                                <input name="Header[@i].GroupName" value="@group.GroupName" hidden>
+                                                i++;
+                                            }
+                                            <th class="text-right" rowspan="2"><div class="text-right">Total</div></th>
+                                        }
+                                    </tr>
+                                    <tr>
+                                        @if (Model != null && Model.Header.Any())
+                                        {
+                                            var i = 0;
+                                            @foreach (var group in Model.Header)
+                                            {
+                                                var j = 0;
+                                                foreach (var question in group.Questions)
+                                                {
+                                                    if (question.Type != "s")
+                                                    {
+                                                        if (question.IsCalculate)
+                                                        {
+                                                            <th class="text-right">@question.Order*</th>
+                                                        }
+                                                        else 
+                                                        {
+                                                            <th class="text-right">@question.Order</th>
+                                                        }
+                                                        <input name="Header[@i].Questions[@j].Order" value="@question.Order" hidden>
+                                                    }
+                                                    
+                                                    <input name="Header[@i].Questions[@j].Type" value="@question.Type" hidden>
+                                                    noDataColSpan++;
+                                                    j++;
+                                                }
+                                                
+                                                i++;
+                                            }
+                                        }
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model != null && Model.Students != null && Model.Students.Any())
+                                    {
+                                        decimal totalAverage = 0;
+                                        var i = 0;
+                                        foreach (var student in Model.Students) 
+                                        {
+                                            var answerSource = student?.Questions?.Where(x => x.IsCalculate && x.Type != "s" && x.Answer != 0).ToList() ?? new List<QuestionnaireByInstructorAndSectionQuestion>();
+                                            var average = answerSource.Any()? answerSource.Average(x => x.Answer) : 0;
+                                            var j = 0;
+                                            <tr>
+                                                <td>@index</td>
+                                                @* <td>@student.StudentCode</td>
+                                                <input name="Students[@i].Title" value="@student.Title" hidden>
+                                                <input name="Students[@i].FirstName" value="@student.FirstName" hidden>
+                                                <input name="Students[@i].MidName" value="@student.MidName" hidden>
+                                                <input name="Students[@i].LastName" value="@student.LastName" hidden> *@
+                                                @foreach (var head in Model.Header)
+                                                {
+                                                    foreach (var headQuestion in head.Questions)
+                                                    {
+                                                        foreach (var question in student.Questions.Where(x => x.QuestionId == headQuestion.QuestionId))
+                                                        {
+                                                            if (question.Type == "s")
+                                                            {
+                                                                <td class="text-right">@question.AnswerText</td>
+                                                                <input name="Students[@i].Questions[@j].AnswerText" value="@question.AnswerText" hidden>
+                                                            }
+                                                            else
+                                                            {
+                                                                <td class="text-right">@question.Answer</td>
+                                                                <input name="Students[@i].Questions[@j].Answer" value="@question.Answer" hidden>
+                                                            }
+
+                                                            <input name="Students[@i].Questions[@j].Type" value="@question.Type" hidden>
+                                                            j++;
+                                                        }
+                                                    }
+                                                }
+                                                <td class="text-right">@average.ToString(StringFormat.TwoDecimal)</td>
+                                                <input name="Students[@i].Average" value="@average" hidden>
+                                            </tr>
+                                            totalAverage += average;
+                                            i++;
+                                            index++;
+                                        }
+
+                                        <input name="returnUrl" value="@contextPath" hidden>
+                                        <input  name="TotalAverage" value="Model.TotalAverage" hidden>
+
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="@noDataColSpan" class="text-center"><b>Total</b></td>
+                                                <td class="text-right js-col-total"><b>@Model.TotalAverage</b></td>
+                                            </tr>
+                                        </tfoot>
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="@(noDataColSpan + 1)" class="text-center">
+                                                <i class="text-danger">No Data</i>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        }
+        else 
+        {
+            <div class="block block--underline">
+                <div class="block__title">
+                    <header>Data not found.</header>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/questionnaire-by-section.js"></script>
+}

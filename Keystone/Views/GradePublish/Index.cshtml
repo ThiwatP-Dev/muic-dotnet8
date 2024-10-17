@@ -1,0 +1,179 @@
+@model GradeApprovalViewModel
+@{ 
+    ViewData["Title"] = "Grade Publish";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+    var index = 1;
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>@ViewData["Title"]</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="GradePublish" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group mb-0">
+                        <div class="col-8">
+                            <input class="form-control" asp-for="Criteria.Code" type="text">
+                            <label>Barcode Number</label>
+                        </div>
+                        <div class="col-4 align-self-end text-right text-nowrap">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>  
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+@if(Model != null)
+{
+    <section class="row">
+        <div class="col-12">
+            <div class="block block--underline">
+                <div class="block__title">
+                    <header>Barcode List</header>
+                </div>
+
+                <div class="block__body">
+                    <form class="form-horizontal" asp-controller="GradePublish" asp-action="Publishes">
+                        @Html.AntiForgeryToken()
+                        <div class="box-scroll__content border js-render-nicescroll p-0">
+                            <table id="js-grade-approval-table" class="table table-bordered m-0">
+                                <thead class="scroll-header">
+                                    <tr>
+                                        <th class="w-10 text-center">
+                                            <input id="checkAll" class="js-check-all" name="IsChecked" type="checkbox">
+                                            <label class="mt-2 mb-0 m-l-2" for="checkAll"></label>
+                                        </th>
+                                        <th class="text-center">Term</th>
+                                        <th>Name</th>
+                                        <th class="text-center">Joint</th>
+                                        <th class="text-center">Grade Entered</th>
+                                        <th class="text-center">AU / I</th>
+                                        <th class="text-center">No Score</th>
+                                        <th class="text-center">Published</th>
+                                        <th class="text-center">Withdrawn</th>
+                                        <th class="text-center">Section</th>
+                                        <th class="text-center">Approved</th>
+                                        <th class="text-center">Published</th>
+                                        <th class="text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="js-items">
+                                    @if(Model.Details != null && Model.Details.Any())
+                                    {
+                                        @for (int i = 0; i < Model.Details.Count; i++)
+                                        {
+                                            <tr class="js-suggestion-parent">
+                                                <td>
+                                                    @if(!Model.Details[i].IsPublished && Model.Details[i].IsApproved)
+                                                    {
+                                                        @if (Model.Details[i].IsChecked)
+                                                        {
+                                                            <input id="Details[@i]" class="form-check-input" name="Details[@i].IsChecked" type="checkbox" value="true" checked>
+                                                        }
+                                                        else
+                                                        {
+                                                            <input id="Details[@i]" class="form-check-input" name="Details[@i].IsChecked" type="checkbox" value="true" checked="@Model.Details[i].IsPublished">
+                                                        }
+
+                                                        <label class="m-0" for="Details[@i]"></label>
+                                                        <input name="Details[@i].IsChecked" value="false" type="hidden">
+                                                        
+                                                    }
+                                                    <input name="Details[@i].BarcodeId" value="@Model.Details[i].BarcodeId" hidden>
+                                                </td>
+                                                <td>@Model.Details[i].Term</td>
+                                                <td>@Model.Details[i].CourseCode (@Model.Details[i].SectionNumber)</td>
+                                                <td>@Model.Details[i].JointSection</td>
+                                                <td>@Model.Details[i].GradeEnteredStudent</td>
+                                                <td>@Model.Details[i].SpecifyGradeStudent</td>
+                                                <td>@Model.Details[i].NoScoreStudent</td>
+                                                <td>@Model.Details[i].PublishedStudent</td>
+                                                <td>@Model.Details[i].WithdrawnStudent</td>
+                                                <td>@Model.Details[i].SectionStudent</td>
+                                                <td>
+                                                    <partial name="_BooleanResult" model="@Model.Details[i].IsApproved" />
+                                                </td>
+                                                <td>
+                                                    <partial name="_BooleanPublishStatus" model="@Model.Details[i].Status" />
+                                                </td>
+                                                <td class="text-nowrap td-actions">
+                                                    @if (Model.Details[i].PublishedStudent > 0)
+                                                    {
+                                                        <a data-toggle="modal" 
+                                                           data-target="#confirm-revert-modal" 
+                                                           data-controller="GradePublish"
+                                                           data-action="Revert" 
+                                                           data-barcode-id="@Model.Details[i].BarcodeId"
+                                                           data-return-url="@contextPath">
+                                                            <i class="la la-times delete"></i>
+                                                        </a>
+                                                    }
+                                                    else if(Model.Details[i].IsApproved)
+                                                    {
+                                                        <a data-toggle="modal" 
+                                                           data-target="#confirm-publish-modal" 
+                                                           data-controller="GradePublish"
+                                                           data-action="Publish" 
+                                                           data-barcode-id="@Model.Details[i].BarcodeId"
+                                                           data-return-url="@contextPath">
+                                                            <i class="la la-check info"></i>
+                                                        </a>
+                                                    }
+
+                                                    <a asp-controller="GradeScoreSummary"
+                                                       asp-action="Report"
+                                                       asp-route-courseId="@Model.Details[i].CourseId"
+                                                       asp-route-termId="@Model.Details[i].TermId"
+                                                       asp-route-returnUrl="@contextPath">
+                                                        <i class="la la-info info"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            ++index;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="12">
+                                                <i class="text-danger">No Data</i>
+                                            </td>
+                                        </tr>
+                                    }
+
+                                    <input class="js-return-url" name="returnUrl" value="@contextPath" hidden>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="block__action-row">
+                            <button class="btn btn-mw-120 btn--primary js-save-button" type="submit" disabled>Publish</button>
+                            <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+@section Modals {
+    <partial name="_PublishConfirm">
+    <partial name="_RevertConfirm">
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/grade-publish.js"></script>
+}

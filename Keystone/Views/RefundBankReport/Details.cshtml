@@ -1,0 +1,63 @@
+@model List<Refund>;
+@{
+    ViewData["Title"] = "Refund List";
+    var student = Model.FirstOrDefault(); 
+    var index = 1;
+}
+
+<section class="row">
+	<div class="ks-page-header d-flex justify-content-between">
+        <h2 class="ks-page-header__title">
+            <a class="btn-back" asp-action="Index" asp-controller="RefundBankReport"
+               asp-route-termId="@student?.Receipt?.TermId" asp-route-academicLevelId="@student?.Receipt?.Term?.AcademicLevelId">
+                <i class="la la-angle-double-left mr-1"></i>Back
+            </a>
+        </h2>
+        <button class="btn btn-mw-120 btn--primary rounded print-btn mr-3 js-print-btn" type="button">
+            <i class="la la-print mr-2"></i>Print
+        </button>
+	</div>
+
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__body">
+                @if (student != null)
+                {
+                    <header class="align-self-center color-primary p-0">
+                        <h3 class="my-2">@student.Receipt?.Student?.Code @student.Receipt?.Student?.FullNameEn</h3>
+                        <h4 class="my-2">Term: @student.Receipt?.Term?.TermText</h4>
+                    </header>
+                }
+                
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="w-25 text-center">#</th>
+                                <th class="text-center">Receipt Number</th>
+                                <th>Fee Item</th>
+                                <th class="text-center w-200">Percent</th>
+                                <th class="text-right w-200">Amount</th>
+                                <th class="text-center">Refunded Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach(var item in Model)
+                            {
+                                <tr>
+                                    <td>@index</td>
+                                    <td>@item.Receipt?.Number</td>
+                                    <td>@item.ReceiptItem?.FeeItemName</td>
+                                    <td>@item.RefundPercentageText</td>
+                                    <td>@item.RefundAmountText</td>
+                                    <td>@item.RefundedAtText</td>
+                                </tr>
+                                ++index;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

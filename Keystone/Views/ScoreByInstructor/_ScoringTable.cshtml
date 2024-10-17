@@ -1,0 +1,167 @@
+@model EditScoringViewModel
+@{
+    var template_index = 0;
+    var studentIndex = 0;
+}
+<input id="js-allocation-count" value="@(Model.Allocations?.Count??0)" hidden>
+@for(int i = 0; i < Model.Allocations?.Count; i++)
+{
+    <input name="Model.Allocations[@i].Id" value="@Model.Allocations[i].Id" type="hidden">
+    <input name="Model.Allocations[@i].Abbreviation" value="@Model.Allocations[i].Abbreviation" type="hidden">
+    <input name="Model.Allocations[@i].Score" value="@Model.Allocations[i].Score" type="hidden">
+    <input name="Model.Allocations[@i].Sequence" value="@Model.Allocations[i].Sequence" type="hidden">
+    <input name="Model.Allocations[@i].CourseId" value="@Model.Allocations[i].CourseId" type="hidden">
+}
+
+@for(int i = 0; i < Model.Sections?.Count; i++)
+{
+    <input name="Model.Sections[@i].SectionId" value="@Model.Sections[i].SectionId" type="hidden">
+    <input name="Model.Sections[@i].CourseCode" value="@Model.Sections[i].CourseCode" type="hidden">
+    <input name="Model.Sections[@i].CourseName" value="@Model.Sections[i].CourseName" type="hidden">
+    <input name="Model.Sections[@i].SectionNumber" value="@Model.Sections[i].SectionNumber" type="hidden">
+    <input name="Model.Sections[@i].TotalStudent" value="@Model.Sections[i].TotalStudent" type="hidden">
+    <input name="Model.Sections[@i].TotalWithdrawn" value="@Model.Sections[i].TotalWithdrawn" type="hidden">
+    <input name="Model.Sections[@i].IsSelected" value="@Model.Sections[i].IsSelected" type="hidden">
+}
+<div class=table-responsive>
+    <table id="js-scoring-table" class="table table-bordered table-hover m-0">
+        <thead>
+            <tr>
+                <th class="text-center w-50">#</th>
+                <th class="text-center w-100">Course</th>
+                <th class="text-center w-50">Section</th>
+                <th class="text-center w-50">Section Type</th>
+                <th class="text-center w-100">Student Code</th>
+                <th>Title</th>
+                <th>First Name</th>
+                <th>Middle Name</th>
+                <th>Last Name</th>
+                <th class="text-center w-100">Withdrawn</th>
+                <th class="text-center w-100">Grade Published</th>
+                <th class="text-center w-100">Grade</th>
+                @for(int i = 0; i < Model.Allocations?.Count; i++)
+                {
+                    <th class="text-right w-100">
+                        <div class="text-center">
+                            @Model.Allocations[i].Abbreviation<br>
+                            <span class="text-nowrap">(<span class="score-limit">@Model.Allocations[i].Score</span>)</span>
+                        </div>
+                    </th>
+                }
+            </tr>
+        </thead>
+
+        <tbody class="js-items">
+            @if (Model.StudentRawScores != null && Model.StudentRawScores.Any())
+            {
+                foreach (var studentScore in Model.StudentRawScores)
+                {
+                    var status = string.Empty;
+                    if (studentScore.IsWithdrawal)
+                    {
+                        status = "bg-secondary-lighter text-danger";
+                    }
+
+                    if (studentScore.IsGradePublish)
+                    {
+                        status = "bg-secondary-lighter text-success";
+                    }
+                    <tr class="@status">
+                        <td class="text-center  w-50">
+                            @(studentIndex + 1)
+                        </td>
+                        <td class="text-center js-course-code  w-100"> @studentScore.CourseCode
+                            <input name="Model.StudentRawScores[@studentIndex].Id" value="@studentScore.Id" type="hidden">  
+                            <input class="js-grade-course-id" name="Model.StudentRawScores[@studentIndex].CourseId" value="@studentScore.CourseId" type="hidden">
+                            <input class="js-grade-section-id" name="Model.StudentRawScores[@studentIndex].SectionId" value="@studentScore.SectionId" type="hidden">
+                            <input class="js-total-score-value form-control__table text-right" name="Model.StudentRawScores[@studentIndex].TotalScore" value="@studentScore.TotalScore" type="hidden">
+                            <input class="js-grade-registration-id" name="Model.StudentRawScores[@studentIndex].RegistrationCourseId" value="@studentScore.RegistrationCourseId" type="hidden">
+                            <input name="Model.StudentRawScores[@studentIndex].StudentId" value="@studentScore.StudentId" type="hidden">
+                            <input name="Model.StudentRawScores[@studentIndex].StudentTitle" value="@studentScore.StudentTitle" type="hidden">
+                            <input name="Model.StudentRawScores[@studentIndex].StudentFirstNameEn" value="@studentScore.StudentFirstNameEn" type="hidden">
+                            <input name="Model.StudentRawScores[@studentIndex].StudentLastNameEn" value="@studentScore.StudentLastNameEn" type="hidden">
+                            <input name="Model.StudentRawScores[@studentIndex].StudentMidNameEn" value="@studentScore.StudentMidNameEn" type="hidden">
+                            <input name="Model.StudentRawScores[@studentIndex].StudentCode" value="@studentScore.StudentCode" type="hidden">
+                            <input name="Model.StudentRawScores[@studentIndex].CourseCode" value="@studentScore.CourseCode" type="hidden">
+                            <input name="Model.StudentRawScores[@studentIndex].CourseName" value="@studentScore.CourseName" type="hidden">
+                            <input name="Model.StudentRawScores[@studentIndex].CourseCredit" value="@studentScore.CourseCredit" type="hidden">
+                            <input name="Model.StudentRawScores[@studentIndex].SectionType" value="@studentScore.SectionType" type="hidden">
+                            <input name="Model.StudentRawScores[@studentIndex].IsWithdrawal" value="@studentScore.IsWithdrawal.ToString()" type="hidden">
+                            <input name="Model.StudentRawScores[@studentIndex].IsPaid" value="@studentScore.IsPaid.ToString()" hidden>
+                            <input name="Model.StudentRawScores[@studentIndex].IsGradePublish" value="@studentScore.IsGradePublish.ToString()" type="hidden">
+                            <input name="Model.StudentRawScores[@studentIndex].RegistrationCourseId" value="@studentScore.RegistrationCourseId" type="hidden">
+                            <input name="Model.StudentRawScores[@studentIndex].SectionNumber" value="@studentScore.SectionNumber" type="hidden">
+                            <input name="Model.StudentRawScores[@studentIndex].GradeTemplateId" value="@studentScore.GradeTemplateId" type="hidden">
+                        </td>
+                        <td class="text-center js-section-number  w-50">@studentScore.SectionNumber</td>
+                        <td class="text-center w-50">@studentScore.SectionType</td>
+                        <td class="text-center js-student-code  w-100">@studentScore.StudentCode</td>
+                        <td class="js-student-name">@studentScore.StudentTitle</td>
+                        <td class="js-student-name">@studentScore.StudentFirstNameEn</td>
+                        <td class="js-student-name">@studentScore.StudentMidNameEn</td>
+                        <td class="js-student-name">@studentScore.StudentLastNameEn</td>
+                        <td class="text-center  w-100">
+                            <partial name="_BooleanResult" model="@studentScore.IsWithdrawal" />
+                        </td>
+                        <td class="text-center  w-100">
+                            <partial name="_BooleanResult" model="@studentScore.IsGradePublish" />
+                        </td>
+                        <td class="text-center  w-100">
+                            <select class="form-control__table chosen-select" 
+                                id="Model.StudentRawScores[@studentIndex].GradeId"
+                                data-index="@studentIndex"
+                                asp-for="@studentScore.GradeId"
+                                name="Model.StudentRawScores[@studentIndex].GradeId"
+                                asp-items="@ViewBag.Grades"
+                                disabled="@(studentScore.IsGradePublish || @studentScore.IsWithdrawal)">
+                                <option value="0">Raw Score</option>
+                            </select>
+                        </td>
+                        @for(int i = 0; i < Model.Allocations?.Count; i++)
+                        {   
+                            @for (var j = 0; j < Model.StudentRawScores[studentIndex].StudentRawScoreDetails.Count; j++)
+                            {
+                                if(Model.StudentRawScores[studentIndex].StudentRawScoreDetails[j].MarkAllocationId == Model.Allocations?[i].Id)
+                                {
+                                    if(!studentScore.IsGradePublish && !studentScore.IsWithdrawal )
+                                    {
+                                        <td>
+                                            <input class="form-control__table text-right js-student-score js-student-score-@studentIndex"
+                                                name="Model.StudentRawScores[@studentIndex].StudentRawScoreDetails[@j].Score" 
+                                                value="@(Model.StudentRawScores[studentIndex].StudentRawScoreDetails[j].Score)" 
+                                                data-max="@Model.Allocations[i].Score"
+                                                disabled="@studentScore.IsSkipGrading"
+                                                data-limit="@Model.Allocations[i].Score">
+                                            <input name="Model.StudentRawScores[@studentIndex].StudentRawScoreDetails[@j].MarkAllocationId" value='@studentScore.StudentRawScoreDetails[j].MarkAllocationId' hidden>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            <input class="form-control__table text-right js-student-score js-student-score-@studentIndex"
+                                                name="Model.StudentRawScores[@studentIndex].StudentRawScoreDetails[@j].Score"  
+                                                value="@(Model.StudentRawScores[studentIndex].StudentRawScoreDetails[j].Score)"
+                                                data-max="@Model.Allocations[i].Score"
+                                                data-limit="@Model.Allocations[i].Score" disabled>
+                                            <input name="Model.StudentRawScores[@studentIndex].StudentRawScoreDetails[@j].MarkAllocationId" value='@studentScore.StudentRawScoreDetails[j].MarkAllocationId' hidden>
+                                        </td> 
+                                    }
+                                }
+                            }
+                        }
+                       
+                    </tr>
+                    ++studentIndex;
+                }
+            }
+            else 
+            {
+                <tr id="js-table-text-row">
+                    <td colspan="15">
+                        <i id="js-table-text">Please select section.</i>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

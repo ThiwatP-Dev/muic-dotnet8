@@ -1,0 +1,472 @@
+@model AdvisorViewModel
+@{
+    var index = 1;
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+
+<section class="row">
+	<div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">
+            <a class="btn-back" href="@ViewBag.ReturnUrl">
+                <i class="la la-angle-double-left"></i>
+            </a>
+            <span>Advisor Note Information</span>
+        </h2>
+	</div>
+</section>
+
+<section>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel-group" id="accordion1">
+                <div class="block">
+                    <div class="block__title collapsed" data-toggle="collapse" data-parent="#accordion1" data-target="#accordion1-1">
+                        <header>Student Information</header>
+                        <div class="tools">
+                            <div class="btn-group">
+                                <a class="btn btn--white btn--circle">
+                                    <i class="la la-angle-down"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end .block-head -->
+                    <div id="accordion1-1" class="collapse show" aria-expanded="true">
+                        <div class="block__body">
+                            <div class="row">
+                                <div class="form-group mb-3 col-md-3 col-xl-4">
+                                    <div class="form-control-label d-flex align-items-center">Code</div>
+                                    <div class="form-control-plaintext">@Model?.StudentCode</div>
+                                </div>
+                                <div class="form-group mb-3 col-md-3 col-xl-4">
+                                    <div class="form-control-label d-flex align-items-center">Full name</div>
+                                    <div class="form-control-plaintext text-uppercase">@Model?.StudentName</div>
+                                </div>
+                                <div class="form-group mb-3 col-md-3 col-xl-4">
+                                    <div class="form-control-label d-flex align-items-center">Academic Level</div>
+                                    <div class="form-control-plaintext">@Model?.AcademicLevel</div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group mb-6 col-md-6 col-xl-4">
+                                    <div class="form-control-label d-flex align-items-center">Division</div>
+                                    <div class="form-control-plaintext">@Model?.Faculty</div>
+                                </div>
+                                <div class="form-group mb-6 col-md-6 col-xl-4">
+                                    <div class="form-control-label d-flex align-items-center">Major</div>
+                                    <div class="form-control-plaintext">@Model?.Department</div>
+                                </div>
+                                <div class="form-group mb-6 col-md-6 col-xl-4">
+                                    <div class="form-control-label d-flex align-items-center">Curriculum</div>
+                                    <div class="form-control-plaintext">@Model?.Curriculum</div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group mb-6 col-md-6 col-xl-4">
+                                    <div class="form-control-label d-flex align-items-center">Curriculum Version</div>
+                                    <div class="form-control-plaintext">@Model?.CurriculumVersion</div>
+                                </div>
+                                <div class="form-group mb-3 col-md-3 col-xl-4">
+                                    <div class="form-control-label d-flex align-items-center">Credit Complete</div>
+                                    <div class="form-control-plaintext">@Model?.CreditComplete</div>
+                                </div>
+                                <div class="form-group mb-3 col-md-3 col-xl-4">
+                                    <div class="form-control-label d-flex align-items-center">Credit Earned</div>
+                                    <div class="form-control-plaintext">@Model?.CreditEarned</div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group mb-3 col-md-3 col-xl-4">
+                                    <div class="form-control-label d-flex align-items-center">Credit Transfer</div>
+                                    <div class="form-control-plaintext">@Model?.CreditTransfer</div>
+                                </div>
+                                <div class="form-group mb-3 col-md-3 col-xl-4">
+                                    <div class="form-control-label d-flex align-items-center">GPA</div>
+                                    <div class="form-control-plaintext">@Model?.GPA</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--end .block-body -->
+                    </div>
+                </div>
+                <!--end .block -->
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="panel-group" id="accordion2">
+                <div class="block">
+                    <div class="block__title collapsed" data-toggle="collapse" data-parent="#accordion2" data-target="#accordion2-1">
+                        <header>Registration Result</header>
+                        <div class="tools">
+                            <div class="btn-group">
+                                <a class="btn btn--white btn--circle">
+                                    <i class="la la-angle-down"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end .block-head -->
+                    <div id="accordion2-1" class="collapse show" aria-expanded="true">
+                        <div class="block__body">
+                            <div>
+                                <header class="mb-2">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <b>Current Term: @Model.CurrentTerm</b>
+                                        </div>
+                                        <div class="col-6 text-right">
+                                            @{
+                                                decimal totalCredit = Model.CurrentTermCourses?.Sum(y => (decimal?)y.Credit) ?? 0;
+                                                var gpa = totalCredit == 0 ? 0 : Model.CurrentTermCourses.Sum(y => y.Credit * (y.GradeWeight ?? 0)) / totalCredit;
+                                            }
+                                            <b>GPA: @gpa.ToString(StringFormat.TwoDecimal)</b>
+                                        </div>
+                                    </div>
+                                </header>
+                                <table class="table table-bordered table-hover w-100x">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center w-100">#</th>
+                                            <th class="text-center w-200">Course Code</th>
+                                            <th>Course Name</th>
+                                            <th class="text-center w-200">Section</th>
+                                            <th class="text-center w-200">Credit</th>
+                                            <th class="text-center w-200">Grade</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (Model != null && Model.CurrentTermCourses != null && Model.CurrentTermCourses.Any())
+                                        {
+                                            foreach (var item in Model.CurrentTermCourses)
+                                            {
+                                                <tr>
+                                                    <td>@index</td>
+                                                    <td>@item.CourseCode</td>
+                                                    <td>@item.CourseName</td>
+                                                    <td>@item.Section</td>
+                                                    <td>@item.Credit</td>
+                                                    <td>@item.GradeName</td>
+                                                </tr>
+                                                ++index;
+                                            }
+
+                                            <tfoot>
+                                                <tr>
+                                                    <td colspan="3"></td>
+                                                    <td class="text-center"><b>Total</b></td>
+                                                    <td class="text-center js-col-total"><b>@Model.CurrentTermTotalCredit</b></td>
+                                                    <td></td>
+                                                </tr>
+                                            </tfoot>
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td class="text-center" colspan="6">
+                                                    <i class="text-danger">No data</i>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="mt-5">
+                                <header class="mb-2">
+                                    <b>Registration Term: @Model.RegistrationTerm</b>
+                                </header>
+                                <table class="table table-bordered table-hover w-100x">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center w-100">#</th>
+                                            <th class="text-center w-200">Course Code</th>
+                                            <th>Course Name</th>
+                                            <th class="text-center w-200">Section</th>
+                                            <th class="text-center w-200">Credit</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (Model != null && Model.RegistrationCourses != null && Model.RegistrationCourses.Any())
+                                        {
+                                            index = 1;
+                                            foreach (var item in Model.RegistrationCourses)
+                                            {
+                                                <tr>
+                                                    <td>@index</td>
+                                                    <td>@item.CourseCode</td>
+                                                    <td>@item.CourseName</td>
+                                                    <td>@item.Section</td>
+                                                    <td>@item.Credit</td>
+                                                </tr>
+                                                ++index;
+                                            }
+
+                                            <tfoot>
+                                                <tr>
+                                                    <td colspan="3"></td>
+                                                    <td class="text-center"><b>Total</b></td>
+                                                    <td class="text-center js-col-total"><b>@Model.RegistrationTermTotalCredit</b></td>
+                                                </tr>
+                                            </tfoot>
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td class="text-center" colspan="5">
+                                                    <i class="text-danger">No data</i>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                                <form class="form-horizontal" asp-controller="Advisor" asp-action="Save" method="POST">
+                                    <div class="row form-group d-flex justify-content-around">
+                                        <div class="col-3 text-right form-check">
+                                            <input id="IsAdvise" class="form-check-input" asp-for="IsAdvise" type="checkbox">
+                                            <label for="IsAdvise">Advise</label>
+                                        </div>
+                                        <div class="col-3 text-right form-check">
+                                            <input id="IsRegistration" class="form-check-input" asp-for="IsRegistration" type="checkbox">
+                                            <label for="IsRegistration">Registration</label>
+                                        </div>
+                                        <div class="col-3 text-right form-check">
+                                            <input id="IsPayment" class="form-check-input" asp-for="IsPayment" type="checkbox">
+                                            <label for="IsPayment">Payment</label>
+                                        </div>
+                                        <div class="col-3 text-right">
+                                            <input asp-for="StudentId" type="hidden">
+                                            <input asp-for="AdvisorDetail.AdvisorId" type="hidden">
+                                            <input asp-for="AdvisorDetail.AdvisingStatusId" type="hidden">
+                                            <input asp-for="RegistrationTermId" type="hidden">
+                                            <input name="returnUrl" type="hidden" value="@contextPath">
+                                            <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+                                        </div>
+                                        
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <!--end .block-body -->
+                    </div>
+                </div>
+                <!--end .block -->
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="panel-group" id="accordion3">
+                <div class="block">
+                    <section>
+                        <form asp-controller="Advisor" asp-action="EditCourse" method="post">
+                            @Html.AntiForgeryToken()
+                            <div class="block__title collapsed" data-toggle="collapse" data-parent="#accordion3" data-target="#accordion3-1">
+                                <header>Advising Course Term: @Model.RegistrationTerm</header>
+                                <div class="tools">
+                                    <div class="btn-group">
+                                        <a class="btn btn--white btn--circle">
+                                            <i class="la la-angle-down"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--end .block-head -->
+                            <div id="accordion3-1" class="collapse show" aria-expanded="true">
+                                <div class="block__body">
+                                    <div class="form-group">
+                                        <table id="js-advisor-course" class="table table-bordered table-hover w-100x">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center">#</th>
+                                                    <th>Course<span class="text-danger">*</span></th>
+                                                    <th>Section</th>
+                                                    <th class="text-center">Require<span class="text-danger">*</span></th>
+                                                    <th>Advisor</th>
+                                                    <th class="text-center">Date</th>
+                                                    <th class="text-center w-75">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @if(Model.AdvisingCourses != null && Model.AdvisingCourses.Any())
+                                                {
+                                                    @for (int i = 0; i < Model.AdvisingCourses.Count(); i++)
+                                                    {
+                                                        <tr>
+                                                            <input class="js-cascade-advisor-term" asp-for="@Model.AdvisingCourses[i].TermId" value="@Model.RegistrationTermId" type="hidden">
+                                                            <input asp-for="@Model.AdvisingCourses[i].StudentId" value="@Model.StudentId" type="hidden">
+                                                            <input asp-for="@Model.AdvisingCourses[i].InstructorId" value="@Model.AdvisorDetail.AdvisorId" type="hidden">
+                                                            <td>
+                                                                @(i + 1)
+                                                            </td>
+                                                            <td>
+                                                                <select class="form-control__table chosen-select js-cascade-advisor-course" asp-for="@Model.AdvisingCourses[i].CourseId" 
+                                                                        asp-items="@ViewBag.Courses" data-placeholder="Select">
+                                                                    <option selected value="0">Select</option>
+                                                                </select>
+                                                            </td>
+                                                            <td>
+                                                                <select class="form-control__table chosen-select js-cascade-advisor-section" asp-for="@Model.AdvisingCourses[i].SectionId" 
+                                                                        asp-items="@Model.AdvisingCourses[i].SectionSelectList" data-placeholder="Select">
+                                                                    <option selected value="">Select</option>
+                                                                </select>
+                                                            </td>
+                                                            <td>
+                                                                <select class="form-control__table chosen-select" asp-for="@Model.AdvisingCourses[i].IsRequired" 
+                                                                        asp-items="ViewBag.YesNoAnswer" data-placeholder="Select">
+                                                                    <option selected disabled>Select</option>
+                                                                </select>
+                                                            </td>
+                                                            <td>@Model.AdvisingCourses[i].Instructor?.FullNameEn</td>
+                                                            <td>@Model.AdvisingCourses[i].CreatedAtText</td>
+                                                            <td class="text-nowrap td-actions">
+                                                                <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                                                    <i class="la la-trash delete"></i>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <tr>
+                                                        <input class="js-cascade-advisor-term" asp-for="@Model.AdvisingCourses[0].TermId" value="@Model.RegistrationTermId" type="hidden">
+                                                        <input asp-for="@Model.AdvisingCourses[0].StudentId" value="@Model.StudentId" type="hidden">
+                                                        <input asp-for="@Model.AdvisingCourses[0].InstructorId" value="@Model.AdvisorDetail.AdvisorId" type="hidden">
+                                                        <td>
+                                                            1
+                                                        </td>
+                                                        <td>
+                                                            <select class="form-control__table chosen-select js-cascade-advisor-course" asp-for="@Model.AdvisingCourses[0].CourseId" 
+                                                                    asp-items="@ViewBag.Courses" data-placeholder="Select">
+                                                                <option selected value="0">Select</option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <select class="form-control__table chosen-select js-cascade-advisor-section" asp-for="@Model.AdvisingCourses[0].SectionId" 
+                                                                    data-placeholder="Select">
+                                                                <option selected value="">Select</option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <select class="form-control__table chosen-select" asp-for="@Model.AdvisingCourses[0].IsRequired" 
+                                                                    asp-items="ViewBag.YesNoAnswer" data-placeholder="Select">
+                                                                <option selected disabled>Select</option>
+                                                            </select>
+                                                        </td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td class="text-nowrap td-actions">
+                                                            <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                                                <i class="la la-trash delete"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+                                <input asp-for="@Model.RegistrationTermId" type="hidden">
+                                <input asp-for="@Model.StudentId" type="hidden">
+                                <input asp-for="@Model.AdvisorDetail.AdvisorId" type="hidden">
+
+                                <div class="block__action p-r-15">
+                                    <div class="block__action-row">
+                                        <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+                                    </div>
+                                </div>
+                                <!--end .block-body -->
+                            </div>
+                        </form>
+                    </section>
+                </div>
+                <!--end .block -->
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="panel-group" id="accordion4">
+                <div class="block">
+                    <div class="block__title collapsed" data-toggle="collapse" data-parent="#accordion4" data-target="#accordion4-1">
+                        <header>Advisor Note</header>
+                        <div class="tools">
+                            <div class="btn-group">
+                                <a class="btn btn--white btn--circle">
+                                    <i class="la la-angle-down"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end .block-head -->
+                    <div id="accordion4-1" class="collapse show" aria-expanded="true">
+                        <div class="block__body">
+                            <section>
+                                <form class="form-horizontal" asp-controller="Advisor" asp-action="CreateNote" method="POST">
+                                    @Html.AntiForgeryToken()
+                                    <div class="row form-group m-b-30">
+                                        <div class="col-10">
+                                            <input class="form-control js-single-student" name="Note">
+                                            <label>Note</label>
+                                        </div>
+
+                                        <input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+                                        <input name="StudentId" value="@Model.StudentId" type="hidden">
+                                        <input name="AdvisorId" value="@Model.AdvisorDetail.AdvisorId" type="hidden">
+                                        
+                                        <div class="col-2 align-self-end text-right">
+                                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                                <i class="la la-plus mr-2"></i>Add Advisor Note
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </section>
+                            <table class="table table-bordered table-hover w-100x">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">#</th>
+                                        <th>Advisor Name</th>
+                                        <th>Date</th>
+                                        @* <th class="text-center">Action</th> *@
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if(Model.AdvisingLogs != null && Model.AdvisingLogs.Any())
+                                    {
+                                        var advisngLogIndex = 1;
+                                        foreach(var item in Model.AdvisingLogs)
+                                        {
+                                            <tr>
+                                                <td rowspan="2">@advisngLogIndex</td>
+                                                <td>@item.Instructor.CodeAndName</td>
+                                                <td>@item.UpdatedAtText</td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="3" style="text-align: left !important; border: none;">@item.Message</td>
+                                            </tr>
+                                            ++advisngLogIndex;
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        <!--end .block-body -->
+                    </div>
+                </div>
+                <!--end .block -->
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Modals {
+    <partial name="_DeleteRowConfirmModals">
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/advisor-note-modal.js"></script>
+}

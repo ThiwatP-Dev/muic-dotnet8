@@ -1,0 +1,54 @@
+@model TeachingType
+
+<div class="block__title">
+    <header>@ViewData["Title"]</header>
+</div>
+
+<div class="block__body">
+    <div class="form-group">
+        <input class="form-control" asp-for="Code" type="text">
+        <label>Code</label>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" asp-for="NameEn" type="text">
+        <label>English Name</label>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" asp-for="NameTh" type="text">
+        <label>Thai Name</label>
+    </div>
+
+    <div class="form-group">
+        <select class="form-control" asp-for="CalculateType">
+            <option value="h">Per Hour</option>
+            <option value="s">Per Student</option>
+        </select>
+        <label for="CalculateType">Calculate Type</label>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" asp-for="LoadConverter" type="number">
+        <label>Load Converter</label>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" asp-for="Priority" type="number">
+        <label>Priority</label>
+    </div>
+    
+    <div class="row">
+        <div class="form-check">
+            <input class="form-check-input" asp-for="IsActive" type="checkbox">
+            <label for="IsActive">Active</label>
+        </div>
+    </div>
+</div>
+
+<div class="block__action container">
+    <div class="block__action-row">
+        <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+        <a class="btn btn-mw-120 btn--cancel" asp-action="Index">Cancel</a>
+    </div>
+</div>

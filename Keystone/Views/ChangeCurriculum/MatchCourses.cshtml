@@ -1,0 +1,59 @@
+@model StudentTransferViewModel
+@{ 
+    ViewData["Title"] = "Match Courses";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>@ViewData["Title"]</header>
+            </div>
+
+            <div class="block__body">
+                <div class="row form-group mb-2">
+                    <div class="col-3">
+                        <div class="form-control-label d-flex align-items-center">Student Code</div>
+                        <div class="form-control-plaintext">@Model.StudentCode</div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-control-label d-flex align-items-center">Student Name</div>
+                        <div class="form-control-plaintext">@Model.StudentFirstName @Model.StudentLastName</div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-control-label d-flex align-items-center">New Curriculum</div>
+                        <div class="form-control-plaintext">@Model.CurriculumName - @Model.CurriculumVersionName</div>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-change-main-grade" asp-items="ViewBag.Grades">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>New Grade</label>
+                    </div>
+                </div>
+
+                @if (Model.StudentCourseEquivalents != null)
+                {
+                    <hr>
+                    <form id="js-match-course-form" class="form-horizontal" asp-controller="ChangeCurriculum">
+                        <input name="returnUrl" value="@contextPath" type="hidden">
+                        <partial name="Curriculums/_MatchCourses" model="@Model" />
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+
+@section Modals {
+  <partial name="_DeleteRowConfirmModals" />
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/match-courses.js"></script>
+}

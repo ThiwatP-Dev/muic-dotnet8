@@ -1,0 +1,91 @@
+@model PreviousSchool
+
+<div class="block block--underline mb-0">
+	<div class="block__title">
+		<header>@Model.Code @Model.NameEn</header>
+	</div>
+
+    <div class="block__body">
+		<div class="row form-group">
+			<div class="col-6">
+				<div class="form-control-label d-flex align-items-center">Code</div>
+				<div class="form-control-plaintext">@Model.Code</div>
+			</div>
+			<div class="col-6">
+				<div class="form-control-label d-flex align-items-center">Higher Education Commission Code</div>
+				<div class="form-control-plaintext">@Model.OHECCode</div>
+			</div>
+		</div>
+
+		<div class="row form-group">
+			<div class="col-6">
+				<div class="form-control-label d-flex align-items-center">English Name</div>
+				<div class="form-control-plaintext">@Model.NameEn</div>
+			</div>
+			<div class="col-6">
+				<div class="form-control-label d-flex align-items-center">Thai Name</div>
+				<div class="form-control-plaintext">@Model.NameTh</div>
+			</div>
+		</div>
+
+        <div class="row form-group">
+			<div class="col-4">
+				<div class="form-control-label d-flex align-items-center">Country</div>
+				<div class="form-control-plaintext">@Model.Country?.NameEn</div>
+			</div>
+			<div class="col-4">
+				<div class="form-control-label d-flex align-items-center">State</div>
+				<div class="form-control-plaintext">@Model.State?.NameEn</div>
+			</div>
+			<div class="col-4">
+				<div class="form-control-label d-flex align-items-center">Province</div>
+				<div class="form-control-plaintext">@Model.Province?.NameEn</div>
+			</div>
+		</div>
+
+        <div class="row form-group">
+			<div class="col-4">
+				<div class="form-control-label d-flex align-items-center">School Type</div>
+				<div class="form-control-plaintext">@Model.SchoolType?.NameEn</div>
+			</div>
+			<div class="col-4">
+				<div class="form-control-label d-flex align-items-center">School Region</div>
+				<div class="form-control-plaintext">@Model.SchoolTerritory?.NameEn</div>
+			</div>
+			<div class="col-4">
+				<div class="form-control-label d-flex align-items-center">School Group</div>
+				<div class="form-control-plaintext">@Model.SchoolGroup?.NameEn</div>
+			</div>
+		</div>
+
+        <div class="row form-group">
+			<div class="col-6">
+				<div class="form-control-label d-flex align-items-center">Address 1</div>
+				<div class="form-control-plaintext">@Model.Address1</div>
+			</div>
+			<div class="col-6">
+				<div class="form-control-label d-flex align-items-center">Address 2</div>
+				<div class="form-control-plaintext">@Model.Address2</div>
+			</div>
+		</div>
+
+        <div class="row form-group">
+			<div class="col-6">
+				<div class="form-control-label d-flex align-items-center">Address 3</div>
+				<div class="form-control-plaintext">@Model.Address3</div>
+			</div>
+			<div class="col-6">
+				<div class="form-control-label d-flex align-items-center">Phone number</div>
+				<div class="form-control-plaintext">@Model.PhoneNumber</div>
+			</div>
+		</div>
+    </div>
+
+    <div class="block__action">
+        <div class="block__action-row">
+            <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-mw-120 btn--cancel rounded">Close</a>
+        </div>
+    </div>
+</div>
+
+

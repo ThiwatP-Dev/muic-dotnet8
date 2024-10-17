@@ -1,0 +1,15 @@
+@model AdmissionExaminationType
+@{ 
+    ViewData["Title"] = "Add Entrance Examination type"; 
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <form class="ks-form container" asp-controller="AdmissionExaminationType" asp-action="Create" method="POST">
+                @Html.AntiForgeryToken()
+                <partial name="_Form">
+            </form>
+        </div>
+    </div>
+</div>

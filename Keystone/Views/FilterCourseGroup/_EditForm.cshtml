@@ -1,0 +1,24 @@
+@model FilterCourseGroupViewModel
+
+<div class="row form-group m-b-30">
+    <div class="col-12">
+        <input class="form-control" asp-for="Name" type="text">
+        <label>Name<span class="text-danger">*</span></label>
+    </div>
+</div>
+
+<div class="row form-group m-b-30">
+    <div class="col-12">
+        <input class="form-control" asp-for="Description" type="text">
+        <label>Description</label>
+    </div>
+</div>
+
+<div class="block__action container">
+    <div class="block__action-row">
+        <button class="btn btn-mw-120 btn--primary" type="submit"><i class="la la-save info"></i>Save</button>
+    </div>
+</div>
+
+<input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+<input asp-for="Id" type="hidden">

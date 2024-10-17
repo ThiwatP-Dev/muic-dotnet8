@@ -1,0 +1,145 @@
+@model ReenterCourseViewModel
+@{
+    ViewData["Title"] = "Re-Enter/Admission Course";
+    var index = 0;
+}
+
+<div class="row">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</div>
+
+<section class="row ks-general-info">
+    <div class="col-12">
+        <div class="block">
+            <form asp-controller="Reenter" asp-action="ReenterCourse" method="GET">
+                <div class="block__body">
+                    <div class="row form-group">
+                        <div class="col-3">
+                            <div class="form-control-label d-flex align-items-center">Student ID</div>
+                            <div class="form-control-plaintext">@Model?.StudentCode</div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-control-label d-flex align-items-center">Name</div>
+                            <div class="form-control-plaintext">@Model?.StudentName</div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-control-label d-flex align-items-center">Curriculum Version</div>
+                            <div class="form-control-plaintext">@Model?.CurriculumVersion</div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-control-label d-flex align-items-center">Transfered Credit</div>
+                            <div class="form-control-plaintext section-title">
+                                <h4 class="text-danger">@Model?.TransferedCredit</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <input name="code" value="@Model.StudentCode" hidden>
+
+                    <div class="row form-group">
+                        <div class="col-12 align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@if (Model.TransferCourses != null && Model.TransferCourses.Any())
+{
+    <section class="row">
+        <div class="col-12">
+            <div class="block block--underline">
+                <div class="block__body">
+                    <form class="form-horizontal" asp-controller="Reenter" asp-action="ReenterCourse" method="POST">
+                        @Html.AntiForgeryToken()
+                        <div class="row form-group">
+                            <div class="col-3">
+                                <select class="chosen-select form-control" asp-for="TransferedTermId" asp-items="ViewBag.Terms">
+                                    <option selected disabled>Select</option>
+                                </select>
+                                <label>Term<span class="text-danger">*</span></label>
+                            </div>
+                            <div class="col-3">
+                                <select class="chosen-select form-control" asp-for="TransferedGrade" asp-items="ViewBag.TransferedGrades"></select>
+                                <label>Transfered To Grade<span class="text-danger">*</span></label>
+                            </div>
+                        </div>
+
+                        <div class="box-scroll__content border js-render-nicescroll p-0 m-b-30">
+                            <table id="js-reenter-students" class="table table-bordered m-0">
+                                <thead class="scroll-header">
+                                    <tr>
+                                        <th class="w-25">
+                                            <input id="checkAll" class="js-check-all" name="Students" type="checkbox">
+                                            <label class="mt-2 mb-0 m-l-2" for="checkAll"></label>
+                                        </th>
+                                        <th class="w-125 text-center">Code</th>
+                                        <th>Course</th>
+                                        <th class="text-center">Term</th>
+                                        <th class="w-200 text-center">Credit</th>
+                                        <th class="w-200 text-center">Grade</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="js-items">
+                                    @foreach (var item in Model.TransferCourses)
+                                    {
+                                        <tr class="js-suggestion-parent">
+                                            <td class="w-25">
+                                                <input id="check@(index)" class="js-reenter-course-check" name="registrationCourseIds" type="checkbox" value="@item.RegistrationCourseId">
+                                                <label class="form-check-input" for="check@(index)"></label>
+                                                <input class="js-reenter-credit" value="@item.Credit" hidden>
+                                            </td>
+                                            <td class="w-125">@item.Code</td>
+                                            <td>@item.Name</td>
+                                            <td>@item.Term</td>
+                                            <td class="w-200">@item.Credit</td>
+                                            <td class="w-200">@item.Grade</td>
+                                        </tr>
+                                        index++;
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <input name="StudentCode" value="@Model.StudentCode" hidden>
+                        <input name="StudentName" value="@Model.StudentName" hidden>
+                        <input name="CurriculumVersion" value="@Model.CurriculumVersion" hidden>
+                        <input name="TransferedCredit" value="@Model.TransferedCredit" hidden>
+                        <input class="js-reenter-transfer-credit" value="@Model.TransferedCredit" hidden>
+
+                        <div class="row form-group">
+                            <div class="col-12">
+                                <div class="text-right border-right-0 section-title">Total Select Credit <b class="js-reenter-sum-credit">0</b> Credits</div>
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-12">
+                                <div class="text-right border-right-0">Max Credit @Model?.TransferedCredit Credits</div>
+                            </div>
+                        </div>
+                        
+                        <div class="block__action-row">
+                            <button class="btn btn-mw-120 btn--primary js-reenter-course-save" type="submit">Save</button>
+                            <a class="btn btn-mw-120 btn--cancel" href="@ViewBag.ReturnUrl">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/re-enter.js"></script>
+}

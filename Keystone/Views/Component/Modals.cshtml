@@ -1,0 +1,27 @@
+@{
+    ViewData["Title"] = "Modals";
+}
+
+<section class="row">
+    <div class="col-md-6">
+        <em class="text-caption">Modal Form (If input fields <= 5)</em>
+        <div class="block">
+            <div class="block__body">
+                <a href="#" class="btn btn-block btn-primary" data-toggle="modal" data-target="#form-modal">Toggle Modal Form</a>
+            </div>
+            <!--end .block-body -->
+        </div>
+    </div>
+    <div class="col-md-6">
+        <em class="text-caption">Modal Delete Confirmation</em>
+        <div class="block">
+            <div class="block__body">
+                <a href="#" class="btn btn-block btn-danger" data-toggle="modal" data-target="#delete-confirm-modal">Toggle Modal Delete</a>
+            </div>
+            <!--end .block-body -->
+        </div>
+    </div>
+</section>
+
+<partial name="_FormModals" />
+<partial name="_DeleteConfirmModals" />

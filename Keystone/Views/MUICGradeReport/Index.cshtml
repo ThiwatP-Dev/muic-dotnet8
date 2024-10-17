@@ -1,0 +1,320 @@
+@model TranscriptViewModel
+@{ 
+    ViewData["Title"] = "MUIC Grade Report";
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>@ViewData["Title"]</header>
+            </div>
+            
+            <form asp-controller="MUICGradeReport" asp-action="Index" method="GET">
+                @Html.AntiForgeryToken()
+                <div class="block__body">
+                    <div class="js-disable-trigger">
+                        <div class="row form-group">
+                            <div class="col-3">
+                                <input class="form-control js-single-student" asp-for="Criteria.Code">
+                                <label>Student Code<span class="text-danger">*</span></label>
+                            </div>
+                            <div class="col-3">
+                                <input class="form-control js-multiple-student" asp-for="Criteria.StudentCodeFrom">
+                                <label>Student Code From<span class="text-danger">*</span></label>
+                            </div>
+                            <div class="col-3">
+                                <input class="form-control js-multiple-student" asp-for="Criteria.StudentCodeTo">
+                                <label>To<span class="text-danger">*</span></label>
+                            </div>
+                            <div class="col-3">
+                                <select class="chosen-select form-control" asp-for="Criteria.Status" asp-items="@ViewBag.StudentStatuses"></select>
+                                <label>Student Status</label>
+                            </div>
+                        </div>
+                        
+                        <div class="row form-group">
+                            <div class="col-3">
+                                <select class="chosen-select form-control" asp-for="Criteria.Language" asp-items="@ViewBag.Languages"></select>
+                                <label>Language<span class="text-danger">*</span></label>
+                            </div>
+                            <div class="col-3">
+                                <select class="chosen-select form-control js-cascade-academic-level"
+                                        asp-for="Criteria.AcademicLevelId" asp-items="@ViewBag.AcademicLevels">
+                                    <option selected>Select</option>
+                                </select>
+                                <label>Academic Level</label>
+                            </div>
+                            <div class="col-3">
+                                <select class="chosen-select form-control js-cascade-term"
+                                        asp-for="Criteria.TermId" asp-items="@ViewBag.Terms">
+                                    <option selected>Select</option>
+                                </select>
+                                <label>Term</label>
+                            </div>
+                            <div class="col-3">
+                                <input class="form-control" asp-for="Criteria.AcademicYear">
+                                <label>Year</label>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-3">
+                                <input class="form-control" asp-for="Criteria.GraduatedClass">
+                                <label>Graduate Class</label>
+                            </div>
+                            <div class="col-3">
+                                <select class="chosen-select form-control js-cascade-faculty"
+                                        asp-for="Criteria.FacultyId" asp-items="@ViewBag.Faculties">
+                                    <option selected>Select</option>
+                                </select>
+                                <label>Division</label>
+                            </div>
+                            <div class="col-3">
+                                <select class="chosen-select form-control js-cascade-department"
+                                        asp-for="Criteria.DepartmentId" asp-items="@ViewBag.Departments">
+                                    <option selected>Select</option>
+                                </select>
+                                <label>Major</label>
+                            </div>
+                            <div class="col-3">
+                                <input class="form-control" asp-for="Criteria.GPAFrom">
+                                <label>Current GPA From</label>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-3">
+                                <input class="form-control" asp-for="Criteria.GPATo">
+                                <label>To</label>
+                            </div>
+                            <div class="col text-right align-self-end">
+                                <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">Search</button>
+                                <a id="js-reset-btn" class="btn btn-mw-120 btn--reset mb-0" asp-action="Index" >Reset</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        @if (Model.Transcripts != null && Model.Transcripts.Any())
+        {
+            <form asp-controller="MUICGradeReport" asp-action="Preview" method="POST">
+                @Html.AntiForgeryToken()
+                <div class="block block--underline">
+                    <div class="block__title">
+                        <header>Search Result (@Model?.Transcripts.Count())</header>
+                    </div>
+
+                    <div class="block__body">
+                        @for (var i = 0; i < Model?.Transcripts.Count(); i++)
+                        {
+                            <div class="section-title mb-3">
+                                <h4>General Infomation</h4>
+                            </div>
+
+                            <div class="row form-group">
+                                <div class="col-3">
+                                    <div class="form-control-label d-flex align-items-center">Student Code</div>
+                                    <div class="form-control-plaintext">@Model.Transcripts[i].StudentCode</div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-control-label d-flex align-items-center">First Name</div>
+                                    <div class="form-control-plaintext">@Model.Transcripts[i].FirstName</div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-control-label d-flex align-items-center">Middle Name</div>
+                                    <div class="form-control-plaintext">@Model.Transcripts[i].MidName</div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-control-label d-flex align-items-center">Last Name</div>
+                                    <div class="form-control-plaintext">@Model.Transcripts[i].LastName</div>
+                                </div>
+                            </div>
+                            <div class="row form-group d-none">
+                                <div class="col-4">
+                                    <div class="form-control-label d-flex align-items-center">Address 1</div>
+                                    <div class="form-control-plaintext">@Model.Transcripts[i].Address1</div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-control-label d-flex align-items-center">Address 2</div>
+                                    <div class="form-control-plaintext">@Model.Transcripts[i].Address2</div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-control-label d-flex align-items-center">Address 3</div>
+                                    <div class="form-control-plaintext">@Model.Transcripts[i].Address3</div>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-3">
+                                    <div class="form-control-label d-flex align-items-center">Birth Date</div>
+                                    <div class="form-control-plaintext">@Model.Transcripts[i].BirthDate</div>
+                                </div>
+                                <div class="col-3 d-none">
+                                    <div class="form-control-label d-flex align-items-center">Birth Place</div>
+                                    <div class="form-control-plaintext">@Model.Transcripts[i].BirthPlace</div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-control-label d-flex align-items-center">Nationality</div>
+                                    <div class="form-control-plaintext">@Model.Transcripts[i].Nationality</div>
+                                </div>
+                                <div class="col-3 d-none">
+                                    <div class="form-control-label d-flex align-items-center">Religion</div>
+                                    <div class="form-control-plaintext">@Model.Transcripts[@i].Religion</div>
+                                </div>
+                            </div>
+                            <div class="row form-group d-none">
+                                <div class="col-3">
+                                    <div class="form-control-label d-flex align-items-center">Admission Date</div>
+                                    <div class="form-control-plaintext">@Model.Transcripts[i].AdmissionAt</div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-control-label d-flex align-items-center">Academic Level</div>
+                                    <div class="form-control-plaintext">@Model.Transcripts[i].AcademicLevel</div>
+                                </div>
+                            </div>
+
+                            <div class="section-title mb-3 d-none">
+                                <h4>Previous Degree, Certificate, Insituition and Year</h4>
+                            </div>
+                            <div class="row form-group d-none">
+                                <div class="col-3">
+                                    <div class="form-control-label d-flex align-items-center">Previous Degree</div>
+                                    <div class="form-control-plaintext">@Model.Transcripts[i].EducationBackground</div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-control-label d-flex align-items-center">Previous School</div>
+                                    <div class="form-control-plaintext">@Model.Transcripts[i].PreviousSchool</div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-control-label d-flex align-items-center">ReliPrevious School Countrygion</div>
+                                    <div class="form-control-plaintext">@Model.Transcripts[i].PreviousSchoolCountry</div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-control-label d-flex align-items-center">Previous Graduated Year</div>
+                                    <div class="form-control-plaintext">@Model.Transcripts[i].PreviousGraduatedYear</div>
+                                </div>
+                            </div>
+
+                            <div class="section-title mb-3">
+                                <h4>Academic Information</h4>
+                            </div>
+                            <div class="row form-group d-none">
+                                <div class="col-6">
+                                    <div class="form-control-label d-flex align-items-center">Curriculum Version</div>
+                                    <div class="form-control-plaintext">@Model.Transcripts[i].CurriculumVersion</div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-control-label d-flex align-items-center">Curriculum</div>
+                                    <div class="form-control-plaintext">@Model.Transcripts[i].Curriculum</div>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-3">
+                                    <div class="form-control-label d-flex align-items-center">Division</div>
+                                    <div class="form-control-plaintext">@Model.Transcripts[i].Faculty</div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-control-label d-flex align-items-center">Program</div>
+                                    <div class="form-control-plaintext">@Model.Transcripts[i].Department</div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-control-label d-flex align-items-center">Minor</div>
+                                    <div class="form-control-plaintext">@Model.Transcripts[i].Minor</div>
+                                </div>
+                                <div class="col-3 d-none">
+                                    <div class="form-control-label d-flex align-items-center">Second Minor</div>
+                                    <div class="form-control-plaintext">@Model.Transcripts[i].SecondMinor</div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-control-label d-flex align-items-center">Concentration</div>
+                                    <div class="form-control-plaintext">@Model.Transcripts[i].Concentration</div>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-3 d-none">
+                                    <div class="form-control-label d-flex align-items-center">Second Concentration</div>
+                                    <div class="form-control-plaintext">@Model.Transcripts[i].SecondConcentration</div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-control-label d-flex align-items-center">Student Status</div>
+                                    <div class="form-control-plaintext">@Model.Transcripts[i].StudentStatusText</div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-control-label d-flex align-items-center">Status Date</div>
+                                    <div class="form-control-plaintext">@Model.Transcripts[i].StatusAtText</div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-control-label d-flex align-items-center">Degree</div>
+                                    <div class="form-control-plaintext">@Model.Transcripts[i].Degree</div>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-3">
+                                    <div class="form-control-label d-flex align-items-center">Award</div>
+                                    <div class="form-control-plaintext">@Model.Transcripts[i].Award</div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-control-label d-flex align-items-center">Total Credit Transferred</div>
+                                    <div class="form-control-plaintext">@Model.Transcripts[i].TotalCreditTransferred</div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-control-label d-flex align-items-center">Total Credit Earnd</div>
+                                    <div class="form-control-plaintext">@Model.Transcripts[i].TotalCreditCompleted</div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-control-label d-flex align-items-center">Total Credit Registration</div>
+                                    <div class="form-control-plaintext">@Model.Transcripts[i].TotalCreditEarnd</div>
+                                </div>
+                            </div>
+                            
+                            <input class="js-transcript-faculty" asp-for="@Model.Transcripts[@i].Faculty" hidden>
+                            <input class="js-transcript-department" asp-for="@Model.Transcripts[@i].Department" hidden>
+                            <input class="js-transcript-degree" asp-for="@Model.Transcripts[@i].Degree" hidden>
+                            <input asp-for="@Model.Transcripts[@i].StudentCode" hidden>
+                            <input asp-for="@Model.Transcripts[@i].FirstName" hidden>
+                            <input asp-for="@Model.Transcripts[@i].MidName" hidden>
+                            <input asp-for="@Model.Transcripts[@i].LastName" hidden>
+                            <hr/>
+                        }
+                    </div>
+                </div>
+
+                <div class="block__action-row px-5 pb-3">
+                    <div class="row form-group">
+                        <div class="col-11 align-self-end">
+                            <input id="IsOfficial" class="form-check-input" asp-for="Criteria.IsOfficial" type="checkbox">
+                            <label for="IsOfficial">Official</label>
+                        </div>
+                        <div class="col-1 text-right align-self-end">
+                            <button class="btn btn-mw-120 btn--primary" type="submit">Preview</button>
+                        </div>
+                    </div>
+                </div>
+
+                <input asp-for="Criteria.Status" hidden>
+                <input asp-for="Criteria.Code" hidden>
+                <input asp-for="Criteria.StudentCodeFrom" hidden>
+                <input asp-for="Criteria.StudentCodeTo" hidden>
+                <input asp-for="Criteria.AcademicLevelId" hidden>
+                <input asp-for="Criteria.TermId" hidden>
+                <input asp-for="Criteria.AcademicYear" hidden>
+                <input asp-for="Criteria.GraduatedClass" hidden>
+                <input asp-for="Criteria.FacultyId" hidden>
+                <input asp-for="Criteria.DepartmentId" hidden>
+                <input asp-for="Criteria.GPAFrom" hidden>
+                <input asp-for="Criteria.GPATo" hidden>
+                <input asp-for="Criteria.Type" hidden>
+                <input asp-for="Criteria.Purpose" hidden>
+                <input class="js-transcript-language" asp-for="Criteria.Language" hidden>
+            </form>
+        }
+    </div>
+</section>
+
+@section Modals {
+    <partial name="_DeleteRowConfirmModals">
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/transcript-generator.js"></script>
+}

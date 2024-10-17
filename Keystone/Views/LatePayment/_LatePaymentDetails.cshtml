@@ -1,0 +1,69 @@
+@model List<LatePaymentViewModel>
+@{
+    var index = 1;
+}
+
+<div class="block block--underline">
+    <div class="block__title">
+        <header>Student List (<span>@Model?.Count()</span>)</header>
+    </div>
+    
+	<div class="block__body">
+        <div class="row">
+            <div class="col-12">
+                <div class="table-responsive">
+                    <table id="js-selected-student" class="table table-bordered mb-0">
+                        <thead>
+                            <tr>
+                                <th class="w-50">#</th>
+                                <th class="w-75 text-center">Code</th>
+                                <th>Name</th>
+                                <th class="w-75 text-center">Finished Registration</th>
+                                <th class="w-75 text-center">Allow Payment</th>
+                                <th class="w-75 text-center">Graduating</th>
+                                <th class="w-75 text-center">Advising</th>
+                                <th class="w-150 text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td rowspan="2">@index</td>
+                                    <td>@item.StudentCode</td>
+                                    <td class="text-nowrap">@item.StudentFullName</td>
+                                    <td class="text-success">@item.FinishedRegistration</td>
+                                    <td class="text-danger">No</td>
+                                    <td class="text-success">Yes</td>
+                                    <td class="text-danger">No</td>
+                                    <td class="text-nowrap td-actions" rowspan="2">
+                                        <a asp-controller="Registration" 
+                                           asp-action="Index"
+                                           asp-route-code="@item.StudentCode">
+                                            <i class="la la-info info"></i>
+                                        </a>
+                                        <a class="js-edit-late-payment" href="#">
+                                            <i class="la la-edit edit"></i>
+                                        </a>
+                                        <a data-toggle="modal" 
+                                           data-target="#delete-confirm-modal" 
+                                           data-controller="LatePayment" 
+                                           data-action="Delete"
+                                           data-value="@item.Id"
+                                           href="#!">
+                                            <i class="la la-trash delete"></i>
+                                        </a>   
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6">@item.Remark</td>
+                                </tr>
+                                index++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

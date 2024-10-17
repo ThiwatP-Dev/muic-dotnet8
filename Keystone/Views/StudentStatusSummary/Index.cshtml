@@ -1,0 +1,171 @@
+@model StudentStatusSummaryViewModel
+@{ 
+    ViewData["Title"] = "Student Status Summary";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+
+<div class="row">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+        </ul>
+    </div>
+</div>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="StudentStatusSummary" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group m-b-30">
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                                <option selected>Select</option>
+                            </select>
+                            <label>Academic Level<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="ViewBag.Faculties">
+                                <option selected>Select</option>
+                            </select>
+                            <label>Division</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentId" asp-items="ViewBag.Departments">
+                                <option selected>Select</option>
+                            </select>
+                            <label>Major</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-curriculum" asp-for="Criteria.CurriculumId" asp-items="ViewBag.Curriculums">
+                                <option selected>Select</option>
+                            </select>
+                            <label>Curriculum</label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group m-b-30">
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-curriculum-version" asp-for="Criteria.CurriculumVersionId" asp-items="ViewBag.CurriculumVersions">
+                                <option selected>Select</option>
+                            </select>
+                            <label>Curriculum Version</label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.StartStudentBatch" type="number">
+                            <label>Batch From</label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.EndStudentBatch" type="number">
+                            <label>Batch To</label>
+                        </div>
+                        <div class="col-3">
+                            <h4 class="font-size-default m-y-4">Student Status</h4>
+                            <select class="chosen-select form-control" asp-for="Criteria.StudentStatuses" asp-items="ViewBag.StudentStatuses" data-placeholder="Select" multiple></select>
+                        </div>
+                    </div>
+
+                    <div class="row form-group mb-0">
+                        <div class="col-3">
+                            <h4 class="font-size-default m-y-4">Student Fee Type</h4>
+                            <select class="chosen-select form-control" asp-for="Criteria.StudentFeeTypeIds" asp-items="ViewBag.StudentFeeTypes" data-placeholder="Select" multiple></select>
+                        </div>
+                        <div class="col-3">
+                            <h4 class="font-size-default m-y-4">Resident Type</h4>
+                            <select class="chosen-select form-control" asp-for="Criteria.ResidentTypeIds" asp-items="ViewBag.ResidentTypes" data-placeholder="Select" multiple></select>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.Active" asp-items="ViewBag.ActiveStatuses"></select>
+                            <label>Status</label>
+                        </div>
+                        <div class="col-3 align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.Results?.Count() ?? 0))</header>
+            </div>
+
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table class="table table-bordered js-report-table w-100x">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Batch</th>
+                                @if (Model != null && Model.Headers != null && Model.Headers.Any())
+                                {
+                                    foreach (var item in Model.Headers)
+                                    {
+                                        <th class="text-center">@item</th>
+                                    }
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Results != null && Model.Results.Any())
+                            {
+                                foreach (var item in Model.Results) 
+                                {
+                                    <tr>
+                                        <td>@item.Batch</td>
+                                        @if (Model.Columns != null && Model.Columns.Any())
+                                        {
+                                            foreach (var column in Model.Columns)
+                                            {
+                                                <td class="text-nowrap td-actions">
+                                                    <a asp-controller="StudentStatusSummary" 
+                                                       asp-action="Details" 
+                                                       asp-route-academicLevelId="@Model.Criteria.AcademicLevelId"
+                                                       asp-route-facultyId="@Model.Criteria.FacultyId"
+                                                       asp-route-departmentId="@Model.Criteria.DepartmentId"
+                                                       asp-route-batch="@item.Batch"
+                                                       asp-route-studentFeeTypeIds="@Model.Criteria.StudentFeeTypeIds"
+                                                       asp-route-residentTypeIds="@Model.Criteria.ResidentTypeIds"
+                                                       asp-route-active="@Model.Criteria.Active"
+                                                       asp-route-curriculumId="@Model.Criteria.CurriculumId"
+                                                       asp-route-curriculumVersionId="@Model.Criteria.CurriculumVersionId"
+                                                       asp-route-studentStatus="@column"
+                                                       asp-route-returnUrl="@contextPath">
+                                                        @(Convert.ToInt64(item.GetType().GetProperty(column).GetValue(item)))
+                                                    </a>
+                                                </td>
+                                            }
+                                        }
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td class="text-center"><b>Total</b></td>
+                                @if (Model != null && Model.Columns != null && Model.Columns.Any())
+                                {
+                                    foreach (var column in Model.Columns)
+                                    {
+                                        <td class="text-center js-col-total">
+                                            <b>@(Model.Results?.Sum(x => Convert.ToInt64(x.GetType().GetProperty(column).GetValue(x))).ToString(StringFormat.NumberString))</b>
+                                        </td>
+                                    }
+                                }
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

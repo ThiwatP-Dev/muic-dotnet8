@@ -1,0 +1,98 @@
+#  Template .NET Core build
+
+#  This template allows you to validate your .NET Core package.
+#  The workflow allows running tests and code linting on the default branch.
+
+# To run your pipeline on a Windows machine, create a self-hosted Windows runner.
+# For instructions on setting up a Windows runner, see https://support.atlassian.com/bitbucket-cloud/docs/set-up-runners-for-windows/
+
+# follow this guide https://itnext.io/net-core-and-bitbucket-pipelines-9e8cb86b1dd6
+
+image: mcr.microsoft.com/dotnet/core/sdk:3.1
+
+pipelines:
+  branches:
+    #'{master,develop,feature/*}':
+    '{develop}':
+      - step:
+          name: Build and Test
+          runs-on:
+          - self.hosted
+          - windows
+          #caches:
+          #  - dotnetcore
+          script:
+            - $CONFIGURATION="Release"
+            - $REPORTS_REL_PATH="./test-reports/build_$Env:BITBUCKET_BUILD_NUMBER"
+            - $REPORTS_PATH="./ks/test-reports/build_$Env:BITBUCKET_BUILD_NUMBER"
+            - $CONFIGURATION
+            - $REPORTS_REL_PATH
+            - $REPORTS_PATH
+            #- dir
+            - cd Keystone
+            #- dir
+            - npm install
+            - npm rebuild node-sass
+            - npm run prebuild
+            - dotnet restore
+            - dotnet build --no-restore --configuration $CONFIGURATION
+            - dotnet test --no-build --test-adapter-path:. --logger:"junit;LogFilePath=$REPORTS_REL_PATH/junit.xml"
+            - dotnet publish --configuration $CONFIGURATION --no-build -o ./publish
+            - dir
+            - dir ./publish
+            - Compress-Archive -Path ./publish/* -DestinationPath ./publish/publish.zip
+            - dir ./publish
+            #- Get-Content D:\bitbucket\atlassian-bitbucket-pipelines-runner\temp\6fc57f11-37a3-57ee-82b2-f17df6b08806\runner.log
+          artifacts: 
+            - Keystone/publish/publish.zip
+      - step:
+          name: Deploy to MUIC docker repository
+          deployment: MUIC Docker Repo
+          trigger: manual
+          runs-on:
+          - self.hosted
+          - windows
+          script:
+            - echo "Deploying to MUIC Docker Repo environment"
+            - $Env:DockerRepoUrl
+            - $Env:DockerRepo
+            - $Env:DcokerRepoUser
+            - dir ./Keystone/publish/
+            - dir .
+            - $filePath = "Keystone/publish/publish.zip"
+            - Expand-Archive -Path $filePath -DestinationPath ./ForDeploy/Keystone
+            - dir .
+            - dir ./ForDeploy/Keystone/
+            - cd ./ForDeploy/
+            - dir .
+            - >-
+              $dockerContent = "
+              FROM mcr.microsoft.com/dotnet/aspnet:2.1-focal 
+
+              RUN apt-get update \
+                  && apt-get install -y --allow-unauthenticated \
+                      libc6-dev \
+                      libgdiplus \
+                      libx11-dev \
+                   && rm -rf /var/lib/apt/lists/*
+
+              COPY Keystone App/
+              
+              WORKDIR /App
+              
+              ENTRYPOINT [`"dotnet`", `"Keystone.dll`"]
+              
+              EOF              
+              "
+            - $dockerContent
+            - New-Item -Path . -Name "Dockerfile" -ItemType "file" -Value $dockerContent
+            - dir .
+            - Get-Content -Path ".\Dockerfile"      
+            - $dockerTag = $Env:DockerRepoUrl + "/" + $Env:DockerRepo + ":latest"
+            - $dockerTag
+            - docker -v
+            - echo "$Env:DockerRepoPass" | docker login -u "$Env:DcokerRepoUser" --password-stdin $Env:DockerRepoUrl
+            #- docker login -u $Env:DcokerRepoUser -p $Env:DockerRepoPass $Env:DockerRepoUrl
+            - docker build -t $dockerTag .
+            - docker push $dockerTag
+            - echo "Success"

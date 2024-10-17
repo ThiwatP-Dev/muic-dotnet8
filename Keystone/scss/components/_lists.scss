@@ -1,0 +1,63 @@
+/*------------------------------------
+    List
+------------------------------------*/
+
+ul,
+ol {
+    padding-left: 16px;
+
+    &.list-divided {
+
+        li {
+            margin-top: 16px;
+        }
+
+        li:first-child {
+            margin-top: 0;
+        }
+    }
+
+    &.list-simple {
+        list-style: none !important;
+
+        li {
+            &.list-items {
+                padding: 0.5rem 0;
+                border-bottom: 1px solid #eeeeee;
+
+                &:first-child{
+                    padding-top: 0;
+                }
+
+                &:last-child{
+                    padding-bottom: 0;
+                    border-bottom: none;
+                }
+            }
+        }
+    }
+
+    &.list-sortable {
+        min-height: 50px;
+        list-style: none !important;
+
+        li {
+            cursor: pointer;
+            margin: .75rem 0;
+            padding: .75rem 1rem;
+            background-color: $white;
+            border-radius: 10px;
+            -webkit-box-shadow: 0 0 5px $white-light;
+            box-shadow: 0 1px 5px 1px rgba($shadow,.25);
+
+            &:first-child {
+                margin-top: 0;
+            }
+
+            &:last-child{
+                margin-bottom: 0;
+                border-bottom: none;
+            }
+        }
+    }
+}

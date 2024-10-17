@@ -1,0 +1,87 @@
+/*------------------------------------
+    DataTable Customization
+------------------------------------*/
+.dataTables_wrapper {
+    
+    select.form-control:not([size]):not([multiple]) {
+        height: initial;
+    }
+
+    .form-control {
+        height: initial;
+        padding-top: 0;
+    }
+
+    .dataTables_filter {
+        color: $black;
+    }
+
+    .dataTables_info {
+        color: $black;
+        margin-top: 15px;
+        padding: 6px 0 0 0 !important;
+        clear: both;
+        float: left;
+    }
+
+    .dataTables_processing {
+        color: $black;
+    }
+
+    .dataTables_paginate {
+        margin-top: 15px !important;
+        float: right;
+        color: $black;
+        text-align: right;
+    }
+
+    .dt-buttons {
+        float: left;
+    }
+
+    table.dataTable {
+        margin-top: 15px !important;
+    }
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+
+    a {
+        display: inline-block;
+        color: $smoke;
+        background-color: #fff;
+        text-align: center;
+        text-decoration: none !important;
+        box-sizing: border-box;
+        box-shadow: none !important;
+        cursor: pointer;
+
+        &:hover {
+            color: $black_50;
+            background-color: $smoke;
+            border-color: $smoke;
+        }
+    }
+
+    &.active {
+        a {
+            color: $black_50;
+            background-color: $smoke;
+            border-color: $smoke;
+        }
+    }
+    
+  
+}
+
+.dataTables_length {
+    color: $black;
+}
+
+table.table-bordered.dataTable tbody th, table.table-bordered.dataTable tbody td {
+    border-bottom-width: 1px;
+}
+
+div.dataTables_wrapper div.dataTables_length select {
+    padding-left: 5px;
+}

@@ -1,0 +1,136 @@
+@model WithdrawalReportViewModel
+@{
+    ViewData["Title"] = "Withdrawal Report";
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline d-print-none">
+            <div class="block__title">
+                <header>@ViewData["Title"]</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="WithdrawalReport" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group m-b-30">
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="@ViewBag.AcademicLevels" data-placeholder="Select">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Academic Level<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="@ViewBag.Terms">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Term<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <h4 class="font-size-default m-y-4">Course</h4>
+                            <select class="chosen-select form-control js-cascade-multiple-course" asp-for="Criteria.CourseIds" asp-items="@ViewBag.Courses" data-placeholder="Select" multiple></select>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.GroupWithdrawBy" data-placeholder="Select">
+                                <option selected value="c">Course</option>
+                                <option value="sm">Student Sort By Major</option>
+                                <option value="sc">Student Sort By Student ID</option>
+                            </select>
+                            <label>Group By<span class="text-danger">*</span></label>
+                        </div>
+                    </div>
+                    <div class="row form-group mb-0">
+                        <div class="col-12 text-right align-self-end">
+                            <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">
+                                <i class="la la-search mr-2"></i>
+                                <span class="bold">Search</span>
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        @if (Model.Criteria?.AcademicLevelId > 0 && Model.Criteria?.TermId > 0)
+        {
+            <div class="block block--underline">
+                <div class="block__title">
+                    <form id="export-excel-form" class="form-horizontal" asp-controller="WithdrawalReport" asp-action="ExportExcel" method="POST">
+                        <header>Withdrawal Student List Group by @(Model.Criteria.GroupWithdrawBy.Contains("s") ? "Student" : "Course")</header>
+                        @if((Model.WithdrawalReportByCourses != null 
+                            && Model.WithdrawalReportByCourses.Any())
+                            || (Model.WithdrawalReportByStudents != null 
+                            && Model.WithdrawalReportByStudents.Any()))
+                        {
+                            <div class="tools pr-4">
+                                <button id="js-export-excel" class="btn btn--primary mb-0 js-add-row" type="submit">
+                                    Export Excel
+                                </button>
+                            </div>
+                            <input name="Criteria.AcademicLevelId" value="@Model.Criteria.AcademicLevelId" type="hidden">
+                            <input name="Criteria.TermId" value="@Model.Criteria.TermId" type="hidden">
+                            <input name="Criteria.CourseIds" value="@Model.Criteria.CourseIds" type="hidden">
+                            <input name="Criteria.GroupWithdrawBy" value="@Model.Criteria.GroupWithdrawBy" type="hidden">
+                        }
+                    </form>
+                </div>
+                <div class="block__body">
+                    <div class="d-flex justify-content-between">
+                        <h4 class="font-weight-700">Trimester  @Model.Term</h4>
+                        <h4 class="text-right align-self-end">D = Debarment, A = Application, P = Petition</h4>
+                    </div>
+                    <div class="table-responsive p-y-50">
+                        <table id="js-withdrawal-approve" class="table table-bordered table-hover w-100x m-0">
+                            <thead>
+                                <tr>                                    
+                                    <th class="w-10" rowspan="2">#</th>
+                                    @if (Model.WithdrawalReportByCourses != null) {
+                                        <th class="text-center w-10" rowspan="2">Student ID</th>
+                                    }
+                                    else if (Model.WithdrawalReportByStudents != null) {
+                                        <th class="text-center w-10" rowspan="2">Course Code</th>
+                                    }
+                                    <th class="text-nowrap w-350" rowspan="2">Name</th>
+                                    <th class="text-center w-50" rowspan="2">Section</th>
+                                    <th class="w-400" rowspan="2">Instructor</th>
+                                    <th class="text-center" colspan="3">Type</th>
+                                    <th class="text-left" rowspan="2">Remark</th>
+                                </tr>
+                                <tr>
+                                    <th class="text-center w-50">D</th>
+                                    <th class="text-center w-50">A</th>
+                                    <th class="text-center w-50">P</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.WithdrawalReportByCourses != null && Model.WithdrawalReportByCourses.Any())
+                                {
+                                    <partial name="_WithdrawalTableByCourses" model="@Model.WithdrawalReportByCourses" />
+                                }
+                                else if (Model.WithdrawalReportByStudents != null && Model.WithdrawalReportByStudents.Any())
+                                {
+                                    <partial name="_WithdrawalTableByStudents" model="@Model.WithdrawalReportByStudents" />
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="9" class="text-center">
+                                            <i class="text-danger">No Data</i>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>    
+                        </table>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/export-excel.js"></script>
+}

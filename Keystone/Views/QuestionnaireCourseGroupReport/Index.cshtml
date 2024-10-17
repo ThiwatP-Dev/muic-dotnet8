@@ -1,0 +1,123 @@
+@model QuestionnaireCourseGroupReportViewModel
+@{ 
+    ViewData["Title"] = "Questionnaire Course Group Report"; 
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+    var recordNumber = 1;
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Questionnaire Course Group Report</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="QuestionnaireCourseGroupReport" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group mb-0">
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Academic Level<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="ViewBag.Terms">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Term<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.CourseGroupId" asp-items="ViewBag.QuestionnaireCourseGroups">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Questionnaire Course Group<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3 align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (Model != null)
+{
+    <section class="row">
+        <div class="col-12">
+            <div class="block block--underline">
+                <div class="block__title">
+                    <header>Search Result (@(Model?.Details?.Count ?? 0))</header>
+                </div>
+
+                <div class="block__body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover w-100x">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">#</th>
+                                    <th>Course</th>
+                                    <th class="text-center">Section</th>
+                                    <th>Instructor</th>
+                                    <th class="text-center">Individual Total Score</th>
+                                    <th class="text-center">All Related Section Total Score</th>
+                                    <th class="text-center">Evaluated</th>
+                                    <th class="text-center">Taken Seat</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.Details != null && Model.Details.Any())
+                                {
+                                    foreach (var item in Model.Details) 
+                                    {
+                                        <tr>
+                                            <td>@recordNumber</td>
+                                            <td>@item.Course</td>
+                                            <td>@item.Section</td>
+                                            <td>@item.Instructor</td>
+                                            <td>@item.IndividualTotalScoreText</td>
+                                            <td>@item.RelatedSectionScoreText</td>
+                                            <td>@item.EvaluatedCount</td>
+                                            <td>@item.TakenSeat</td>
+                                        </tr>
+                                        recordNumber++;
+                                    }
+                                    <tr>
+                                        <td></td>
+                                        <td>Total Average Score</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-center">@Model.TotalScore</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="8">
+                                            <i class="text-danger">No Data</i>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+@section Modals {
+    <partial name="_DeleteConfirmModals">
+}

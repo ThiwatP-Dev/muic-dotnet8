@@ -1,0 +1,15 @@
+@model CustomCourseGroup
+@{ 
+    ViewData["Title"] = "Edit Custom Course Group"; 
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <form class="ks-form container" asp-controller="CustomCourseGroup" asp-action="Edit" method="POST">
+                @Html.AntiForgeryToken()
+                <partial name="_Form"/>
+            </form>
+        </div>
+    </div>
+</section>

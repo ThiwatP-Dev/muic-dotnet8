@@ -1,0 +1,137 @@
+@model RegistrationViewModel
+@{
+    var index = 1;
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+
+<section class="ks-general-info">
+    <div class="block block--underline">
+        <div class="block__body">
+            <div class="d-flex">
+                <div class="js-show-credits align-self-center mr-auto pl-3">
+                    <span class="form-control-label mr-4">
+                        Min. Credit : <span>@Model?.MinimumCredit</span>
+                    </span>
+                    <span class="form-control-label mr-4">
+                        Max. Credit : <span>@Model?.MaximumCredit</span>
+                    </span>
+                    <span class="form-control-label">
+                        Credit : <span>@Model?.AccumulativeRegistrationCredit (+@Model?.TotalCredit)</span>
+                    </span>
+                </div>
+                
+                <div class="block__action-row pb-3">
+                    <a class="btn btn--primary mb-0"
+                       data-toggle="modal"
+                       data-target="#update-credit-modal">Update Credit</a>
+                    @* <button class='btn btn--primary dropdown mb-0' asp-action="Withdrawal">
+                        <span class="bold">Options<i class="la la-caret-down ml-2"></i></span>
+                        <div class="dropdown-content right color-primary">
+                            @if (Model?.Registrations != null)
+                            {
+                                <a data-toggle="modal" 
+                                   data-target="#return-seat-modal"
+                                   data-controller="Registration"
+                                   data-action="ReturnSeat"
+                                   data-route-channel="w"
+                                   data-route-student-id="@Model.StudentId"
+                                   data-route-term-id="@Model.TermId">
+                                   <img class="align-top w-15 mr-1" src="~/images/seat.svg"> Return Seat
+                                </a>
+                            } 
+                            else
+                            {
+                                <a>
+                                    <i class="la la-plus mr-1"></i> New Schedule
+                                </a>
+                            }
+                            <a>
+                                <i class="la la-hourglass-end mr-2 font-weight-800"></i>Late Registration
+                            </a>
+                            <a asp-controller="LatePayment" asp-action="Index" asp-route-returnUrl="@contextPath">
+                                <i class="la la-hourglass-end mr-2 font-weight-800"></i>Late Payment
+                            </a>
+                        </div>
+                    </button> *@
+                </div>
+            </div>
+
+            <div class="table-responsive mb-4">
+                <table class="table table-hover table-bordered align-contents-top m-0">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Course</th>
+                            <th class="text-center">Registration Credit</th>
+                            <th class="text-center">Sec.</th>
+                            <th>Time</th>
+                            <th>Room</th>
+                            <th>Midterm/<br>Final Exam</th>
+                            <th class="text-center">Paid</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model?.Registrations != null && Model?.Registrations.Count != 0)
+                        {
+                            @foreach (var item in Model.Registrations)
+                            {
+                                <tr style="vertical-align: top;">
+                                    <td rowspan="2">@index</td>
+                                    <td>
+                                        <b>@item.Course?.Code @item.Course?.CreditText</b><br>
+                                        <b>@item.Course?.NameEn</b><br>
+                                        @item.Section?.MainInstructor?.FullNameEn
+                                    <td>@item.Course?.RegistrationCreditText</td>
+                                    <td>@item.Section?.Number</td>
+                                    <td>
+                                        <partial name="_StringLoop" model="@(item.Section!= null ? item.Section.SectionDetails.Select(x => x.Dayofweek + ' ' + x.Time).ToList() : new List<string>())">
+                                    </td>
+                                    <td>
+                                        <partial name="_StringLoop" model="@(item.Section!= null ? item.Section.SectionDetails.Select(x => x.Room?.NameEn).ToList() : new List<string>())">
+                                    </td>
+                                    <td>
+                                        @("M: " + (item.Section?.MidtermDate == new DateTime() || item.Section?.MidtermDate == null ? " -" : item.Section?.MidtermDateTime))
+                                        <br>
+                                        @("F: " + (item.Section?.FinalDate == new DateTime() || item.Section?.FinalDate == null ? " -" : item.Section?.FinalDateTime))
+                                    </td>
+                                    <td>
+                                        <partial name="_BooleanCheck" model="@item.IsPaid">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="7">Remaks: @(item.Section?.Remark)</td>
+                                </tr>
+                                index++;
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td class="text-center" colspan="7">
+                                    <i class="text-danger">No data</i>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    @* <tfoot>
+                        <tr>
+                            <td class="text-right border-right-0" colspan="4">Total : </td>
+                            <td class="text-center border-right-0 border-left-0">@Model?.TotalCredit</td>
+                            <td id="js-total-get-reg-credit" class="text-center border-left-0"></td>
+                            <td></td>
+                        </tr>
+                    </tfoot> *@
+                </table>
+            </div>
+
+            <hr>
+
+            <header class="font-size-16 color-primary mb-2">Schedule @Model.TermText</header>
+            <div class="mx-auto">
+                <div id="js-schedule" class="table-responsive" data-schedules="@Model?.RegistrationScheduleJsonData">
+                    <partial name="_Schedule">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

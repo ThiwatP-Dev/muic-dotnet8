@@ -1,0 +1,148 @@
+@model CertificationViewModel
+@{ 
+    ViewData["Title"] = "Certificate Generator";
+}
+
+<form asp-controller="Certificate" asp-action="Preview" method="POST">
+    @Html.AntiForgeryToken()
+
+    <section class="row">
+        <div class="col-12">
+            <div class="block block--underline">
+                <a class="btn-back" href="@ViewBag.ReturnUrl">
+		        	<i class="la la-angle-double-left"></i>
+		        </a>
+                <span>@ViewData["Title"]</span>
+                
+                <div class="block__body">
+                    <div class="row form-group">
+                        <div class="col-8">
+                            <select id="js-certificate-type" class="chosen-select form-control" asp-for="CertificationType" asp-items="ViewBag.CertificateTypes">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Certificate Type<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-4">
+                            <select class="chosen-select form-control" asp-for="Purpose" asp-items="ViewBag.Purposes"></select>
+                            <label>Purpose<span class="text-danger">*</span></label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group mb-0">
+                        <div class="col-2">
+                            <input class="form-control js-student-code" asp-for="StudentCode"/>
+                            <label>Student Code<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-2">
+                            <select class="chosen-select form-control" asp-for="Language" asp-items="ViewBag.Languages"></select>
+                            <label>Language<span class="text-danger">*</span></label>
+                        </div>
+                        <div id="js-year-input" class="col-1 @(Model.CertificationType == "ExpensesOutlineCertificate" ? "" : "d-none")">
+                            <input class="form-control js-academic-year-cascade js-default-zero js-click-highlight" asp-for="AcademicYear">
+                            <label>Year<span class="text-danger">*</span></label>
+                        </div>
+                        <div id="js-term-input" class="col-1 @(Model.CertificationType == "ExpensesOutlineCertificate" ? "" : "d-none")">
+                            <input class="form-control js-academic-term-cascade js-default-zero js-click-highlight" asp-for="AcademicTerm">
+                            <label>Term<span class="text-danger">*</span></label>
+                        </div>
+                        <div id="js-receipt-select"class="col-3 @(Model.CertificationType == "ExpensesOutlineCertificate" ? "" : "d-none")">
+                            <select class="js-receipt-cascade chosen-select form-control" asp-for="ReceiptId"
+                                    asp-items="ViewBag.ReceiptNumbers" data-placeholder="Select">
+                            </select>
+                            <label>Receipt Number<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-2 align-self-end">
+                            <input class="form-check-input" asp-for="IsUrgent" type="checkbox" />
+                            <label class="mb-0" for="IsUrgent">Urgent</label>
+                        </div>
+                    </div>
+
+                    <input asp-for="StudentCertificateId" type="hidden">
+
+                    <div class="row form-group">
+                        <div class="col-12 text-right align-self-end">
+                            <button id="js-get-details" class="btn btn-mw-120 btn--primary mb-0" type="button">
+                                <i class="la la-search"></i> Search
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="row">
+        <div class="col-12">
+            <div id="flash-message"></div>
+            <div class="block block--underline">
+                <div class="block__title">
+                    <header>Certificate Detail</header>
+                </div>
+                
+                <div class="block__body">
+                    <div id="js-get-form">
+                        <!-- details -->
+                        <div class="row form-group mb-0">
+                            <div class="col-12 disable-item">
+                                <i>Please Select Certificate Type.</i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- footer -->
+                    <hr>
+                    <div class="row form-group">
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="ApprovedBy" asp-items="@ViewBag.Signatories">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Approved By<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-2">
+                            <input id="js-limit-date" class="form-control" asp-for="CreatedAtString" type="text" autocomplete="off" />
+                            <label>Issued Date<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-7">
+                            <h4>Signs<span class="text-danger">*</span></h4>
+                            <select class="chosen-select form-control" asp-for="SignIds" asp-items="@ViewBag.Signatories"
+                                    data-placeholder="Select" multiple></select>
+                        </div>
+                    </div>
+
+                    <div class="row form-group mb-0">
+                        <div class="col-3 align-self-end">
+                            <input class="form-check-input js-required-payment" asp-for="IsRequiredPayment" type="checkbox" />
+                            <label class="mb-0" for="IsRequiredPayment">Required Payment</label>
+                        </div>
+                        <div class="col-2 align-self-end js-payment-section d-none">
+                            <input class="form-check-input" asp-for="IsPaid" type="checkbox">
+                            <label class="mb-0" for="IsPaid">Paid</label>
+                        </div>
+                        <div class="col js-payment-section d-none">
+                            <input id="js-document-amount" class="form-control" asp-for="Amount" type="number">
+                            <label>Amount</label>
+                        </div>
+                        <div class="col js-payment-section d-none">
+                            <input id="js-document-fee" class="form-control" asp-for="DocumentFee">
+                            <label>Document Fee</label>
+                        </div>
+                        <div class="col text-nowrap text-right align-self-end">
+                            <button id="js-preview-button" class="btn btn-mw-120 btn--primary mb-0" type="submit" disabled>Preview</button>
+                            <a id="js-reset-btn" class="btn btn-mw-120 btn--reset mb-0" asp-action="Index">Reset</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+
+@section Modals {
+    <partial name="_DeleteRowConfirmModals">
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/ajax-cascading/certificate-generator.js"></script>
+    <script type="text/javascript" src="~/js/pages/certificate.js"></script>
+    <script type="text/javascript" src="~/js/pages/expenses-outline-certificate.js"></script>
+}

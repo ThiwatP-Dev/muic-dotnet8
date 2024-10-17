@@ -1,0 +1,255 @@
+@model PagedResult<RoomReservation>
+@{ 
+    ViewData["Title"] = "Room Reservation Management"; 
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+    var recordNumber = Model?.FirstRowOnPage;
+}
+
+<div class="row">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</div>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Room Reservation</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="RoomReservationManagement" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group">
+                        <div class="col-3">
+                            <input class="form-control js-single-date" asp-for="Criteria.StartedAt" type="text" autocomplete="off">
+                            <label>Date From</label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control js-single-date" asp-for="Criteria.EndedAt" type="text" autocomplete="off">
+                            <label>Date To</label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.CodeAndName" type="text">
+                            <label>Name</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-campus" asp-for="Criteria.CampusId" asp-items="ViewBag.Campuses">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Campus</label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-building" asp-for="Criteria.BuildingId" asp-items="ViewBag.Buildings">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Building</label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.Floor" type="number">
+                            <label>Floor</label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.RoomName" type="text">
+                            <label>Room</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.Status" asp-items="ViewBag.ReservationStatuses">
+                                <option selected value="all">All</option>
+                            </select>
+                            <label>Status</label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-2">
+                            <select class="chosen-select form-control" asp-for="Criteria.SenderType" asp-items="ViewBag.SenderTypes">
+                                <option selected value="">All</option>
+                            </select>
+                            <label>Sender Type</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.CreatedBy" asp-items="ViewBag.Users">
+                                <option selected value="">All</option>
+                            </select>
+                            <label>Created By</label>
+                        </div>
+                         <div class="col-2">
+                            <input class="form-control js-single-date" asp-for="Criteria.CreatedFrom" type="text" autocomplete="off">
+                            <label>Created Date From</label>
+                        </div>
+                        <div class="col-2">
+                            <input class="form-control js-single-date" asp-for="Criteria.CreatedTo" type="text" autocomplete="off">
+                            <label>Created Date To</label>
+                        </div>
+                        <div class="col-3 align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset mb-0" asp-action="Index">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.RowCount ?? 0))</header>
+                <div class="tools pr-4">
+                    <a class="btn btn--primary btn-mw-120 mb-0 m-r-5" asp-action="Create" asp-route-returnUrl="@contextPath">
+                        <i class="la la-plus mr-1 font-weight-800"></i> Add Room Reservation
+                    </a>
+                </div>
+            </div>
+            
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover w-100x">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th>Name</th>
+                                <th>Phone Number</th>
+                                <th>Email</th>
+                                <th class="text-center">Date</th>
+                                <th class="text-center">Time</th>
+                                <th>Room</th>
+                                <th class="text-center">Sender</th>
+                                <th class="text-center">Created Date</th>
+                                <th class="text-center">Created By</th>
+                                <th class="text-center">Approved Date</th>
+                                <th class="text-center">Approved By</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Results.Any())
+                            {
+                                foreach (var item in Model.Results) 
+                                {
+                                    <tr>
+                                        <td rowspan="2">@recordNumber</td>
+                                        <td>@item.Name</td>
+                                        <td>@item.PhoneNumber</td>
+                                        <td>@item.Email</td>
+                                        <td>@item.DateFromText - @item.DateToText</td>
+                                        <td>@item.TimeDisplay</td>
+                                        <td>@item.Room?.NameEn</td>
+                                        <td>@item.SenderTypeText</td>
+                                        <td>@item.CreatedDateTimeText</td>
+                                        <td>@item.CreatedByFullNameEn</td>
+                                        <td>@item.ApprovedAtText</td>
+                                        <td>@item.ApprovedByFullNameEn</td>
+                                        <td>
+                                            <partial name="_RoomReservationStatus" model="@item.Status">
+                                        </td>
+                                        <td class="text-nowrap td-actions">
+                                            <a data-toggle="modal"
+                                               data-target="#js-room-reservation-modal"
+                                               data-value="@item.Id"
+                                               data-return-url="@contextPath"
+                                               title="Infomation">
+                                                <i class="la la-info info"></i>
+                                            </a>
+                                            @if(item.Status == "w")
+                                            {
+                                                <a asp-controller="RoomReservationManagement" 
+                                                    asp-action="Edit" 
+                                                    asp-route-Id="@item.Id"
+                                                    asp-route-returnUrl="@contextPath"
+                                                    title="Edit">
+                                                    <i class="la la-edit edit"></i>
+                                                </a>
+                                                <a asp-controller="RoomReservationManagement" 
+                                                   asp-action="Approve" 
+                                                   asp-route-Id="@item.Id"
+                                                   asp-route-returnUrl="@contextPath"
+                                                   title="Approve">
+                                                   <i class="la la-check edit"></i>
+                                                </a>
+                                                <a data-toggle="modal"
+                                                data-target="#edit-room-reservation"
+                                                data-value="@item.Id"
+                                                data-return-url="@contextPath"
+                                                title="Reject">
+                                                    <i class="la la-close edit"></i>
+                                                </a>
+                                                <a data-toggle="modal" 
+                                                data-target="#delete-confirm-modal" 
+                                                data-controller="RoomReservationManagement" 
+                                                data-action="Delete" 
+                                                data-return-url="@contextPath"
+                                                data-value="@item.Id"
+                                                title="Delete">
+                                                    <i class="la la-trash delete"></i>
+                                                </a>
+                                            }
+                                            @if(item.Status == "a")
+                                            {
+                                                <a data-toggle="modal" 
+                                                data-target="#edit-room-slot-reservation" 
+                                                data-value="@item.Id"
+                                                data-return-url="@contextPath"
+                                                title="Edit Room Slot">
+                                                    <i class="la la-list edit"></i>
+                                                </a>
+                                                <a data-toggle="modal"
+                                                data-target="#edit-room-reservation"
+                                                data-value="@item.Id"
+                                                data-return-url="@contextPath"
+                                                title="Reject">
+                                                    <i class="la la-close edit"></i>
+                                                </a>
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="13" class="text-left">
+                                            <p>Description: @item.Description</p>
+                                            <p>Remark: @item.Remark</p>
+                                        </td>
+                                    </tr>
+                                    recordNumber++;
+                                }
+                            }
+                            else 
+                            {
+                                <tr>
+                                    <td colspan="14">
+                                        <i class="text-danger">No Data</i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @(await Component.InvokeAsync<PagerViewComponent>(Model))
+    </div>
+</section>
+
+@section Modals {
+    <partial name="_DeleteConfirmModals">
+    <partial name="_DetailsModal" model="new RoomReservationViewModel()">
+    <partial name="_EditReservationModal" model="new RoomReservation()">
+    <partial name="_EditReservationRoomSlotModal" model="new List<RoomReservationSlotViewModel>()">
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/room-reservation-modal.js"></script>
+    <script src="~/js/pages/ajax-cascading/building-cascade.js"></script>
+    <script src="~/js/pages/room-reservation.js"></script>
+}

@@ -1,0 +1,23 @@
+@model ExaminationPeriod
+@{ 
+    ViewData["Title"] = "Add Examination Period"; 
+}
+
+<section id="data-table-form-v1" class="row">
+    <div class="col-lg-12">
+        <div class="block block--underline">
+            <form class="ks-form container" asp-controller="ExaminationPeriod" asp-action="Create" method="post">
+                @Html.AntiForgeryToken()
+                <partial name="_Form"/>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            InputMask.renderTimeMask();
+        });
+    </script>
+}

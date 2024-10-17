@@ -1,0 +1,52 @@
+@model List<WithdrawalReportByCourse>
+
+@foreach (var item in Model)
+{
+    <tr>
+        <td class="text-left" colspan="9">
+            <b>@item.CourseCodeAndName</b>
+        </td>
+    </tr>
+    var index = 1;
+    @foreach (var withdrawal in item.Withdrawals)
+    {
+        <tr>
+            <td class="text-center">@(index)</td>
+            <td>@withdrawal.StudentCode</td> 
+            <td>@withdrawal.StudentFullName</td>
+            <td>@withdrawal.SectionNumber</td>
+            <td>@withdrawal.InstructorFullName</td>
+            @if (withdrawal.Type == "d")
+            {
+                <td class="text-center">W</td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td>
+                    <div class="text-left">
+                        @(string.IsNullOrEmpty(withdrawal.Remark) ? $"{ withdrawal.InstructorCode }: { withdrawal.InstructorFullName }"
+                                                                  : $"{ withdrawal.InstructorCode }: { withdrawal.InstructorFullName }, { withdrawal.Remark }")
+                    </div>
+                </td>
+            }
+            else if (withdrawal.Type == "u")
+            {
+                <td class="text-center"></td>
+                <td class="text-center">W</td>
+                <td class="text-center"></td>
+                <td>
+                    <div class="text-left">@withdrawal.Remark</div>
+                </td>
+            }
+            else if (withdrawal.Type == "p")
+            {
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-center">W</td>
+                <td>
+                    <div class="text-left">@withdrawal.Remark</div>
+                </td>
+            }
+        </tr>
+        ++index;
+    }
+}

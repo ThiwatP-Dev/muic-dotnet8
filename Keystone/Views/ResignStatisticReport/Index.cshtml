@@ -1,0 +1,169 @@
+@model ResignStatisticReportViewModel
+@{
+    ViewData["Title"] = "Resign Statistic Report";
+}
+
+<section class="ks-general-info">
+    <div class="block block--underline">
+        <div class="block__title" >
+            <header>@ViewData["Title"]</header>
+        </div>
+
+        <div class="block__body">
+            <form asp-controller="ResignStatisticReport" asp-action="Index" class="form-horizontal" method="GET">
+                @Html.AntiForgeryToken()
+                <div class="row form-group m-b-30">
+                    <div class="col-3">
+                        <input class="form-control" asp-for="Criteria.StartStudentBatch" type="text">
+                        <label>Batch From<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control" asp-for="Criteria.EndStudentBatch" type="text">
+                        <label>To<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-6">
+                        <select class="chosen-select form-control" asp-for="Criteria.ResignReasonId" asp-items="ViewBag.ResignReasons" data-placeholder="Select">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Resign Reason</label>
+                    </div>
+                </div>
+                <div class="row form-group m-b-30">
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Academic Level</label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control" asp-for="Criteria.AcademicYear" type="number">
+                        <label>Year</label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="@ViewBag.Faculties" data-placeholder="Select">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Division</label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentId" asp-items="@ViewBag.Departments" data-placeholder="Select">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Major</label>
+                    </div>
+                </div>
+                <div class="row form-group m-b-0">
+                    <div class="col-12 align-self-end text-right">
+                        <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">
+                            <i class="la la-search mr-2"></i>Search
+                        </button>
+                        <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                            Reset
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@if (Model != null && Model.Results.Any())
+{
+    <section class="row">
+        <div class="col-12">
+            <div class="block block--underline">
+                <div class="block__body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered js-report-table table-hover m-0 w-100x">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    @for (int i = Model.Criteria.StartStudentBatch ?? 0; i <= (Model.Criteria.EndStudentBatch ?? 0); i++)
+                                    {
+                                        <th class="text-center">ID:@i</th>
+                                        foreach (var term in Model.Terms)
+                                        {
+                                            <th></th>
+                                        }
+                                    }
+                                </tr>
+                                <tr>
+                                    <th>Division</th>
+                                    <th>Code</th>
+                                    <th>Major</th>
+                                    @for (int i = Model.Criteria.StartStudentBatch ?? 0; i <= (Model.Criteria.EndStudentBatch ?? 0); i++)
+                                    {
+                                        foreach (var term in Model.Terms)
+                                        {
+                                            <th class="text-center">@term</th>
+                                        }
+                                        
+                                        <th class="text-center">Total</th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var faculty in Model.Results.GroupBy(x => x.FacultyAbbreviation))
+                                {
+                                    var departments = faculty.GroupBy(x => x.DepartmentAbbreviation);
+                                    foreach (var department in departments)
+                                    {
+                                        <tr>
+                                            <td>@faculty.Key</td>
+                                            <td>@department.Key</td>
+                                            <td>@department.FirstOrDefault().DepartmentName</td>
+                                            @for (int i = Model.Criteria.StartStudentBatch ?? 0; i <= (Model.Criteria.EndStudentBatch ?? 0); i++)
+                                            {
+                                                var batches = department.Where(x => x.Batch == i);
+                                                <td class="text-center">@batches.Where(x => x.AcademicTerm == 1).Count()</td>
+                                                <td class="text-center">@batches.Where(x => x.AcademicTerm == 2).Count()</td>
+                                                <td class="text-center">@batches.Where(x => x.AcademicTerm == 3).Count()</td>
+                                                <td class="text-center">@batches.Where(x => x.AcademicTerm == 4).Count()</td>
+                                                <td class="text-center">@batches.Count()</td>
+                                            }
+                                        </tr>
+                                    }
+
+                                    <tr class="table-active">
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-right"><b>Total</b></td>
+                                        @for (int i = Model.Criteria.StartStudentBatch ?? 0; i <= (Model.Criteria.EndStudentBatch ?? 0); i++)
+                                        {
+                                            var batches = faculty.Where(x => x.Batch == i);
+                                            foreach (var term in Model.Terms)
+                                            {
+                                                <td class="text-center"><b>@batches.Where(x => x.AcademicTerm == term).Count()</b></td>
+                                            }
+                                            
+                                            <td class="text-center"><b>@batches.Count()</b></td>
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="text-right"><b>Grand Total</b></td>
+                                    @for (int i = Model.Criteria.StartStudentBatch ?? 0; i <= (Model.Criteria.EndStudentBatch ?? 0); i++)
+                                    {
+                                        var total = Model.Results.Where(x => x.Batch == i);
+                                        foreach (var term in Model.Terms)
+                                        {
+                                            <td class="text-center"><b>@total.Where(x => x.AcademicTerm == term).Count()</b></td>
+                                        }
+
+                                        <td class="text-center"><b>@total.Count()</b></td>
+                                    }
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}

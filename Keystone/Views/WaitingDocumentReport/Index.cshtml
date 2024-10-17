@@ -1,0 +1,158 @@
+@model PagedResult<WaitingDocumentReportViewModel>
+@{
+    ViewData["Title"] = "Waiting Document Report";
+    var recordNumber = Model?.FirstRowOnPage;
+}
+
+<section class="row">
+    <div class="col-12">
+        <div id="waiting-document-accordion1" class="d-print-none">
+            <div class="block block--underline">
+                <div class="block__title collapsed" data-toggle="collapse" data-parent="#waiting-document-accordion1" data-target="#waiting-document-accordion1-1">
+                    <header>@ViewData["Title"]</header>
+                    <div class="tools">
+                        <a class="btn btn--white btn--circle">
+                            <i class="la la-angle-down"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="waiting-document-accordion1-1" class="collapse show" aria-expanded="true">
+                    <div class="block__body">
+                        <form class="form-horizontal" asp-controller="WaitingDocumentReport" asp-action="Index" method="GET">
+                            @Html.AntiForgeryToken()
+                            <div class="row form-group m-b-30">
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="@ViewBag.AcademicLevels" data-placeholder="Select">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Academic Level<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-admission-round" asp-for="Criteria.AdmissionRoundId" asp-items="@ViewBag.AdmissionRounds" data-placeholder="Select">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Admission Round</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="@ViewBag.Faculties" data-placeholder="Select">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Division</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentId" asp-items="@ViewBag.Departments" data-placeholder="Select">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Major</label>
+                                </div>
+                            </div>
+
+                            <div class="row form-group">
+                                <div class="col-3">
+                                    <input class="form-control" asp-for="Criteria.StartStudentBatch" type="text">
+                                    <label>Batch</label>
+                                </div>
+                                <div class="col-3">
+                                    <input class="form-control" asp-for="Criteria.Code" type="text">
+                                    <label>Student Code</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control" asp-for="Criteria.Status" asp-items="@ViewBag.StudentStatuses" data-placeholder="Select">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Student Status</label>
+                                </div>
+                                <div class="col-3 align-self-end text-right text-nowrap">
+                                    <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                        <i class="la la-search mr-2"></i>Search
+                                    </button>
+                                    <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                        Reset
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title d-print-none">
+                <header>Search Result (@(Model?.RowCount ?? 0))</header>
+                <div class="tools pr-4">
+                    <button class="btn btn--primary btn-mw-120 mb-0 m-r-5" onclick="window.print()">
+                        <i class="la la-print mr-1 font-weight-800"></i> Print
+                    </button>
+                </div>
+            </div>
+
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table class="table table-bordered w-100x">
+                        <thead>
+                            <tr>
+                                <th class="w-25">#</th>
+                                <th>Code</th>
+                                <th>Name</th>
+                                <th>Division</th>
+                                <th>Major</th>
+                                <th class="text-center">Sex</th>
+                                <th>Email</th>
+                                <th>Personal Email</th>
+                                <th>Phone Number</th>
+                                <th>Previous School</th>
+                                <th>Student Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Results.Any())
+                            {
+                                foreach (var item in Model.Results)
+                                {
+                                    var documentCount = 1;
+                                    <tr>
+                                        <td rowspan="@((item?.WaitingDocuments.Count+1) ?? 0)" class="text-center">@recordNumber</td>
+                                        <td>@item.Code</td>
+                                        <td>@item.FullName</td>
+                                        <td>@item.Faculty</td>
+                                        <td>@item.Department</td>
+                                        <td>@item.Gender</td>
+                                        <td>@item.Email</td>
+                                        <td>@item.PersonalEmail</td>
+                                        <td>@item.Phone</td>
+                                        <td>@item.PreviousSchool</td>
+                                        <td>@item.StudentStatus</td>
+                                    </tr>
+                                    @foreach (var document in item.WaitingDocuments)
+                                    {
+                                        <tr>
+                                            <td colspan="5">@(documentCount + ". " + document.DocumentName)</td>
+                                            <td colspan="5">@document.Remark</td>
+                                        </tr>
+                                        ++documentCount;
+                                    }
+                                    recordNumber++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td class="text-center" colspan="11">
+                                        <i class="text-danger">No Data</i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            @(await Component.InvokeAsync<PagerViewComponent>(Model))
+        </div>
+    </div>
+</section>

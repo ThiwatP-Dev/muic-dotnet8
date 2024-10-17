@@ -1,0 +1,24 @@
+@{
+    var searchReturnUrl = ViewBag.ReturnUrl;
+}
+
+<div id="course-tuition-fee-modal-create" class="modal fadeIn animated js-details-modal" tabindex="-1" role="dialog"
+    aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="block block--underline mb-0">
+                <div class="block__title">
+                    <header>Create Tuition Fee</header>
+                </div>
+                <div class="block__body">
+                    <section class="row">
+                        <form class="ks-form container py-0" asp-controller="Course" asp-action="CreateTuitionFee" asp-route-returnUrl="@searchReturnUrl" method="POST">
+                            @Html.AntiForgeryToken()
+                            <partial name="_TuitionFee.cshtml" model="new TuitionFee()"/>
+                        </form>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

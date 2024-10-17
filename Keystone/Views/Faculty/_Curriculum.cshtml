@@ -1,0 +1,44 @@
+@model FacultyViewModel
+@{
+    var index = 1;
+}
+
+<section>
+    <div class="block__body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover w-100x">
+                <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th class="text-center">Code</th>
+                        <th>English Name</th>
+                        <th>Thai Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Curriculums.Any())
+                    {
+                        foreach (var item in Model.Curriculums) 
+                        {
+                            <tr>
+                                <td>@index</td>
+                                <td>@item.Code</td>
+                                <td>@item.NameEn</td>
+                                <td>@item.NameTh</td>
+                            </tr>
+                            index++;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4">
+                                <i class="text-danger">No Data</i>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,223 @@
+@model ExaminationPeriodReportViewModel
+@{
+    ViewData["Title"] = "Examination Period Report";
+}
+<section class="row">
+    <div class="col-12">
+        <div class="panel-group">
+            <div class="block block--underline d-print-none">
+                <div class="block__title">
+                    <header>@ViewData["Title"]</header>
+                    <ul class="d-flex flex-md-row align-items-md-center float-right">
+                        <li class="list-inline-item mx-3 mb-0 d-print-none">
+                            <a class="btn btn--primary" onclick="window.print()">
+                                <i class="la la-print mr-1 font-weight-800"></i> Print
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="collapse show" aria-expanded="true">
+                    <div class="block__body">
+                        <form class="form-horizontal" asp-controller="ExaminationPeriodReport" asp-action="Index" method="GET">
+                            @Html.AntiForgeryToken()
+
+                            <div class="row form-group m-b-30">
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels" data-placeholder="Select">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label for="Criteria.AcademicLevelId">Academic Level<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="ViewBag.Terms" data-placeholder="Select">
+                                        <option selected disabled>Select</option>
+                                    </select>   
+                                    <label for="Criteria.TermId">Term<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control" asp-for="Criteria.ExaminationType" asp-items="ViewBag.ExaminationTypes" data-placeholder="Select">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label for="Criteria.ExaminationType">Examination Type<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control" asp-for="Criteria.CampusId" asp-items="ViewBag.Campuses" data-placeholder="Select">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label for="Criteria.CampusId">Campus<span class="text-danger">*</span></label>
+                                </div>
+                            </div>
+
+                            <div class="row form-group m-b-0">
+                                <div class="col-3">
+                                    <input class="form-control js-single-date" asp-for="Criteria.StartedAt" type="text" autocomplete="off">
+                                    <label>Examination Date From<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-3">
+                                    <input class="form-control js-single-date" asp-for="Criteria.EndedAt" type="text" autocomplete="off">
+                                    <label>Examination Date To<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-check pl-0">
+                                        <input class="form-check-input" asp-for="Criteria.IsShowByTime" type="checkbox">
+                                        <label class="mb-0" for="Criteria_IsShowByTime">Show By Time</label>
+                                    </div>
+                                </div>
+                                <div class="col-3 text-right align-self-end search-js">
+                                    <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">
+                                        <i class="la la-search mr-2"></i>
+                                        <span class="bold">Search</span>
+                                    </button>
+                                    <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                        Reset
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <div class="block">
+                <div class="block__body">
+                    <div class="table-responsive">
+                        @if (Model != null && Model.ExaminationPeriodByCourseReports != null && Model.ExaminationPeriodByCourseReports.Any())
+                        {
+                            <div class="text-center">
+                                <h4>MAHIDOL UNIVERSITY</h4>
+                                <h4>@Model.Criteria?.ExaminationType.ToUpper() FOR SEMESTER @Model.Term</h4>
+                                <p>Date: @Model.StartDate - @Model.EndDate</p>
+                                <p>@(Model.CampusName.ToUpper() == "NO ROOM" ? Model.CampusName.ToUpper() : $"MUIC { Model.CampusName.ToUpper() } CAMPUS")</p>
+                            </div>
+                            <table id="js-examination-period-report" class="table table-bordered table-hover js-report-table w-100x">
+                                @if (Model.SummaryExaminationPeriodReportViewModels != null && Model.SummaryExaminationPeriodReportViewModels.Any())
+                                {
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            @foreach (var examTime in Model.ExamTimes)
+                                            {
+                                                <th class="text-center">@examTime</th>
+                                            }
+                                            
+                                            <th class="text-center">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var examTimeCount in Model.SummaryExaminationPeriodReportViewModels)
+                                        {
+                                            <tr>
+                                                <td>@examTimeCount.DateString</td>
+                                                @for (var i = 0; i < Model.ExamTimes.Count(); ++i)
+                                                {
+                                                    var examCount = examTimeCount.SummaryExaminationPeriodDetails.SingleOrDefault(x => x.Time == Model.ExamTimes[i]);
+                                                    
+                                                    <td>@(examCount != null && examCount?.Count != 0 ? examCount.Count.ToString() : "-")</td>
+                                                }
+                                                <td>@examTimeCount.Total</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                }
+                                else if (Model.ExaminationPeriodByCourseReports.Any())
+                                {
+                                    foreach (var item in Model.ExaminationPeriodByCourseReports)
+                                    {
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center" colspan="7">@item.ExaminationAtDayOfWeek</th>
+                                            </tr>
+                                            <tr>
+                                                <th class="text-center w-150">Date</th>
+                                                <th class="text-center w-150">Period</th>
+                                                <th class="text-center w-150">Begin</th>
+                                                <th class="text-center w-150">End</th>
+                                                <th class="text-center w-150">Course Code</th>
+                                                <th>Course Name</th>
+                                                <th class="text-center w-150">No. of Student</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @{
+                                                var morningPeriod = item.ExaminationPeriodByCourseDetails.Where(x => x.Period == "Morning");
+                                                var afternoonPeriod = item.ExaminationPeriodByCourseDetails.Where(x => x.Period == "Afternoon");
+                                                if (morningPeriod.Any())
+                                                {
+                                                    foreach(var info in morningPeriod)
+                                                    {
+                                                        <tr>
+                                                            <td>@item.ExaminationAtDay</td>
+                                                            <td>@info.Period</td>
+                                                            <td>@info.BeginTime</td>
+                                                            <td>@info.EndTime</td>
+                                                            <td>@info.CourseCode</td>
+                                                            <td><div class="text-left">@info.CourseName</div></td>
+                                                            <td><div class="text-right p-r-10">@info.TotalStudent</div></td>
+                                                        </tr>
+                                                    }
+
+                                                    <tr>
+                                                        <td colspan="6"><b>Total per Period</b></td>
+                                                        <td><div class="text-right p-r-10">@morningPeriod.Sum(x => x.TotalStudent)</div></td>
+                                                    </tr>
+                                                }
+                                                
+                                                if (afternoonPeriod.Any())
+                                                {
+                                                    foreach(var info in afternoonPeriod)
+                                                    {
+                                                        <tr>
+                                                            <td>@item.ExaminationAtDay</td>
+                                                            <td>@info.Period</td>
+                                                            <td>@info.BeginTime</td>
+                                                            <td>@info.EndTime</td>
+                                                            <td>@info.CourseCode</td>
+                                                            <td><div class="text-left">@info.CourseName</div></td>
+                                                            <td><div class="text-right p-r-10">@info.TotalStudent</div></td>
+                                                        </tr>
+                                                    }
+
+                                                    <tr>
+                                                        <td colspan="6"><b>Total per Period</b></td>
+                                                        <td><div class="text-right p-r-10">@afternoonPeriod.Sum(x => x.TotalStudent)</div></td>
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>   
+                                    }
+                                }
+                            </table>
+                        }
+                        else
+                        {
+                            <table class="table table-bordered table-hover js-report-table w-100x">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center w-150">Date</th>
+                                        <th class="text-center w-150">Period</th>
+                                        <th class="text-center w-150">Begin</th>
+                                        <th class="text-center w-150">End</th>
+                                        <th class="text-center w-150">Course Code</th>
+                                        <th>Course Name</th>
+                                        <th class="text-center w-150">No. of Student</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="7">
+                                            <i class="text-danger">No Data</i>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        }
+                </div>    
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/ajax-cascading/academic-cascade.js"></script>
+}

@@ -1,0 +1,21 @@
+@model ReportViewModel
+@{ 
+    ViewData["Title"] = "Student ID Card Preview";
+    var studentIdCards = Model.Body as List<StudentIdCardFormDetail>;
+}
+
+<img id="js-default-logo" src="~/images/logo-muic.png" hidden>
+
+@if(studentIdCards != null)
+{
+    foreach (var item in studentIdCards)
+    {
+        <img id="@($"img-student-{item.Code}")" src="@(item.ProfileImageURL == null ? "/images/default-profile-m.png" : item.ProfileImageURL)" onerror="this.src = '/images/default-profile-m.png'" hidden>
+    }
+}
+
+<partial name="Preview/_PreviewHeader" model="@Model">
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/pdf-render/student-id-card.js"></script>
+}

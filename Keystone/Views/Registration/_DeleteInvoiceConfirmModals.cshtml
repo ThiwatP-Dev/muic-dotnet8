@@ -1,0 +1,30 @@
+<div class="modal fadeIn animated js-modal-form" id="delete-invoice-confirm-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="block mb-0">
+        <form asp-controller="Invoice" asp-action="DeleteFromRegistration"  method="GET">
+          <div class="block__body">
+            <h3 class="color-danger m-b-15">
+              <i class="la la-trash m-r-5"></i>
+              Cancel
+            </h3>
+            <p><b class="js-invoice-number">Invoice Number: </b></p>
+            <div class="col">
+                <input class="form-control js-remark-invoice" name="remark" value="">
+                <input id="invoice-id-modal" name="id" value="" hidden>
+                <input id="invoice-return-url" name="returnUrl" value="" hidden>
+                <label>Remark<span class="text-danger">*</span></label>
+            </div>
+          </div>
+          <!--end .block__body -->
+          <div class="block__action">
+            <div class="block__action-row">
+                <button class="btn btn-mw-120 btn--danger rounded" id="btn-cancel-invoice" type="submit" disabled>Yes</button>
+                <a href="javascript:void(0);" class="btn btn-mw-120 btn--cancel rounded" data-dismiss="modal">No</a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

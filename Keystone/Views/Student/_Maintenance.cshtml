@@ -1,0 +1,39 @@
+@model Student
+
+<section class="ks-maintenance-info">
+    <div class="block no-shadow h-100x m-b-30">
+        <div class="block__body">
+            <div class="row form-group">
+                <div class="col-3">
+                    <div class="form-control-label d-flex align-items-center">Current Credit Enrolled</div>
+					<div class="form-control-plaintext">@Model.AcademicInformation?.CreditComp</div>
+                </div>
+                <div class="col-2">
+                    <div class="form-control-label d-flex align-items-center">Degree</div>
+					<div class="form-control-plaintext">@Model.AcademicInformation?.DegreeName</div>
+                </div>
+                <div class="col-2">
+                    <div class="form-control-label d-flex align-items-center">Graduated Date</div>
+					<div class="form-control-plaintext">@Model.GraduationInformation?.GraduatedAt</div>
+                </div>
+                <div class="col-2">
+                    <div class="form-control-label d-flex align-items-center">Graduated Class</div>
+					<div class="form-control-plaintext">@Model.GraduationInformation?.Class</div>
+                </div>
+                <div class="col-2">
+                    <div class="form-control-label d-flex align-items-center">Graduated Term</div>
+					<div class="form-control-plaintext">@Model.GraduationInformation?.Term?.TermText</div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-4">
+                    <partial name="_RegistrationTranscript" />
+                </div>
+                <div class="col-8">
+                    <partial name="_MaintenanceTransaction" model="@Model"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

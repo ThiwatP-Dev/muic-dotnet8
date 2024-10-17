@@ -1,0 +1,258 @@
+@model PagedResult<WithdrawalSearchResultViewModel>
+@{
+    ViewData["Title"] = "Withdrawal";
+    var contextPath = $"{ Context.Request.Path }{ Context.Request.QueryString }";
+    var recordNumber = Model?.FirstRowOnPage;
+}
+
+<section class="row">
+    <div class="col-md-12">
+        <div id="withdrawal-approve-accordion1" class="panel-group">
+            <div class="block block--underline">
+                <div class="block__title collapsed" data-toggle="collapse" data-parent="#withdrawal-approve-accordion1" data-target="#withdrawal-approve-accordion1-1">
+                    <header>@ViewData["Title"]</header>
+                    <div class="tools">
+                        <div class="btn-group">
+                            <a class="btn btn--white btn--circle">
+                                <i class="la la-angle-down"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="withdrawal-approve-accordion1-1" class="collapse show" aria-expanded="true">
+                    <div class="block__body">
+                        <form class="form-horizontal" asp-controller="Withdrawal" asp-action="Index" method="GET">
+                            @Html.AntiForgeryToken()
+                            <div class="row form-group m-b-30">
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="@ViewBag.AcademicLevels">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Academic Level<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="@ViewBag.Terms">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Term<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="@ViewBag.Faculties">
+                                        <option selected>Select</option>
+                                    </select>
+                                    <label>Division</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentId" asp-items="@ViewBag.Departments">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Major</label>
+                                </div>
+                            </div>
+
+                            <div class="row form-group m-b-30">
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-course" asp-for="Criteria.CourseId" asp-items="@ViewBag.Courses">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Course</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-section" asp-for="Criteria.SectionId" asp-items="@ViewBag.Sections">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Section</label>
+                                </div>
+                                <div class="col-3">
+                                    <input id="search-student-code" class="form-control" asp-for="Criteria.CodeAndName" type="text">
+                                    <label>Student</label>
+                                </div>
+                                <div class="col-3 align-self-end text-nowrap">
+                                    <select class="chosen-select form-control " asp-for="Criteria.Status" asp-items="@ViewBag.WithdrawalStatuses">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Status</label>
+                                </div>
+                            </div>
+                            <div class="row form-group mb-0">
+                                <div class="col-3">
+                                    <select class="chosen-select form-control" asp-for="Criteria.InstructorId" asp-items="ViewBag.Instructors">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Instructor</label>
+                                </div>
+                                <div class="col-3">
+                                </div>
+                                <div class="col-3">
+                                </div>
+                                <div class="col-3 align-self-end text-nowrap">
+                                    <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">
+                                        <i class="la la-search mr-2"></i>Search
+                                    </button>
+                                    <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                        Reset
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @if (Model != null)
+        {
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="block block--underline">
+                        <div class="block__title">
+                            <header>Search Result (@(Model?.RowCount ?? 0))</header>
+                            <div class="tools">
+                                <form asp-action="Create"
+                                  asp-route-returnUrl="@contextPath"
+                                  asp-route-termId="@Model?.Criteria?.TermId"
+                                  asp-route-academicLevelId="@Model?.Criteria?.AcademicLevelId">
+                                    <button class="btn btn--primary mb-0" type="submit">
+                                        <i class="la la-plus mr-1 font-weight-800"></i> Add Withdrawal
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="block__body">
+                            <div class="table-responsive">
+                                <table id="js-withdrawal-approve" class="table table-bordered m-0">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">#</th>
+                                            <th>Major</th>
+                                            <th class="text-center">Code</th>
+                                            <th class="text-nowrap">Name</th>
+                                            <th class="text-nowrap">Course</th>
+                                            <th>Credit</th>
+                                            <th class="text-center">Section</th>
+                                            <th>Lecturer</th>
+                                            <th>Type</th>
+                                            <th>Requested By</th>
+                                            <th class="text-center">Requested Date</th>
+                                            <th class="text-nowrap">Approver</th>
+                                            <th class="text-nowrap">Remark</th>
+                                            <th class="text-center">Status</th>
+                                            <th class="text-center">ApprovedDate</th>
+                                            <th class="text-center">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (Model.Results.Any())
+                                        {
+                                            @foreach (var item in Model.Results)
+                                            {
+                                                <tr>
+                                                    <td>@recordNumber</td>
+                                                    <td>@item.Major</td>
+                                                    <td>@item.Code</td>
+                                                    <td>@item.Name</td>
+                                                    <td>@item.Course</td>
+                                                    <td>@item.Credit</td>
+                                                    <td>@item.Section</td>
+                                                    <td>@item.Instructor</td>
+                                                    <td>@item.TypeText</td>
+                                                    <td>@item.RequestedBy</td>
+                                                    <td>@item.RequestedDate</td>
+                                                    <td>@item.Approver</td>
+                                                    <td>@item.Remark</td>
+                                                    <td>@item.StatusText</td>
+                                                    <td>@item.ApprovedDate</td>
+                                                    <td class="text-nowrap td-actions">
+                                                        <a data-toggle="modal"
+                                                           data-target="#js-withdrawal-logs"
+                                                           data-value="@item.Id">
+                                                            <i class="la la-info info"></i>
+                                                        </a>
+
+                                                        @if (item.Status == "w")
+                                                        {
+                                                            <a data-toggle="modal"
+                                                               data-target="#approve-confirm-modal"
+                                                               data-controller="Withdrawal"
+                                                               data-action="Approve"
+                                                               data-id="@item.Id"
+                                                               data-return-url="@contextPath">
+                                                                <i class="la la-check edit"></i>
+                                                            </a>
+                                                            <a data-toggle="modal"
+                                                               data-target="#reject-confirm-modal"
+                                                               data-controller="Withdrawal"
+                                                               data-action="Reject"
+                                                               data-id="@item.Id"
+                                                               data-return-url="@contextPath">
+                                                                <i class="la la-times delete"></i>
+                                                            </a>
+                                                        }
+                                                        else if (item.Status == "a")
+                                                        {
+                                                            <a data-toggle="modal"
+                                                               data-target="#cancel-confirm-modal"
+                                                               data-controller="Withdrawal"
+                                                               data-action="Cancel"
+                                                               data-id="@item.Id"
+                                                               data-return-url="@contextPath">
+                                                                <i class="la la-refresh delete"></i>
+                                                            </a>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                                recordNumber++;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td colspan="12">
+                                                    <i class="text-danger">No Data</i>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row form-group float-right">
+                <form asp-controller="Withdrawal" asp-action="ExportExcel">
+                    @if (Model != null && Model.Results.Any())
+                    {
+                        <input asp-for="Criteria.AcademicLevelId" hidden>
+                        <input asp-for="Criteria.TermId" hidden>
+                        <input asp-for="Criteria.FacultyId" hidden>
+                        <input asp-for="Criteria.DepartmentId" hidden>
+                        <input asp-for="Criteria.CodeAndName" hidden>
+                        <input asp-for="Criteria.SectionId" hidden>
+                        <input asp-for="Criteria.Status" hidden>
+                        <input asp-for="Criteria.CourseId" hidden>
+                        <input asp-for="Criteria.InstructorId" hidden>
+                        <input name="returnUrl" value="@contextPath" hidden>
+                        <div class="col text-nowrap text-right">
+                            <button class="btn btn-mw-120 btn--primary mb-0" type="submit">Show All [For Export]</button>
+                        </div>
+                    }
+                </form>
+            </div>
+        }
+        @(await Component.InvokeAsync<PagerViewComponent>(Model))
+    </div>
+</section>
+
+@section Modals {
+<partial name="_CancelModal" />
+<partial name="_ApproveModal" />
+<partial name="_RejectModal" />
+<partial name="_DetailsModal" model="null" />
+}
+
+@section Scripts {
+<script type="text/javascript" src="~/js/pages/tabs.js"></script>
+<script type="text/javascript" src="~/js/pages/withdrawal.js"></script>
+}

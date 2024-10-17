@@ -1,0 +1,170 @@
+@model AllSectionTimeSlotReportViewModel
+@{
+    ViewData["Title"] = "All Section Time Slots Report";
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="panel-group">
+            <div class="block block--underline d-print-none">
+                <div class="block__title">
+                    <header>@ViewData["Title"]</header>
+                </div>
+
+                <div class="collapse show" aria-expanded="true">
+                    <div class="block__body">
+                        <form class="form-horizontal" asp-controller="AllSectionTimeSlotReport" asp-action="Index" method="GET">
+                            @Html.AntiForgeryToken()
+
+                            <div class="row form-group m-b-30">
+                                <div class="col-3">
+                                    <input class="form-control js-single-date" asp-for="Criteria.StartedAt" type="text" autocomplete="off">
+                                    <label>Date From<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-3">
+                                    <input class="form-control js-single-date" asp-for="Criteria.EndedAt" type="text" autocomplete="off">
+                                    <label>Date To<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-campus" asp-for="Criteria.CampusId" asp-items="ViewBag.Campuses">
+                                        <option selected value="">Select</option>
+                                    </select>
+                                    <label>Campus</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-building" asp-for="Criteria.BuildingId" asp-items="ViewBag.Buildings">
+                                        <option selected value="">Select</option>
+                                    </select>
+                                    <label>Building</label>
+                                </div>
+                            </div>
+
+                            <div class="row form-group mb-30">
+
+                                <div class="col-12 align-self-end text-right text-nowrap">
+                                    <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                        <i class="la la-search mr-2"></i>Search
+                                    </button>
+                                    <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                                        Reset
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="block block--underline">
+                    <div class="block__title">
+                        <header>Search Result</header>
+                    </div>
+                    <div class="block__body">
+                        @if (Model != null && Model.Items.Any())
+                        {
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover all-slot-dt-export w-100x">
+                                            <thead>
+                                                <tr style="display:none;">
+                                                    <th></th>
+                                                    @for (int index = 0; index < Model.Items[0].Header.Count; index++)
+                                                    {
+                                                        <th></th>
+                                                    }
+                                                    <th></th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody class="">
+                                                @foreach (var type in Model.Items)
+                                                {
+                                                    Dictionary<int, long> colSumCounter = new Dictionary<int, long>();
+
+                                                    <tr class="bg-primary-lighter">
+                                                        <td colspan="@(3+type.Header.Count)">
+                                                            <h4 style="font-weight:bold;">@type.UsingTypeText</h4>
+                                                        </td>
+                                                        @for (int index = 0; index < type.Header.Count; index++)
+                                                        {
+                                                            <td style="display:none;"></td>
+                                                        }
+                                                        <td style="display:none;"></td>
+                                                        <td style="display:none;"></td>
+                                                    </tr>
+                                                    <tr class="bg-primary-lighter">
+                                                        <td class="text-center" style="font-weight:bold;">Day \ Time</td>
+                                                        @for (int index = 0; index < type.Header.Count; index++)
+                                                        {
+                                                            colSumCounter[index] = 0;
+                                                            <td class="text-right" style="font-weight:bold;">@type.Header[index]</td>
+                                                        }
+                                                        <td class="text-right" style="font-weight:bold;">Total</td>
+                                                        <td class="text-right" style="font-weight:bold;">%</td>
+                                                    </tr>
+                                                    @foreach (var rowItem in type.Rows)
+                                                    {
+                                                        <tr>
+                                                            <td style="font-weight:bold;">@rowItem.DayOfWeekText</td>
+                                                            @for (int index = 0; index < rowItem.Values.Count; index++)
+                                                            {
+                                                                colSumCounter[index] += rowItem.Values[index];
+                                                                <td class="text-right">@rowItem.Values[index]</td>
+                                                            }
+                                                            <td class="text-right">@rowItem.Total</td>
+                                                            <td class="text-right">@((type.Total > 0 ? (decimal)rowItem.Total/ type.Total : 0).ToString("P2"))</td>
+                                                        </tr>
+                                                    }
+
+                                                    <tr>
+                                                        <td style="font-weight:bold;">Total</td>
+                                                        @for (int index = 0; index < type.Header.Count; index++)
+                                                        {
+                                                            <td class="text-right">@colSumCounter[index]</td>
+                                                        }
+                                                        <td class="text-right">@type.Total</td>
+                                                        <td class="text-right"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="font-weight:bold;">%</td>
+                                                        @for (int index = 0; index < type.Header.Count; index++)
+                                                        {
+                                                            <td class="text-right">@((type.Total > 0 ? (decimal)colSumCounter[index]/ type.Total : 0).ToString("P2"))</td>
+                                                        }
+                                                        <td class="text-right"></td>
+                                                        <td class="text-right"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="@(3+type.Header.Count)"></td>
+                                                        @for (int index = 0; index < type.Header.Count; index++)
+                                                        {
+                                                            <td style="display:none;"></td>
+                                                        }
+                                                        <td style="display:none;"></td>
+                                                        <td style="display:none;"></td>
+                                                    </tr>
+
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+<script src="~/js/pages/ajax-cascading/building-cascade.js"></script>
+<script type="text/javascript" src="~/js/pages/all-section-time-slot-report.js"></script>
+}

@@ -1,0 +1,14 @@
+@model string
+
+@if (Model == "Passed")
+{
+    <span class="text-success">@Model</span>
+}
+else if (Model == "Cancel")
+{
+   <span class="text-danger">@Model</span>
+}
+else
+{
+   <span class="text-warning">@Model</span>
+}

@@ -1,0 +1,19 @@
+@model CourseExclusion
+@{
+    ViewData["Title"] = "Edit Course Exclusion";
+ }
+
+<section class="row">
+    <div class="col-lg-12">
+        <div class="block block--underline">
+            <form class="ks-form container" asp-controller="ExcludingCourse" asp-action="Edit" method="post">
+                @Html.AntiForgeryToken()
+                <partial name="_Form"/>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Modals {
+    <partial name="_DeleteRowConfirmModals">
+}

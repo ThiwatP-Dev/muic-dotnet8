@@ -1,0 +1,43 @@
+@model LoginViewModel
+@{
+    ViewData["Title"] = "Log in";
+}
+
+<section class="login-wrapper">
+    <div class="block block--underline">
+        <div class="block__title">
+            <header class="logo">
+                <img class="logo__img" src="~/images/logo-muic-2.png" alt="Keystone-Logo"/>  
+                <span class="logo__title font-weight-400">Sky+ Keystone</span>
+            </header>
+        </div>
+
+        <div class="block__body">
+            <h4 class="font-weight-700 m-b-15">Sign in</h4>
+            <form class="form-horizontal" asp-controller="Account" asp-action="Login" method="POST">
+                @Html.AntiForgeryToken()
+                <div>
+                    <label asp-for="Username"></label>
+                    <input class="form-control pt-0" asp-for="Username" autofocus type="text">
+                    <span class="text-danger" asp-validation-for="Username"></span>
+                </div>
+
+                <div>
+                    <label asp-for="Password"></label>
+                    <input class="form-control pt-0" asp-for="Password" type="password">
+                    <span class="text-danger" asp-validation-for="Password"></span>
+                </div>
+
+                <input asp-for="ReturnUrl" type="hidden">
+                <div class="row form-group mb-0">
+                    <div class="col-12 text-right">
+                        <button class="btn btn-mw-120 btn--primary mb-0" type="submit">
+                            Sign in
+                            <i class="fas fa-arrow-circle-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

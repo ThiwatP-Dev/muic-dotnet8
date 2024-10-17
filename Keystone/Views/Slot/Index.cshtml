@@ -1,0 +1,173 @@
+@model PagedResult<Slot>
+@{ 
+    ViewData["Title"] = "Slot"; 
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title collapsed" data-toggle="collapse" data-parent="#slot-search" data-target="#slot-search-criteria">
+                <header>@ViewData["Title"]</header>
+                <div class="tools">
+                    <div class="btn-group">
+                        <a class="btn btn--white btn--circle">
+                            <i class="la la-angle-down"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="slot-search-criteria" class="collapse show" aria-expanded="true">
+                <div class="block__body">
+                    <form class="form-horizontal" asp-controller="Slot" asp-action="Index" method="GET">
+                        @Html.AntiForgeryToken()
+                        <div class="row form-group mb-0">
+                            <div class="col-3">
+                                <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                                    <option selected disabled>Select</option>
+                                </select>
+                                <label>Academic Level<span class="text-danger">*</span></label>
+                            </div>
+
+                            <div class="col-3">
+                                <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="ViewBag.Terms">
+                                    <option selected disabled>Select</option>
+                                </select>
+                                <label>Term<span class="text-danger">*</span></label>
+                            </div> 
+
+                            <div class="col-3">
+                                <select class="chosen-select form-control" asp-for="Criteria.RegistrationTermId" asp-items="ViewBag.RegistrationTerms">
+                                    <option selected>Select</option>
+                                </select>
+                                <label>Registration Term</label>
+                            </div> 
+
+                            <div class="col-3 align-self-end text-nowrap">
+                                <button class="btn btn--primary btn-mw-120 mb-0 m-r-5" type="submit">
+                                    <i class="la la-search mr-2"></i>Search
+                                </button>
+                                <a class="btn btn-mw-120 btn--reset" asp-action="Index">
+                                    Reset
+                                </a>
+                            </div> 
+                        </div>  
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+		<div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.RowCount ?? 0))</header>
+                <div class="tools">
+                    <a class="btn btn--primary btn-mw-120 mb-0" 
+                        asp-action="Create"
+                        asp-route-returnUrl="@contextPath">
+                        <i class="la la-plus mr-1 font-weight-800"></i> Add Slot
+                    </a>
+                </div>
+            </div>
+
+			<div class="block__body">
+                <div class="p-4">
+                    <table id="js-slot-search" class="table table-bordered table-hover js-report-table w-100x">
+                        <thead>
+                            <tr>
+                                <th class="w-25"></th>
+                                <th>Date / Time</th>
+                                @* <th>Ended At</th> *@
+                                <th>Slot Name</th>
+                                <th>Registration Term</th>
+                                <th class="text-center">Special Slot</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @if(Model != null && Model.Results.Count != 0)
+                        {
+                            @foreach (var item in Model.Results) 
+                            {
+                                <tr>
+                                    <td class="hidden-row-toggle"><i class="fas fa-plus-circle"></i></td>
+                                    <td>@item.SlotText</td>
+                                    @* <td>@item.EndedAtText</td> *@
+                                    <td>@item.Name</td>
+                                    <td>@item.RegistrationTerm.Name</td>
+                                    <td>
+                                        @if (item.IsSpecialSlot)
+                                        {
+                                            <i class="la la-check"></i>
+                                        }
+                                    </td>
+                                    <td>
+                                        <partial name="_BooleanActive" model="@item.IsActive" />
+                                    </td>
+                                    <td class="text-nowrap td-actions">
+                                        <a asp-controller="Slot" 
+                                           asp-action="Edit" 
+                                           asp-route-Id="@item.Id"
+                                           asp-route-returnUrl="@contextPath">
+                                            <i class="la la-edit edit"></i>
+                                        </a>
+                                        <a data-toggle="modal" 
+                                           data-target="#delete-confirm-modal" 
+                                           data-controller="Slot" 
+                                           data-action="Delete" 
+                                           data-value="@item.Id">
+                                            <i class="la la-trash delete"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr class="hidden-row d-none">
+                                    <td></td>
+                                    <td colspan="6">
+                                        <partial name="_Details" model="@item.RegistrationSlotConditions" />
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td class="text-center" colspan="9">
+                                    <i class="text-danger">No Data</i>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+
+                    <div class="row form-group float-right">
+                        <form asp-controller="Slot" asp-action="ExportExcel">
+                            @if (Model != null && Model.Results.Any())
+                            {
+                                for (var i = 0; i < Model.Results.Count(); i++)
+                                {
+                                    <input name="ids" value="@Model.Results[i].Id" hidden>
+                                }
+                                <input name="returnUrl" value="@contextPath" hidden>
+                                <div class="col text-nowrap text-right">
+                                    <button class="btn btn-mw-120 btn--primary mb-0" type="submit">Preview</button>
+                                </div>
+                            }
+                        </form>
+                    </div>
+                </div>
+            </div>
+		</div>
+        @(await Component.InvokeAsync<PagerViewComponent>(Model))
+	</div>
+</section>
+
+@section Modals {
+    <partial name="_DeleteConfirmModals" />
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/registration-slot.js"></script>
+}

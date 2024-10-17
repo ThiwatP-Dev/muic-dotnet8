@@ -1,0 +1,270 @@
+@model Student
+
+<section class="ks-general-info">
+    <form class="form-horizontal" asp-controller="student" asp-action="SaveGeneral" asp-route-Id="@ViewData["StudentId"]" method="post">
+        <div class="block no-shadow h-100x m-b-30">
+            <div class="block__body">
+                <div class="section-title">
+                    <h4>English Name</h4>
+                </div>
+
+                <input name="currentStudentStatus" value="@Model.StudentStatus" type="hidden">
+                
+                <div class="row form-group">
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-title-en" asp-for="TitleId" asp-items="ViewBag.TitlesEn" autofocus>
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Title<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control text-uppercase" asp-for="FirstNameEn" type="text">
+                        <label>First Name<span class="text-danger">*</span></label>
+                        <span class="text-danger help-block" asp-validation-for="FirstNameEn"></span>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control text-uppercase" asp-for="MidNameEn" type="text">
+                        <label>Middle Name</label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control text-uppercase" asp-for="LastNameEn" type="text">
+                        <label>Last Name<span class="text-danger">*</span></label>
+                    </div>
+                </div>
+
+                <div class="section-title">
+                    <h4>Thai Name</h4>
+                </div>
+                <div class="row form-group">
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-title-th" asp-for="TitleId" asp-items="ViewBag.TitleTh" disabled>
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Title<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control" asp-for="FirstNameTh" type="text">
+                        <label>First Name</label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control" asp-for="MidNameTh" type="text">
+                        <label>Middle Name</label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control" asp-for="LastNameTh" type="text">
+                        <label>Last Name</label>
+                    </div>
+                </div>
+
+                <div class="section-title">
+                    <h4>Personal Information</h4>
+                </div>
+                <div class="row form-group">
+                    <div class="col-3 d-flex align-items-center">
+                        <div class="form-check d-flex pl-0 w-100x">
+                            <input id="Male" class="form-check-input primary" asp-for="Gender" type="radio" value="1">
+                            <label class="mx-auto w-50x" for="Male">Male</label>
+
+                            <input id="Female" class="form-check-input primary" asp-for="Gender" type="radio" value="2">
+                            <label class="mx-auto w-50x" for="Female">Female</label>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control js-single-date" asp-for="BirthDate" type="text" autocomplete="off">
+                        <label>Birth Date<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control" asp-for="RaceId" asp-items="ViewBag.Races">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Race</label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-identity" asp-for="NationalityId" asp-items="ViewBag.Nationalities">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Nationality</label>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-3">
+                        <input class="form-control js-identity-type" asp-for="CitizenNumber" type="text" data-identity="thai">
+                        <label>Citizen Number</label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control js-identity-type" asp-for="Passport" type="text" data-identity="foreign">
+                        <label>Passport</label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control js-single-date js-identity-type" asp-for="PassportIssuedAt" type="text" data-identity="foreign" autocomplete="off">
+                        <label>Passport Issue Date</label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control js-single-date js-identity-type" asp-for="PassportExpiredAt" type="text" data-identity="foreign" autocomplete="off">
+                        <label>Passport Expiry Date</label>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-address-cascade" asp-for="BirthCountryId" asp-items="ViewBag.Countries" data-group="birth" data-type="country">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Birth Country</label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-address-cascade" asp-for="BirthProvinceId" asp-items="ViewBag.Provinces" data-group="birth" data-type="province">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Birth Province</label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-address-cascade" asp-for="BirthStateId" asp-items="ViewBag.States" data-group="birth" data-type="state">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Birth State</label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-address-cascade" asp-for="BirthCityId" asp-items="ViewBag.Cities" data-group="birth" data-type="city">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Birth City</label>
+                    </div>
+                </div>
+                
+                <div class="row form-group">
+                    <div class="col-3">
+                        <select class="chosen-select form-control" asp-for="ReligionId" asp-items="ViewBag.Religions">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Religion</label>
+                        <span class="text-danger help-block" asp-validation-for="ReligionId"></span>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control" asp-for="MaritalStatus" asp-items="ViewBag.MaritalStatuses">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Marital Status</label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control" asp-for="LivingStatus" asp-items="ViewBag.LivingStatuses">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Living Status</label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control" asp-for="NativeLanguage" asp-items="ViewBag.NativeLanguages">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Native Language</label>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-3">
+                        <select class="chosen-select form-control" asp-for="DeformationId" asp-items="ViewBag.Deformations">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Deformation</label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control" asp-for="DisabledBookCode" type="text">
+                        <label>Disabled Book Code</label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control js-single-date" asp-for="DisableBookIssuedAt" type="text" autocomplete="off">
+                        <label>Disable Book Issue Date</label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control js-single-date" asp-for="DisableBookExpiredAt" type="text" autocomplete="off">
+                        <label>Disable Book Expiry Date</label>
+                    </div>
+                </div>
+
+                <div class="section-title">
+                    <h4>University Information</h4>
+                </div>
+                <div class="row form-group">
+                    <div class="col-4">
+                        <select class="chosen-select form-control" asp-for="BankBranchId" asp-items="ViewBag.BankBranches">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Bank Branch</label>
+                    </div>
+                    <div class="col-4">
+                        <input class="form-control" asp-for="BankAccount" type="text">
+                        <label>Bank Account No.</label>
+                    </div>
+                    <div class="col-4">
+                        <input class="form-control js-single-date" asp-for="AccountUpdatedAt" type="text" autocomplete="off">
+                        <label>Account Updated At</label>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-3">
+                        <select class="chosen-select form-control" asp-for="RegistrationStatusId" asp-items="ViewBag.Statuses">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Registration Status</label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control" asp-for="ResidentTypeId" asp-items="ViewBag.ResidentTypes">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Resident Type<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control" asp-for="StudentFeeTypeId" asp-items="ViewBag.StudentFeeTypes">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Student Fee Type<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control" asp-for="StudentFeeGroupId" asp-items="ViewBag.StudentFeeGroups">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label for="StudentFeeGroupId">Student Fee Group<span class="text-danger">*</span></label>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-4">
+                        <div class="form-control-label d-flex align-items-center">Student Status</div>
+                        <div class="form-control-plaintext">@Model.StudentStatusText</div>
+                    </div>
+                    <div class="col-4">
+                        <input class="form-control" asp-for="Barcode" type="text">
+                        <label>Barcode</label>
+                    </div>
+                    <div class="col-4">
+                        <input class="form-control" asp-for="StudentRemark" type="text">
+                        <label>Student Remark</label>
+                    </div>
+                </div>
+                @if(Model.StudentStatus == null || !Model.StudentStatus.StartsWith("g"))
+                {
+                    <div class="row form-group">
+                        <div class="col-6">
+                            <a class="btn btn--primary mb-0"
+                            data-toggle="modal"
+                            data-target="#change-student-status"
+                            data-value="@Model.Id"
+                            data-status="@Model.StudentStatus">
+                                <span class="mr-1 font-weight-800">Change Student Status</span>
+                            </a>
+                        </div>
+                    </div>
+                }
+                
+                <input asp-for="Code" type="hidden">
+                <input asp-for="ProfileImageURL" type="hidden">
+                <input asp-for="StudentStatus" type="hidden">
+                <input id="student-academiclevel-id" type="hidden" value="@Model.AcademicInformation?.AcademicLevelId">
+                <input id="student-faculty-id" type="hidden" value="@Model.AcademicInformation?.FacultyId">
+                <input id="student-department-id" type="hidden" value="@Model.AcademicInformation?.DepartmentId">
+            </div>
+        </div>
+    </form>
+</section>

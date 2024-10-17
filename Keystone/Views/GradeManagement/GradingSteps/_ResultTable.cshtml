@@ -1,0 +1,88 @@
+@* @model List<StudentScore>
+@{
+    var gradeAllocationCount = Model.FirstOrDefault()?.StudentScores.Count() ?? 0;
+    var index = 0;
+}
+<table class="table table-bordered editable-table m-a-0">
+    <thead>
+        <tr>
+            <th class="text-center w-50">Section</th>
+            <th class="w-100">Student Code</th>
+            <th>Student Name</th>
+            <th class="text-center w-125">Grade</th>
+            <th class="text-center w-100">Total Score</th>
+            <th class="text-center w-75">Round Score</th>
+            @if(Model.FirstOrDefault() == null)
+            {
+                <th class="text-center w-75">Allocation</th>
+            }
+            else
+            {
+                @foreach(var item in Model.First().StudentScores)
+                {
+                    <th class="text-center w-75">@item.Type</th>
+                }
+            }
+            <th class="text-center w-150">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Any())
+        {
+            @foreach (var item in Model)
+            {
+                var prefix = item.RegistrationCourse?.Course?.Code + "_" + item.RegistrationCourse?.Section?.Number + "_" + item.Student?.Code;
+                var gradeId = prefix + "_GradeId";
+                <tr class="@(item.IsWithdrawal ? "bg-secondary-lighter" : "")@(item.IsCheating ? "bg-danger-pastel" : "")">
+                    <td class="text-center">@item.RegistrationCourse.Section.Number</td>
+                    <td>@item.Student.Code</td>
+                    <td>@item.Student.FullNameEn</td>
+                    <td class="text-center text-nowrap">
+                        @if (item.Grade != null)
+                        {
+                            <span class="original-grade d-none" data-original="@item.Grade.Name">@item.Grade.Name <i class="la la-arrow-right"></i></span>
+                            <span id="@gradeId" class="js-edit-value">@item.Grade.Name</span>
+                            <select data-default-value="@item.Grade.Id" class="form-control__table js-edit-input d-none" asp-for="@Model[index].GradeId" asp-items="@ViewBag.Grades"></select>                                
+                        }
+                        else
+                        {
+                            <span class="original-grade d-none" data-original="N/A">N/A <i class="la la-arrow-right"></i></span>
+                            <span id="@gradeId" class="js-edit-value text-danger">N/A</span>
+                            <select data-default-value="N/A" class="form-control__table js-edit-input d-none" asp-for="@Model[index].GradeId" asp-items="@ViewBag.Grades"></select>
+                        }
+                    </td>
+                    <td class="text-center">@item.TotalScore</td>
+                    <td class="text-center">@item.Percentage</td>
+                    @for(int i = 0; i < gradeAllocationCount; i++)
+                    {
+                        if (item.StudentScores.Any())
+                        {
+                            <td class="text-center">@item.StudentScores[i].FullScore</td>
+                        }
+                        else
+                        {
+                            <td class="text-center"></td>
+                        }
+                    }
+                    <td class="text-center text-nowrap td-actions">
+                        <a href="#!"
+                            data-toggle="modal"
+                            data-target="#result-edit-grade-modal"
+                            data-value="@prefix"
+                            data-studentScoreId="@Model[index].Id">
+                            <i class="la la-edit edit"></i>
+                        </a>
+                    </td>
+                </tr>
+                <input type="hidden" asp-for="@Model[index].Id"/>
+                ++index;
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="8" class="text-center">No Data</td>
+            </tr>
+        }
+    </tbody>
+</table> *@

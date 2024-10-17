@@ -1,0 +1,32 @@
+@model Agency
+@{ 
+    ViewData["Title"] = "Edit Representative"; 
+}
+
+<section class="row">
+    <div class="col-lg-12">
+        <div class="block block--underline">
+            <form class="ks-form container" asp-controller="Agency" asp-action="Edit" method="post">
+                @Html.AntiForgeryToken()
+                <partial name="_Form"/>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Modals {
+    <partial name="_DeleteRowConfirmModals">
+}
+
+@section Scripts {
+    <script>
+        $(document).ready( function() {
+            var contractTable = new RowAddAble({
+                TargetTable: "#js-agency-contract",
+                TableTitle: 'Contract Detail<span class="text-danger">*</span>',
+                ButtonTitle: 'Contract'
+            });
+            contractTable.RenderButton();
+        });
+    </script>
+}

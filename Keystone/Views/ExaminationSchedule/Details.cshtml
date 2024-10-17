@@ -1,0 +1,92 @@
+@model RoomScheduleViewModel
+@{
+    ViewData["Title"] = $"Room: { Model.Name }  Academic Year: { Model.Term }";
+    var index = 1;
+}
+
+<section>
+    <div class="row">
+        <div class="ks-page-header col-lg-12">
+            <h2 class="ks-page-header__title">
+                <a class="btn-back" href="@ViewBag.ReturnUrl">
+                    <i class="la la-angle-double-left mr-1"></i>Back
+                </a>
+            </h2>
+        </div>
+    </div>
+
+    <div class="block block--underline">
+        <div class="block__title d-flex justify-content-between">
+            <header class="align-self-center">
+                <span class="mr-3 my-2">Room : @Model.Name</span>
+                <span class="mr-3 my-2">Building : @Model.BuildingNameEn</span>
+                <span class="mr-3 my-2">Academic Year : @Model.Term</span>
+                <span class="mr-3 my-2">Campus : @Model.CampusNameEn</span>
+                <span class="my-2">as of : @Model.DateString</span>
+            </header>
+            <div class="tools">
+                <button class="btn btn-mw-120 btn--primary rounded print-btn mb-0 js-print-btn" type="button">
+                    <i class="la la-print mr-2"></i>Print
+                </button>
+            </div>
+        </div>
+
+        <div id="js-printJS-form" class="block__body">
+            <div class="table-responsive">
+                <table class="table table-bordered mb-4">
+                    <thead>
+                        <tr>
+                            <th class="w-50 text-center">#</th>
+                            <th class="w-150">Course Code</th>
+                            <th>Course Title</th>
+                            <th class="text-center">Section</th>
+                            <th class="text-center">Day</th>
+                            <th class="text-center">Time</th>
+                            <th>Instructor</th>
+                            <th class="text-center">Seat</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Schedules != null)
+                        {
+                            @foreach (var item in Model.Schedules)
+                            {            
+                                <tr>
+                                    <td>@index</td>
+                                    <td>@item.CourseCode</td>
+                                    <td>@item.CourseName</td>
+                                    <td>@item.Section</td>
+                                    <td>
+                                        <partial name="_StringLoop" model="@item.ScheduleTimes.Select(x => x.DayOfWeek).ToList()">
+                                    </td>
+                                    <td>
+                                        <partial name="_StringLoop" model="@item.ScheduleTimes.Select(x => x.Time).ToList()">
+                                    </td>
+                                    <td>
+                                        <partial name="_StringLoop" model="@item.ScheduleTimes.Select(x => x.InstructorNameEn).ToList()">
+                                    </td>
+                                    <td>@item.SeatUsed</td>
+                                </tr>
+                                index++;
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+                <hr class="m-0">
+                <div class="block__title">
+                    <header class="p-0">Class Schedule</header>
+                </div>
+                <div class="mx-auto">
+                    <div id="js-schedule" class="table-responsive" data-schedules="@ViewBag.CoursesJsonData">
+                        <partial name="_Schedule">
+                    </div>
+                </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts 
+{
+    <script src="~/js/pages/class-schedule.js"></script>
+}

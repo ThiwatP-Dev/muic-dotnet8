@@ -1,0 +1,26 @@
+@model CurriculumInformation
+
+<div class="row form-group">
+    <div class="col-6">
+        <div class="form-control-label d-flex align-items-center">Division</div>
+        <div class="form-control-plaintext">@Model?.Faculty?.NameEn</div>
+    </div>
+    <div class="col-3">
+        <div class="form-control-label d-flex align-items-center">Major</div>
+        <div class="form-control-plaintext">@Model?.Department?.NameEn</div>
+    </div>
+    <div class="col-3">
+        <div class="form-control-label d-flex align-items-center">Curriculum Version</div>
+        <div class="form-control-plaintext">@Model?.CurriculumVersion?.CodeAndName</div>
+    </div>
+    @* <div class="col-3">
+        <div class="form-control-label d-flex align-items-center">Specialization Group</div>
+        <div class="form-control-plaintext">@Model?.SpecializationGroup?.NameEn</div>
+    </div> *@
+</div>
+
+<div class="block__action pb-0">
+    <div class="block__action-row">
+        <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-mw-120 btn--cancel rounded">Close</a>
+    </div>
+</div>

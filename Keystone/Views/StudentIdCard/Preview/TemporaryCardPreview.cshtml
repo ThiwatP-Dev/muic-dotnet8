@@ -1,0 +1,13 @@
+@model ReportViewModel
+@{ 
+    ViewData["Title"] = "Temporary ID Card Preview";
+}
+<img id="js-default-student" src="@(Model.ProfileImageURL == null ? "/images/default-profile-m.png" : Model.ProfileImageURL)" hidden>
+<img id="js-default-logo" src="~/images/logo-muic-2.png" hidden>
+
+<partial name="~/Views/StudentIdCard/Preview/_PreviewHeader.cshtml" model="@Model">
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/pdf-render/student-id-card-temporary.js"></script>
+    <script type="text/javascript" src="~/js/helpers/thai-number.js"></script>
+}

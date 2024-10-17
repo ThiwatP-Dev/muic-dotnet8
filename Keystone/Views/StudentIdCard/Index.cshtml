@@ -1,0 +1,99 @@
+@model StudentIdCardViewModel
+@{ 
+    ViewData["Title"] = "ID Card Generator"; 
+}
+
+<form class="form-horizontal" asp-action="Preview" method="POST">
+    @Html.AntiForgeryToken()
+    <section class="row">
+        <div class="col-12">
+            <div class="block block--underline">
+                <div class="block__title">
+                    <header>@ViewData["Title"]</header>
+                </div>
+                
+                <div class="block__body">
+                    <div class="row form-group m-b-30">
+                        <div class="col-4">
+                            <select id="js-id-card-type" class="chosen-select form-control" asp-for="CardType" data-placeholder="Select">
+                                <option value="idcard">Student Card</option>
+                                <option value="substitudecard">Substitute Card</option>
+                            </select>
+                            <label>ID Card Type<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-4 js-check-academic-level">
+                            <select class="chosen-select form-control js-cascade-academic-level" asp-for="AcademicLevelId" asp-items="ViewBag.AcademicLevels" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Academic Level</label>
+                        </div>
+                        <div class="col-4 js-check-admission-round">
+                            <select class="chosen-select form-control js-cascade-admission-round" asp-for="AdmissionRoundId" asp-items="ViewBag.AdmissionRounds" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Admission Round</label>
+                        </div>
+                    </div>
+                    <div class="row form-group m-b-30">
+                        <div class="col-4">
+                            <input class="form-control js-student-code" asp-for="Code">
+                            <label>Code</label>
+                        </div>
+                        <div class="col-2">
+                            <input class="form-control js-student-code-from">
+                            <label>Code From</label>
+                        </div>
+                        <div class="col-2">
+                            <input class="form-control js-student-code-to">
+                            <label>To</label>
+                        </div>
+                        <div class="col-4 text-nowrap align-self-end text-right">
+                            <button id="js-get-details" class="btn btn-mw-120 btn--primary mb-0" type="button">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <a id="js-reset-btn" class="btn btn-mw-120 btn--reset mb-0" asp-action="Index">Reset</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="row">
+        <div class="col-12">
+            <div id="flash-message"></div>
+            <div class="block block--underline">
+                <div class="block__title">
+                    <header>Student Detail</header>
+                </div>
+                
+                <div class="block__body">
+                    <!-- details -->
+                    <div id="js-get-student-card-form">
+                        <div class="row form-group mb-0">
+                            <div class="col-12 disable-item">
+                                <i>Please Fill Required Data.</i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- footer -->
+                    <div class="row">
+                        <div class="col-12 align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary mb-0 js-preview-button d-none" type="submit">Preview</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+
+@section Modals {
+    <partial name="_DeleteRowConfirmModals">
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/student-id-card.js"></script>
+    <script type="text/javascript" src="~/js/helpers/address-selects-helper.js"></script>
+}

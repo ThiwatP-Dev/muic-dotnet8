@@ -1,0 +1,203 @@
+@model PrintingLogReportViewModel
+@{
+    ViewData["Title"] = "Print Log Report";
+}
+
+<section class="row">
+    <div class="col-12">
+        <div id="flash-message"></div>
+        <div id="printing-log-report-accordion1" class="panel-group">
+            <div class="block block--underline">
+                <div class="block__title collapsed" data-toggle="collapse" data-parent="#printing-log-report-accordion1" data-target="#printing-log-report-accordion1-1">
+                    <header>@ViewData["Title"]</header>
+                    <div class="tools">
+                        <div class="btn-group">
+                            <a class="btn btn--white btn--circle">
+                                <i class="la la-angle-down"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="printing-log-report-accordion1-1" class="collapse show" aria-expanded="true">
+                    <div class="block__body">
+                        <form class="form-horizontal" asp-controller="PrintingLogReport" asp-action="Index" method="GET">
+                            @Html.AntiForgeryToken()
+                            <div class="row form-group m-b-30">
+                                <div class="col-3">
+                                    <input id="js-reference-number" class="form-control" asp-for="Criteria.Code" type="text">
+                                    <label>Reference Number</label>
+                                </div>
+                                <div class="col-3">
+                                    <select id="js-gender" class="chosen-select form-control" asp-for="Criteria.Gender" asp-items="ViewBag.Gender" data-placeholder="Select"></select>   
+                                    <label>Gender</label>
+                                </div>
+                                <div class="col-3">
+                                    <input id="js-started-date" class="form-control js-single-date" asp-for="Criteria.StartedAt" type="text" autocomplete="off">
+                                    <label>Started Date</label>
+                                </div>
+                                <div class="col-3">
+                                    <input id="js-ended-data" class="form-control js-single-date" asp-for="Criteria.EndedAt" type="text" autocomplete="off" />
+                                    <label>End Date</label>
+                                </div>
+                            </div>
+                            <div class="row form-group m-b-0">
+                                <div class="col-3">
+                                    <select id="js-language" class="chosen-select form-control" asp-for="Criteria.Language" asp-items="ViewBag.Languages"></select>   
+                                    <label>Language</label>
+                                </div>
+                                <div class="col-2">
+                                    <select id="js-urgent-status" class="chosen-select form-control" asp-for="Criteria.UrgentStatus" asp-items="ViewBag.UrgentStatuses"></select>   
+                                    <label>Urgent Status</label>
+                                </div>
+                                <div class="col-2">
+                                    <select id="js-print-status" class="chosen-select form-control" asp-for="Criteria.PrintStatus" asp-items="ViewBag.PrintStatuses"></select>   
+                                    <label>Print Status</label>
+                                </div>
+                                <div class="col-2">
+                                    <select id="js-paid-status" class="chosen-select form-control" asp-for="Criteria.PaidStatus" asp-items="ViewBag.PaidStatuses"></select>   
+                                    <label>Paid Status</label>
+                                </div>
+                                <div class="col-3 text-right align-self-end">
+                                    <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">
+                                        <i class="la la-search mr-2"></i>
+                                        <span class="bold">Search</span>
+                                    </button>
+                                    <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                        Reset
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@Model.PrintingLogReports?.Count())</header>
+            </div>
+                <div class="block__body">
+                    @if (Model.PrintingLogReportStatistics != null)
+                    {
+                        <h4 class="font-weight-600 color-primary">Log Statistics</h4>
+                        <div class="row m-b-30">
+                            <div class="col">
+                                <table class="table table-bordered m-0">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">All</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>@Model.PrintingLogReportStatistics.All</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col">
+                                <table class="table table-bordered m-0">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">Male</th>
+                                            <th class="text-center">Female</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>@Model.PrintingLogReportStatistics.Male</td>
+                                            <td>@Model.PrintingLogReportStatistics.Female</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col">
+                                <table class="table table-bordered m-0">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">Normal</th>
+                                            <th class="text-center">Urgent</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>@Model.PrintingLogReportStatistics.Normal</td>
+                                            <td>@Model.PrintingLogReportStatistics.Urgent</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col">
+                                <table class="table table-bordered m-0">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">English</th>
+                                            <th class="text-center">Thai</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>@Model.PrintingLogReportStatistics.English</td>
+                                            <td>@Model.PrintingLogReportStatistics.Thai</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col">
+                                <table class="table table-bordered m-0">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">Paid</th>
+                                            <th class="text-center">Unpaid</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>@Model.PrintingLogReportStatistics.Paid</td>
+                                            <td>@Model.PrintingLogReportStatistics.Unpaid</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    }
+
+                    @if (Model.PrintingLogReports != null)
+                    {
+                        <h4 class="font-weight-600 color-primary">Details</h4>
+                        <div class="table-responsive">
+                            <table id="js-printing-log-report" class="table table-bordered text-uppercase m-0 table-hover js-editable-table">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center w-50">#</th>
+                                        <th>Printed At</th>
+                                        <th class="text-center">Gender</th>
+                                        <th>Document</th>
+                                        <th class="text-center">Reference Number</th>
+                                        <th>Name</th>
+                                        <th>Tracking Number</th>
+                                        <th class="text-center">Amount</th>
+                                        <th class="text-center">Paid</th>
+                                        <th class="text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <partial name="_PrintingLogList" model="@Model.PrintingLogReports" />
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+            </div>
+        </div>
+    </div>  
+</section>
+
+@section Scripts{
+    <script type="text/javascript" src="~/js/pages/printing-log-report.js"></script>
+}

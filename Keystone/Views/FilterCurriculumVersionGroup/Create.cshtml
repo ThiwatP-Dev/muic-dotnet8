@@ -1,0 +1,88 @@
+@model FilterCurriculumVersionGroupViewModel
+@{ 
+    ViewData["Title"] = "Create Filter Curriculum Version Group"; 
+}
+
+<section class="row">
+	<div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">
+            <a class="btn-back" href="@ViewBag.ReturnUrl">
+                <i class="la la-angle-double-left"></i>Back
+            </a>
+        </h2>
+	</div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Curriculum Versions</header>
+            </div>
+
+            <div class="block__body">
+                <form class="ks-form container" asp-controller="FilterCurriculumVersionGroup" asp-action="Create" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group m-b-30">
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Academic Level<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="ViewBag.Faculties">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Division</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentId" asp-items="ViewBag.Departments">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Major</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-curriculum" asp-for="Criteria.CurriculumId" asp-items="ViewBag.Curriculums">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Curriculum</label>
+                        </div>
+                    </div>
+
+                    <input name="returnUrl" value="@ViewBag.ReturnUrl" hidden>
+
+                    <div class="row form-group">
+                        <div class="col-12 text-right align-self-end text-nowrap">
+                            <button class="btn btn--primary btn-mw-120 mb-0 m-r-5" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <a id="js-reset-btn" class="btn btn-mw-120 btn--reset" asp-action="Create" asp-route-returnUrl="@ViewBag.ReturnUrl">Reset</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>@ViewData["Title"]</header>
+            </div>
+            
+            <form class="ks-form container" asp-controller="FilterCurriculumVersionGroup" asp-action="Create" method="POST">
+                @Html.AntiForgeryToken()
+                <partial name="_Form"/>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Modals {
+    <partial name="_DeleteRowConfirmModals">
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/filter-curriculum-version-group.js"></script>
+}

@@ -1,0 +1,52 @@
+@model BlacklistedStudent
+
+<div class="block__title">
+    <header>@ViewData["Title"]</header>
+</div>
+
+<div class="block__body">
+    @if (Model.StudentId == null)
+    {
+        <div class="row form-group">
+            <div class="col-6">
+                <input id="js-student-code" class="form-control" asp-for="Code" value="@Model.Student?.Code">
+                <label>Student Code</label>
+            </div>
+            <div class="col-3 align-self-center">
+                <button id="js-student-search" class="btn btn-mw-120 btn--primary" type="button">
+                    <i class="la la-search mr-2"></i>Search
+                </button>
+            </div>
+        </div>
+
+        <hr class="mb-4">
+    }
+    
+    <div id="js-form-detail">
+        <partial name="_FormDetail">
+    </div>
+    
+    <div class="row form-group mt-3">
+        <div class="col-12">
+            <textarea class="form-control" asp-for="Detail"></textarea>
+            <label>Detail</label>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-check">
+            <input class="form-check-input" asp-for="IsActive" type="checkbox">
+            <label for="IsActive">Active</label>
+        </div>
+
+        <input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+        <input asp-for="Code" hidden>
+        
+        <div class="block__action container">
+            <div class="block__action-row">
+                <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+                <a class="btn btn-mw-120 btn--cancel" href="@ViewBag.ReturnUrl">Cancel</a>
+            </div>
+        </div>
+    </div>
+</div>

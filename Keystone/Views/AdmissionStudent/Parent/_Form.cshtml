@@ -1,0 +1,140 @@
+@model ParentInformation
+
+<div class="row form-group">
+    <div class="col-4">
+        <input class="form-control" asp-for="FirstNameEn" type="text">
+        <label>English First Name<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="FirstNameEn"></span>
+	</div>
+    <div class="col-4">
+        <input class="form-control" asp-for="MidNameEn" type="text">
+        <label>English Middle Name<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="MidNameEn"></span>
+	</div>
+    <div class="col-4">
+        <input class="form-control" asp-for="LastNameEn" type="text">
+        <label>English Last Name<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="LastNameEn"></span>
+	</div>
+</div>
+
+<div class="row form-group">
+    <div class="col-4">
+        <input class="form-control" asp-for="FirstNameTh" type="text">
+        <label>Thai First Name<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="FirstNameTh"></span>
+	</div>
+    <div class="col-4">
+        <input class="form-control" asp-for="MidNameTh" type="text">
+        <label>Thai Middle Name<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="MidNameTh"></span>
+	</div>
+    <div class="col-4">
+        <input class="form-control" asp-for="LastNameTh" type="text">
+        <label>Thai Last Name<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="LastNameTh"></span>
+	</div>
+</div>
+
+
+<div class="row form-group">
+    <div class="col-6">
+        <input class="form-control" asp-for="CitizenNumber" type="text">
+        <label>Citizen Number</label>
+	</div>
+    <div class="col-6">
+        <select class="chosen-select form-control" asp-for="RelationshipId" asp-items="@ViewBag.Relationships">
+            <option selected disabled>Select</option>
+        </select>
+        <label>Relationship</label>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-6">
+        <input class="form-control" asp-for="TelephoneNumber1" type="text">
+        <label>Telephone Number</label>
+    </div>
+    <div class="col-6">
+        <input class="form-control" asp-for="Email" type="text">
+        <label>Email</label>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-12">
+        <input class="form-control" asp-for="AddressEn" type="text">
+        <label>English Address</label>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-12">
+        <input class="form-control" asp-for="AddressTh" type="text">
+        <label>Thai Address</label>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-6">
+        <select class="chosen-select form-control js-address-cascade" asp-for="CountryId" asp-items="ViewBag.Countries" data-group="parent" data-type="country">
+            <option selected value="">Select</option>
+        </select>
+        <label for="CountryId">Country</label>
+    </div>
+    <div class="col-6">
+        <select class="chosen-select form-control js-address-cascade" asp-for="ProvinceId" asp-items="ViewBag.Provinces" data-group="parent" data-type="province">
+            <option selected value="">Select</option>
+        </select>
+        <label for="ProvinceId">Province</label>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-6">
+        <select class="chosen-select form-control js-address-cascade" asp-for="DistrictId" asp-items="ViewBag.Districts" data-group="parent" data-type="district">
+            <option selected value="">Select</option>
+        </select>
+        <label for="DistrictId">District</label>
+    </div>
+    <div class="col-6">
+        <select class="chosen-select form-control js-address-cascade" asp-for="SubdistrictId" asp-items="ViewBag.Subdistricts" data-group="parent" data-type="subdistrict">
+            <option selected value="">Select</option>
+        </select>
+        <label for="SubdistrictId">Sub-District</label>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-6">
+        <select class="chosen-select form-control js-address-cascade" asp-for="StateId" asp-items="ViewBag.States" data-group="parent" data-type="state">
+            <option selected value="">Select</option>
+        </select>
+        <label for="StateId">State</label>
+    </div>
+    <div class="col-6">
+        <select class="chosen-select form-control js-address-cascade" asp-for="CityId" asp-items="ViewBag.Cities" data-group="parent" data-type="city">
+            <option selected value="">Select</option>
+        </select>
+        <label for="CityId">City</label>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-12">
+        <input class="form-control" asp-for="ZipCode" type="text">
+		<label>ZIP Code</label>
+	</div>
+</div>
+
+<input asp-for="StudentId" type="hidden">
+<input asp-for="Id" type="hidden">
+<input asp-for="CreatedAt" type="hidden">
+<input asp-for="CreatedBy" type="hidden">
+
+<div class="block__action pb-0">
+    <div class="block__action-row">
+        <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+        <a class="btn btn-mw-120 btn--cancel rounded" href="javascript:void(0);" data-dismiss="modal">Cancel</a>
+    </div>
+</div>

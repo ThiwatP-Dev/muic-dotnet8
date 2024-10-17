@@ -1,0 +1,164 @@
+@model Voucher
+
+<section>
+    <div class="block__title">
+        <header>@ViewData["Title"]</header>
+    </div>
+
+    <div class="block__body">
+        @if (Model?.Student != null)
+        {
+            <div class="row form-group mb-3">
+                <div class="col-3">
+                    <div class="form-control-plaintext text-wrap">@Model?.Student?.Code</div>
+                </div>
+                <div class="col-9">
+                    <div class="form-control-plaintext text-wrap">@Model?.Student?.FullNameEn</div>
+                </div>
+            </div>
+        }
+
+        @if (Model?.ScholarshipStudent != null)
+        {
+            <div class="row form-group mb-3">
+                <div class="col-3">
+                    <div class="form-control-plaintext text-wrap">Scholarship</div>
+                </div>
+                <div class="col-9">
+                    <div class="form-control-plaintext text-wrap">@Model?.ScholarshipStudent?.Scholarship?.NameEn</div>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <span class="class-lookup-title mb-2">Budget Balance</span>
+                <table class="table table-bordered table-hover w-100x">
+                    <thead>
+                        <tr>
+                            <th>Fee Group</th>
+                            <th class="text-right">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model?.ScholarshipStudent?.Scholarship?.BudgetDetails != null)
+                        {
+                            foreach (var item in Model.ScholarshipStudent.Scholarship.BudgetDetails)
+                            {
+                                <tr>
+                                    <td>@item.FeeGroup?.NameEn</td>
+                                    <td>@item.AmountText</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="2" class="text-center">
+                                    <i class="text-danger">No Data</i>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section-title">
+                <h4>Voucher</h4>
+            </div>
+
+            <div class="row form-group">
+                <div class="col-6">
+                    <select class="chosen-select form-control" asp-for="TermId" asp-items="ViewBag.Terms">
+                        <option selected value="">Select</option>
+                    </select>
+                    <label>Term<span class="text-danger">*</span></label>
+                </div>
+                <div class="col-6">
+                    <input class="form-control js-single-date" asp-for="RequestedAt" type="text">
+                    <label>Requested Date<span class="text-danger">*</span></label>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <div class="col-6">
+                    <select class="chosen-select form-control" asp-for="Status" asp-items="ViewBag.Statuses">
+                        <option selected value="">Select</option>
+                    </select>
+                    <label>Status<span class="text-danger">*</span></label>
+                </div>
+                <div class="col-6">
+                    <input class="form-control js-single-date" asp-for="PaidAt" type="text">
+                    <label>Paid Date</label>
+                </div>
+            </div>
+
+            <div class="row form-group mb-4 mx-0">
+                <table id="js-add-fee" class="table table-bordered w-100x">
+                    <thead>
+                        <tr>
+                            <th class="text-center w-50">#</th>
+                            <th>Fee Item</th>
+                            <th>Amount</th>
+                            <th class="text-center w-75">Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @if (Model != null && Model.VoucherLogs != null && Model.VoucherLogs.Any())
+                        {
+                            for (int i = 0; i < Model.VoucherLogs.Count; i++)
+                            {
+                                <tr>
+                                    <td>@(i + 1)</td>
+                                    <td>
+                                        <select class="form-control__table js-chosen-select" asp-for="@Model.VoucherLogs[@i].FeeItemId" asp-items="@ViewBag.FeeItems">
+                                            <option selected disabled>Select</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input class="form-control__table" asp-for="@Model.VoucherLogs[@i].Amount" type="number">
+                                    </td>
+                                    <td class="text-nowrap td-actions">
+                                        <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                            <i class="la la-trash delete"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td>1</td>
+                                <td>
+                                    <select class="form-control__table js-chosen-select" asp-for="@Model.VoucherLogs[0].FeeItemId" asp-items="@ViewBag.FeeItems">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input class="form-control__table" asp-for="@Model.VoucherLogs[0].Amount" type="number">
+                                </td>
+                                <td class="text-nowrap td-actions">
+                                    <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                        <i class="la la-trash delete"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+            <input asp-for="StudentId" type="hidden">
+            <input asp-for="StudentScholarshipId" type="hidden">
+            <input asp-for="Code" type="hidden">
+
+            <div class="block__action container">
+                <div class="block__action-row">
+                    <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+                    <a class="btn btn-mw-120 btn--cancel" href="@ViewBag.ReturnUrl">Cancel</a>
+                </div>
+            </div>
+        }
+    </div>
+</section>

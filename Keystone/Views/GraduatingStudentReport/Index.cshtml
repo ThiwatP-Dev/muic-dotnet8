@@ -1,0 +1,147 @@
+@model PagedResult<GraduatingStudentReportViewModel>
+@{
+    ViewData["Title"] = "Graduating Student Report";
+    var recordNumber = Model?.FirstRowOnPage;
+}
+
+<section class="d-print-none">
+    <div class="block block--underline">
+        <div class="block__title">
+            <header>Graduating Student Report</header>
+        </div>
+        <form class="form-horizontal" asp-controller="GraduatingStudentReport" asp-action="Index" method="GET">
+            @Html.AntiForgeryToken()
+            <div class="block__body">
+                <div class="row form-group m-b-30">
+                    <div class="col-4">
+                        <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId"
+                                asp-items="ViewBag.AcademicLevels" data-placeholder="Select">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Academic Level<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-4">
+                        <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="ViewBag.Faculties">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Division</label>
+                    </div>
+                    <div class="col-4">
+                        <select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentId" asp-items="ViewBag.Departments">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Major</label>
+                    </div>
+                </div>
+
+                <div class="row form-group m-b-30">
+                    <div class="col-4">
+                        <select class="chosen-select form-control js-cascade-curriculum" asp-for="Criteria.CurriculumId" asp-items="ViewBag.Curriculums">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Curriculum</label>
+                    </div>
+                    <div class="col-4">
+                        <select class="chosen-select form-control js-cascade-curriculum-version" asp-for="Criteria.CurriculumVersionId" asp-items="ViewBag.CurriculumVersions">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Curriculum Version</label>
+                    </div>
+                    <div class="col-4">
+                        <input class="form-control js-default-zero js-click-highlight" asp-for="Criteria.Credit" min="0" type="number">
+                        <label>Credit<span class="text-danger">*</span></label>
+                    </div>
+                </div>
+
+                <div class="row form-group mb-0">
+                    <div class="col-4">
+                        <input class="form-control" asp-for="Criteria.StartStudentBatch" type="number">
+                        <label for="Criteria.StartStudentBatch">Batch Start<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-4">
+                        <input class="form-control" asp-for="Criteria.EndStudentBatch" type="number">
+                        <label for="Criteria.EndStudentBatch">Batch End<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-4 align-self-end text-right text-nowrap">
+                        <button class="btn btn--primary btn-mw-120 m-r-5" type="submit">
+                            <i class="la la-search mr-2"></i>Search
+                        </button>
+                        <button class="btn btn-mw-120 btn--reset js-reset-btn" type="reset">
+                            Reset
+                        </button>
+                    </div>
+                </div>            
+            </div>
+        </form>
+    </div>
+</section>
+
+<div class="block block--underline">
+    <div class="block__title">
+        <div class="row">
+            <div class="col-6">
+                <header>Search Result (@(Model?.RowCount ?? 0))</header>
+            </div>
+        </div>
+    </div>
+
+    <div class="block__body">
+        <div class="table-responsive">
+            <table class="table table-bordered m-0 js-report-table w-100x">
+                <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th class="text-center">Code</th>
+                        <th>Full Name</th>
+                        <th>Division</th>
+                        <th>Major</th>
+                        <th>Curriculum Version</th>
+                        <th class="text-center">Curriculum Credit</th>
+                        <th class="text-center">Credit Earned</th>
+                        <th class="text-center">Registration Credit</th>
+                        <th class="text-center">Total Credit</th>
+                        <th class="text-center">Total Credit + Expected</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Results.Any())
+                    {
+                        foreach (var item in Model.Results)
+                        {
+                            <tr>
+                                <td>@recordNumber</td>
+                                <td>@item.StudentCode</td>
+                                <td>@item.StudentFullName</td>
+                                <td>@item.Faculty</td>
+                                <td>@item.Department</td>
+                                <td>@item.CurriculumVersion</td>
+                                <td>@item.TotalCreditCurriculum</td>
+                                <td>@item.CreditEarned</td>
+                                <td>@item.TotalRegistrationCredit</td>
+                                <td>@item.TotalCreditEarn</td>
+                                <td>@item.TotalCreditEarnWithExpected</td>
+                                <td class="text-nowrap td-actions">
+                                    <a asp-controller="Student"
+                                    asp-action="Details"
+                                    asp-route-id="@item.StudentId">
+                                        <i class="la la-info info"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            recordNumber++;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td class="text-center" colspan="12">
+                                <i class="text-danger">No data</i>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

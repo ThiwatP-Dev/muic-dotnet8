@@ -1,0 +1,38 @@
+@model ExportProfileViewModel
+
+<div class="form-group table-responsive js-render-nicescroll p-b-50">
+    <table id="js-export-profile" class="table table-bordered table-hover w-100x">
+        <thead>
+            <tr>
+                <th class="w-25 text-center">
+                    <input id="checkAll" class="js-check-all" name="Students" type="checkbox">
+                    <label class="mt-2 mb-0 m-l-2" for="checkAll"></label>
+                </th>
+                <th>Student Id</th>
+                <th>Name</th>
+                <th>Profile Image</th>
+            </tr>
+        </thead>
+        <tbody class="js-items">
+            @for (int i = 0; i < Model.Results.Count(); i++)
+            {
+                <tr class="js-suggestion-parent">
+                    <td>
+                        <input id="Results[@i]" class="form-check-input js-add-student" name="Results[@i].IsChecked" type="checkbox" value="@Model.Results[i].IsChecked">
+                        <label class="js-focus-item m-0" for="Results[@i]"></label>
+                    </td>
+                    <td>@Model.Results[i].StudentCode</td>
+                    <td>@Model.Results[i].StudentFullName</td>
+                    <td>
+                        <img class="w-100 h-100 img-cover" src="@Model.Results[i].ProfileImageURL" 
+                             alt="Image Not Found" 
+                             onerror="this.onerror=null;this.src='/images/default-profile-m.png';">
+                    </td>
+                    <input asp-for="@Model.Results[i].StudentCode" type="hidden">
+                    <input asp-for="@Model.Results[i].StudentFullName" type="hidden">
+                    <input asp-for="@Model.Results[i].ProfileImageURL" type="hidden">
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

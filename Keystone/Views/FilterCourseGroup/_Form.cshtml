@@ -1,0 +1,39 @@
+@model FilterCourseGroupViewModel
+<div class="block__body">
+    <div class="row form-group m-b-30">
+        <div class="col-6">
+            <input class="form-control" asp-for="Name" type="text">
+            <label>Name<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-6">
+            <div class="block__action-row">
+                <button class="btn btn-mw-120 btn--primary" type="submit"><i class="la la-save mr-2"></i>Save</button>
+            </div>
+        </div>
+    </div>
+    <div class="row form-group m-b-30">
+        <div class="col">
+            <input class="form-control" asp-for="Description" type="text">
+            <label>Description</label>
+        </div>
+    </div>
+    <div class="row form-group m-b-30">
+        <div class="col">
+            <label><b>Course List (@(Model?.Courses?.Count ?? 0))</b></label>
+        </div>
+    </div>
+
+    <partial name="_FormCourseSelect" model=@Model></partial>
+</div>
+
+
+<input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+<input asp-for="Criteria.AcademicLevelId" type="hidden">
+<input asp-for="Criteria.FacultyId" type="hidden">
+<input asp-for="Criteria.DepartmentId" type="hidden">
+
+<div class="block__action container">
+    <div class="block__action-row">
+        <button class="btn btn-mw-120 btn--primary" type="submit"><i class="la la-save mr-2"></i>Save</button>
+    </div>
+</div>

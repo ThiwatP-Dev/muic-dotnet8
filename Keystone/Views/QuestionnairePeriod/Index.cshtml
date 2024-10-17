@@ -1,0 +1,121 @@
+@model PagedResult<QuestionnairePeriod>
+@{ 
+    ViewData["Title"] = "Questionnaire Period";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+    var recordNumber = Model?.FirstRowOnPage;
+}
+
+<div class="row">
+    <div class="ks-page-header col-lg-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+        <ul class="d-flex flex-md-row align-items-md-center float-right">
+            <li class="list-inline-item mx-3 mb-0">
+                <a class='btn btn--primary' asp-action="Create" asp-route-returnUrl="@contextPath">
+                    <i class="la la-plus mr-1 font-weight-800"></i> Add
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search @ViewData["Title"]</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="QuestionnairePeriod" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group m-b-0">
+                        <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Academic Level</label>
+                        </div>
+
+                        <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="ViewBag.Terms" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Term</label>
+                        </div>
+                        
+                        <div class="col-4 align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.RowCount ?? 0))</header>
+            </div>
+
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover w-100x">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th>Term</th>
+                                <th class="text-center">Started Date</th>
+                                <th class="text-center">Ended Date</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-nowarp text-center no-sort">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach(var item in Model.Results) 
+                            {
+                                <tr>
+                                    <td>@recordNumber</td>
+                                    <td>@item.Term.TermText</td>
+                                    <td>@item.StartedAtText</td>
+                                    <td>@item.EndedAtText</td>
+                                    <td>
+                                        <partial name="_BooleanActive" model="@item.IsActive" />
+                                    </td>
+                                    <td class="text-nowrap td-actions">
+                                        <a asp-controller="QuestionnairePeriod" 
+                                           asp-action="Edit" 
+                                           asp-route-Id="@item.Id" 
+                                           asp-route-returnUrl="@contextPath">
+                                            <i class="la la-edit edit"></i>
+                                        </a>
+                                        <a data-toggle="modal" 
+                                           data-target="#delete-confirm-modal" 
+                                           asp-controller="QuestionnairePeriod" 
+                                           asp-action="Delete" 
+                                           asp-route-Id="@item.Id" 
+                                           asp-route-returnUrl="@contextPath">
+						                    <i class="la la-trash delete"></i>
+					                    </a>
+                                    </td>
+                                </tr>
+                                recordNumber++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @(await Component.InvokeAsync<PagerViewComponent>(Model))
+    </div>
+</section>
+
+<partial name="_DeleteConfirmModals">

@@ -1,0 +1,40 @@
+<table class="table table-bordered text-center schedule js-class-schedule-table" style="table-layout: fixed; width: 100%; ">
+    <tbody>
+        <tr>
+            <th class="w-100">Time/Day</th>
+            <th class="w-110">08:00 - 09:50</th>
+            <th class="w-110">10:00 - 11:50</th>
+            <th class="w-110">12:00 - 13:50</th>
+            <th class="w-110">14:00 - 15:50</th>
+            <th class="w-110">16:00 - 17:50</th>
+            <th class="w-110">18:00 - 19:50</th>
+        </tr>
+        @{
+            var d = new List<string> { "SUN", "MON", "TUE", "WED" ,"THU" ,"FRI" ,"SAT" };
+            @foreach (var item in d)
+            {
+                <tr>
+                    <td>@item</td>
+                    <td class="pl-0 pr-0">
+                        <div class="wrapper"></div>
+                    </td>
+                    <td class="pl-0 pr-0">
+                        <div class="wrapper"></div>
+                    </td>
+                    <td class="pl-0 pr-0">
+                        <div class="wrapper"></div>
+                    </td>
+                    <td class="pl-0 pr-0">
+                        <div class="wrapper"></div>
+                    </td>
+                    <td class="pl-0 pr-0">
+                        <div class="wrapper"></div>
+                    </td>
+                    <td class="pl-0 pr-0">
+                        <div class="wrapper"></div>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

@@ -1,0 +1,158 @@
+@model PagedResult<AdmissionExaminationViewModel>
+@{ 
+    ViewData["Title"] = "Entrance Examination";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+    var recordNumber = Model?.FirstRowOnPage;
+}
+
+<div class="row">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+        <ul class="d-flex flex-md-row align-items-md-center float-right">
+            <li class="list-inline-item mx-3 mb-0">
+                <a class='btn btn--primary' asp-action="Create" asp-route-returnUrl="@contextPath">
+                    <i class="la la-plus mr-1 font-weight-800"></i> Add Entrance Examination
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Entrance Examination</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="AdmissionExamination" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group m-b-30">
+                        <div class="col-2">
+                            <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels" data-placeholder="Select">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Academic Level<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-2">
+                            <select class="chosen-select form-control js-cascade-admission-term" asp-for="Criteria.TermId" asp-items="ViewBag.Terms" data-placeholder="Select">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Admission Term<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-2">
+                            <select class="chosen-select form-control js-cascade-admission-round" asp-for="Criteria.AdmissionRoundId" asp-items="ViewBag.AdmissionRounds" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label class="text-nowrap">Admission Round</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="ViewBag.Faculties" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Division</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentId" asp-items="ViewBag.Departments" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Major</label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group m-b-0">
+                        <div class="col-12 align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover w-100x">
+                        <thead>
+                            <tr>
+                                <th class="text-center w-25">#</th>
+                                <th>Examination</th>
+                                <th>Academic Round</th>
+                                <th>Division</th>
+                                <th>Major</th>
+                                <th class="text-center w-125">Status</th>
+                                <th class="text-center w-175">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Results.Any())
+                            {
+                                foreach(var item in Model.Results)
+                                {
+                                    <tr>
+                                        <td>@recordNumber</td>
+                                        <td>@item.NameEn</td>
+                                        <td>@item.AdmissionRound</td>
+                                        <td>@item.Faculty</td>
+                                        <td>@item.Department</td>
+                                        <td>
+                                            <partial name="_BooleanActive" model="@item.IsActive">
+                                        </td>
+                                        <td class="text-nowrap td-actions">
+                                            <a data-toggle="modal" 
+                                               data-target="#admission-examination-modal" 
+                                               data-controller="AdmissionExamination" 
+                                               data-action="Details"
+                                               data-value="@item.Id">
+                                                <i class="la la-info info"></i>
+                                            </a>
+                                            <a asp-controller="AdmissionExamination" asp-action="Edit"
+                                               asp-route-id="@item.Id" asp-route-returnUrl="@contextPath">
+                                                <i class="la la-edit edit"></i>
+                                            </a>
+                                            <a data-toggle="modal" 
+                                               data-target="#delete-confirm-modal" 
+                                               data-controller="AdmissionExamination" 
+                                               data-action="Delete" 
+                                               data-value="@item.Id">
+                                                <i class="la la-trash delete"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    recordNumber++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="11">
+                                        <i class="text-danger">No Data</i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Modals {
+    <partial name="_AdmissionExaminationModal" model="new AdmissionExaminationViewModel()">
+    <partial name="_DeleteConfirmModals">
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/admission-examination.js"></script>
+}

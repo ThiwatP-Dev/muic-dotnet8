@@ -1,0 +1,39 @@
+@model AdmissionDocumentGroup
+@{ 
+    ViewData["Title"] = "Edit Admission Document Group"; 
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <form class="ks-form container" asp-controller="AdmissionDocumentGroup" asp-action="Edit" method="POST">
+                @Html.AntiForgeryToken()
+                <partial name="_Form">
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Modals {
+    <partial name="_DeleteRowConfirmModals">
+}
+
+@section Scripts {
+    <script>
+        var inputTable = new RowAddAble({
+            TargetTable: '#js-required-doc',
+            ButtonTitle: 'Document'
+        })
+        inputTable.RenderButton();
+
+        $('#IsThai').change( function() {
+            if ($(this).prop('checked')) {
+                $('.js-country-trigger').addClass('disable-item');
+                $('#Country').val(0).prop('disabled', true).trigger("chosen:updated");
+            } else {
+                $('.js-country-trigger').removeClass('disable-item');
+                $('#Country').prop('disabled', false).trigger("chosen:updated");
+            }
+        })
+    </script>
+}

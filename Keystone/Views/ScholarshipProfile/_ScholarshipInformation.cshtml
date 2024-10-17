@@ -1,0 +1,73 @@
+@model ScholarshipProfileViewModel
+@{
+    var index = 1;
+}
+
+<div class="form-group text-right mb-3">
+    <a href="#!" data-toggle="modal" data-target="#add-scholarship-student-modal" data-id="@Model.StudentId"
+        class="btn btn-mw-120 btn--primary mb-0">
+        <i class="la la-plus mr-2"></i>Add Scholarship
+    </a>
+</div>
+<div class="form-group table-responsive mb-3">
+    <table id="js-scholarship-table" class="table table-bordered m-0">
+        <thead>
+            <tr>
+                <th class="w-25">#</th>
+                <th>Name</th>
+                <th class="text-center">Effective</th>
+                <th class="text-center">Expire</th>
+                <th class="text-center">Reference Date</th>
+                <th class="text-center">Contract</th>
+                <th class="text-right">Limit Amount</th>
+                <th class="text-right">Balance</th>
+                <th class="text-center">Status</th>
+                <th class="text-center w-150">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.ScholarshipStudents != null && Model.ScholarshipStudents.Any()) 
+            {
+                foreach (var item in Model.ScholarshipStudents)
+                {
+                    <tr>
+                        <td>@index</td>
+                        <td>@item.Scholarship?.NameEn</td>
+                        <td>@item.EffectivedTerm?.TermText</td>
+                        <td>@item.ExpiredTerm?.TermText</td>
+                        <td>@item.CreatedAtText</td>
+                        <td>
+                            <partial name="_BooleanResult" model="@item.SendContract" />
+                        </td>
+                        <td>@item.LimitedAmountText</td>
+                        <td>@item.BalanceText</td>
+                        <td>
+                            <partial name="_BooleanActive" model="@item.IsActive" />
+                        </td>
+                        <td class="td-actions text-nowrap">
+                            <a data-toggle="modal"
+                               data-target="#edit-scholarship-student-modal"
+                               data-value="@item.Id">
+                                <i class="la la-edit edit"></i>
+                            </a>
+                            <a data-toggle="modal" 
+                               data-target="#delete-confirm-modal" 
+                               data-controller="ScholarshipProfile" 
+                               data-action="Delete"
+                               data-value="@item.Id">
+                                <i class="la la-trash delete"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    index++;
+                }
+            }
+            else
+            {
+                <tr>
+                    <td class="text-center" colspan="10">NO DATA</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,251 @@
+@model SectionSlotViewModel
+@{
+    ViewData["Title"] = "Section Slot";
+    var recordNumber = 1;
+    var contextPath = $"{Context.Request.Path}{Context.Request.QueryString}";
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Section Slot</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="SectionSlot" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group m-b-30">
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels" data-placeholder="Select">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Academic Level<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="ViewBag.Terms" data-placeholder="Select">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Term<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.CodeAndName" type="text">
+                            <label>Course<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.SectionNumber" type="text">
+                            <label>Section<span class="text-danger">*</span></label>
+                        </div>
+                    </div>
+                    <div class="row form-group m-b-0">
+                        <div class="col-12 align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">
+                                <i class="la la-search mr-2"></i>
+                                <span class="bold">Search</span>
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+@if (Model?.SectionSlots != null)
+{
+    <section class="row">
+        <div class="col-12">
+            <form class="form-horizontal" asp-controller="SectionSlot" asp-action="BatchEdit" method="POST">
+                @Html.AntiForgeryToken()
+                <input asp-for="Criteria.AcademicLevelId" type="hidden">
+                <input asp-for="Criteria.TermId" type="hidden">
+                <input asp-for="Criteria.CodeAndName" type="hidden">
+                <input asp-for="Criteria.SectionNumber" type="hidden">
+                <div class="block block--underline">
+                    <div class="block__title">
+                        <header>Search Result (@(Model?.SectionSlots?.Count ?? 0))</header>
+                        @if (Model?.SectionId > 0 || (Model?.SectionSlots != null && Model.SectionSlots.Any()))
+                        {
+                            <ul class="d-flex flex-md-row align-items-md-center float-right">
+                                <li class="list-inline-item mx-3 mb-0">
+                                    <a class="btn btn--primary"
+                                       data-toggle="modal"
+                                       data-target="#add-section-slot"
+                                       data-section-id="@(Model?.SectionSlots?.FirstOrDefault()?.SectionId ?? Model?.SectionId)"
+                                       data-total-weeks="@Model?.SectionSlots?.FirstOrDefault()?.TotalWeeks">
+                                        <i class="la la-plus mr-1 font-weight-800"></i> Add Section Slot
+                                    </a>
+                                    <button class="btn btn-mw-120 btn--primary js-update-submit" type="submit">Save</button>
+                                </li>
+                            </ul>
+                        }
+                    </div>
+
+                    <div class="block__body">
+                        <div class="row form-group">
+                            <div class="col-4">
+                                <select class="chosen-select form-control chosen-single js-default-select " id="teachingTypeId" name="teachingTypeId" asp-items="@ViewBag.TeachingTypes">
+                                    <option selected value="">Select new value to apply on selected slot / Leave to skip</option>
+                                </select>
+                                <label>Teaching Type</label>
+                            </div>
+                            <div class="col-4">
+                                <select class="chosen-select form-control chosen-single" id="instructorId" name="instructorId" asp-items="@ViewBag.Instructors" data-placeholder="Select">
+                                    <option selected value="">Select new value to apply on selected slot / Leave to skip</option>
+                                </select>
+                                <label>Instructor</label>
+                            </div>
+     @*                        <div class="col-4">
+                                <select class="chosen-select form-control chosen-single" id="status" name="status" asp-items="@ViewBag.Status" data-placeholder="Select">
+                                    <option selected value="">Select / Leave to skip</option>
+                                </select>
+                                <label>Status</label>
+                            </div> *@
+                        </div>
+@*                         <div class="row form-group">
+                            <div class="col-4">
+                                <select class="chosen-select form-control chosen-single js-default-select " id="isMakeUpClass" name="isMakeUpClass" asp-items="@ViewBag.YesNoAnswer">
+                                    <option selected value="">Select / Leave to skip</option>
+                                </select>
+                                <label>Make Up Class</label>
+                            </div>
+                        </div> *@
+
+                        <div class="table-responsive">
+                            <table id="js-section-slot" class="table table-bordered table-hover w-100x">
+                                <thead>
+                                    <tr>
+                                        <th class="w-50 text-center col">
+                                            @if (Model.SectionSlots.Count != 0)
+                                            {
+                                                <input id="checkAll" class="js-check-all" type="checkbox" checked="@((Model.SectionSlots.Count(x => x.IsChecked == "on") == Model.SectionSlots.Count()) && Model.SectionSlots.Count() > 0)">
+                                            }
+                                            else
+                                            {
+                                                <input id="checkAll" class="js-check-all" type="checkbox" checked="false" disabled="true">
+                                            }
+                                            <label for="checkAll"></label>
+                                            <div class="text-center">
+                                                <span class="js-item-count">(0)</span>
+                                            </div>
+                                        </th>
+                                        <th class="text-center w-25">#</th>
+                                        <th>Course</th>
+                                        <th class="text-center">Section</th>
+                                        <th class="text-center w-25">Day</th>
+                                        <th class="text-center w-125">Date</th>
+                                        <th class="text-center w-25">Start Time</th>
+                                        <th class="text-center w-25">End Time</th>
+                                        <th class="w-175">Teaching Type</th>
+                                        <th>Room</th>
+                                        <th>Instructor</th>
+                                        <th>Remark</th>
+                                        <th class="text-center w-25">Make Up</th>
+                                        <th class="text-center w-100">Status</th>
+                                        <th class="text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="js-items">
+                                    @if (Model != null && Model.SectionSlots.Any())
+                                    {
+                                        for (int i = 0; i < Model.SectionSlots.Count; i++)
+                                        {
+                                            var item = Model.SectionSlots[i];
+                                            <tr>
+                                                <td class="w-50">
+                                                    @if (!item.IsExam)
+                                                    {
+                                                        <input id="sectionSlots[@i].IsChecked" class="form-check-input js-update-check" name="sectionSlots[@i].IsChecked" type="checkbox" value="@item.IsChecked" checked="@item.IsChecked">
+                                                        <label class="js-focus-item m-0" for="sectionSlots[@i].IsChecked"></label>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @recordNumber
+                                                    <input id="sectionSlots[@i].Id" class="form-check-input js-update-check" name="sectionSlots[@i].Id" type="hidden" value="@item.Id">
+                                                    <input id="sectionSlots[@i].IsExam" class="form-check-input js-update-check" name="sectionSlots[@i].IsExam" type="hidden" value="@item.IsExam">
+                                                </td>
+                                                <td>@item.CourseCodeAndCredit</td>
+                                                <td>@item.Number</td>
+                                                <td>@item.Dayofweek</td>
+                                                <td>@item.DateText</td>
+                                                <td>@item.StartTimeText</td>
+                                                <td>@item.EndTimeText</td>
+                                                <td>@item.TeachingType</td>
+                                                <td>@item.Room</td>
+                                                <td>@item.InstructorFullNameEn</td>
+                                                <td>@item.Remark</td>
+                                                <td>
+                                                    @if (!item.IsExam)
+                                                    {
+                                                        <partial name="_BooleanCheck" model="@item.IsMakeUpClass"></partial>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    <partial name="_SectionSlotStatus" model="@item.StatusText"></partial>
+                                                </td>
+                                                <td class="text-nowrap td-actions">
+                                                    @if (item.IsExam)
+                                                    {
+                                                        <a asp-controller="ExaminationReservationManagement"
+                                                           asp-action="Index"
+                                                           asp-route-endedAt="@item.DateText"
+                                                           asp-route-startedAt="@item.DateText"
+                                                           asp-route-codeAndName="@item.CourseCode"
+                                                           asp-route-termId="@Model.Criteria.TermId"
+                                                           asp-route-sectionNumber="@item.Number"
+                                                           asp-route-examinationTypeId="@item.ExaminationTypeId"
+                                                           asp-route-status="@item.EaminationReservationStatus"
+                                                           asp-route-roomName="@item.Room">
+                                                            <i class="la la-edit edit"></i>
+                                                        </a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a data-toggle="modal"
+                                                           data-target="#edit-section-slot"
+                                                           data-value="@item.Id">
+                                                            <i class="la la-edit edit"></i>
+                                                        </a>
+                                                        <a data-toggle="modal"
+                                                           data-target="#delete-confirm-modal"
+                                                           asp-controller="SectionSlot"
+                                                           asp-action="Delete"
+                                                           asp-route-id="@item.Id"
+                                                           asp-route-returnUrl="@contextPath">
+                                                            <i class="la la-trash delete"></i>
+                                                        </a>
+                                                    }
+                                                </td>
+                                            </tr>
+                                            recordNumber++;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="15">
+                                                <i class="text-danger">No Data</i>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+}
+
+@section Modals {
+    <partial name="_DeleteConfirmModals" />
+    <partial name="_CreateModal" model="new SectionSlot()" />
+    <partial name="_EditModal" model="new SectionSlot()" />
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/section-slot.js"></script>
+}

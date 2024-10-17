@@ -1,0 +1,74 @@
+@model RegistrationConfiguration
+
+<input asp-for="Id" type="hidden">
+<div class="block__title text-left height-3">
+    <header>@ViewData["Title"]</header>
+</div>
+<div class="block__body text-left height-3">
+    <div class="row">
+        <div class="col-6">
+            <div class="form-group">
+                <select class="chosen-select form-control js-cascade-academic-level" asp-for="AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                    <option selected disabled>Select</option>
+                </select>
+                <label>Academic Level<span class="text-danger">*</span></label>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="block__body text-left height-3">
+    <div class="row">
+        <div class="col-3">
+            <div class="form-group">
+                <select class="chosen-select form-control js-cascade-term" asp-for="FromTermId" asp-items="ViewBag.Terms">
+                    <option selected disabled>Select</option>
+                </select>
+                <label>From Term<span class="text-danger">*</span></label>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="form-group">
+                <select class="chosen-select form-control js-cascade-term-not-disable" asp-for="ToTermId" asp-items="ViewBag.Terms">
+                    <option selected>Select</option>
+                </select>
+                <label>ToTerm</label>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="form-group">
+                <input class="form-control js-default-zero js-click-highlight" asp-for="MininumCreditToWithdraw" type="number">
+                <label>Mininum Credit to Withdraw</label>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="form-group">
+                <input class="form-control js-default-zero js-click-highlight" asp-for="RegistrationTime" type="number">
+                <label>Registration Limit</label>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="block__body text-left height-3">
+    <div class="form-check">
+        <input class="form-check-input" asp-for="IsRegistrationAllowed" type="checkbox">
+        <label for="IsRegistrationAllowed">Allow Registration</label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" asp-for="IsPaymentAllowed" type="checkbox">
+        <label for="IsPaymentAllowed">Allow Payment</label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" asp-for="IsActive" type="checkbox">
+        <label for="IsActive">Active</label>
+    </div>
+</div>
+
+<input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+
+<div class="block__action container">
+    <div class="block__action-row">
+        <button type="submit" class="btn btn-mw-120 btn--primary">Save</button>
+        <a class="btn btn-mw-120 btn--cancel" href="@ViewBag.ReturnUrl">Cancel</a>
+    </div>
+</div>

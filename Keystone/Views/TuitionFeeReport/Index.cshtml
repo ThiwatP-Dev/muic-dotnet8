@@ -1,0 +1,114 @@
+@model TuitionFeeReportViewModel
+@{
+    ViewData["Title"] = "Tuition Fee Report";
+}
+
+<section class="d-print-none">
+    <div class="block block--underline">
+        <div class="block__title">
+            <header>@ViewData["Title"]</header>
+        </div>
+        
+        <form class="form-horizontal" asp-controller="TuitionFeeReport" asp-action="Index" method="GET">
+            @Html.AntiForgeryToken()
+            <div class="block__body">
+                <div class="row form-group m-b-30">
+                    <div class="col-4">
+                        <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels" data-placeholder="Select">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Academic Level<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-4">
+                        <input class="form-control" asp-for="Criteria.CourseCode" type="text">
+                        <label>Course Code</label>
+                    </div>
+                    <div class="col-4">
+                        <input class="form-control" asp-for="Criteria.CourseName" type="text">
+                        <label>Course Name</label>
+                    </div>
+                </div>
+
+                <div class="row form-group mb-0">
+                    <div class="col-2">
+                        <input class="form-control" asp-for="Criteria.StartStudentBatch" type="text">
+                        <label>Batch From<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-2">
+                        <input class="form-control" asp-for="Criteria.EndStudentBatch" type="text">
+                        <label>To<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-8 align-self-end text-right text-nowrap">
+                        <button class="btn btn--primary btn-mw-120 m-r-5" type="submit">
+                            <i class="la la-search mr-2"></i>Search
+                        </button>
+                        <button class="btn btn-mw-120 btn--reset js-reset-btn" type="reset">
+                            Reset
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+<div class="block block--underline">
+    <div class="block__body">
+        <table class="table table-bordered m-0 w-100x">
+            <thead>
+                <tr>
+                    <th class="text-center">Course Id</th>
+                    <th>Course Code</th>
+                    <th>Course Name</th>
+                    <th class="text-center">Course Credit</th>
+                    <th class="text-center">Batch</th>
+                    <th>Formula</th>
+                    <th>Tuition</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Results.Any())
+                {
+                    foreach (var group in Model.Results.GroupBy(x => new { x.CourseId, x.FormularName }))
+                    {
+                        var index = 1;
+                        var rowCount = group.GroupBy(x => new { x.Batch, x.FormularName }).Count();
+                        foreach(var item in group.GroupBy(x => new { x.Batch, x.FormularName }))
+                        {
+                            if(index == 1)
+                            {
+                                <tr>
+                                    <td rowspan="@rowCount">@group.Key.CourseId</td>
+                                    <td rowspan="@rowCount">@group.FirstOrDefault().CourseCode</td>
+                                    <td rowspan="@rowCount">@group.FirstOrDefault().CourseName</td>
+                                    <td rowspan="@rowCount">@group.FirstOrDefault().CreditText</td>
+                                    <td>@item.Key.Batch</td>
+                                    <td>@item.Key.FormularName</td>
+                                    <td>@item.Sum(x => x.FirstAmount) * @item.Sum(x => x.SecondAmount)</td>
+                                </tr>
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td>@item.Key.Batch</td>
+                                    <td>@item.Key.FormularName</td>
+                                    <td>@item.Sum(x => x.FirstAmount) * @item.Sum(x => x.SecondAmount)</td>
+                                </tr>
+                            }
+                            
+                            index++;
+                        }
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td class="text-center" colspan="7">
+                            <i class="text-danger">No data</i>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

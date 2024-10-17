@@ -1,0 +1,78 @@
+@model QuestionnaireStudentCourseDetail
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <form class="ks-form container" asp-controller="QuestionnaireStudent" asp-action="Create" method="POST">
+                <div class="block__title">
+                    <header>
+                        <p class="color-primary font-weight-700">@Model.CourseCode   @Model.CourseName</p>
+                        <p class="color-primary font-weight-700">Section : @Model.SectionNumber     @Model.InstructorName</p>
+                    </header>
+                </div>
+
+                <div class="block__body">
+                    @for (var i = 0; i < Model.Questionnaire.QuestionGroups.Count; i++)
+                    {
+                        var group = i+1;
+                        <div class="section-title mt-3">
+                            <h4>@group. @Model.Questionnaire.QuestionGroups[i].NameEn</h4>
+                        </div>
+
+                        @for (var j = 0; j < Model.Questionnaire.QuestionGroups[i].Questions.Count; j++)
+                        {
+                            var question = j+1;
+                            <div class="section-title ml-5">
+                                <h4>@(group+"."+question) @Model.Questionnaire.QuestionGroups[i].Questions[j].QuestionEn</h4>
+                            </div>
+
+                            @if (Model.Questionnaire.QuestionGroups[i].Questions[j].QuestionType == "o")
+                            {
+                                <div class="row form-group">
+                                    @for (var k = 0; k < Model.Questionnaire.QuestionGroups[i].Questions[j].Answers.Count; k++)
+                                    {
+                                        <div class="col-2 d-flex align-items-center">
+                                            <div class="form-check d-flex pl-0 w-100x">
+                                                <input id="check-@i-@j-@k" class="form-check-input primary" type="radio" 
+                                                name="Model.Questionnaire.QuestionGroups[@i].Questions[@j].Responses[@j].Answer"
+                                                value="@Model.Questionnaire.QuestionGroups[i].Questions[j].Answers[k].Value">
+                                                <label class="mx-auto w-50x" for="check-@i-@j-@k">@Model.Questionnaire.QuestionGroups[i].Questions[j].Answers[k].AnswerEn</label>
+                                                <input name="Model.Questionnaire.QuestionGroups[@i].Questions[@j].Responses[@k].Question" type="hidden" value="@Model.Questionnaire.QuestionGroups[i].Questions[j].Id">
+                                                <input name="Model.Questionnaire.QuestionGroups[@i].Questions[@j].Responses[@k].Type" type="hidden" value="o">
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            else if (Model.Questionnaire.QuestionGroups[i].Questions[j].QuestionType == "s")
+                            {
+                                <div class="row form-group ml-5">
+                                    <input name="Model.Questionnaire.QuestionGroups[@i].Questions[@j].Responses[0].Question" type="hidden" value="@Model.Questionnaire.QuestionGroups[i].Questions[j].Id">
+                                    <div class="col-12">
+                                        <input class="form-control" type="text" name="Model.Questionnaire.QuestionGroups[@i].Questions[@j].Responses[0].Answer" value="@Model.Questionnaire.QuestionGroups[i].Questions[j].Answers[0].Value" placeholder="Comment">
+                                    </div>
+                                </div>
+                            }
+                        }
+                        <input name="Model.Questionnaire.QuestionGroups[@i].Id" type="hidden" value="@Model.Questionnaire.QuestionGroups[i].Id">
+                    }
+                </div>
+
+                <input name="Model.StudentId" type="hidden" value="@Model.StudentId">
+                <input name="Model.StudentCode" type="hidden" value="@Model.StudentCode">
+                <input name="Model.TermId" type="hidden" value="@Model.TermId">
+                <input name="Model.CourseId" type="hidden" value="@Model.CourseId">
+                <input name="Model.SectionId" type="hidden" value="@Model.SectionId">
+                <input name="Model.InstructorId" type="hidden" value="@Model.InstructorId">
+                <input name="Model.Questionnaire.Id" type="hidden" value="@Model.Questionnaire.Id">
+
+                <div class="block__action container">
+                    <div class="block__action-row">
+                        <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+                        <a class="btn btn-mw-120 btn--cancel" asp-action="Index">Cancel</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

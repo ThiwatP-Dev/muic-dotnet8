@@ -1,0 +1,124 @@
+@model PagedResult<TuitionFeeRate>
+@{ 
+    ViewData["Title"] = "Tuition Fee Rate";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+
+<section class="row">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Tuition Fee Rate</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="TuitionFeeRate" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group m-b-30">
+                        <div class="col-4">
+                            <input class="form-control" asp-for="Criteria.CodeAndName" type="text">
+                            <label>Name</label>
+                        </div>
+                        <div class="col-4">
+                            <select class="chosen-select form-control" asp-for="Criteria.Batch" asp-items="ViewBag.Batches">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Batch</label>
+                        </div>
+                        <div class="col-4">
+                            <select class="chosen-select form-control" asp-for="Criteria.TuitionFeeTypeId" asp-items="ViewBag.TuitionFeeTypes">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Tuition Fee Type</label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group m-b-30">
+                        <div class="col-4">
+                            <select class="chosen-select form-control" asp-for="Criteria.StudentFeeTypeId" asp-items="ViewBag.StudentFeeTypes">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Student Fee Type</label>
+                        </div>
+                        <div class="col-4">
+                            <select class="chosen-select form-control" asp-for="Criteria.CustomCourseGroupId" asp-items="ViewBag.CustomCourseGroups">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Custom Course Group</label>
+                        </div>
+                        <div class="col-4">
+                            <select class="chosen-select form-control" asp-for="Criteria.DepartmentId" asp-items="ViewBag.Departments">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Whitelist Major</label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-12 align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset js-reset-btn" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.RowCount ?? 0))</header>
+                <div class="tools pr-4">
+                    <a class="btn btn--primary btn-mw-120 mb-0 m-r-5" asp-action="Create" asp-route-returnUrl="@contextPath">
+                        <i class="la la-plus mr-1 font-weight-800"></i> Add Tuition Fee Rate
+                    </a>
+                </div>
+            </div>
+            
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table id="js-course-list" class="table table-bordered table-hover w-100x js-datatable-export-excel">
+                        <thead>
+                            <tr>
+                                <th class="text-center w-25 no-print">#</th>
+                                <th>Name</th>
+                                <th class="text-center">Batch</th>
+                                <th>Tuition Fee Type</th>
+                                <th>Student Fee Type</th>
+                                <th>Custom Course Group</th>
+                                <th>Whitelist Major</th>
+                                <th class="text-right">Amount</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center no-print">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <partial name="_TuitionFeeRateList">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Modals {
+    <partial name="_DeleteConfirmModals">
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/datatable-export-excel.js"></script>
+}

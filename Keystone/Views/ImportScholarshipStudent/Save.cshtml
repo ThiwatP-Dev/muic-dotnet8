@@ -1,0 +1,44 @@
+@model List<ScholarshipStudent>
+@{ 
+    ViewData["Title"] = "Import Scholarship Student Success";
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>@ViewData["Title"]</header>
+            </div>
+            @if(Model == null)
+            {
+                <div class="block__body">
+                    <div class="ks-page-header col-12 mb-3">
+                        <div class="block__title">
+                            <header> Save Fail</header>
+                        </div>
+                        <ul class="d-flex flex-md-row align-items-md-center float-right">
+                            <li class="list-inline-item mx-3 mb-0">
+                                <a class="btn btn--primary" asp-action="Index">OK</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="block__body">
+                    <div class="ks-page-header col-12 mb-3">
+                        <div class="block__title">
+                            <header> Save Success Result(@(Model.Count()))</header>
+                        </div>
+                        <ul class="d-flex flex-md-row align-items-md-center float-right">
+                            <li class="list-inline-item mx-3 mb-0">
+                                <a class="btn btn--primary" asp-action="Index">OK</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>

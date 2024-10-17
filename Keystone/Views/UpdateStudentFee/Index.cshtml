@@ -1,0 +1,244 @@
+@model UpdateStudentFeeViewModel
+@{
+    ViewData["Title"] = "Update Student Fee";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+
+<section class="row">
+    <div class="col-12">
+        <div id="student-fee-accordion1" class="panel-group">
+            <div class="block block--underline">
+                <div class="block__title collapsed" data-toggle="collapse" data-parent="#student-fee-accordion1" data-target="#student-fee-accordion1-1">
+                    <header>@ViewData["Title"]</header>
+                    <div class="tools">
+                        <a class="btn btn--white btn--circle">
+                            <i class="la la-angle-down"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="student-fee-accordion1-1" class="collapse show" aria-expanded="true">
+                    <div class="block__body">
+                        <form class="form-horizontal" asp-controller="UpdateStudentFee" asp-action="Index" method="GET">
+                            @Html.AntiForgeryToken()
+                            <div class="row form-group m-b-30">
+                                <div class="col-3">
+                                    <input class="form-control" asp-for="Criteria.StudentCodeFrom" type="number">
+                                    <label>Code From</label>
+                                </div>
+                                <div class="col-3">
+                                    <input class="form-control" asp-for="Criteria.StudentCodeTo" type="number">
+                                    <label>Code To</label>
+                                </div>
+                                <div class="col-3">
+                                    <input class="form-control" asp-for="Criteria.FirstName" type="text">
+                                    <label>First Name</label>
+                                </div> 
+                                <div class="col-3">
+                                    <input class="form-control" asp-for="Criteria.LastName" type="text">
+                                    <label>Last Name</label>
+                                </div>
+                            </div>
+
+                            <div class="row form-group m-b-30">
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="@ViewBag.AcademicLevels" data-placeholder="Select">
+                                        <option selected value="">Select</option>
+                                    </select>
+                                    <label>Academic Level</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="@ViewBag.Faculties" data-placeholder="Select">
+                                        <option selected value="">Select</option>
+                                    </select>
+                                    <label>Division</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentId" asp-items="@ViewBag.Departments" data-placeholder="Select">
+                                        <option selected value="">Select</option>
+                                    </select>
+                                    <label>Major</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control" asp-for="Criteria.StudentStatus" asp-items="ViewBag.StudentStatuses"></select>
+                                    <label>Student Status</label>
+                                </div>
+                            </div>
+
+                            <div class="row form-group m-b-30">
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-curriculum" asp-for="Criteria.CurriculumId" asp-items="@ViewBag.Curriculums" data-placeholder="Select">
+                                        <option selected value="">Select</option>
+                                    </select>
+                                    <label>Curriculum</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-curriculum-version" asp-for="Criteria.CurriculumVersionId" asp-items="@ViewBag.CurriculumVersions" data-placeholder="Select">
+                                        <option selected value="">Select</option>
+                                    </select>
+                                    <label>Curriculum Version</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control" asp-for="Criteria.AdmissionTypeId" asp-items="@ViewBag.AdmissionTypes" data-placeholder="Select">
+                                        <option selected value="">Select</option>
+                                    </select>
+                                    <label>Admission Type</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control" asp-for="Criteria.IsThai" asp-items="ViewBag.ThaiStatuses"></select>
+                                    <label>Thai/Non-Thai</label>
+                                </div>
+                            </div>
+
+                            <div class="row form-group">
+                                <div class="col-3">
+                                    <select class="chosen-select form-control" asp-for="Criteria.StudentFeeGroupId" asp-items="@ViewBag.StudentFeeGroups" data-placeholder="Select">
+                                        <option selected value="">Select</option>
+                                    </select>
+                                    <label>Student Fee Group</label>
+                                </div>
+                                <div class="col-9 align-self-end text-right">
+                                    <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                        <i class="la la-search mr-2"></i>Search
+                                    </button>
+                                    <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                        Reset
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <input name="returnUrl" value="@contextPath" type="hidden">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (Model != null && Model.Details != null)
+{
+    <section class="row">
+        <div class="col-12">
+            <form class="form-horizontal update-student-fee-form" asp-controller="UpdateStudentFee" asp-action="Update" method="POST">
+                @Html.AntiForgeryToken()
+                <div class="block block--underline">
+                    <div class="block__title">
+                        <header>Search Result (@Model?.Details?.Count())</header>
+                        <header class="float-right">
+                            <input name="returnUrl" value="@contextPath" type="hidden">
+                            <input asp-for="Criteria.AcademicLevelId" type="hidden">
+                            <button class="btn btn--primary mb-0 js-export-excel" type="submit">Export Excel</button>
+                            <button class="btn btn-mw-120 btn--primary js-update-submit" type="submit" disabled="true">Save</button>
+                        </header>
+                    </div>
+                    <div class="block__body">
+                        <div class="row form-group">
+                            <div class="col-4">
+                                <select class="chosen-select form-control js-resident-type" asp-for="Criteria.ResidentTypeId" asp-items="@ViewBag.ResidentTypes" data-placeholder="Select">
+                                    <option selected value="">Select</option>
+                                </select>
+                                <label>Resident Type</label>
+                            </div>
+                            <div class="col-4">
+                                <select class="chosen-select form-control js-fee-type" asp-for="Criteria.StudentFeeTypeId" asp-items="@ViewBag.StudentFeeTypes" data-placeholder="Select">
+                                    <option selected value="">Select</option>
+                                </select>
+                                <label>Student Fee Type</label>
+                            </div>
+                            <div class="col-4">
+                                <select class="chosen-select form-control js-fee-group" asp-for="Criteria.StudentFeeGroupId" asp-items="@ViewBag.StudentFeeGroups" data-placeholder="Select">
+                                    <option selected value="">Select</option>
+                                </select>
+                                <label>Student Fee Group</label>
+                            </div>
+                        </div>
+
+                        <div class="border js-render-nicescroll p-0 m-b-30">
+                            <table id="js-update-fee-table" class="table table-bordered w-100x">
+                                <thead class="scroll-header">
+                                    <tr>
+                                        <th class="w-50 text-center col">
+                                            @if (Model.Details.Count != 0)
+                                            {
+                                                <input id="checkAll" class="js-check-all" type="checkbox" checked="@((Model.Details.Count(x => x.IsChecked == "on") == Model.Details.Count()) && Model.Details.Count() > 0)">
+                                            }
+                                            else
+                                            {
+                                                <input id="checkAll" class="js-check-all" type="checkbox" checked="false" disabled="true">
+                                            }
+                                            <label for="checkAll"></label>
+                                            <div class="text-center">
+                                                <span class="js-item-count">(0)</span>
+                                            </div>
+                                        </th>
+                                        <th class="text-center w-100">Code</th>
+                                        <th>Name</th>
+                                        <th>Major</th>
+                                        <th>Nationality</th>
+                                        <th>Admission Type</th>
+                                        <th>Resident Type</th>
+                                        <th>Student Fee Type</th>
+                                        <th>Student Fee group</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="js-items">
+                                    @if (Model.Details.Count != 0)
+                                    {
+                                        for (int i = 0; i < Model.Details.Count; i++)
+                                        {
+                                            <tr class="js-suggestion-parent">
+                                                <td class="w-50">
+                                                    <input id="Details[@i]" class="form-check-input js-update-check" name="Details[@i].IsChecked" type="checkbox" value="@Model.Details[i].IsChecked" checked="@Model.Details[i].IsChecked">
+                                                    <label class="js-focus-item m-0" for="Details[@i]"></label> 
+                                                </td>
+                                                <td>@Model.Details[i].Code</td>
+                                                <td>@Model.Details[i].FullName</td>
+                                                <td>@Model.Details[i].Major</td>
+                                                <td>@Model.Details[i].Nationality</td>
+                                                <td>@Model.Details[i].AdmissionType</td>
+                                                <td>@Model.Details[i].ResidentType</td>
+                                                <td>@Model.Details[i].StudentFeeType</td>
+                                                <td>@Model.Details[i].StudentFeeGroup</td>
+                                            </tr>
+
+                                            <input asp-for="Details[i].StudentId" type="hidden">
+                                            <input asp-for="Details[i].Code" type="hidden">
+                                            <input asp-for="Details[i].Title" type="hidden">
+                                            <input asp-for="Details[i].FirstName" type="hidden">
+                                            <input asp-for="Details[i].MidName" type="hidden">
+                                            <input asp-for="Details[i].LastName" type="hidden">
+                                            <input asp-for="Details[i].Major" type="hidden">
+                                            <input asp-for="Details[i].Nationality" type="hidden">
+                                            <input asp-for="Details[i].ResidentType" type="hidden">
+                                            <input asp-for="Details[i].StudentFeeType" type="hidden">
+                                            <input asp-for="Details[i].StudentFeeGroup" type="hidden">
+                                            <input asp-for="Details[i].AdmissionType" type="hidden">
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td class="text-center" colspan="9">
+                                                <i class="text-danger">No data</i>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="block__action-row">
+                            <button class="btn btn--primary mb-0 js-export-excel" type="submit">Export Excel</button>
+                            <button class="btn btn-mw-120 btn--primary js-update-submit" type="submit" disabled="true">Save</button>
+                            <a class="btn btn-mw-120 btn--cancel" href="@ViewBag.ReturnUrl">Cancel</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+}
+    
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/update-student-fee.js"></script>
+}

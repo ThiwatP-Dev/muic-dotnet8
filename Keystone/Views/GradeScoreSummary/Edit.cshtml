@@ -1,0 +1,351 @@
+@model GradingReportViewModel
+@{
+    ViewData["Title"] = "Grading Record";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+    bool IsDisabled = true;
+}
+<section>
+    <div class="block block--underline mb-0">
+        <div class="block__title">
+            <header class="color-primary">
+                <a href="@ViewBag.ReturnUrl">
+                    <i class="la la-angle-double-left"></i>
+                </a>
+                @ViewData["Title"]
+            </header>
+        </div>
+        <div class="block__body">
+            <div class="form-group mb-0 row">
+                <div class="col-2">
+                    <b>Term</b>
+                </div>
+                <div class="col-4">
+                    <b>Course</b>
+                </div>
+                <div class="col-2">
+                    <b>Section</b>
+                </div>
+                <div class="col-4">
+                    <b>Main Instructor</b>
+                </div>
+            </div>
+            <div class="form-group mb-0 row">
+                <div class="col-2">
+                    @Model.Semester
+                </div>
+                <div class="col-4">
+                    @Model.Course @Model.CourseCreitText
+                </div>
+                <div class="col-2">
+                    @Model.SectionString
+                </div>
+                <div class="col-4">
+                    @Model.InstructorsString
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="grade-score-data" data-model="@(JsonConvert.SerializeObject(Model))">
+    <div class="block block--underline mb-0">
+        <div class="block__body">
+            <div class="form-group mb-0">
+                <div class="table-responsive">
+                    <table id="js-grade-table" class="table table-bordered m-0">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                @* <th class="text-center">GPA</th> *@
+                                <th class="text-center">Min</th>
+                                <th class="text-center">Max</th>
+                                <th class="text-center">Mean</th>
+                                <th class="text-center">Median</th>
+                                <th class="text-center">Sd.</th>
+                                <th class="text-center">Withdrawaln</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th>Class Statistic</th>
+                                @* <td class="text-center">@(Model.ClassStatistics.GPA)</td> *@
+                                <td class="text-center" id="min-score" >@(Model.ClassStatistics.Min)</td>
+                                <td id="max-score" >@(Model.ClassStatistics.Max)</td>
+                                <td id="mean-score" >@(Model.ClassStatistics.Mean.ToString(StringFormat.TwoDecimal))</td>
+                                <td id="median-score" >@(Model.ClassStatistics.Median.ToString(StringFormat.TwoDecimal))</td>
+                                <td id="sd-score" >@(Model.ClassStatistics.SD.ToString(StringFormat.TwoDecimal))</td>
+                                <td id="withdraw-count">@(Model.StudentScoreAllocations.Where(x => x.Grade == "W" || x.Grade == "w")?.Count() ?? 0)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<form id="form-edit-grade-curve" asp-controller="GradeScoreSummary" asp-action="Edit" method="post">
+    @Html.AntiForgeryToken()
+    <input asp-for="TermId" hidden>
+    <input asp-for="CourseId" hidden>
+    <input asp-for="IsSave" value="true" checked>
+    <input asp-for="IsSave" value="false">
+    <input name="returnUrl" hidden>
+    @if(Model.GradingCurves.Any() && Model.IsCalGradeExist)
+    {
+        <section>
+            <div class="block block--underline mb-0">
+                <div class="block__body" id="js-get-standard-grading">
+                    <div class="row">
+                            <div class="col-3">
+                                <div id="grading-curve">
+                                    <table id="js-grade-table" class="table table-bordered m-a-0 js-curve-table">
+                                        <thead>
+                                            <tr>
+                                                <th class="w-75 text-center">Grade</th>
+                                                <th class="w-100 text-center">Score</th>
+                                                @* <th class="w-100 text-center">Max</th> *@
+                                                <th class="text-center">Students</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        @if (Model.GradingCurves.Any())
+                                        {
+                                            var i = 0;
+                                            @foreach(var gradingScore in Model.GradingCurves)
+                                            {
+                                                <input asp-for="GradingCurves[i].Id" hidden>
+                                                <input asp-for="GradingCurves[i].GradeId" hidden>
+                                                <input asp-for="GradingCurves[i].GradeTemplateId" hidden>
+                                                <input class="form-control__table text-center curve-max-score" asp-for="GradingCurves[i].Maximum" autocomplete="off" hidden>
+                                                <input class="form-control__table text-center curve-min-score" asp-for="GradingCurves[i].Minimum" autocomplete="off" hidden>
+                                                if(IsDisabled)
+                                                {
+                                                    <tr>
+                                                        <td>@gradingScore.Grade.Name</td>
+                                                        @if(gradingScore.Grade.Name == "F")
+                                                        {
+                                                            <td>
+                                                                @("< " + (gradingScore.Maximum + 1))
+                                                            </td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td>
+                                                                >= @(gradingScore.Minimum % 5 == 0 ? gradingScore.Minimum : gradingScore.Minimum - (gradingScore.Minimum % 5))
+                                                            </td>
+                                                        }
+                                                        @* <td>
+                                                            @gradingScore.Maximum
+                                                        </td> *@
+                                                        <td>@(Model.GradingRanges.SingleOrDefault(x => x.Grade == gradingScore.Grade.Name).Frequency)</td>
+                                                    </tr>
+                                                }
+                                                else
+                                                {
+                                                    if (i == 0)
+                                                    {
+                                                        <tr>
+                                                            <td>@gradingScore.Grade.Name</td>
+                                                            <td>
+                                                                <input class="form-control__table text-center curve-min-score" asp-for="GradingCurves[i].Minimum" autocomplete="off" disabled="@IsDisabled">
+                                                            </td>
+                                                            <td>100</td>
+                                                            <input name="GradingCurves[@i].Maximum" hidden>
+                                                        </tr>
+                                                    }
+                                                    else if (i == (Model.GradingCurves.Count - 1))
+                                                    {
+                                                        <tr>
+                                                            <td>
+                                                                @gradingScore.Grade.Name
+                                                                <input name="GradingCurves[@i].Minimum" hidden>
+                                                                <input class="curve-max-score-val" asp-for="GradingCurves[i].Maximum" hidden>
+                                                            </td>
+                                                            <td>0</td>
+                                                            <td class="curve-max-score">@gradingScore.Maximum</td>
+                                                        </tr>
+                                                    }
+                                                    else
+                                                    {
+                                                        <tr>
+                                                            <td>
+                                                                @gradingScore.Grade.Name
+                                                                <input class="curve-max-score-val" asp-for="GradingCurves[i].Maximum" hidden>
+                                                            </td>
+                                                            @if(Model.GradingCurves[i].Maximum > 0)
+                                                            {
+                                                                <td>
+                                                                    <input class="form-control__table text-center curve-min-score" asp-for="GradingCurves[i].Minimum" autocomplete="off" disabled="@IsDisabled">
+                                                                </td>
+                                                            }
+                                                            else
+                                                            {
+                                                                <td>
+                                                                    <input class="form-control__table text-center curve-min-score" asp-for="GradingCurves[i].Minimum" autocomplete="off" disabled>
+                                                                </td>
+                                                            }
+                                                            <td class="curve-max-score">@Model.GradingCurves[i].Maximum</td>
+                                                        </tr>
+                                                    }
+                                                }
+                                                ++i;
+                                            }
+                                        }
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <button type="button" class='btn btn-mw-120 btn--primary btn-recalc @(IsDisabled ? "d-none" : "")'>Re Calculated</button>
+                            </div>
+                            <div class="col-9">
+                                <div class="block chart">
+                                    <canvas id="grade-chart" class="block__body"
+                                            data-chart-title="Grade Distribution"
+                                            data-axis-x-title="Percentage"
+                                            data-axis-y-title="Number of Students ( @Model.StudentScoreAllocations.Count(x => x.IsCalcGrade) )">
+                                    </canvas>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </section>
+    }
+    @if(Model.IsNotCalGradeExist)
+    {
+        <section>
+            <div class="block block--underline mb-0">
+                <div class="block__body" id="js-get-standard-grading">
+                    <div class="row">
+                        <div class="col-3">
+                            <div id="grading-curve">
+                                <table id="js-grade-table" class="table table-bordered m-a-0 js-curve-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="w-100 text-center">Grade</th>
+                                            <th class="w-100 text-center">SCORE</th>
+                                            <th class="w-100 text-center">STUDENTS</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    @if (Model.GradingCurves.Any())
+                                    {
+                                        var i = 0;
+                                        @foreach(var gradingScore in Model.GradingCurvesNotCalc)
+                                        {
+                                            <input asp-for="GradingCurvesNotCalc[i].Id" hidden>
+                                            <input asp-for="GradingCurvesNotCalc[i].GradeId" hidden>
+                                            <input asp-for="GradingCurvesNotCalc[i].GradeTemplateId" hidden>
+                                            if(IsDisabled)
+                                            {
+                                                    <tr>
+                                                        <td>@gradingScore.Grade.Name</td>
+                                                        @if(gradingScore.Grade.Name == "W")
+                                                        {
+                                                            <td>
+                                                                @("> "+ (gradingScore.Maximum + 1))
+                                                            </td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td>
+                                                                >= @(gradingScore.Minimum % 5 == 0 ? gradingScore.Minimum : gradingScore.Minimum - (gradingScore.Minimum % 5))
+                                                            </td>
+                                                        }
+                                                        @* <td>
+                                                            @gradingScore.Maximum
+                                                        </td> *@
+                                                        <td>@(Model.GradingRanges.SingleOrDefault(x => x.Grade == gradingScore.Grade.Name).Frequency)</td>
+                                                    </tr>
+                                            }
+                                            else
+                                            {
+                                                if (i == 0)
+                                                {
+                                                    <tr>
+                                                        <td>@gradingScore.Grade.Name</td>
+                                                        <td>
+                                                            <input class="form-control__table text-center curve-min-score" asp-for="GradingCurvesNotCalc[i].Minimum" autocomplete="off">
+                                                        </td>
+                                                        <td>100</td>
+                                                        <input name="GradingCurvesNotCalc[@i].Maximum" hidden>
+                                                    </tr>
+                                                }
+                                                else if (i == (Model.GradingCurvesNotCalc.Count - 1))
+                                                {
+                                                    <tr>
+                                                        <td>
+                                                            @gradingScore.Grade.Name
+                                                            <input name="GradingCurvesNotCalc[@i].Minimum" value="0" hidden>
+                                                            <input class="curve-max-score-val" asp-for="GradingCurvesNotCalc[i].Maximum" hidden>
+                                                        </td>
+                                                        <td>0</td>
+                                                        <td class="curve-max-score">@gradingScore.Maximum</td>
+                                                    </tr>
+                                                }
+                                                else
+                                                {
+                                                    <tr>
+                                                        <td>
+                                                            @gradingScore.Grade.Name
+                                                            <input class="curve-max-score-val" asp-for="GradingCurvesNotCalc[i].Maximum" hidden>
+                                                        </td>
+                                                        @if (Model.GradingCurvesNotCalc[i].Maximum > 0)
+                                                        {
+                                                            <td>
+                                                                <input class="form-control__table text-center curve-min-score" asp-for="GradingCurvesNotCalc[i].Minimum" autocomplete="off" disabled="@IsDisabled">
+                                                            </td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td>
+                                                                <input class="form-control__table text-center curve-min-score" asp-for="GradingCurvesNotCalc[i].Minimum" autocomplete="off" disabled>
+                                                            </td>
+                                                        }
+                                                        <td class="curve-max-score">@Model.GradingCurvesNotCalc[i].Maximum</td>
+                                                    </tr>
+                                                }
+                                            }
+                                            ++i;
+                                        }
+                                    }
+                                    </tbody>
+                                </table>
+                            </div>
+                            <button type="button"  class='btn btn-mw-120 btn--primary btn-recalc @(IsDisabled ? "d-none" : "")'>Re-calculate</button>
+                        </div>
+                        <div class="col-9">
+                            <div class="block chart">
+                                <canvas id="grade-chart-2" class="block__body"
+                                        data-chart-title="Grade Distribution"
+                                        data-axis-x-title="Percentage"
+                                        data-axis-y-title="Number of Students ( @Model.StudentScoreAllocations.Count(x => !x.IsCalcGrade) )">
+                                </canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+    <section>
+        <div class="block">
+            <div class="block__body" id="js-get-standard-grading">
+                <div class="">
+                    <div class="block__action-row">
+                        <button type="button" class="btn btn-mw-120 btn--primary btn-next">Summary</button>
+                        @* <a asp-controller="GradeScoreSummary"
+                           asp-action="Edit" 
+                           asp-route-courseId="@Model.CourseId"
+                           asp-route-termId="@Model.TermId"
+                           asp-route-returnUrl="@contextPath"
+                           class="btn btn-mw-120 btn--reset js-reset-btn mb-0 text-danger">
+                            Reset
+                        </a> *@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/grade-score-summary.js"></script>
+}

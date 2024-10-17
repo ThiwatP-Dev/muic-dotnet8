@@ -1,0 +1,66 @@
+@model MaintenanceStatus
+
+<div class="row form-group">
+	<div class="col-12">
+		<select class="chosen-select form-control" asp-for="TermId" asp-items="@ViewBag.Terms" autofocus>
+			<option selected disabled>Select</option>
+		</select>
+		<label>Term<span class="text-danger">*</span></label>
+	</div>
+</div>
+
+<div class="row form-group">
+	<div class="col-12">
+		<select class="chosen-select form-control" asp-for="MaintenanceFeeId" asp-items="@ViewBag.MaintenanceFees">
+			<option selected disabled>Select</option>
+		</select>
+		<label>Maintenance Fee<span class="text-danger">*</span></label>
+	</div>
+</div>
+
+<div class="row form-group">
+	<div class="col-12">
+		<input class="form-control" asp-for="InvoiceNumber" type="text">
+		<label>Invoice Number</label>
+	</div>
+</div>
+
+<div class="row form-group">
+	<div class="col-12">
+		<input class="form-control js-single-date" asp-for="PaidDate" type="text" autocomplete="off">
+		<label>Paid Date</label>
+	</div>
+</div>
+
+<div class="row form-group">
+	<div class="col-12">
+		<input class="form-control" asp-for="Remark" type="text">
+		<label>Remark</label>
+	</div>
+</div>
+
+<div class="row form-group">
+	<div class="col-12">
+		<select class="chosen-select form-control" asp-for="ApprovedBy" asp-items="@ViewBag.Signatories">
+			<option selected disabled>Select</option>
+		</select>
+		<label>Approved By<span class="text-danger">*</span></label>
+	</div>
+</div>
+	
+<div class="row form-group">
+	<div class="col-12">
+		<input class="form-control js-single-date" asp-for="ApprovedAt" type="text" autocomplete="off">
+		<label>Approved Date</label>
+	</div>
+</div>
+
+<input asp-for="StudentId" type="hidden">
+<input asp-for="Id" type="hidden">
+
+<div class="block__action pb-0">
+    <div class="block__action-row">
+        <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+		<a class="btn btn-mw-120 btn--cancel rounded" href="javascript:void(0);" data-dismiss="modal">Cancel</a>
+    </div>
+</div>

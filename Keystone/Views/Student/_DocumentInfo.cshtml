@@ -1,0 +1,127 @@
+@model StudentRequiredDocument
+@{
+    var index = 0;
+    var waitingStatus = "w";
+}
+    
+<section class="ks-document-info">
+    <form asp-controller="Student" asp-action="SaveDocument" method="POST" enctype="multipart/form-data">
+        <div class="block block--underline">
+            <div class="block__body">
+                <div class="form-group">
+                    <table id="js-document" class="table table-bordered m-0">
+                        <thead>
+                            <tr>
+                                <th class="text-center w-25">#</th>
+                                <th>Document Name<span class="text-danger">*</span></th>
+                                <th class="text-center">Required<span class="text-danger">*</span></th>
+                                <th class="text-center">Amount</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center w-150">Submitted<span class="text-danger">*</span></th>
+                                <th>Remark</th>
+                                <th class="text-center">Upload file</th>
+                                <th class="text-center w-100">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.StudentDocuments != null && Model.StudentDocuments.Any())
+                            {
+                                foreach (var item in Model.StudentDocuments)
+                                {
+                                    <tr>
+                                        <td>@(index+1)</td>
+                                        <td>
+                                            <select class="chosen-select form-control" asp-for="StudentDocuments[index].DocumentId" asp-items="ViewBag.Documents" data-placeholder="Select">
+                                                <option selected disabled>Select</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="js-required chosen-select form-control" asp-for="StudentDocuments[index].IsRequired" asp-items="ViewBag.YesNoAnswer" data-placeholder="Select"></select>
+                                        </td>
+                                        <td>
+                                            <input class="form-control__table js-amount" asp-for="StudentDocuments[index].Amount" type="number" min=0>
+                                        </td>
+                                        <td>
+                                            <partial class="js-document-status" name="_DocumentStatus" model="@item.DocumentStatus">
+                                        </td>
+                                        <td>
+                                            <input class="form-control__table js-submitted-amount" asp-for="StudentDocuments[index].SubmittedAmount" type="number" min=0>
+                                        </td>
+                                        <td>
+                                            <input class="form-control__table text-uppercase" asp-for="StudentDocuments[index].Remark" type="text">
+                                        </td>
+                                        <td class="td-upload">
+                                            <button class="btn btn-mw-120 btn--primary mr-2 mb-0" type="button" onclick="document.getElementById('StudentDocuments_@(index)__UploadFile').click();">Browse</button>
+                                            <span id="filename_@index"></span>
+                                        </td>
+                                        <td class="text-nowrap td-actions">
+                                            @if (Model.StudentDocuments[index].ImageUrl != null) 
+                                            {
+                                                <input type="hidden" class="js-current-imageurl" asp-for="StudentDocuments[index].ImageUrl" />
+                                                <a href="#!" data-toggle="modal" data-target="#view-document-modal" data-value="@Model.StudentDocuments[index].ImageUrl">
+                                                    <i class="la la-info info"></i>
+                                                </a>
+                                            }
+                                            <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                                <i class="la la-trash delete"></i>
+                                            </a>
+                                        </td>
+                                        <input class="js-required-docuemnt-id" asp-for="StudentDocuments[index].Id" type="hidden">
+                                        <input type="file" class="form-control-file" asp-for="StudentDocuments[index].UploadFile" onchange="onSelectDocumentFile(this, @index);" />
+                                    </tr>
+                                    ++index;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td>1</td>
+                                    <td>
+                                        <select class="chosen-select form-control" asp-items="ViewBag.Documents" name="StudentDocuments[0].DocumentId" data-placeholder="Select">
+                                            <option selected disabled>Select</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="js-required chosen-select form-control" asp-items="ViewBag.YesNoAnswer" name="StudentDocuments[0].IsRequired" data-placeholder="Select"></select>
+                                    </td>
+                                    <td>
+                                        <input class="form-control__table js-amount" name="StudentDocuments[index].Amount" type="number" min=0>
+                                    </td>
+                                    <td>
+                                        <partial class="js-document-status" name="_DocumentStatus" model="waitingStatus">
+                                    </td>
+                                    <td>
+                                        <input class="form-control__table" name="StudentDocuments[0].SubmittedAmount" type="number" min=0>
+                                    </td>
+                                    <td>
+                                        <input class="form-control__table text-uppercase" name="StudentDocuments[0].Remark" type="text">
+                                    </td>
+                                    <td class="td-upload">
+                                        <button class="btn btn-mw-120 btn--primary mr-2 mb-0" type="button" onclick="document.getElementsByName('StudentDocuments[0].UploadFile')[0].click();">Browse</button>
+                                        <span id="filename_0"></span>
+                                    </td>
+                                    <td class="text-nowrap td-actions">
+                                        <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                            <i class="la la-trash delete"></i>
+                                        </a>
+                                    </td>
+                                    <input type="file" class="form-control-file" name="StudentDocuments[0].UploadFile" onchange="onSelectDocumentFile(this, 0);" />
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <input asp-for="StudentId" type="hidden">
+    </form>
+</section>
+
+<script>
+    function onSelectDocumentFile(control, index) 
+    {
+        $("#filename_" + index).empty().html(control.files[0].name);
+    }
+</script>
+
+<partial name="~/Views/AdmissionStudent/_DocumentModal.cshtml" />

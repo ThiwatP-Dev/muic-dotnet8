@@ -1,0 +1,176 @@
+@model CopyCurriculumViewModel
+@{
+	ViewData["Title"] = "Copy Curriculum";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+<div class="row">
+	<div class="ks-page-header col-lg-12">
+		<h2 class="ks-page-header__title">
+            <a class="btn-back" href="@ViewBag.ReturnUrl">
+                <i class="la la-angle-double-left mr-1"></i>Back
+            </a>
+		</h2>
+	</div>
+</div>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Target Curriculum</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-action="CreateCopyCurriculum" asp-route-returnUrl="@contextPath" method="GET">
+                    @Html.AntiForgeryToken()
+                    <input name="returnUrl" value="@ViewBag.ReturnUrl" type="hidden">
+                    <div class="row form-group m-b-30">
+	    				<div class="col-3">
+	    					<select class="chosen-select form-control js-cascade-academic-level" asp-for="AcademicLevelId"
+                                    asp-items="ViewBag.AcademicLevels" data-placeholder="Select">
+	    						<option selected disabled>Select</option>
+	    					</select>
+	    					<label for="AcademicLevelId">Academic Level<span class="text-danger">*</span></label>
+	    				</div>
+	    				<div class="col-6">
+	    					<select class="chosen-select form-control js-cascade-curriculum" asp-for="MasterCurriculumId"
+                                    asp-items="ViewBag.Curriculums" data-placeholder="Select">
+	    						<option selected disabled>Select</option>
+	    					</select>
+	    					<label for="Id">From Curriculum<span class="text-danger">*</span></label>
+	    				</div>
+                        <div class="col-3 align-self-end text-right text-nowrap">
+	    					<button class="btn btn--primary btn-mw-120 m-r-5 mb-0" type="submit">
+	    						<i class="la la-search mr-2"></i>Search
+	    					</button>
+	    					<button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+	    						Reset
+	    					</button>
+	    				</div>
+                    </div>
+                </form>
+	    	</div>
+	    </div>
+    </div>
+</section>
+
+@if (Model != null)
+{
+    <section class="row">
+        <div class="col-12">
+            <form class="form-horizontal" asp-action="CreateCopyCurriculum" asp-route-returnUrl="@contextPath" method="POST">
+                <div class="block block--underline">
+                    <div class="block__title">
+                        <header>Copy Curriculum</header>
+                    </div>
+
+                    <div class="block__body">
+                        <div class="row form-group">
+                            <div class="col-6">
+                                <input class="form-control" asp-for="Curriculum.ReferenceCode">
+                                <label>Reference Code<span class="text-danger">*</span></label>
+                                <span class="text-danger help-block" asp-validation-for="Curriculum.ReferenceCode"></span>
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-6">
+                                <input class="form-control" asp-for="Curriculum.NameEn">
+                                <label>English Name<span class="text-danger">*</span></label>
+                                <span class="text-danger help-block" asp-validation-for="Curriculum.NameEn"></span>
+                            </div>
+                            <div class="col-6">
+                                <input class="form-control" asp-for="Curriculum.NameTh">
+                                <label>Thai Name<span class="text-danger">*</span></label>
+                                <span class="text-danger help-block" asp-validation-for="Curriculum.NameTh"></span>
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-6">
+                                <input class="form-control" asp-for="Curriculum.AbbreviationEn">
+                                <label>English Abbreviation</label>
+                            </div>
+                            <div class="col-6">
+                                <input class="form-control" asp-for="Curriculum.AbbreviationTh">
+                                <label>Thai Abbreviation</label>
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-6">
+                                <select class="chosen-select form-control js-cascade-academic-level-copy-curriculum" asp-for="Curriculum.AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                                    <option selected disabled>Select</option>
+                                </select>
+                                <label for="AcademicLevelId">Academic Level<span class="text-danger">*</span></label>
+                            </div>
+                            <div class="col-6">
+                                <select class="chosen-select form-control js-cascade-term-copy-curriculum" asp-for="Curriculum.TermType" asp-items="ViewBag.CurriculumTermTypes">
+                                    <option selected disabled>Select</option>
+                                </select>
+                                <label for="AcademicLevelId">Term Type<span class="text-danger">*</span></label>
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-6">
+                                <select class="chosen-select form-control js-cascade-faculty-copy-curriculum" asp-for="Curriculum.FacultyId" asp-items="ViewBag.Faculties">
+                                    <option selected disabled>Select</option>
+                                </select>
+                                <label for="FacultyId">Division<span class="text-danger">*</span></label>
+                            </div>
+                            <div class="col-6">
+                                <select class="chosen-select form-control js-cascade-department-copy-curriculum" asp-for="Curriculum.DepartmentId" asp-items="ViewBag.Departments">
+                                    <option selected disabled>Select</option>
+                                </select>
+                                <label for="DepartmentId">Major<span class="text-danger">*</span></label>
+                            </div>
+                        </div>  
+
+                        <div class="row form-group">
+                            <div class="col-12">
+                                <input class="form-control" asp-for="Curriculum.DescriptionEn">
+                                <label>English Description</label>
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-12">
+                                <input class="form-control" asp-for="Curriculum.DescriptionTh">
+                                <label>Thai Description</label>
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-6">
+                                <input class="form-control" asp-for="Curriculum.MinimumGPA" type="number" step="0.01" min=0 max=4>
+                                <label>Minimum GPA<span class="text-danger">*</span></label>
+                                <span class="text-danger help-block" asp-validation-for="Curriculum.MinimumGPA"></span>
+                            </div>
+                        </div>
+
+                        <div class="row form-check">
+                            <input class="form-check-input" asp-for="Curriculum.IsActive" type="checkbox" checked>
+                            <label for="IsActive">Active</label>
+                        </div>
+
+                        <input asp-for="MasterCurriculumId" type="hidden" value="@Model.Curriculum?.Id">
+                        <input asp-for="AcademicLevelId" type="hidden">
+                        <input name="returnUrl" type="hidden" value="@contextPath">
+
+                        <div class="row form-group mb-0">
+	    			    	<div class="col-12 text-right text-nowrap">
+                                <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">Next</button>
+                                <a class="btn btn-mw-120 btn--cancel mb-0" href="@ViewBag.ReturnUrl">Cancel</a>
+	    			    	</div>
+	    			    </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+}
+
+@section Scripts {
+	<script type="text/javascript" src="~/js/pages/ajax-cascading/copy-curriculum.js"></script>
+}

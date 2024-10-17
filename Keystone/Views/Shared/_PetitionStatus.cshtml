@@ -1,0 +1,17 @@
+@model KeystoneLibrary.Models.Enums.PetitionStatusEnum
+
+@switch (Model)
+{
+   case KeystoneLibrary.Models.Enums.PetitionStatusEnum.PENDING:
+      <span class="text-muted">Pending</span>
+      break;
+   case KeystoneLibrary.Models.Enums.PetitionStatusEnum.CANCEL:
+      <span class="text-danger">Cancel</span>
+      break;
+   case KeystoneLibrary.Models.Enums.PetitionStatusEnum.APPROVED:
+      <span class="text-success">Approved</span>
+      break;
+   case KeystoneLibrary.Models.Enums.PetitionStatusEnum.REJECTED:
+      <span class="text-danger">Rejected</span>
+      break;
+}

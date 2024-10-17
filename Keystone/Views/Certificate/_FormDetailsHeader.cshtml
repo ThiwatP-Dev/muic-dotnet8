@@ -1,0 +1,27 @@
+@model CertificationViewModel
+
+<div class="row form-group">
+    <div class="col-3">
+        <input class="form-control" asp-for="ReferenceNumber">
+        <label>Reference Number<span class="text-danger">*</span></label>
+    </div>
+    <div class="col-3">
+        <select class="chosen-select form-control" asp-for="TitleId" asp-items="ViewBag.Titles">
+            <option selected disabled>Select</option>
+        </select>
+        <label>Title<span class="text-danger">*</span></label>
+    </div>
+    <div class="col-3">
+        <input class="form-control" asp-for="StudentFirstName">
+        <label>First Name<span class="text-danger">*</span></label>
+    </div>
+    <div class="col-3">
+        <input class="form-control" asp-for="StudentLastName">
+        <label>Last Name<span class="text-danger">*</span></label>
+    </div>
+</div>
+<input asp-for="StudentId" type="hidden">
+<input asp-for="Gender" type="hidden">
+<input asp-for="RunningNumber" type="hidden">
+<input asp-for="DocumentYear" type="hidden">
+<hr>

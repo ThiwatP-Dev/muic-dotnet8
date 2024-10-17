@@ -1,0 +1,79 @@
+@model GraduationInformation
+
+<section class="row">
+    <div class="col-lg-12">
+        <div class="block block--underline">
+            <form class="ks-form container" asp-controller="GraduationInformation" asp-action="Edit" method="post">
+                <div class="block__title">
+                    <header>Edit Graduation Information</header>
+                </div>
+                <div class="block__body">
+                    <div class="row form-group">
+                        <div class="col-12">
+                            <select class="chosen-select form-control" asp-for="CurriculumInformation.CurriculumVersionId" asp-items="ViewBag.Curriculums">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label for="CurriculumInformation.CurriculumVersionId">Curriculum Version</label>
+                        </div>
+                    </div>
+
+                    <div class="section-title">
+                        <h4>Graduation</h4>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-3">
+                            <input class="form-control js-single-date" asp-for="GraduatedAt" type="text" autocomplete="off">
+                            <label for="GraduatedAt">Graduated Date</label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Class" type="text">
+                            <label for="Class">Graduated Class</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="TermId" asp-items="ViewBag.Terms">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label for="TermId">Graduated Term</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="HonorId" asp-items="ViewBag.AcademicHonors">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label for="HonorId">Honor</label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-12">
+                            <input class="form-control text-uppercase" asp-for="Remark" placeholder="">
+                            <label for="Remark">Graduation Remark</label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="row form-group">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" asp-for="IsActive">
+                                <label for="IsActive">Active</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <input type="hidden" name="IsActive" value="false">
+                    <input asp-for="Id" type="hidden">
+                    <input asp-for="CurriculumInformationId" type="hidden">
+                    <input asp-for="CommissionApprovedAt" type="hidden">
+                    <input asp-for="GraduationRegisteredAt" type="hidden">
+                    <input asp-for="CreatedAt" type="hidden">
+                    <input asp-for="CreatedBy" type="hidden">
+                    <input class="js-cascade-student" asp-for="StudentId" type="hidden">
+
+                    <div class="block__action-row">
+                        <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+                        <a class="btn btn-mw-120 btn--cancel" asp-action="Details" asp-controller="Student" asp-route-id="@Model.StudentId" asp-route-tabIndex="4">Cancel</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

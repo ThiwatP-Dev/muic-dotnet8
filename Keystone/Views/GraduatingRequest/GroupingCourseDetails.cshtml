@@ -1,0 +1,18 @@
+@model GraduatingRequestViewModel
+
+<form class="form-horizontal" asp-controller="GraduatingRequest" asp-action="SaveEqualCourses" method="POST">
+    <input type="hidden" asp-for="@Model.CourseGroupingLog.Id">
+    <input type="hidden" asp-for="@Model.GraduatingRequest.Id">
+
+	<partial name="_GroupingCourseForm">
+
+    <div class="form-group text-right mb-0">
+        <button type="submit" class="btn btn-mw-120 btn--primary">Next</button>
+        <a href="@ViewBag.ReturnUrl" class="btn btn-mw-120 btn--cancel">Cancel</a>
+    </div>
+
+</form>
+
+@section Modals {
+    <partial name="_DeleteRowConfirmModals">
+}

@@ -1,0 +1,90 @@
+@model GradeManagementViewModel
+<div class="block block--underline mb-0">
+    <div class="block__body">
+        <div class="form-group mb-3">
+            <div id="grading-result">
+                <table id="js-grading-result" class="table table-bordered editable-table m-0">
+                    <thead>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th class="text-center w-100">Course Code</th>
+                            <th class="text-center w-50">Section</th>
+                            <th class="w-100">Student Code</th>
+                            <th>Student Name</th>
+                            <th class="text-center w-125">Grade</th>
+                            <th class="text-center w-100">Total Score</th>
+                            <th class="text-center w-75">Round Score</th>
+                            @for(int i = 0; i < Model.Allocations?.Count; i++)
+                            {
+                                <th class="text-center w-100">
+                                    @Model.Allocations[i].Abbreviation
+                                    <span class="text-nowrap">(<span class="score-limit">@Model.Allocations[i].FullScore</span>)</span>
+                                </th>
+                            }
+                            <th class="text-center w-150">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.StudentScoresResult != null && Model.StudentScoresResult.Count != 0)
+                        {
+                            for (int i = 0; i < Model.StudentScoresResult.Count; i++)
+                            {
+                                var prefix = Model.StudentScoresResult[i].CourseCode + "_" + Model.StudentScoresResult[i].SectionNumber + "_" + @Model.StudentScoresResult[i].StudentCode;
+                                var gradeId = prefix + "_GradeId";
+                                var totalScoreId = prefix + "_TotalScoreId";
+                                var percentageId = prefix + "_PercentageId";
+                                var withdrawalId = prefix + "_IsWithdrawal";
+                                <tr class="@(Model.StudentScoresResult[i].IsWithdrawal == true ? "bg-secondary-lighter" : "") @(Model.StudentScoresResult[i].IsCheating == true ? "bg-danger-pastel" : "")">
+                                    <td class="text-center">@(i + 1)</td>
+                                    <td class="js-course-code">@Model.StudentScoresResult[i].CourseCode</td>
+                                    <td class="js-section-number">@Model.StudentScoresResult[i].SectionNumber</td>
+                                    <td class="js-student-code">@Model.StudentScoresResult[i].StudentCode</td>
+                                    <td class="js-student-name">@Model.StudentScoresResult[i].StudentName</td>
+                                    <td id="@gradeId"></td>
+                                    <td id="@totalScoreId">@Model.StudentScoresResult[i].TotalScore</td>
+                                    <td id="@percentageId">@Model.StudentScoresResult[i].Percentage</td>
+                                    @if (Model.StudentScoresResult[i].Scores.Any())
+                                    {
+                                        for (int j = 0; j < @Model.StudentScoresResult[i].Scores.Count ; j++)
+                                        {
+                                            var score = Model.StudentScoresResult[i].SectionNumber + "_" + @Model.StudentScoresResult[i].StudentCode + "_" + j;
+                                            <td id="@score">@Model.StudentScoresResult[i].Scores[j].FullScore</td>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        for (int j = 0; j < Model.Allocations?.Count; j++)
+                                        {
+                                            <td>@Model.Allocations[j].FullScore</td>
+                                        }
+                                    }
+                                    <td class="text-center text-nowrap td-actions">
+                                        <a href="#!"
+                                           data-toggle="modal"
+                                           data-target="#result-edit-grade-modal"
+                                           data-value="@prefix"
+                                           data-studentScoreId="@Model.StudentScoresResult[i].StudentScoreId">
+                                            <i class="la la-edit edit"></i>
+                                        </a>
+                                    </td>
+                                    <input type="hidden" class="js-grade-prefix" value="@prefix" />
+                                    <input type="hidden" class="js-student-score-id" value="@Model.StudentScoresResult[i].StudentScoreId" />
+                                    <input type="hidden" id="@withdrawalId" asp-for="@Model.StudentScoresResult[i].IsWithdrawal" />
+                                    <input type="hidden" asp-for="@Model.StudentScoresResult[i].StudentScoreId" />
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="15">
+                                    <i>Loading...</i>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

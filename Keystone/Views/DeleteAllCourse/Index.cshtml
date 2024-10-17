@@ -1,0 +1,252 @@
+@model PagedResult<Student>
+@{
+    ViewData["Title"] = "Delete All Courses";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+    var recordNumber = Model?.FirstRowOnPage;
+}
+@Html.AntiForgeryToken()
+
+<section class="row">
+    <div class="col-12">
+        <div id="delete-all-course-accordion1" class="panel-group">
+            <div class="block block--underline">
+                <div class="block__title collapsed" data-toggle="collapse" data-parent="#delete-all-course-accordion1" data-target="#delete-all-course-accordion1-1">
+                    <header>@ViewData["Title"]</header>
+                    <div class="tools">
+                        <div class="btn-group">
+                            <a class="btn btn--white btn--circle">
+                                <i class="la la-angle-down"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="delete-all-course-accordion1-1" class="collapse show" aria-expanded="true">
+                    <div class="block__body">
+                        <form class="form-horizontal" asp-controller="DeleteAllCourse" asp-action="Index" method="GET">
+                            <div class="row form-group m-b-30">
+                                <div class="col-3">
+                                    <select id="AcademicLevelId" class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels" data-placeholder="Select">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Academic Level<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-3">
+                                    <select id="TermId" class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="ViewBag.Terms" data-placeholder="Select">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Term<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-3">
+                                    <select id="FacultyId" class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="ViewBag.Faculties">
+                                        <option selected value="">Select</option>
+                                    </select>
+                                    <label>Division</label>
+                                </div>
+                                <div class="col-3">
+                                    <select id="DepartmentId" class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentId" asp-items="ViewBag.Departments" data-placeholder="Select">
+                                        <option selected value="">Select</option>
+                                    </select>
+                                    <label>Major</label>
+                                </div>
+                            </div>
+
+                            <div class="row form-group mb-0">
+                                <div class="col-3">
+                                    <input id="Code" class="form-control" asp-for="Criteria.Code" type="text" autofocus>
+                                    <label>Student Code</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control" asp-for="Criteria.IsLatePayment" asp-items="ViewBag.LatePaymentStatuses" data-placeholder="All"></select>
+                                    <label>Late Payment</label>
+                                </div>
+                                <div class="col-6 text-right align-self-end">
+                                    <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">
+                                        <i class="la la-search mr-2"></i>Search
+                                    </button>
+                                    <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                        Reset
+                                    </button>
+                                </div>                                
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <form asp-action="DeleteCourses" class="form-horizontal" method="POST">
+            <div class="block block--underline">
+                <div class="block__title">
+                    <header>Search Result (@(Model?.RowCount ?? 0))</header>
+                    <div class="tools">
+                        <button id="delete-button" class="btn btn--primary mb-0" type="submit" disabled>
+                            <i class="la la-trash delete"></i> Delete Courses
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="block__body">
+                    <div class="form-group table-responsive mb-0">
+                        <table id="js-row-add-able" class="col-12 table table-bordered m-0 js-checklist-student">
+                            @if (Model != null && Model.Results.Any() && Model.Criteria != null)
+                            {
+                                if (Model.Criteria.IsLatePayment != "true")
+                                {
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center w-50">#</th>
+                                            <th class="w-100 text-center">
+                                                <input id="student-check-all" class="js-check-all" type="checkbox">
+                                                <label class="mt-2 mb-0 m-l-1" for="student-check-all"></label><br>
+                                                <span class="js-item-count">(0)</span>
+                                            </th>
+                                            <th class="text-center">Student Code</th>
+                                            <th>Name</th>
+                                            <th>Division</th>
+                                            <th>Major</th>
+                                            <th>Course List</th>
+                                            <th class="text-center w-75">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="js-items">
+                                        @for (int i = 0; i < Model.Results.Count(); i++)
+                                        {
+                                            <tr>
+                                                <td>@recordNumber</td>
+                                                <td>
+                                                    <input id="Model.Results[@i].Code" class="student-checkbox" name="deleteItem" type="checkbox" value="@Model.Results[i].Id">
+                                                    <label class="form-check-input" for="Model.Results[@i].Code"></label>
+                                                </td>
+                                                <td>@Model.Results[i].Code</td>
+                                                <td>@Model.Results[i].FullNameEn</td>
+                                                <td>@Model.Results[i].AcademicInformation?.Faculty?.NameEn</td>
+                                                <td>@Model.Results[i].AcademicInformation?.Department?.NameEn</td>
+                                                <td>
+                                                    @(string.Join(", ", Model.Results[i].RegistrationCourses?.Where(x => !x.IsPaid && Model.Criteria.TermId == x.TermId)
+                                                                                                             .Select(x => x.Course.CodeAndCredit + "(" + x.Section.Number + ")")
+                                                                                                             .ToList()))
+                                                </td>
+                                                <td class="text-nowrap td-actions">
+                                                    <a data-toggle="modal"
+                                                       data-target="#registration-course-details-modal"
+                                                       data-term-id="@Model.Criteria.TermId"
+                                                       data-student-id="@Model.Results[i].Id"
+                                                       data-return-url="@contextPath"
+                                                       Title="Registration information">
+                                                        <i class="la la-info info"></i>
+                                                    </a>
+                                                    <a asp-action="Index" 
+                                                       asp-controller="Registration" 
+                                                       asp-route-code="@Model.Results[i].Code"
+                                                       asp-route-AcademicLevelId="@Model.Criteria.AcademicLevelId"
+                                                       asp-route-TermId="@Model.Criteria.TermId"
+                                                       asp-route-returnUrl="@contextPath"
+                                                       Title="Edit registration">
+                                                        <i class="la la-edit edit"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            recordNumber++;
+                                        }
+                                    </tbody>
+                                }
+                                else
+                                {
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center w-50">#</th>
+                                            <th class="w-50">
+                                                <input id="student-check-all" class="js-check-all" type="checkbox">
+                                                <label class="mt-2 mb-0" for="student-check-all"></label><br>
+                                                <span class="js-item-count">(0)</span>
+                                            </th>
+                                            <th class="text-center">Student Code</th>
+                                            <th>Name</th>
+                                            <th>Division</th>
+                                            <th>Major</th>
+                                            <th>Approved By</th>
+                                            <th>Approved At</th>
+                                            <th>Type</th>
+                                            <th class="text-center w-75">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="js-items">
+                                        @for (int i = 0; i < Model.Results.Count(); i++)
+                                        {
+                                            <tr>
+                                                <td rowspan="2">@recordNumber</td>
+                                                <td>
+                                                    <input id="Model.Results[@i].Code" class="student-checkbox" name="deleteItem" type="checkbox" value="@Model.Results[i].Id">
+                                                    <label class="form-check-input" for="Model.Results[@i].Code"></label>
+                                                </td>
+                                                <td>@Model.Results[i].Code</td>
+                                                <td>@Model.Results[i].FullNameEn</td>
+                                                <td>@Model.Results[i].AcademicInformation.Department.Faculty.NameEn</td>
+                                                <td>@Model.Results[i].AcademicInformation.Department.Faculty.NameEn</td>
+                                                <td>@Model.Results[i].LatePayments[0].ApprovedBy</td>
+                                                <td>@Model.Results[i].LatePayments[0].ApprovedAtText</td>
+                                                <td>@Model.Results[i].LatePayments[0].TypeText</td>
+                                                <td class="text-nowrap td-actions">
+                                                    <a data-toggle="modal"
+                                                       data-target="#registration-course-details-modal"
+                                                       data-term-id="@Model.Criteria.TermId"
+                                                       data-student-id="@Model.Results[i].Id"
+                                                       data-return-url="@contextPath"
+                                                       Title="Registration information">
+                                                        <i class="la la-info info"></i>
+                                                    </a>
+                                                    <a asp-action="Index" 
+                                                       asp-controller="Registration" 
+                                                       asp-route-code="@Model.Results[i].Code"
+                                                       asp-route-AcademicLevelId="@Model.Criteria.AcademicLevelId"
+                                                       asp-route-TermId="@Model.Criteria.TermId"
+                                                       asp-route-returnUrl="@contextPath"
+                                                       Title="Edit registration">
+                                                        <i class="la la-edit edit"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="9">@Model.Results[i].LatePayments[0].Remark</td>
+                                            </tr>
+                                            recordNumber++;
+                                        }
+                                    </tbody>
+                                }
+                                <input asp-for="Criteria.AcademicLevelId" type="hidden" value="@Model.Criteria.AcademicLevelId">
+                                <input asp-for="Criteria.TermId" type="hidden" value="@Model.Criteria.TermId">
+                                <input asp-for="Criteria.FacultyId" type="hidden" value="@Model.Criteria.FacultyId">
+                                <input asp-for="Criteria.DepartmentId" type="hidden" value="@Model.Criteria.DepartmentId">
+                                <input asp-for="Criteria.Code" type="hidden" value="@Model.Criteria.Code">
+                                <input asp-for="Criteria.IsLatePayment" type="hidden" value="@Model.Criteria.IsLatePayment">
+                            }
+                            else
+                            {
+                                <tbody>
+                                    <tr>
+                                        <td class="text-danger"><i>No Data</i></td>
+                                    </tr>
+                                </tbody>
+                            }
+                        </table>
+                    </div>
+                    
+                </div>
+            </div>
+        </form>
+        @(await Component.InvokeAsync<PagerViewComponent>(Model))
+    </div>
+</section>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/delete-all-course.js"></script>
+}
+
+@section Modals {
+    <partial name="_DetailsModal" model="new Student()">
+}

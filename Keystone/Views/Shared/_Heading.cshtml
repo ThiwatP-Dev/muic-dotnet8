@@ -1,0 +1,263 @@
+@{
+    var controllerName = this.ViewContext.RouteData.Values["controller"].ToString();
+    var actionName = this.ViewContext.RouteData.Values["action"].ToString();
+    @* var isStudentInformationFilled =  ? true : false; *@
+}
+
+@{
+    @if(controllerName == "Student" && actionName != "ChangeCurriculum")
+    {
+        <header class="header header--big">
+            <div class="row flex-row justify-content-between p-x-25 p-y-10 ks-heading">
+                <div class="col-6 px-0 text-nowrap">
+                    @if (!string.IsNullOrEmpty(ViewBag.ReturnUrl))
+                    {
+                        <a class="btn-back" href="@ViewBag.ReturnUrl">
+                            <i class="la la-angle-double-left mr-1"></i>Back
+                        </a>
+                    }
+                    
+                    <div class="d-flex align-items-center justify-content-sm-between">
+                        <div class="media m-b-10">
+                            <div class="d-flex m-r-20">
+                                <a href="#" class="darken" data-toggle="modal" data-target="#webcam-modal" data-value="@Model.Code" data-return="student">
+                                    <img class="img-h100 img-cover" src=@ViewData["Profile"] alt="Image Not Found" onerror="this.onerror=null;this.src='/images/default-profile-m.png';">
+                                    <span class="darken">Upload image</span>
+                                </a>
+                            </div>
+                            <div class="media-body">
+                                <h3 class="mb-1 text-uppercase text-truncate">@ViewData["Title"]</h3>
+                                <div class="d-block">
+                                    <span class="color-primary font-size-14">Curriculum Version: @ViewData["CurriculumVersion"] ( @ViewData["SubTitle"] )</span>
+                                </div>
+                                <div class="d-block">
+                                    <span class="color-primary font-size-14 text-uppercase mr-2">gpa:</span> @ViewData["GPA"]
+                                    <span class="color-primary font-size-14 text-uppercase mx-3">Credit:</span> @ViewData["Credit"]
+                                    <span class="color-primary font-size-14 text-uppercase mx-3">Status:</span> <span class="@(ViewData["StudentStatus"].Equals("Delete") || ViewData["StudentStatus"].Equals("Blacklist") ? "text-danger" : "")">@ViewData["StudentStatus"]</span>
+                                    <span class="color-primary font-size-14 text-uppercase mx-3"><partial name="_BooleanActive" model="@ViewData["IsActive"]"></span>
+                                </div>
+                                <div class="d-block">
+                                    <span class="color-primary font-size-14 text-uppercase mx-0">Scholarship:</span> @ViewData["Scholarship"]
+                                    @if (ViewData["Advisor"] != null)
+                                    {
+                                        <span class="color-primary font-size-14 text-uppercase mx-3">Advisor:</span> @ViewData["Advisor"]
+                                    }
+                                    
+                                    <span class="text-danger font-size-14 text-uppercase mx-3">@(ViewData["IsCurrentStudentProbation"].Equals(true) ? "Probation" : "")</span>
+                                    <span class="text-danger font-size-14 text-uppercase mx-3">@(ViewData["IsStudentExtended"].Equals(true) ? "Extended Student" : "")</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="px-0">
+                        <h5>Last updated: @ViewData["LastUpdate"]</h5>
+                    </div>
+                </div>
+                <div class="col-6 px-0 text-right align-self-end">
+                    <ul class="list-inline mb-0">
+                        <li class="list-inline-item mx-3">
+                            <form class="row" asp-route="FindStudentByCode" method="GET">
+                                <div class="form-group m-b-10">
+                                    <input class="form-control search-form" name="code" type="text" placeholder="Student Code">
+                                    <div class="help-block text-danger" asp-validation-summary="ModelOnly"></div>
+                                    <button class="btn btn--primary btn--circle btn--search m-t-2" type="submit">
+                                        <i class="la la-search"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </li>
+                        <li class="list-inline-item mx-3">
+                            <a id="js-save-btn" class="btn btn--primary btn--circle mr-2 mb-0" href="#" onclick="saveTabForm();">
+                                <i class="la la-save"></i>
+                            </a>
+                            <a class="btn btn--primary btn--circle mr-3 mb-0" href="#" onclick="location.reload();">
+                                <i class="la la-refresh"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </header>
+    }
+    else if (controllerName == "Instructor")
+    {
+        if (@ViewBag.DetailsPage == true)
+        {
+            <header class="header header--big">
+                <div class="row flex-row justify-content-between p-x-25 p-y-10 ks-heading">
+                    <div class="col-6 px-0 text-nowrap">
+                        @if (!string.IsNullOrEmpty(ViewBag.ReturnUrl))
+                        {
+                            <a class="btn-back" href="@ViewBag.ReturnUrl">
+                                <i class="la la-angle-double-left mr-1"></i>Back
+                            </a>
+                        }
+                        
+                        <div class="d-flex align-items-center justify-content-sm-between">
+                            <div class="media m-b-10">
+                                <div class="d-flex m-r-20">
+                                    <img class="w-100 h-100 img-cover" src=@ViewData["Profile"] alt="Image Not Found" onerror="this.onerror=null;this.src='/images/default-profile-m.png';">
+                                </div>
+                                <div class="media-body">
+                                    <h3 class="mb-2 text-uppercase text-truncate">@ViewData["Title"]</h3>
+                                    <div class="d-block">
+                                        <span class="color-primary font-size-14">@ViewData["SubTitle"]</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="px-0">
+                            <h5>Last updated: @ViewData["LastUpdate"]</h5>
+                        </div>
+                    </div>
+                    <div class="col-6 px-0 text-right align-self-end">
+                        <ul class="list-inline mb-0">
+                            <li class="list-inline-item mx-3">
+                                <form class="row" asp-controller="Instructor" asp-action="DetailsSearch" method="GET">
+                                    <div class="form-group m-b-10">
+                                        <input id="code" class="form-control search-form" name="code" type="text" placeholder="Instructor ID">
+                                        <div class="help-block text-danger" asp-validation-summary="ModelOnly"></div>
+                                        <button class="btn btn--primary btn--circle btn--search m-t-2" type="submit">
+                                            <i class="la la-search"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                            </li>
+                            <li class="list-inline-item mx-3">
+                                <a class="btn btn--primary btn--circle mb-0" href="#" onclick="location.reload();">
+                                    <i class="la la-refresh"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </header>
+        }
+    }
+    else if (controllerName == "AdmissionStudent" && actionName != "Index"
+             && actionName != "ApplicationFormPreview" && actionName != "TemporaryIdCardPreview")
+    {
+        <header class="header header--big">
+            <div class="row flex-row justify-content-between p-x-25 p-y-10 ks-heading">
+                <div class="col-6 px-0 text-nowrap">
+                    @if (!string.IsNullOrEmpty(ViewBag.ReturnUrl))
+                    {
+                        <a class="btn-back" href="@ViewBag.ReturnUrl">
+                            <i class="la la-angle-double-left mr-1"></i>Back
+                        </a>
+                    }
+                    <div class="d-flex align-items-center justify-content-sm-between">
+                        <div class="media m-b-10">
+                            <div class="d-flex m-r-20">
+                                @if (Model != null && Model.Student != null && Model.Student.Code != null)
+                                {
+                                    <a href="#" class="darken" data-toggle="modal" data-target="#webcam-modal" data-value="@Model.Student.Code" data-return="admission-student">
+                                        <img class="w-100 h-100 img-cover" src=@ViewData["Profile"] alt="Image Not Found" onerror="this.onerror=null;this.src='/images/default-profile-m.png';">
+                                        <span class="darken">Upload image</span>
+                                    </a>
+                                }
+                                else 
+                                {
+                                    <img class="w-100 h-100 img-cover" src=@ViewData["Profile"] alt="Image Not Found" onerror="this.onerror=null;this.src='/images/default-profile-m.png';">
+                                }
+                            </div>
+                            <div class="media-body">
+                                <h3 class="mb-2 text-uppercase text-truncate">@ViewData["Title"]</h3>
+                                <div class="d-block">
+                                    <span class="color-primary font-size-14">@ViewData["SubTitle"]</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="px-0">
+                        <h5>Last updated: @ViewData["LastUpdate"]</h5>
+                    </div>
+                </div>
+                <div class="col-6 d-flex flex-column px-0 text-right justify-content-between">
+                    <div class="text-right">
+                        <a class="btn btn--success btn-mw-120 mb-0 @((bool)ViewData["IsStudentInformationFilled"] == true ? "" : "d-none")" href="#!"
+                           data-toggle="modal"
+                           data-target="#confirm-status-modal"
+                           data-controller="AdmissionStudent" 
+                           data-action="ChangeStudentStatus">
+                            <i class="la la-check mr-1"></i>Confirm Student
+                        </a>
+                    </div>
+                    <ul class="list-inline mb-0">
+                        <li class="list-inline-item mx-3">
+                            <form class="row" asp-controller="AdmissionStudent" asp-action="Details" method="GET">
+                                <div class="form-group m-b-10">
+                                    <input id="code" class="form-control search-form text-uppercase" name="codeOrNumber" type="text" placeholder="Citizen / Passport / Student ID">
+                                    <div class="help-block text-danger" asp-validation-summary="ModelOnly"></div>
+                                    <button class="btn btn--primary btn--circle btn--search m-t-2" type="submit">
+                                        <i class="la la-search"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </li>
+                        <li class="list-inline-item mx-3">
+                            <a class="btn btn--primary btn--circle mr-2 mb-0"
+                               asp-action="Details"
+                               asp-route-returnUrl="@ViewBag.ReturnUrl">
+                                <i class="la la-plus"></i>
+                            </a>
+                            <a id="js-save-btn" class="btn btn--primary btn--circle mr-2 mb-0" href="#" onclick="saveTabForm();">
+                                <i class="la la-save"></i>
+                            </a>
+                            <a class="btn btn--primary btn--circle mr-2 mb-0" href="#" onclick="location.reload();">
+                                <i class="la la-refresh"></i>
+                            </a>
+                            <a class="btn btn--primary btn--circle mb-0"
+                               asp-controller="StudentIdCard"
+                               asp-action="Index"
+                               asp-route-code="StudentId">
+                                <i class="la la-print"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </header>
+    }
+}
+
+<style>
+    .darken {
+        display: inline-block;
+        background: black;
+        padding: 0;
+        overflow:hidden;
+        position:relative;
+        text-align:center;
+    }
+
+    .darken img {
+        display: block;
+        
+        -webkit-transition: all 0.2s linear;
+        -moz-transition: all 0.2s linear;
+            -ms-transition: all 0.2s linear;
+            -o-transition: all 0.2s linear;
+                transition: all 0.2s linear;
+    }
+
+    .darken:hover img {
+        opacity: 0.7;
+                
+    }
+    .darken:hover span {
+        display:block;
+        position:absolute;
+        z-index:9999;
+        bottom:15px;
+        color:white;
+        font-size:12px;        
+    }
+
+    .darken span { 
+        display: none;
+        background-color: transparent;
+        width: 100px;
+        text-align: center;
+    }
+</style>

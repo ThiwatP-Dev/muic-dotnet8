@@ -1,0 +1,20 @@
+@model AbilityBlacklistDepartmentViewModel
+
+<input asp-for="Id" type="hidden">
+<input asp-for="SpecializationGroupBlackListId" type="hidden">
+
+<div class="row form-group">
+    <div class="col-12">
+        <select class="chosen-select form-control" asp-for="DepartmentId" asp-items="ViewBag.Departments">
+            <option selected>Select</option>
+        </select>
+        <label>Major<span class="text-danger">*</span></label>
+    </div>
+</div>
+
+<div class="block__action pb-0">
+    <div class="block__action-row">
+        <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+        <a class="btn btn-mw-120 btn--cancel rounded" href="javascript:void(0);" data-dismiss="modal">Cancel</a>
+    </div>
+</div>

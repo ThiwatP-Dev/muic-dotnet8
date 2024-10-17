@@ -1,0 +1,36 @@
+@{
+	var examinationTypes = ViewBag.ExaminationTypes as List<ExaminationType>;
+}
+
+<div class="modal fadeIn animated" id="allocation-template-modal" tabindex="-1" role="dialog"
+     aria-hidden="true" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+		<div class="modal-content">
+			<div class="block mb-0">
+				<div class="block__body">
+					<div class="block__title text-left height-3">
+						<header>Choose Allocation Type</header>
+					</div>
+					<div class="block__body text-left height-3">
+                        <div class="row form-group">
+							@for (int i = 0 ; i < examinationTypes.Count ; ++i)
+							{
+								<div class="col-4">
+									<input id="examination_type_@i" class="form-check-input" name="allocationType"
+										   type="checkbox" data-value="@examinationTypes[i].NameEn" data-abbr="@examinationTypes[i].Abbreviation" />
+									<label for="examination_type_@i">@examinationTypes[i].NameEn</label>
+								</div>
+							}
+						</div>
+					</div>
+                    <div class="block__action">
+                        <div class="block__action-row">
+                            <button id="js-confirm-selected" class="btn btn-mw-120 btn--primary" type="button">Add</button>
+                            <a class="btn btn-mw-120 btn--cancel rounded" href="javascript:void(0);" data-dismiss="modal">Close</a>
+                        </div>
+                    </div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,293 @@
+@model AdmissionStudentInformation
+
+<section class="ks-admission-info">
+    <form asp-controller="AdmissionStudent" asp-action="SaveAdmissionInformation" method="POST">
+        <div class="block no-shadow h-100x m-b-30">
+            <div class="block__body">
+                <div class="section-title">
+                    <h4>Admission Information</h4>
+                    <input name="Id" id="AdmissionStudentId" value="@Model?.AdmissionInformation?.Id" type="hidden">
+                    <input name="AdmissionInformation.PreviousDocumentId" id="AdmissionStudentPreviousDocumentId" value="@Model?.AdmissionInformation?.AdmissionDocumentGroupId" type="hidden">
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-academic-level js-cascade-admission-academic-level" asp-for="AdmissionInformation.AcademicLevelId"
+                                asp-items="ViewBag.AcademicLevels" data-placeholder="Select">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label for="AdmissionInformation.AcademicLevelId">Academic Level<span class="text-danger">*</span></label>
+                    </div>
+                     <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-admission-term" asp-for="AdmissionInformation.AdmissionTermId"
+                                asp-items="ViewBag.Terms" data-placeholder="Select">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label for="AdmissionInformation.AdmissionTermId">Admission Term<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-admission-round" asp-for="AdmissionInformation.AdmissionRoundId"
+                                asp-items="ViewBag.AdmissionRounds" data-placeholder="Select">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label for="AdmissionInformation.AdmissionRoundId">Admission Round</label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control js-single-date js-cascade-first-class-date" asp-for="AdmissionInformation.AdmissionDate" type="text" autocomplete="off">
+                        <label for="AdmissionInformation.AdmissionDate">Admission Date<span class="text-danger">*</span></label>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-3">
+                        <select class="chosen-select form-control" asp-for="AdmissionInformation.AdmissionTypeId"
+                                asp-items="ViewBag.AdmissionTypes" data-placeholder="Select">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label for="AdmissionInformation.AdmissionTypeId">Admission Type<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-faculty" asp-for="AdmissionInformation.FacultyId"
+                                asp-items="ViewBag.Faculties" data-placeholder="Select">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label for="AdmissionInformation.FacultyId">Division</label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-department" asp-for="AdmissionInformation.DepartmentId"
+                                asp-items="ViewBag.Departments" data-placeholder="Select">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label for="AdmissionInformation.DepartmentId">Major</label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-curriculum-version" asp-for="AdmissionInformation.CurriculumVersionId"
+                                asp-items="ViewBag.AdmissionCurriculumVersions" data-placeholder="Select">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label for="AdmissionInformation.CurriculumVersionId">Curriculum Version</label>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-3">
+                        <input class="form-control js-single-date" asp-for="AdmissionInformation.AppliedAt" type="text" autocomplete="off">
+                        <label for="AdmissionInformation.AppliedAt">Apply Date</label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control" asp-for="AdmissionInformation.EntranceExamResult" asp-items="ViewBag.EntranceExamResults"
+                                data-placeholder="Select">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label for="AdmissionInformation.EntranceExamResult">Entrance Exam Result</label>
+                    </div>
+                    <div class="col-3">
+                        <select class="js-cascade-preschool-country chosen-select form-control" asp-for="AdmissionInformation.GraduatedCountryId"
+                                asp-items="ViewBag.Countries" data-placeholder="Select">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label for="js-cascade-preschool-country">High School Country</label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control" asp-for="AdmissionInformation.AdmissionDocumentGroupId"
+                                asp-items="ViewBag.DocumentGroups" data-placeholder="Select">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label for="AdmissionInformation.AdmissionDocumentGroupId">Document Group</label>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-3">
+                        <select class="chosen-select form-control" asp-for="AdmissionInformation.AgencyId" asp-items="ViewBag.Agencies" data-placeholder="Select">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label for="AdmissionInformation.AgencyId">Representative</label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control" asp-for="AdmissionInformation.ChannelId" asp-items="ViewBag.AdmissionChannels"
+                                data-placeholder="Select">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label for="AdmissionInformation.ChannelId">Channel</label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control" asp-for="AdmissionInformation.AdmissionPlaceId" asp-items="ViewBag.AdmissionPlaces"
+                                data-placeholder="Select">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label for="AdmissionInformation.AdmissionPlaceId">Admission Place</label>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-3">
+                        <input asp-for="AdmissionInformation.ApplicationNumber" type="hidden">
+                        <div class="form-control-label d-flex align-items-center">Application Number</div>
+                        <div class="form-control-plaintext">@Model?.AdmissionInformation?.ApplicationNumber</div>
+                    </div>
+                    <div class="col-3">
+                        <input asp-for="AdmissionInformation.Password" type="hidden">
+                        <div class="form-control-label d-flex align-items-center">Password</div>
+                        <div class="form-control-plaintext">@Model?.AdmissionInformation?.Password</div>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control text-uppercase" asp-for="AdmissionInformation.OfficerName" type="text">
+                        <label for="AdmissionInformation.OfficerName">Officer Name</label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control" asp-for="AdmissionInformation.OfficerPhone" type="text">
+                        <label for="AdmissionInformation.OfficerPhone">Officer Phone</label>
+                    </div>
+                </div>
+
+                <div class="section-title">
+                    <h4>Pre-School</h4>
+                </div>
+                <div class="row form-group">
+                    <div class="col-6">
+                        <select class="chosen-select form-control" asp-for="AdmissionInformation.EducationBackgroundId"
+                                asp-items="ViewBag.EducationBackgrounds" data-placeholder="Select">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label for="AdmissionInformation.EducationBackgroundId">Previous Degree</label>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-4">
+                        <select class="chosen-select form-control js-cascade-previous-school" asp-for="AdmissionInformation.PreviousSchoolId"
+                                asp-items="ViewBag.PreviousSchools" data-placeholder="Select">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label for="js-cascade-previous-school">Previous School Name</label>
+                    </div>
+                    <div class="col-4">
+                        <input class="form-control" asp-for="AdmissionInformation.PreviousGraduatedYear" type="text">
+                        <label for="AdmissionInformation.PreviousGraduatedYear">Grad. Year</label>
+                    </div>
+                    <div class="col-4">
+                        <input class="form-control" asp-for="AdmissionInformation.PreviousSchoolGPA" type="text">
+                        <label for="AdmissionInformation.PreviousSchoolGPA">Previous GPA</label>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-4">
+                        <select class="chosen-select form-control js-cascade-previous-school" asp-for="AdmissionInformation.PreviousBachelorSchoolId" asp-items="ViewBag.PreviousSchools">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label for="AdmissionInformation.PreviousBachelorSchoolId">Previous Bachelor School</label>
+                    </div>
+                    <div class="col-4">
+                        <input class="form-control" asp-for="AdmissionInformation.PreviousBachelorGraduatedYear" type="text">
+                        <label for="AdmissionInformation.PreviousBachelorGraduatedYear">Grad. Year</label>
+                    </div>
+                    <div class="col-4">
+                        <input class="form-control" asp-for="AdmissionInformation.PreviousBachelorSchoolGPA" type="text">
+                        <label for="AdmissionInformation.PreviousBachelorSchoolGPA">Previous GPA</label>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-4">
+                        <select class="chosen-select form-control js-cascade-previous-school" asp-for="AdmissionInformation.PreviousMasterSchoolId" asp-items="ViewBag.PreviousSchools">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label for="AdmissionInformation.PreviousMasterSchoolId">Previous Master School</label>
+                    </div>
+                    <div class="col-4">
+                        <input class="form-control" asp-for="AdmissionInformation.PreviousMasterGraduatedYear" type="text">
+                        <label for="AdmissionInformation.PreviousMasterGraduatedYear">Grad. Year</label>
+                    </div>
+                    <div class="col-4">
+                        <input class="form-control" asp-for="AdmissionInformation.PreviousMasterSchoolGPA" type="text">
+                        <label for="AdmissionInformation.PreviousMasterSchoolGPA">Previous GPA</label>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-6">
+                        <input class="form-control js-single-date" asp-for="AdmissionInformation.CheckDated" type="text" autocomplete="off">
+                        <label for="AdmissionInformation.CheckDated">Checked Date</label>
+                    </div>
+                    <div class="col-6">
+                        <input class="form-control" asp-for="AdmissionInformation.CheckReferenceNumber" type="text">
+                        <label for="AdmissionInformation.CheckReferenceNumber">Check Reference Number</label>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-6">
+                        <input class="form-control js-single-date" asp-for="AdmissionInformation.ReplyDate" type="text" autocomplete="off">
+                        <label for="AdmissionInformation.ReplyDate">Replied Date</label>
+                    </div>
+                    <div class="col-6">
+                        <input class="form-control" asp-for="AdmissionInformation.ReplyReferenceNumber" type="text">
+                        <label for="AdmissionInformation.ReplyReferenceNumber">Reply Reference Number</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <table id="js-exam-table" class="table table-bordered m-0">
+                        <thead>
+                            <tr>
+                                <th>Examination</th>
+                                <th class="text-right w-125">Score</th>
+                                <th class="text-center w-75">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.StudentExemptedExamScores != null && Model.StudentExemptedExamScores.Any())
+                            {
+                                @for (int i = 0; i < Model.StudentExemptedExamScores.Count(); i++)
+                                {
+                                    <tr>
+                                        <td>
+                                            <select class="chosen-select form-control" asp-for="StudentExemptedExamScores[i].ExemptedExaminationId" asp-items="ViewBag.ExemptedExaminations">
+                                                <option selected disabled>Select</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input class="form-control__table" asp-for="StudentExemptedExamScores[i].Score">
+                                            <input asp-for="StudentExemptedExamScores[i].Id" type="hidden">
+                                        </td>
+                                        <td class="text-nowrap td-actions">
+                                            <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                                <i class="la la-trash delete"></i>
+                                            </a>
+                                        </td>
+                                        <input asp-for="StudentExemptedExamScores[i].StudentId" type="hidden">
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td>
+                                        <select class="chosen-select form-control" name="StudentExemptedExamScores[0].ExemptedExaminationId" asp-items="ViewBag.ExemptedExaminations">
+                                            <option selected disabled>Select</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input class="form-control__table" name="StudentExemptedExamScores[0].Score">
+                                    </td>
+                                    <td class="text-nowrap td-actions">
+                                        <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                            <i class="la la-trash delete"></i>
+                                        </a>
+                                    </td>
+                                    <input name="StudentExemptedExamScores[0].StudentId" value="@Model.AdmissionInformation?.StudentId" type="hidden">
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <input asp-for="AdmissionInformation.StudentId" type="hidden">
+                <input asp-for="AdmissionInformation.AdmissionDocumentGroupId" type="hidden">
+                <input asp-for="AdmissionInformation.Id" type="hidden">
+                <input class="js-curriculum-id" asp-for="AdmissionInformation.CurriculumId" type="hidden">
+            </div>
+        </div>
+    </form>
+</section>

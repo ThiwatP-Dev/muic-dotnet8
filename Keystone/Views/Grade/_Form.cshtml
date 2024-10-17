@@ -1,0 +1,53 @@
+@model Grade
+
+<div class="block__title text-left height-3">
+    <header>@ViewData["Title"]</header>
+</div>
+
+<div class="block__body text-left height-3">
+    <div class="form-group">
+        <input class="form-control" asp-for="Name" type="text">
+        <label for="Name">Grade<span class="text-danger">*</span></label>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" asp-for="Weight" type="number">
+        <label for="Weight">Value</label>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" asp-for="DescriptionEn" type="text">
+        <label for="DescriptionEn">English Description</label>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" asp-for="DescriptionTh" type="text">
+        <label for="DescriptionTh">Thai Description</label>
+    </div>
+    
+    <div class="row">
+        <div class="form-check col">
+            <input class="form-check-input" asp-for="IsActive" type="checkbox">
+            <label for="IsActive">Active</label>
+        </div>
+        <div class="form-check col">
+            <input class="form-check-input" asp-for="IsCalculateGPA" type="checkbox">
+            <label for="IsCalculateGPA">Calculate GPA</label>
+        </div>
+        <div class="form-check col">
+            <input class="form-check-input" asp-for="IsCalculateCredit" type="checkbox">
+            <label for="IsCalculateCredit">Calculate Credit</label>
+        </div>
+        <div class="form-check col">
+            <input class="form-check-input" asp-for="IsCalculateRegistrationCredit" type="checkbox">
+            <label for="IsCalculateRegistrationCredit">Calculate Registration Credit</label>
+        </div>
+    </div>
+</div>
+
+<div class="block__action container">
+    <div class="block__action-row">
+        <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+        <a class="btn btn-mw-120 btn--cancel" asp-action="Index">Cancel</a>
+    </div>
+</div>

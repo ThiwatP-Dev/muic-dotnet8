@@ -1,0 +1,46 @@
+@model WithdrawalViewModel
+
+<section>
+    <div class="block mb-3">
+        <div class="block__body">
+            <form asp-controller="Withdrawal" asp-action="Create" asp-route-tabIndex="0">
+                <input id="return-url" asp-for="ReturnUrl" type="hidden">
+                <input asp-for="AcademicLevelId" type="hidden">
+                <input class="js-cascade-term" asp-for="TermId" type="hidden">
+                <div class="row form-group mb-0">
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-course" asp-for="CourseId" asp-items="ViewBag.Courses">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Course<span class="text-danger">*</span></label>
+                    </div>
+ @*                   <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-instructor" asp-items="ViewBag.Instructors" data-placeholder="Select">
+                            <option selected>Select</option>
+                        </select>
+                        <label>Instructor</label>
+                    </div>*@
+                    <div class="col">
+                        <select class="chosen-select form-control js-cascade-section" asp-for="SectionId" asp-items="ViewBag.Sections" data-placeholder="Select">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Section<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col align-self-end text-right text-nowrap">
+                        <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                            <i class="la la-search mr-2"></i>Search
+                        </button>
+                        <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                            Reset
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<div id="flash-message-0"></div>
+<section id="js-withdrawal-course-content">
+    <partial name="_ByCourseDetails" model="Model.WithdrawByCourse">
+</section>

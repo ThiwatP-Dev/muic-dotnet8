@@ -1,0 +1,62 @@
+@model AddDropFeeConfigurationViewModel
+
+<div class="block__title text-left height-3">
+    <header>@ViewData["Title"]</header>
+</div>
+
+<div class="block__body text-left height-3">
+
+     <div class="row form-group">
+        <div class="col-4">
+            <select class="chosen-select form-control js-cascade-academic-level" asp-for="AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                <option selected disabled>Select</option>
+            </select>
+            <label>Academic Level<span class="text-danger">*</span></label>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-4">
+            <select class="chosen-select form-control js-cascade-term" asp-for="FromTermId" asp-items="ViewBag.Terms">
+                <option selected disabled>Select</option>
+            </select>
+            <label>From Term<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-4">
+            <select class="chosen-select form-control js-cascade-term-not-disable" asp-for="ToTermId" asp-items="ViewBag.Terms">
+                <option selected value="">Select</option>
+            </select>
+            <label>To Term</label>
+        </div>
+    </div>
+    
+     <div class="row form-group">
+        <div class="col-4">
+            <input class="form-control" asp-for="Amount" type="number" min="0">
+            <label>Amount<span class="text-danger">*</span></label>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-4">
+            <input class="form-control" asp-for="FreeAddDropCount" type="number" min="0">
+            <label>Add/Drop Quota<span class="text-danger">*</span></label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-check">
+            <input class="form-check-input" asp-for="IsActive" type="checkbox">
+            <label for="IsActive">Active</label>
+        </div>
+    </div>
+</div>
+
+<input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl"/>
+<input asp-for="Id" type="hidden">
+
+<div class="block__action container">
+    <div class="block__action-row">
+        <button type="submit" class="btn btn-mw-120 btn--primary">Save</button>
+        <a class="btn btn-mw-120 btn--cancel" href="@ViewBag.ReturnUrl">Cancel</a>
+    </div>
+</div>

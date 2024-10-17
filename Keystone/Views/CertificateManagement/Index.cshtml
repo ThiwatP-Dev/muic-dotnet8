@@ -1,0 +1,166 @@
+@model PagedResult<StudentCertificate>
+@{ 
+    ViewData["Title"] = "Certificate Management"; 
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+    var recordNumber = Model?.FirstRowOnPage;
+}
+
+<div class="row">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</div>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Certificate</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="CertificateManagement" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group m-b-30">
+                        <div class="col-4">
+                            <select class="chosen-select form-control" asp-for="Criteria.CertificationType" asp-items="ViewBag.CertificateTypes">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Certificate</label>
+                        </div>
+                        <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Academic Level</label>
+                        </div>
+                        <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="ViewBag.Terms">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Term</label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-2">
+                            <input class="form-control" asp-for="Criteria.Code" type="text">
+                            <label>Student Code</label>
+                        </div>
+                        <div class="col-2">
+                            <input class="form-control" asp-for="Criteria.CodeAndName" type="text">
+                            <label>Name</label>
+                        </div>
+                        <div class="col-2">
+                            <input class="form-control js-single-date" asp-for="Criteria.StartedAt" type="text" autocomplete="off">
+                            <label>Request From</label>
+                        </div>
+                        <div class="col-2">
+                            <input class="form-control js-single-date" asp-for="Criteria.EndedAt" type="text" autocomplete="off">
+                            <label>To</label>
+                        </div>
+                        <div class="col-4 align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.RowCount ?? 0))</header>
+            </div>
+
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover js-report-table w-100x">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th>Certificate</th>
+                                <th class="text-center">Code</th>
+                                <th>Name</th>
+                                <th>Channel</th>
+                                <th>Email</th>
+                                <th>Telephone Number</th>
+                                <th class="text-center">Requested Date</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Results.Any())
+                            {
+                                foreach (var item in Model.Results) 
+                                {
+                                    <tr>
+                                        <td>@recordNumber</td>
+                                        <td>@item.CertificateText</td>
+                                        <td>@item.StudentCode</td>
+                                        <td>@item.FullName</td>
+                                        <td>@item.ChannelText</td>
+                                        <td>@item.Email</td>
+                                        <td>@item.TelephoneNumber</td>
+                                        <td>@item.CreatedAtText</td>
+                                        <td>
+                                            <partial name="_BooleanPetitionStatus" model="@item.Status">
+                                        </td>
+                                        <td class="text-nowrap td-actions">
+                                            <a data-toggle="modal"
+                                               data-target="#details-certificate-modal"
+                                               data-value="@item.Id">
+                                                <i class="la la-info info"></i>
+                                            </a>
+                                            <a data-toggle="modal" 
+                                               data-target="#edit-certificate"
+                                               data-value="@item.Id">
+                                                <i class="la la-edit edit"></i>
+                                            </a>
+                                            <a asp-controller="Certificate"
+                                               asp-action="Index"
+                                               asp-route-StudentCode="@item.Code"
+                                               asp-route-CertificationType="@item.Certificate"
+                                               asp-route-Language="@item.Language"
+                                               asp-route-returnUrl="@contextPath"
+                                               asp-route-StudentCertificateId="@item.Id">
+                                                <i class="las la-file-alt"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    recordNumber++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="10">
+                                        <i class="text-danger">No Data</i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Modals {
+    <partial name="_DetailsModal" model="new StudentCertificate()">
+    <partial name="_EditModal" model="new StudentCertificate()">
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/certificate-modal.js"></script>
+}

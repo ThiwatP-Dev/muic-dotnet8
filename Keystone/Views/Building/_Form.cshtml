@@ -1,0 +1,61 @@
+@model Building
+
+<div class="block__title">
+    <header>@ViewData["Title"]</header>
+</div>
+
+<div class="block__body">
+    <div class="form-group">
+        <input class="form-control" asp-for="NameEn" type="text">
+        <label>English Name<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="NameEn"></span>
+    </div>
+    
+    <div class="form-group">
+        <input class="form-control" asp-for="NameTh" type="text">
+        <label>Thai Name</label>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control js-default-min" asp-for="FloorNumber" type="number" min=1>
+        <label>Floor Number<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="FloorNumber"></span>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control js-time-mask" asp-for="OpenedTime">
+        <label>Opened Time</label>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control js-time-mask" asp-for="ClosedTime">
+        <label>Closed Time</label>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" asp-for="Description" type="text">
+        <label>Description</label>
+    </div>
+
+    <div class="form-group">
+        <select class="chosen-select form-control" asp-for="CampusId" asp-items="ViewBag.Campuses">
+            <option>Select</option>
+        </select>
+        <label>Campus<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="CampusId"></span>
+    </div>
+    
+    <div class="row">
+        <div class="form-check">
+            <input class="form-check-input" asp-for="IsActive" type="checkbox">
+            <label for="IsActive">Active</label>
+        </div>
+    </div>
+</div>
+
+<div class="block__action container">
+    <div class="block__action-row">
+        <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+        <a class="btn btn-mw-120 btn--cancel" asp-action="Index">Cancel</a>
+    </div>
+</div>

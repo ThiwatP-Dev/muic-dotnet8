@@ -1,0 +1,53 @@
+@model CreditLoadInformationViewModel
+
+<div id="update-credit-modal" class="modal fadeIn animated js-details-modal" tabindex="-1" role="dialog"
+     aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="block__title">
+				<header>Update Credit Load</header>
+			</div>
+            <div class="block__body">
+
+                <form class="js-update-credit-modal-content ks-from container" asp-controller="Registration" asp-action="UpdateCreditLoad" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group">
+                        <div class="col-6">
+                            <span class="form-control-label">
+                                Min. Credit : <span>@(Model?.MinimumCredit ?? 0)</span>
+                            </span>
+                        </div>
+                        <div class="col-6">
+                            <span class="form-control-label">
+                                Max. Credit : <span>@(Model?.MaximumCredit ?? 0)</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-6">
+                            <input class="form-control" asp-for="MinimumCredit" type="number" min=0>
+                            <label>Changed Credit Min</label>
+                        </div>
+                        <div class="col-6">
+                            <input class="form-control" asp-for="MaximumCredit" type="number" min=0>
+                            <label>Changed Credit Max</label>
+                        </div>
+                    </div>
+
+                    <input asp-for="StudentId" type="hidden">
+                    <input asp-for="Code" type="hidden">
+                    <input asp-for="AcademicLevelId" type="hidden">
+                    <input asp-for="TermId" type="hidden">
+                    <input asp-for="TabIndex" type="hidden">
+                    <input asp-for="ReturnUrl" type="hidden">
+
+                    <div class="block__action-row">
+                        <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+                        <a class="btn btn-mw-120 btn--cancel" data-dismiss="modal">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

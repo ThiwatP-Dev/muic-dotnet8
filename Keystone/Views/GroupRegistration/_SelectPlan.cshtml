@@ -1,0 +1,64 @@
+@model GroupRegistrationViewModel
+
+<div class="block block--underline mb-0">
+    <div class="block__title">
+        <header class="color-primary">
+            Plan List
+        </header>
+        <div class="tools">
+            <a class="btn btn--primary mb-0" asp-controller="Plan" asp-action="Manage">
+                <i class="la la-plus mr-1 font-weight-800"></i> Add Plan
+            </a>
+        </div>
+    </div>
+    <div class="block__body">
+        <div class="col-12 form-group table-responsive">
+            <table class="table table-bordered m-0">
+                <thead>
+                    <tr>
+                        <th class="text-center w-50"></th>
+                        <th class="text-center w-150">Plan Name</th>
+                        <th class="text-center w-150">Registrable Student</th>
+                        <th class="text-center w-150">Total Schedule</th>
+                        <th class="text-center w-150">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.SelectablePlans != null)
+                    {
+                        for (var i = 0; i < Model.SelectablePlans.Count; i++)
+                        {
+                            var plan = Model.SelectablePlans[i];
+                            
+                            <tr>
+                                <th colspan="5">Vincent Mary School of Science and Technology</th>
+                            </tr>
+                            <tr>
+                                <td class="text-center" rowspan="2">
+                                    <input id="plan[@i]" data-plan-title="@plan.Plan.Name" class="form-check-input js-group-registration-plan-selection" name="modelName.plan" type="radio" value="@plan.Plan.Id">
+                                    <label class="form-table" for="plan[@i]"></label>
+                                </td>
+                                <td>@plan.Plan.Name</td>
+                                <td>@plan.RegistrableStudentAmount</td>
+                                <td>@plan.Plan.PlanSchedules.Count</td>
+                                <td class="text-nowrap text-center td-actions" rowspan="2">
+                                    <a data-toggle="modal"
+                                       data-target="#selected-sections-modal" 
+                                       data-value="@plan.Plan.Id">
+                                        <i class="la la-info info"></i>
+                                    </a>
+                                    <a asp-controller="Plan" asp-action="Manage" asp-route-Id="@plan.Plan.Id">
+                                        <i class="la la-edit edit"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="font-size-11" colspan="3"><b>Courses</b>: @plan.PlannedCourse</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

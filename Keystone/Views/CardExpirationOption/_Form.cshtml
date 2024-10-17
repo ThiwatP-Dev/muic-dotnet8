@@ -1,0 +1,48 @@
+@model CardExpirationOption
+
+<div class="block__title">
+    <header>@ViewData["Title"]</header>
+</div>
+
+<div class="block__body">
+    <div class="form-group">
+        <select class="chosen-select form-control js-cascade-academic-level" asp-for="AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+            <option selected disabled>Select</option>
+        </select>    
+        <label>Academic Level<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="AcademicLevelId"></span>
+    </div>
+    
+    <div class="form-group">
+        <select class="chosen-select form-control js-cascade-faculty" asp-for="FacultyId" asp-items="ViewBag.Faculties">
+            <option selected value="">Select</option>
+        </select>    
+        <label>Division</label>
+    </div>
+    
+    <div class="form-group">
+        <select class="chosen-select form-control js-cascade-department" asp-for="DepartmentId" asp-items="ViewBag.Departments">
+            <option selected value="">Select</option>
+        </select>    
+        <label>Major</label>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" asp-for="ValidityYear" type="number" min="0">
+        <label for="ValidityYear">Validity Year<span class="text-danger">*</span></label>
+    </div>
+    
+    <div class="row">
+        <div class="form-check">
+            <input class="form-check-input" asp-for="IsActive" type="checkbox">
+            <label for="IsActive">Active</label>
+        </div>
+    </div>
+</div>
+
+<div class="block__action container">
+    <div class="block__action-row">
+        <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+        <a class="btn btn-mw-120 btn--cancel" asp-action="Index">Cancel</a>
+    </div>
+</div>

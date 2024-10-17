@@ -1,0 +1,93 @@
+@model RegistrationConditionDetailViewModel
+<div class="block__title">
+    <header class="color-primary">Registration Condition Detail</header>
+</div>
+
+<div class="block block--underline mb-0">
+ <div class="block__body">
+        <div class="row form-group mb-3">
+            <div class="col-6">
+                <div class="form-control-label d-flex align-items-center"><h4 class="color-primary">Name</h4></div>
+                <div class="form-control-plaintext text-wrap">@Model?.Name</div>
+            </div>
+        </div>
+
+        <div class="row form-group mb-3">
+            <div class="col">
+                <div class="form-control-label d-flex align-items-center"><h4 class="color-primary">Description</h4></div>
+                <div class="form-control-plaintext text-wrap">@Model?.Description</div>
+            </div>
+        </div>
+        <br/>
+        <div class="row form-group mb-3">
+            <div class="col">
+                <div class="form-control-label d-flex align-items-center"><h4 class="color-primary">Academic Program</h4></div>
+                <div class="form-control-plaintext text-wrap">@Model?.AcademicProgramName</div>
+            </div>
+        </div>
+        <div class="row form-group mb-3">
+            <div class="col-6">
+                <div class="form-control-label d-flex align-items-center"><h4 class="color-primary">Division</h4></div>
+                <div class="form-control-plaintext text-wrap">@Model?.FacultyName</div>
+            </div>
+            <div class="col-6">
+                <div class="form-control-label d-flex align-items-center"><h4 class="color-primary">Major</h4></div>
+                <div class="form-control-plaintext text-wrap">@Model?.DepartmentName</div>
+            </div>
+        </div>
+        <br/>
+        <div class="row form-group mb-3">
+            <div class="col">
+                <div class="form-control-label d-flex align-items-center"><h4 class="color-primary">Student Codes</h4></div>
+                <div class="form-control-plaintext text-wrap">@Model?.StudentCodesText</div>
+            </div>
+        </div>
+        <br/>
+        <div class="row form-group mb-3">
+            <div class="col-3">
+                <div class="form-control-label d-flex align-items-center"><h4 class="color-primary">Batch Code Start</h4></div>
+                <div class="form-control-plaintext text-wrap">@Model?.BatchCodeStart</div>
+            </div>
+            <div class="col-3">
+                <div class="form-control-label d-flex align-items-center"><h4 class="color-primary">Batch Code End</h4></div>
+                <div class="form-control-plaintext text-wrap">@Model?.BatchCodeEnd</div>
+            </div>
+            <div class="col-3">
+                <div class="form-control-label d-flex align-items-center"><h4 class="color-primary">Last Digit Start</h4></div>
+                <div class="form-control-plaintext text-wrap">@Model?.LastDigitStart</div>
+            </div>
+            <div class="col-3">
+                <div class="form-control-label d-flex align-items-center"><h4 class="color-primary">Last Digit End</h4></div>
+                <div class="form-control-plaintext text-wrap">@Model?.LastDigitEnd</div>
+            </div>
+        </div>
+        <br/>
+        <div class="row form-group mb-3">
+            <div class="col-4">
+                <div class="form-control-label d-flex align-items-center"><h4 class="color-primary">Athlete</h4></div>
+                <div class="form-control-plaintext text-wrap">
+                    <partial name="_BooleanActive" model="@Model?.IsAthlete">    
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-control-label d-flex align-items-center"><h4 class="color-primary">Graduating</h4></div>
+                <div class="form-control-plaintext text-wrap">
+                    <partial name="_BooleanActive" model="@Model?.IsGraduating">    
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-control-label d-flex align-items-center"><h4 class="color-primary">Active</h4></div>
+                <div class="form-control-plaintext text-wrap">
+                    <partial name="_BooleanActive" model="@Model?.IsActive">
+                </div>
+            </div>
+        </div>
+        <br/>
+    </div>
+
+    <div class="block__action">
+        <div class="block__action-row">
+            <a class="btn btn-mw-120 btn--cancel rounded" href="javascript:void(0);" data-dismiss="modal">Close</a>
+        </div>
+    </div>
+</div>

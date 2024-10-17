@@ -1,0 +1,88 @@
+@model CheatingStatus
+
+<div class="block__title">
+    <header>@ViewData["Title"]</header>
+</div>
+
+<section>
+    <div class="block__body">
+        <div class="row form-group">
+            <div class="col-4">
+                <select class="chosen-select form-control js-cascade-academic-level" asp-for="Student.AcademicInformation.AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                    <option selected disabled>Select</option>
+                </select>
+                <label>Academic Level<span class="text-danger">*</span></label>
+            </div>
+            <div class="col-4">
+                <select class="chosen-select form-control js-cascade-term" asp-for="TermId" asp-items="@ViewBag.Terms">
+                    <option selected disabled>Select</option>
+                </select>
+                <label>Term<span class="text-danger">*</span></label>
+            </div>
+            <div class="col-4">
+                <input asp-for="StudentCode" type="text" class="form-control js-cascade-student-code">
+                <label>Student Code<span class="text-danger">*</span></label>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-6">
+                <select class="chosen-select form-control js-cascade-course" asp-for="RegistrationCourseId" asp-items="@ViewBag.Course" data-placeholder="Select" autofocus>
+                    <option selected disabled>Select</option>
+                </select>
+                <label>Course<span class="text-danger">*</span></label>
+            </div>
+            <div class="col-6">
+                <select class="chosen-select form-control" asp-for="ExaminationTypeId" asp-items="@ViewBag.ExamType">
+                    <option selected disabled>Select</option>
+                </select>
+                <label>Examination Type<span class="text-danger">*</span></label>
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-12">
+                <select class="chosen-select form-control" asp-for="IncidentId" asp-items="@ViewBag.Incidents">
+                    <option selected value="">Select</option>
+                </select>
+                <label>Punish Type</label>
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-12">
+                <textarea class="form-control text-uppercase" asp-for="Detail" rows="3"></textarea>
+                <label>Detail</label>
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-4">
+                <select class="chosen-select form-control js-cascade-term" asp-for="FromTermId" asp-items="@ViewBag.Terms">
+                    <option selected value="">Select</option>
+                </select>
+                <label>Suspend From</label>
+            </div>
+            <div class="col-3">
+                <select class="chosen-select form-control js-cascade-admission-term" asp-for="ToTermId" asp-items="@ViewBag.Terms">
+                    <option selected value="">Select</option>
+                </select>
+                <label>Suspend To</label>
+            </div>
+        </div>
+    </div>
+    
+    <input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+    <input name="page" type="hidden" value="cheating">
+    <input asp-for="StudentId" type="hidden">
+    <input asp-for="Id" type="hidden">
+    <input asp-for="Student.Code" type="hidden">
+    <input asp-for="Student.FirstNameEn" type="hidden">
+    <input asp-for="Student.LastNameEn" type="hidden">
+
+    <div class="block__action container">
+        <div class="block__action-row">
+            <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+            <a class="btn btn-mw-120 btn--cancel" href="@ViewBag.ReturnUrl">Cancel</a>
+        </div>
+    </div>
+</section>

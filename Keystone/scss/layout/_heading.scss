@@ -1,0 +1,72 @@
+/*------------------------------------
+    Header
+------------------------------------*/
+
+%animate-fadeInDown {
+    transition: background-color 200ms linear;
+    -webkit-animation-duration: .5s;
+    animation-duration: .5s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    -webkit-animation-name: fadeInDown;
+    animation-name: fadeInDown;
+}
+
+
+.header {
+    position: relative;
+
+    &--big {
+        min-height: 170px;
+    }
+
+    &--small {
+        min-height: 125px;
+    }
+}
+
+.ks-heading {
+    position: fixed; /* Set the navbar to fixed position */
+    z-index: 1001;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin-left: 50px;
+    width: calc(100% - 50px);
+    background-color: rgba($white, 1);
+    overflow: hidden;
+    border-top: 0;
+    box-shadow: 0 0 20px rgba($gray, 0.1);
+    @extend %animate-fadeInDown;
+    // @include transition-all;
+
+    h2 {
+        font-size: 1.2rem;
+    }
+
+    &__tools {
+        display: -webkit-box !important;
+        display: -ms-flexbox !important;
+        display: flex !important;
+    }
+
+    &--scrolled {
+        position: fixed; /* Set the navbar to fixed position */
+        z-index: 2001;
+        top: 0;
+        left: 0;
+        right: 0;
+        background-color: rgba($white, 1);
+        overflow: hidden;
+        box-shadow: 0 0 20px rgba($gray, 0.1);
+        @extend %animate-fadeInDown;
+
+        .ks-heading__tools {
+            margin-right: 2.92857rem; 
+
+            a {
+                margin-bottom: 0;
+            }
+        }      
+    }
+}

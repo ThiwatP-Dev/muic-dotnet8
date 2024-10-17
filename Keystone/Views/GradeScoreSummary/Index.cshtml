@@ -1,0 +1,59 @@
+@model GradingScoreSummaryViewModel
+@{
+    ViewData["Title"] = "Grading by Curve";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+
+<div class="row">
+    <div class="ks-page-header col-lg-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</div>
+
+<section class="block">
+        <div class="block block--underline mb-0">
+            <div class="block__title">
+                <header class="color-primary">
+                    Records
+                </header>
+            </div>
+            <div class="block__body">
+                <form asp-controller="GradeScoreSummary" asp-action="Index">
+                    <div class="row form-group mb-0">
+                        @Html.AntiForgeryToken()
+                        <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-academic-level" asp-items="ViewBag.AcademicLevels" asp-for="AcademicLevelId">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Academic Level<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-term" asp-items="ViewBag.Terms" asp-for="TermId">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Term<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-4 align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>            
+                </form>
+            </div>
+        </div>
+        <input name="Model.ReturnUrl" value="@contextPath" hidden/>
+</section>
+
+@if(Model.TermId != 0)
+{
+    <section>
+        <partial name="_Records" model="@Model.GradingStatuses">
+    </section>
+}
+@section Modals {
+    <partial name="_DeleteConfirmModals">
+}

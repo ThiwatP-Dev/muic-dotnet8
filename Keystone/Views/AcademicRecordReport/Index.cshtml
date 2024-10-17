@@ -1,0 +1,220 @@
+@model TranscriptViewModel
+@{ 
+    ViewData["Title"] = "Grade Report";
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>@ViewData["Title"]</header>
+            </div>
+
+            <form asp-controller="AcademicRecordReport" asp-action="Index" method="POST">
+                @Html.AntiForgeryToken()
+                <div class="block__body">
+                    <div class="js-disable-trigger">
+                        <div class="row form-group">
+                            <div class="col-3">
+                                <select class="chosen-select form-control" asp-for="Criteria.Language" asp-items="@ViewBag.Languages"></select>
+                                <label>Language</label>
+                            </div>
+                            <div class="col-3">
+                                <input class="form-control js-single-student" asp-for="Criteria.Code">
+                                <label>Student Code</label>
+                            </div>
+                            <div class="col-3">
+                                <input class="form-control js-multiple-student" asp-for="Criteria.StudentCodeFrom">
+                                <label>Student Code From</label>
+                            </div>
+                            <div class="col-3">
+                                <input class="form-control js-multiple-student" asp-for="Criteria.StudentCodeTo">
+                                <label>To</label>
+                            </div>
+                        </div>
+                        
+                        <div class="row form-group mt-3">
+                            <div class="col-3">
+                                <select class="chosen-select form-control js-multiple-student"
+                                        asp-for="Criteria.AcademicLevelId" asp-items="@ViewBag.AcademicLevels">
+                                    <option selected>Select</option>
+                                </select>
+                                <label>Academic Level</label>
+                            </div>
+                            <div class="col-3">
+                                <select class="chosen-select form-control js-multiple-student"
+                                        asp-for="Criteria.FacultyId" asp-items="@ViewBag.Faculties">
+                                    <option selected>Select</option>
+                                </select>
+                                <label>Division</label>
+                            </div>
+                            <div class="col-3">
+                                <select class="chosen-select form-control js-multiple-student"
+                                        asp-for="Criteria.DepartmentId" asp-items="@ViewBag.Departments">
+                                    <option selected>Select</option>
+                                </select>
+                                <label>Major</label>
+                            </div>
+                            <div class="col-3">
+                                <input class="form-control js-multiple-student" asp-for="Criteria.GraduatedClass">
+                                <label>Graduate Class</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row form-group mt-3">
+                        <div class="col-12 text-right align-self-end">
+                            <button class="btn btn-mw-120 btn--primary" type="submit">Search</button>
+                            <a id="js-reset-btn" class="btn btn-mw-120 btn--reset" asp-action="Index">Reset</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        @if (Model.Transcripts != null && Model.Transcripts.Any())
+        {
+            <form asp-controller="AcademicRecordReport" asp-action="Preview" method="POST">
+                @Html.AntiForgeryToken()
+                <div class="block block--underline">
+                    <div class="block__title">
+                        <header>Search Result (@Model?.Transcripts.Count())</header>
+                    </div>
+
+                    <div class="block__body">
+                        @for (var i = 0; i < Model?.Transcripts.Count(); i++)
+                        {
+                            <div class="block">
+                                <div class="block__body">
+                                    <div class="section-title mb-3">
+                                        <h4>General Infomation</h4>
+                                    </div>
+
+                                    <div class="row form-group">
+                                        <div class="col-3">
+                                            <input class="form-control" asp-for="@Model.Transcripts[@i].StudentCode">
+                                            <label>Student Code</label>
+                                        </div>
+                                        <div class="col-3">
+                                            <input class="form-control" asp-for="@Model.Transcripts[@i].FirstName">
+                                            <label>First Name</label>
+                                        </div>
+                                        <div class="col-3">
+                                            <input class="form-control" asp-for="@Model.Transcripts[@i].MidName">
+                                            <label>Middle Name</label>
+                                        </div>
+                                        <div class="col-3">
+                                            <input class="form-control" asp-for="@Model.Transcripts[@i].LastName">
+                                            <label>Last Name</label>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-6">
+                                            <input class="form-control" asp-for="@Model.Transcripts[@i].Address1">
+                                            <label>Address 1</label>
+                                        </div>
+                                        <div class="col-6">
+                                            <input class="form-control" asp-for="@Model.Transcripts[@i].Address2">
+                                            <label>Address 2</label>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-6">
+                                            <input class="form-control" asp-for="@Model.Transcripts[@i].Address3">
+                                            <label>Address 3</label>
+                                        </div>
+                                        <div class="col-6">
+                                            <input class="form-control" asp-for="@Model.Transcripts[@i].PhoneNumber">
+                                            <label>Address 3</label>
+                                        </div>
+                                    </div>
+                                    <div class="section-title mb-3">
+                                        <h4>Previous Degree, Certificate, Insituition and Year</h4>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-3">
+                                            <input class="form-control" asp-for="@Model.Transcripts[@i].EducationBackground">
+                                            <label>Previous Degree</label>
+                                        </div>
+                                        <div class="col-3">
+                                            <input class="form-control" asp-for="@Model.Transcripts[@i].PreviousSchool">
+                                            <label>Previous School</label>
+                                        </div>
+                                        <div class="col-3">
+                                            <input class="form-control" asp-for="@Model.Transcripts[@i].PreviousSchoolCountry">
+                                            <label>Previous School Country</label>
+                                        </div>
+                                        <div class="col-3">
+                                            <input class="form-control" asp-for="@Model.Transcripts[@i].PreviousGraduatedYear">
+                                            <label>Previous Graduated Year</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="section-title mb-3">
+                                        <h4>Academic Information</h4>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-6">
+                                            <select class="chosen-select form-control js-cascade-curriculum-version" asp-for="@Model.Transcripts[@i].CurriculumVersionId" asp-items="@ViewBag.CurriculumVersions">
+                                                <option selected disabled>Select</option>
+                                            </select>
+                                            <label>Curriculum Version</label>
+                                        </div>
+                                        <div class="col-6">
+                                            <input class="form-control js-transcript-curriculum" asp-for="@Model.Transcripts[@i].Curriculum">
+                                            <label>Curriculum</label>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-3">
+                                            <input class="form-control js-transcript-faculty" asp-for="@Model.Transcripts[@i].Faculty">
+                                            <label>Division</label>
+                                        </div>
+                                        <div class="col-3">
+                                            <input class="form-control js-transcript-department" asp-for="@Model.Transcripts[@i].Department">
+                                            <label>Major</label>
+                                        </div>
+                                        <div class="col-3">
+                                            <input class="form-control" asp-for="@Model.Transcripts[@i].Minor">
+                                            <label>Minor</label>
+                                        </div>
+                                        <div class="col-3">
+                                            <input class="form-control" asp-for="@Model.Transcripts[@i].Concentration">
+                                            <label>Concentration</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="block__action-row px-5 pb-3">
+                    <button class="btn btn-mw-120 btn--primary" type="submit">Preview</button>
+                </div>
+                
+                <input asp-for="Criteria.Code" hidden>
+                <input asp-for="Criteria.StudentCodeFrom" hidden>
+                <input asp-for="Criteria.StudentCodeTo" hidden>
+                <input asp-for="Criteria.AcademicLevelId" hidden>
+                <input asp-for="Criteria.TermId" hidden>
+                <input asp-for="Criteria.AcademicYear" hidden>
+                <input asp-for="Criteria.GraduatedClass" hidden>
+                <input asp-for="Criteria.FacultyId" hidden>
+                <input asp-for="Criteria.DepartmentId" hidden>
+                <input asp-for="Criteria.GPAFrom" hidden>
+                <input asp-for="Criteria.GPATo" hidden>
+                <input asp-for="Criteria.Type" hidden>
+                <input asp-for="Criteria.Purpose" hidden>
+                <input class="js-transcript-language" asp-for="Criteria.Language" hidden>
+                <input asp-for="Criteria.IsUrgent" hidden>
+                <input asp-for="Criteria.ApprovedById" hidden>
+            </form>
+        }
+    </div>
+</section>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/transcript-generator.js"></script>
+}

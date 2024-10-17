@@ -1,0 +1,130 @@
+@model WithdrawalPercentageViewModel
+@{
+    ViewData["Title"] = "Withdrawal Percentage Report";
+    var index = 1;
+}
+
+<section>
+    <div class="block block--underline d-print-none">
+        <div class="block__title">
+            <header>@ViewData["Title"]</header>
+        </div>
+        <form class="form-horizontal" asp-controller="WithdrawalPercentage" asp-action="Index" method="GET">
+            @Html.AntiForgeryToken()
+            <div class="block__body">
+                <div class="row form-group m-b-30">
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Academic Level<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="ViewBag.Terms">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Term<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3">
+                        <h4 class="font-size-default m-y-4">Course</h4>
+                        <select class="chosen-select form-control js-cascade-multiple-course" asp-for="Criteria.CourseIds" asp-items="ViewBag.Courses" data-placeholder="Select" multiple></select>
+                    </div>
+                </div>
+
+                <div class="row form-group mb-0">
+                    <div class="col-12 align-self-end text-right text-nowrap">
+                        <button class="btn btn--primary btn-mw-120 m-r-5" type="submit">
+                            <i class="la la-search mr-2"></i>Search
+                        </button>
+                        <button class="btn btn-mw-120 btn--reset js-reset-btn" type="reset">
+                            Reset
+                        </button>
+                    </div>
+                </div>            
+            </div>
+        </form>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="block block--underline">
+                <div class="block__title">
+                    <header>Search Result (@(Model != null ? Model.WithdrawalPercentageDetails.Count() : 0))</header>
+                    <div class="tools d-print-none">
+                        <button class="btn btn--primary btn-mw-120" onclick="window.print()">
+                            <i class="la la-print mr-1 font-weight-800"></i> Print
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="block__body">
+                    <div class="text-center">
+                        <h4>MAHIDOL University</h4>
+                        <h4>Percentage Comparison of Students Who Withdrwal from the Final Exam</h4>
+                        <h4>Semester @Model.Term</h4>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table id="js-withdrawal-result" class="table table-bordered m-0">
+                            <thead>
+                                <tr>
+                                    <th class="text-center w-50">#</th>
+                                    <th class="text-center w-100">Course Code</th>
+                                    <th>Course Name</th>
+                                    <th class="text-center w-100">No. of Students</th>
+                                    <th class="text-center w-100">Application</th>
+                                    <th class="text-center w-100">%</th>
+                                    <th class="text-center w-100">Debarment</th>
+                                    <th class="text-center w-100">%</th>
+                                    <th class="text-center w-100">Total</th>
+                                    <th class="text-center w-100">%</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.WithdrawalPercentageDetails.Any())
+                                {
+                                    <tr class="table-active">
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-center"><b>Total</b></td>
+                                        <td><b>@Model.TotalNoOfStudents</b></td>
+                                        <td><b>@Model.TotalApplicationWithdrawalStudents</b></td>
+                                        <td><b>@Model.TotalApplicationWithdrawalStudentsPercentageString</b></td>
+                                        <td><b>@Model.TotalDebarmentWithdrawalStudents</b></td>
+                                        <td><b>@Model.TotalDebarmentWithdrawalStudentsPercentageString</b></td>
+                                        <td><b>@Model.TotalNoOfWithdrawalStudent</b></td>
+                                        <td><b>@Model.TotalNoOfWithdrawalStudentPercentageString</b></td>
+                                    </tr>
+                                    @foreach(var item in Model.WithdrawalPercentageDetails)
+                                    {
+                                        <tr>
+                                            <td>@index</td>
+                                            <td>@item.CourseCode</td>
+                                            <td>@item.CourseName</td>
+                                            <td>@item.NoOfStudents</td>
+                                            <td>@(item.WithdrawalStudents.SingleOrDefault(x => x.Type == "Application")?.NoOfStudents ?? 0)</td>
+                                            <td>@item.ApplicationWithdrawalStudentPercentageText</td>
+                                            <td>@(item.WithdrawalStudents.SingleOrDefault(x => x.Type == "Debarment")?.NoOfStudents ?? 0)</td>
+                                            <td>@item.DebarmentWithdrawalStudentPercentageText</td>
+                                            <td>@item.NoOfWithdrawalStudent</td>
+                                            <td>@item.WithdrawalStudentPercentageText</td>
+                                        </tr>
+                                        ++index;
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="8">
+                                            <i class="text-danger">No Data</i>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

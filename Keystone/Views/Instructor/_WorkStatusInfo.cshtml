@@ -1,0 +1,72 @@
+@model Instructor
+
+<div class="ks-instructor-work-status-info">
+    <div class="row">
+        <div class="col-12">
+            <div id="accordion4">
+                <div class="block">
+                    <div class="block__title collapsed" data-toggle="collapse" data-parent="#accordion4" data-target="#accordion4-1">
+                        <header>Work Status Information</header>
+                        <div class="tools">
+                            <div class="btn-group">
+                                <a class="btn btn--white btn--circle">
+                                    <i class="la la-angle-down"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end .block-head -->
+                    <div id="accordion4-1" class="collapse show" aria-expanded="true">
+                        <div class="block__body">
+                            <div class="row">
+                                <div class="form-group mb-3 col-3">
+                                    <div class="form-control-label d-flex align-items-center">Academic Level</div>
+                                    <div class="form-control-plaintext">@Model?.InstructorWorkStatus?.AcademicLevel?.NameEn</div>
+                                </div>
+                                <div class="form-group mb-3 col-3">
+                                    <div class="form-control-label d-flex align-items-center">Division</div>
+                                    <div class="form-control-plaintext">@Model?.InstructorWorkStatus?.Faculty?.NameEn</div>
+                                </div>
+                                <div class="form-group mb-3 col-3">
+                                    <div class="form-control-label d-flex align-items-center">Major</div>
+                                    <div class="form-control-plaintext">@Model?.InstructorWorkStatus?.Department?.NameEn</div>
+                                </div>
+                                <div class="form-group mb-3 col-3">
+                                    <div class="form-control-label d-flex align-items-center">Office room</div>
+                                    <div class="form-control-plaintext">@Model?.InstructorWorkStatus?.OfficeRoom</div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="form-group mb-3 col-3">
+                                    <div class="form-control-label d-flex align-items-center">Type</div>
+                                    <div class="form-control-plaintext">@Model?.InstructorWorkStatus?.InstructorType?.NameEn</div>
+                                </div>
+                                <div class="form-group mb-3 col-3">
+                                    <div class="form-control-label d-flex align-items-center">Ranking</div>
+                                    <div class="form-control-plaintext">@Model?.InstructorWorkStatus?.InstructorRanking?.NameEn</div>
+                                </div>
+                                <div class="form-group mb-3 col-3">
+                                    <div class="form-control-label d-flex align-items-center">Admin Position</div>
+                                    <div class="form-control-plaintext">@Model?.InstructorWorkStatus?.AdminPosition</div>
+                                </div>
+
+                                <div class="form-group mb-3 col-3">
+                                    <div class="form-control-label d-flex align-items-center">Academic Position</div>
+                                    <div class="form-control-plaintext">@Model?.InstructorWorkStatus?.AcademicPosition</div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group mb-3 col-3">
+                                    <div class="form-control-label d-flex align-items-center">Remark</div>
+                                    <div class="form-control-plaintext">@Model?.InstructorWorkStatus?.Remark</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,94 @@
+var dataModel = $('#certificate-preview').data('model');
+
+var page = {
+    p1 : "Reg. C. ",
+    p2 : "GRADUATION STATUS CERTIFICATION",
+    p3 : "This is to certify that as of",
+    p4 : "Adm. No.",
+    p5 : ["has completed", "credits with a cumulative grade point average of"],
+    p6 : "and thus has fulfilled all the requirements towards a ",
+    p7 : "majoring in",
+    p8 : "from Mahidol University of Thailand.",
+    p9 : ["I also certify that English is the medium of instruction and", "assessment at Mahidol Univerisity."],
+    p10 : "Date of Issue :",
+    p11 : ["This is a certified copy. For verification purposes, use this verified code No.", "to check it out at",
+           "www.registrar.au.edu/certificationcheck.html"]
+}
+
+function renderCertificate(dataModel) {
+    var report = new jsPDF('p', 'mm', 'a4');
+    PdfSettings.property(report, dataModel);
+
+    let paddingX = defaultSetting.paddingC,
+        paddingY = defaultSetting.paddingC,
+        currentY = paddingY,
+        centerX = defaultSetting.centerX,
+        lineYL = defaultSetting.LargeLine,
+        lineYN = defaultSetting.NormalLine,
+        lineYS = defaultSetting.SmallLine,
+        fromBottom = defaultSetting.A4Height - (defaultSetting.paddingC / 2);
+
+    var dataBody = dataModel.Body
+        issuedDate = new Date(dataBody.CreatedAt),
+        graduatedDate = new Date(dataBody.GraduatedAt),
+        gpaText = dataBody.GPA == -1 ? 'N/A' : NumberFormat.renderDecimalTwoDigits(dataBody.GPA);
+
+    /* -------------------------------------------------- page 1 --------------------------------------------------*/
+    PdfSettings.format(report, textFormats.serifN)
+    let p1Width = report.getTextWidth(page.p1);
+    report.text(page.p1, paddingX, currentY, PdfSettings.style(textStyles.CertificateLeft))
+          .text(dataBody.ReferenceNumber, paddingX + p1Width, currentY, PdfSettings.style(textStyles.CertificateLeft));
+
+    PdfSettings.format(report, textFormats.serifBoldHeader)
+    report.text(page.p2, centerX, currentY += lineYL, PdfSettings.style(textStyles.CertificateCenter));
+
+    PdfSettings.format(report, textFormats.serifN)
+    report.text(`${ page.p3 } ${ getDateText('en', graduatedDate) }.`, centerX, currentY += lineYL, PdfSettings.style(textStyles.CertificateCenter));
+
+    PdfSettings.format(report, textFormats.serifBoldN)
+    report.text(`${ dataBody.Title } ${ dataBody.StudentFirstName } ${ dataBody.StudentLastName }`, centerX, currentY += lineYL, PdfSettings.style(textStyles.CertificateCenter));
+
+    let p4StudentCode = report.getTextWidth(`${ page.p4 } ${ dataBody.StudentCode }`),
+        p4StudentCodeCenter = p4StudentCode / 2,
+        p4 = report.getTextWidth(page.p4);
+    PdfSettings.format(report, textFormats.serifN)
+    report.text(page.p4, centerX - p4StudentCodeCenter - 1, currentY += lineYL, PdfSettings.style(textStyles.CertificateLeft));
+    PdfSettings.format(report, textFormats.serifBoldN)
+    report.text(GetStudentCodeFormat(dataBody.StudentCode),  centerX - p4StudentCodeCenter + p4, currentY, PdfSettings.style(textStyles.CertificateLeft));
+
+    PdfSettings.format(report, textFormats.serifN)
+    report.text(`${ page.p5[0] } ${ dataBody.CreditEarned } ${ page.p5[1] } ${ gpaText }`, centerX, currentY += lineYN, PdfSettings.style(textStyles.CertificateCenter))
+          .text(`${ page.p6 }`, centerX, currentY += lineYN, PdfSettings.style(textStyles.CertificateCenter))
+          .text(`${ dataBody.DegreeName },`, centerX, currentY += lineYN, PdfSettings.style(textStyles.CertificateCenter))
+          .text(`${ page.p7 } ${ dataBody.DepartmentName }`, centerX, currentY += lineYN, PdfSettings.style(textStyles.CertificateCenter))
+          .text(page.p8, centerX, currentY += lineYN, PdfSettings.style(textStyles.CertificateCenter))
+          .text(page.p9[0], centerX, currentY += lineYN, PdfSettings.style(textStyles.CertificateCenter))
+          .text(page.p9[1], centerX, currentY += lineYN, PdfSettings.style(textStyles.CertificateCenter))
+          .text(`${ page.p10 } ${ getDateText('en', issuedDate) }`, centerX, currentY += lineYN, PdfSettings.style(textStyles.CertificateCenter));
+
+    PdfSettings.format(report, textFormats.serifN)
+    report.text(`( ${ dataBody.ApprovedByName } )`, centerX, currentY += 30, PdfSettings.style(textStyles.CertificateCenter))
+          .text(dataBody.Position, centerX, currentY += lineYS, PdfSettings.style(textStyles.CertificateCenter));
+
+    PdfSettings.format(report, textFormats.serifXS)
+    let verifyCode = (dataBody.VerifyCode).toString(),
+        p11FullText = report.getTextWidth(`${ page.p11[0] } ${ verifyCode } ${ page.p11[1] }`),
+        p11FullTextCenter = p11FullText / 2,
+        p110Width = report.getTextWidth(page.p11[0]),
+        verifyCodeWidth = report.getTextWidth(verifyCode),
+        currentX = centerX - p11FullTextCenter;
+    report.text(page.p11[0], currentX, fromBottom - lineYS, PdfSettings.style(textStyles.CertificateLeft));
+    PdfSettings.format(report, textFormats.serifBoldXS)
+    report.text(verifyCode, currentX += p110Width + 1, fromBottom - lineYS, PdfSettings.style(textStyles.CertificateLeft));
+    PdfSettings.format(report, textFormats.serifXS)
+    report.text(page.p11[1], currentX += verifyCodeWidth + 1, fromBottom - lineYS, PdfSettings.style(textStyles.CertificateLeft));
+    
+    PdfSettings.format(report, textFormats.serifBoldXS)
+    report.text(page.p11[2], centerX, fromBottom, PdfSettings.style(textStyles.CertificateCenter));
+
+    $('#js-print-preview').attr('src', report.output('datauristring'));
+}
+
+$(function() {
+    renderCertificate(dataModel);
+})

@@ -1,0 +1,56 @@
+@model WithdrawalExceptionViewModel
+@Html.AntiForgeryToken()
+@{
+    ViewData["Title"] = "Withdrawal Exception";
+}
+
+<div class="row">
+    <div class="ks-page-header col-lg-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</div>
+
+<section id="withdrawal-exception" class="row">
+    <div class="col-md-12">
+        <div class="tabs-scroller float-left"><i class="la la-angle-double-left"></i></div>
+        <div class="tabs-scroller float-right"><i class="la la-angle-double-right"></i></div>
+        <div class="nav-tabs-wrapper">
+            <ul class="nav nav-tabs ks-tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#nav-tab-0" id="nav-link-0" data-toggle="tab">
+                        Course
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#nav-tab-1" id="nav-link-1" data-toggle="tab">
+                        Division
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="tab-content" id="withdrawal-exception-tab-content">
+            <div class="tab-pane show active" id="nav-tab-0" role="tabpanel">
+                <partial name="_ExceptionCourses"/>
+            </div>
+            <div class="tab-pane" id="nav-tab-1" role="tabpanel">
+                <partial name="_ExceptionFaculties"/>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Modals {
+    <partial name="_DeleteConfirmModalsTab" />
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            var tab = '#nav-link-' + getUrlParameter('tabIndex');
+            $(tab).tab('show');
+        })    
+    </script>
+    <script type="text/javascript" src="~/js/pages/tabs.js"></script>
+    <script type="text/javascript" src="~/js/pages/withdrawal-exception.js"></script> 
+}

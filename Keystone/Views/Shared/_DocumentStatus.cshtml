@@ -1,0 +1,10 @@
+@model string
+
+@if (Model == "c")
+{
+    <span class="js-document-status ks-label bg-success">Complete</span>
+}
+else
+{
+    <span class="js-document-status ks-label bg-danger">Waiting</span>
+}

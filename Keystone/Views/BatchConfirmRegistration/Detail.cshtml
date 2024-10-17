@@ -1,0 +1,205 @@
+@model BatchRegistrationConfirmationJobCreationViewModel
+@{
+    ViewData["Title"] = "Batch Registration Confirmation Job Detail";
+    var searchReturnUrl = ViewBag.ReturnUrl;
+}
+<div class="row">
+    <div class="ks-page-header col-lg-12">
+        <h2 class="ks-page-header__title">
+            <a class="btn-back" href="@searchReturnUrl">
+                <i class="la la-angle-double-left mr-1"></i>Back
+            </a>
+        </h2>
+    </div>
+</div>
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>@ViewData["Title"]</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" disabled>
+                    <div class="row form-group mb-30">
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId"
+                                    asp-items="ViewBag.AcademicLevels" data-placeholder="Select" disabled>
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Academic Level<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-term"
+                                    asp-items="ViewBag.Terms" asp-for="Criteria.TermId" data-placeholder="Select" disabled>
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Term<span class="text-danger">*</span></label>
+                        </div>
+                    </div>
+                    <div class="row form-group mb-30">
+                        <div class="col-3">
+                            <input class="form-control" asp-for="BatchRegistrationConfirmJob.CreatedByFullNameEn" type="text" disabled>
+                            <label>Request By</label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="BatchRegistrationConfirmJob.CreatedDateTimeText" type="text" disabled>
+                            <label>Request At</label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="BatchRegistrationConfirmJob.StartProcessDateTimeThString" type="text" disabled>
+                            <label>Start At</label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="BatchRegistrationConfirmJob.FinishProcessDateTimeThString" type="text" disabled>
+                            <label>Finish At</label>
+                        </div>
+                    </div>
+                    <div class="row form-group mb-30">
+                        <div class="col-3">
+                            <input class="form-control" value="@(Model.BatchRegistrationConfirmJob.IsRunning ? "Is Running"
+                                                    : ((Model.BatchRegistrationConfirmJob.FinishProcessDateTimeUtc.HasValue)
+                                                        ? ((Model.BatchRegistrationConfirmJob.FinishProcessDateTimeUtc - Model.BatchRegistrationConfirmJob.StartProcessDateTimeUtc).Value.ToString("d'd 'h'h 'm'm 's's'"))
+                                                            : "Problem please contract anministrator"))" type="text" disabled>
+                            <label>Run Time</label>
+                        </div>
+                        <div class="col-9">
+                            <input class="form-control" asp-for="BatchRegistrationConfirmJob.RunRemark" type="text" disabled>
+                            <label>Result</label>
+                        </div>
+                    </div>
+                    <div class="row form-group mb-30">
+                        <div class="col-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" asp-for="Criteria.IsCheckCreditLimit" disabled>
+                                <label for="Criteria_IsCheckCreditLimit" title="IsCheckCreditLimit">Check Credit Limit</label>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" asp-for="Criteria.IsExcludeScholarshipStudent" disabled>
+                                <label for="Criteria_IsExcludeScholarshipStudent" title="IsExcludeScholarshipStudent">Exclude Scholarship Student</label>
+                            </div>
+                        </div>
+            @*            <div class="col-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" asp-for="Criteria.IsNotExchangeAdmissionType" disabled>
+                                <label for="Criteria_IsNotExchangeAdmissionType" title="IsNotExchangeAdmissionType">Not Exchange Admission Type</label>
+                            </div>
+                        </div>*@
+                        <div class="col-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" asp-for="Criteria.IsNotExchangeStatus" disabled>
+                                <label for="Criteria_IsNotExchangeStatus" title="IsNotExchangeStatus">Not Exchange Status</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row form-group mb-30">
+                        <div class="col-6">
+                            <h4 class="font-size-default m-y-4">Excluded Major</h4>
+                            <select class="chosen-select form-control" asp-for="Criteria.ExcludeDepartmentIdList"
+                                    asp-items="ViewBag.Departments" data-placeholder="Select" multiple disabled>
+                                @*<option selected value="">Select</option>*@
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <h4 class="font-size-default m-y-4">Include Admission Type</h4>
+                            <select class="chosen-select form-control" asp-for="Criteria.IncludedAdmissionTypeIdList"
+                                    asp-items="ViewBag.AdmissionTypes" data-placeholder="Select" multiple disabled>
+                                @*<option selected value="">Select</option>*@
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row form-group mb-30">
+                        <div class="col-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" asp-for="Criteria.IsRecheckWithUSpark" disabled>
+                                <label for="Criteria_IsRecheckWithUSpark" title="IsRecheckWithUSpark">Force Sync with App</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row form-group mb-0">
+                        <div class="col-12">
+                            <input class="form-control" asp-for="Criteria.ExcludeStudentCodesCsv" type="text" disabled>
+                            <label>Except Student Code</label>
+                        </div>
+                    </div>
+                  
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__body">
+                <div class="col-12">
+                    <h2>Student List to Perform Registration Confirmation</h2>
+                </div>
+                <div class="col-12">
+                    <div class="table-responsive">
+                        <table id="js-batch-confirm-table" class="table table-bordered w-100x js-report-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Student Code</th>
+                                    <th>Student Name</th>
+                                    <th>Faculty</th>
+                                    <th>Department</th>
+                                    <th>Admission Type</th>
+                                    <th>Start Process</th>
+                                    <th>Finish Sync US</th>
+                                    <th>Finish Process</th>
+                                    <th>Status</th>
+                                    <th>Result</th>
+                                </tr>
+                            </thead>
+                            <tbody class="js-items">
+                                @if (Model != null && Model.BatchRegistrationConfirmJobDetailList != null && Model.BatchRegistrationConfirmJobDetailList.Any())
+                                {
+                                    @for (int i = 0; i < Model.BatchRegistrationConfirmJobDetailList.Count; i++)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @(
+                                                    i + 1
+                                                    )
+                                            </td>
+                                            <td>@Model.BatchRegistrationConfirmJobDetailList[i].StudentCode</td>
+                                            <td>@Model.BatchRegistrationConfirmJobDetailList[i].StudentFullName</td>
+                                            <td>@Model.BatchRegistrationConfirmJobDetailList[i].FacultyName</td>
+                                            <td>@Model.BatchRegistrationConfirmJobDetailList[i].DepartmentName</td>
+                                            <td>@Model.BatchRegistrationConfirmJobDetailList[i].AdmissionTypeName</td>
+                                            <td>@Model.BatchRegistrationConfirmJobDetailList[i].StartSyncWithUSparkDateTimeThString</td>
+                                            <td>@Model.BatchRegistrationConfirmJobDetailList[i].FinishSyncWithUSparkDateTimeThString</td>
+                                            <td>@Model.BatchRegistrationConfirmJobDetailList[i].FinishProcessDateTimeThString</td>
+                                            <td>@(Model.BatchRegistrationConfirmJobDetailList[i].IsSuccess ? "Sucess" : (Model.BatchRegistrationConfirmJobDetailList[i].FinishProcessDateTimeUtc.HasValue ? "Error" : "Running"))</td>
+                                            <td>@Model.BatchRegistrationConfirmJobDetailList[i].Result</td>                                            
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="10" class="text-center">
+                                            No Data
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-12 text-right">
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</section>
+
+@section Scripts {
+
+}

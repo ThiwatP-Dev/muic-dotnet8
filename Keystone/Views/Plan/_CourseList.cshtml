@@ -1,0 +1,34 @@
+@model Course
+
+@if(Model != null) 
+{
+    <tr>
+        <td>@Model.Code</td>
+        <td>@Model.NameEn</td>
+        <td class="js-credit">@Model.Credit</td>
+        <td class="js-registration-credit">@Model.RegistrationCredit</td>
+        <td class="text-nowrap td-actions">
+            <span class="js-selected-section">@Model.Sections.Count</span>
+            <a href="!#"
+               data-toggle="modal" 
+               data-target="#selectable-sections-modal"
+               data-id="@Model.Id">
+                <i class="la la-edit edit"></i>
+            </a>
+        </td>
+        <td class="td-actions">
+            <a href="!#"
+               class="js-del-row"
+               data-toggle="modal" 
+               data-target="#delete-row-confirm-modal">
+                <i class="la la-trash delete"></i>
+            </a>
+        </td>
+    </tr>
+}
+else
+{
+    <tr id="default-row">
+        <td class="text-center" colspan="5"><i class="color-danger">No courses</i></td>
+    </tr>
+}

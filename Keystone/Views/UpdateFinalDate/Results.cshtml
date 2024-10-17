@@ -1,0 +1,93 @@
+@model UpdateFinalDateViewModel
+@{ 
+    var successIndex = 1;
+    var failIndex = 1;
+}
+
+<section>
+    <div class="row">
+		<div class="ks-page-header col-lg-12">
+			<h2 class="ks-page-header__title">
+				<a class="btn-back" href="@ViewBag.ReturnUrl">
+					<i class="la la-angle-double-left mr-1"></i>Back
+				</a>
+			</h2>
+		</div>
+	</div>
+
+    <div class="block block--underline">
+		<div class="block__title">
+            <header>Fail Result (@(Model?.Fails.Count() ?? 0))</header>
+        </div>
+
+		<div class="block__body">
+			<div class="table-responsive">
+                <table class="table table-bordered table-hover w-100x">
+                    <thead>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th>Course Code</th>
+                            <th>Course Name</th>
+                            <th class="text-center">Section</th>
+                            <th>Reason</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Fails.Any())
+                        {
+                            foreach (var item in Model.Fails)
+                            {
+                                <tr>
+                                    <td>@failIndex</td>
+                                    <td>@item.CourseCode</td>
+                                    <td>@item.CourseName</td>
+                                    <td>@item.SectionNumber</td>
+                                    <td>@item.Reason</td>
+                                </tr>
+                                failIndex++;
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+		</div>
+	</div>
+    <div class="block block--underline">
+		<div class="block__title">
+            <header>
+                Success Result (@(Model?.Success.Count() ?? 0))</header>
+        </div>
+
+		<div class="block__body">
+			<div class="table-responsive">
+                <table class="table table-bordered table-hover w-100x">
+                    <thead>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th>Course Code</th>
+                            <th>Course Name</th>
+                            <th class="text-center">Section</th>
+                            <th>Reason</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Success.Any())
+                        {
+                            foreach (var item in Model.Success)
+                            {
+                                <tr>
+                                    <td>@successIndex</td>
+                                    <td>@item.CourseCode</td>
+                                    <td>@item.CourseName</td>
+                                    <td>@item.SectionNumber</td>
+                                    <td>@item.Reason</td>
+                                </tr>
+                                successIndex++;
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+		</div>
+	</div>
+</section>

@@ -1,0 +1,77 @@
+@model List<CheatingStatus>
+@{
+    ViewData["Title"] = "Cheating Status";
+    var index = 1;
+}
+
+<section class="ks-cheating">
+    <div class="block block--underline">
+		<div class="block__title">
+			<header>Cheating Status</header>
+		</div>
+
+        <div class="block__body">
+            <div class="table-responsive">
+                <table class="table table-bordered m-0">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th class="text-center">Cheating Term</th>
+                            <th class="text-center">Course</th>
+                            <th class="text-center">Section</th>
+                            <th class="text-center">Exam Type</th>
+                            <th>Punish Type</th>
+                            <th class="text-center">Suspend From</th>
+                            <th class="text-center">Suspend To</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if(Model != null)
+                        {
+                            @foreach (var item in Model.OrderBy(x => x.Term.AcademicYear)
+                                                       .ThenBy(x => x.Term.AcademicTerm))
+                            {
+                                <tr>
+                                    <td rowspan="2">@index</td>
+                                    <td>@item.Term?.TermText</td>
+                                    <td>@item.RegistrationCourse?.Section?.Course?.Code</td>
+                                    <td>@item.RegistrationCourse?.Section?.Number</td>
+                                    <td>@item.ExaminationType?.NameEn</td>
+                                    <td>@item.Incident?.NameEn</td>
+                                    <td>@item.FromTerm?.TermText</td>
+                                    <td>@item.ToTerm?.TermText</td>
+                                    <td class="text-nowrap td-actions">
+                                        <a data-toggle="modal"
+                                           data-target="#details-cheating-status-modal"
+                                           data-value="@item.Id">
+                                            <i class="la la-info info"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="9">@item.Detail</td>
+                                </tr>
+                                ++index;
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td class="text-center" colspan="9">
+                                    <i class="text-danger">No Data</i>
+                                </td>
+                            </tr> 
+                        }
+                    </tbody>
+                </table>
+            </div>	
+        </div>
+    </div>
+</section>
+
+<partial name="~/Views/Student/Cheating/_CreateModal.cshtml" 
+         model="@(ViewData["StudentId"].ToString() == Guid.Empty.ToString() ? new CheatingStatus()
+                                                                            : new CheatingStatus { StudentId = (Guid)ViewData["StudentId"] })">
+<partial name="~/Views/Student/Cheating/_EditModal.cshtml" model="new CheatingStatus()">
+<partial name="~/Views/Student/Cheating/_DetailsModal.cshtml" model="new CheatingStatus()">

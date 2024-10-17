@@ -1,0 +1,105 @@
+@model CertificationViewModel
+@{
+    var index = 0;
+}
+
+<partial name="_FormDetailsHeader" model="@Model">
+
+<div class="row form-group">
+    <div class="col-4">
+        <select class="chosen-select form-control" asp-for="AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+            <option selected disabled>Select</option>
+        </select>
+        <label>Academic Level</label>
+    </div>
+    <div class="col-4">
+        <input class="form-control" asp-for="DegreeName" type="text" autocomplete="off">
+        <label>Degree Name</label>
+    </div>
+    <div class="col-4">
+        <input class="form-control" asp-for="StudyYear">
+        <label>Study Year</label>       
+    </div>
+</div>
+<div class="row form-group">
+    <div class="col-4">
+        <input class="form-control" asp-for="DepartmentName" type="text" autocomplete="off">
+        <label>Major Name</label>
+    </div>
+    <div class="col-4">
+        <input class="form-control" asp-for="ReceiptNumber" type="text" autocomplete="off">
+        <label>Receipt Number</label>
+    </div>
+    <div class="col-4">
+        <input class="form-control js-single-date" asp-for="PaidAt" type="text" autocomplete="off">
+        <label>Payment Date</label>
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table id="js-receipt-items" class="table table-bordered m-0">
+        <thead>
+            <tr>
+                <th class="text-center">#</th>
+                <th>Receipt Item</th>
+                <th>Amount</th>
+                <th class="text-center w-100">Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Receipt != null && Model.Receipt?.ReceiptItems != null && Model.Receipt.ReceiptItems.Any())
+            {
+                @foreach (var item in Model.Receipt.ReceiptItems)
+                {
+                    <tr>
+                        <td>
+                            @(index + 1)
+                        </td>
+                        <td>
+                            <input class="form-control__table" asp-for="@Model.Receipt.ReceiptItems[index].FeeItemName" type="text" autocomplete="off">
+                        </td>
+                        <td>
+                            <input class="form-control__table" asp-for="@Model.Receipt.ReceiptItems[index].TotalAmount" type="number" autocomplete="off">
+                        </td>
+                        <td class="text-nowrap td-actions">
+                            <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                <i class="la la-trash delete"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    ++index;
+                }
+            }
+            else
+            {
+                <tr>
+                    <td>
+                        1
+                    </td>
+                    <td>
+                        <input class="form-control__table" name="Receipt.ReceiptItems[0].FeeItemName" type="text" autocomplete="off">
+                    </td>
+                    <td>
+                        <input class="form-control__table" name="Receipt.ReceiptItems[0].Amount" type="number" autocomplete="off">
+                    </td>
+                    <td class="text-nowrap td-actions">
+                        <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                            <i class="la la-trash delete"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<input asp-for="Language" type="hidden">
+<input asp-for="Pronoun" type="hidden">
+<input asp-for="StudentYear" type="hidden">
+<input asp-for="DepartmentId" type="hidden">
+<input asp-for="TermId" type="hidden">
+<input asp-for="Year" type="hidden">
+<input asp-for="ReceiptId" type="hidden">
+<input asp-for="ReceiptNumber" type="hidden">
+<input asp-for="CreatedAt" type="hidden">
+<input asp-for="ErrorMessage" type="hidden">

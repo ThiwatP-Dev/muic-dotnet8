@@ -1,0 +1,70 @@
+@model List<SectionSearchViewModel>
+
+@{
+    var index = 0;
+}
+<div id="sections-scoring-modal" class="modal fadeIn animated" tabindex="-1" role="dialog"
+     aria-hidden="true" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+		<div class="modal-content">
+			<div class="block block--underline mb-0">
+                <div class="block__title">
+                    <header>Choose Section</header>
+                </div>
+                <div class="block__body">
+                    <div class="form-group">
+                        <div class="table-responsive">
+                            <table id="js-section-scoring-table" class="table table-bordered m-0 js-checklist-sections">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center w-50">
+                                            <input id="check-all-section" class="form-check-input js-check-all" type="checkbox">
+                                            <label class="form-table" for="check-all-section"></label>
+                                        </th>
+                                        <th class="text-center w-150">Course Code</th>
+                                        <th>Course Name</th>
+                                        <th class="text-center w-50">Section</th>
+                                        <th class="text-center w-150">Total Student</th>
+                                        <th class="text-center w-100">Total Withdrawn</th>
+                                    </tr>
+                                </thead>
+                                <tbody  class="js-items">
+                                    @if(Model.Any())
+                                    {
+                                        foreach(var item in Model)
+                                        {
+                                            <tr>
+                                                <td class="text-center">
+                                                    <input id="scoring-section-@(index)" class="form-check-input js-selected-section" name="IsSelected" type="checkbox" data-section-id="@item.SectionId">
+                                                    <label class="form-table" for="scoring-section-@(index)"></label>
+                                                </td>
+                                                <td class="text-center">@item.CourseCode</td>
+                                                <td>@item.CourseName</td>
+                                                <td class="text-center w-50">@item.SectionNumber</td>
+                                                <td>@item.TotalStudent</td>
+                                                <td>@item.TotalWithdrawn</td>
+                                            </tr>
+                                            index++;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td class="text-danger" colspan="7">No Data</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="block__action">
+                    <div class="block__action-row">
+                        <button id="js-section-select-scoring" class="btn btn-mw-120 btn--primary js-section-search-button">Select</button>
+                        <a id="js-reset-data" class="btn btn-mw-120 btn--cancel rounded" href="javascript:void(0);" data-dismiss="modal">Close</a>
+                    </div>
+                </div>
+			</div>
+		</div>
+	</div>
+</div>

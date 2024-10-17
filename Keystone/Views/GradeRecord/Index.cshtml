@@ -1,0 +1,252 @@
+@model GradeRecordViewModel;
+@{
+    ViewData["Title"] = "Grade Record";
+    int i = 0;
+    var returnUrl = (string)ViewBag.ReturnUrl;
+    var action = string.IsNullOrEmpty(returnUrl) ? "Save" : "Approve";
+}
+
+@if (!string.IsNullOrEmpty(returnUrl))
+{
+    <div class="row">
+        <div class="ks-page-header col-lg-12">
+            <h2 class="ks-page-header__title">
+                <a class="btn-back" href="@returnUrl">
+                    <i class="la la-angle-double-left mr-1"></i>Back
+                </a>
+            </h2>
+        </div>
+    </div>
+}
+
+<div class="row">
+    <div class="ks-page-header col-lg-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</div>
+
+<section class="block">
+    <div class="block__body">
+        <form asp-controller="GradeRecord" asp-action="Index" method="GET">
+            <div class="row form-group">
+                @if (string.IsNullOrEmpty(returnUrl))
+                {
+                    <div class="col-6">
+                        <input id="js-barcode-input" class="form-control" asp-for="BarcodeNumber" autofocus>
+                        <label>Record Code or Barcode<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-6 align-self-center">
+                        <button class="btn btn-mw-120 btn--primary" type="submit">
+                            <i class="la la-search mr-2"></i>Search
+                        </button>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-6">
+                        <input asp-for="BarcodeNumber" type="hidden">
+                        <div class="form-control-label d-flex align-items-center">Record Code or Barcode</div>
+					    <div class="form-control-plaintext">@Model?.BarcodeNumber</div>
+                    </div>
+                }
+            </div>
+        </form>
+
+        <hr class="mb-4">
+        
+        <form id="js-save-record" asp-controller="GradeRecord" asp-action="@action" method="POST">
+            <div class="row form-group">
+                <div class="col-6">
+                    <table class="table table-bordered m-0">
+                        <tr>
+                            <th>Course</th>
+                            <td>@Model.BarcodeInfromation?.Course?.CourseAndCredit</td>
+                        </tr>
+                        <tr>
+                            <th>Section</th>
+                            <td>@Model.BarcodeInfromation?.Sections</td>
+                        </tr>
+                        <tr>
+                            <th>Generate Date</th>
+                            <td>@Model.BarcodeInfromation?.GeneratedAtText</td>
+                        </tr>
+                        <tr>
+                            <th>Generate By</th>
+                            <td>@Model.BarcodeInfromation?.CreatedByFullNameEn</td>
+                        </tr>
+                        <tr>
+                            <th>Published</th>
+                            <td>
+                                <partial name="_BooleanPublishStatus" model="@Model.Status" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Total Published Student</th>
+                            <td>@Model.PublishedStudent</td>
+                        </tr>
+                        <tr>
+                            <th>Total Section Student</th>
+                            <td>@Model.SectionStudent</td>
+                        </tr>
+                        <tr>
+                            <th>Approved By</th>
+                            <td>@Model.BarcodeInfromation?.ApprovedByFullNameEn</td>
+                        </tr>
+                        <tr>
+                            <th>Approved Date</th>
+                            <td>@Model.BarcodeInfromation?.ApprovedAtText</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-6">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Range</th>
+                                <th class="text-center">Grade</th>
+                                <th class="text-center">Frequency</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.LetterGradingRanges != null && Model.LetterGradingRanges.Any())
+                            {
+                                foreach (var item in Model.LetterGradingRanges)
+                                {
+                                    <tr>
+                                        <td>@item.Range</td>
+                                        <td>@item.Grade</td>
+                                        <td>@item.Frequency</td>
+                                    </tr>
+                                }
+                            }
+                            else 
+                            {
+                                <tr>
+                                    <td class="text-center text-danger" colspan="3">
+                                        <i>No Data</i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Range</th>
+                                <th class="text-center">Grade</th>
+                                <th class="text-center">Frequency</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.PassFailGradingRanges != null && Model.PassFailGradingRanges.Any())
+                            {
+                                foreach (var item in Model.PassFailGradingRanges)
+                                {
+                                    <tr>
+                                        <td>@item.Range</td>
+                                        <td>@item.Grade</td>
+                                        <td>@item.Frequency</td>
+                                    </tr>
+                                }
+                            }
+                            else 
+                            {
+                                <tr>
+                                    <td class="text-center text-danger" colspan="3">
+                                        <i>No Data</i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Student Code</th>
+                            <th>Student Name</th>
+                            <th class="text-center">Section</th>
+                            <th class="text-center">Grade</th>
+                            <th class="text-center">Published</th>
+                            <th class="text-center">Total Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.StudentRecords != null && Model.StudentRecords.Any())
+                        {
+                            foreach (var item in Model.StudentRecords)
+                            {
+                                <input asp-for="StudentRecords[i].RegistrationCourseId" type="hidden" value="@item.RegistrationCourseId">
+                                <input asp-for="StudentRecords[i].Grade" type="hidden" value="@item.Grade">
+                                <input asp-for="StudentRecords[i].StudentScoreId" type="hidden" value="@item.StudentScoreId">
+                                ++i;
+                                <tr>
+                                    <td>@item.StudentCode</td>
+                                    <td>@item.StudentName</td>
+                                    <td>@item.CourseAndSection</td>
+                                    <td class="text-nowrap">@item.Grade</td>
+                                    <td class="text-center">
+                                        <partial name="_BooleanResult" model="@item.IsPublished" />
+                                    </td>
+                                    <td>@item.TotalScore</td>
+                                </tr>
+                            }
+                        }
+                        else 
+                        {
+                            <tr>
+                                <td class="text-center text-danger" colspan="7">
+                                    <i>No Data</i>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <input id="barcode-number" asp-for="BarcodeNumber" hidden>
+            <input class="js-section-id" asp-for="SectionId" hidden>
+            <input class="js-barcode-id" asp-for="SectionId" hidden>
+            <input id="return-url" name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+            
+            <div class="block__action-row mr-3">
+                @* <a class="btn btn-mw-120 btn--primary @(!string.IsNullOrEmpty(returnUrl)
+                                                        || (string.IsNullOrEmpty(returnUrl)
+                                                            && Model.BarcodeInfromation?.ApprovedAt != null) ? "" : "d-none")"
+                   data-toggle="modal"
+                   data-target="#confirm-modal"
+                   data-form-id="#js-save-record">
+                    @(string.IsNullOrEmpty(returnUrl) ? "Publish" : "Approve")
+                <a class="btn btn-mw-120 btn--danger" data-toggle="modal"
+                   data-target="#js-cancel-grade-modal">
+                    Cancel
+                </a> *@
+
+                @if (string.IsNullOrEmpty(returnUrl))
+                {
+                    <a class="btn btn-mw-120 btn--cancel" asp-controller="GradeRecord" asp-action="Index">
+                        Reset
+                    </a>
+                }
+                else
+                {
+                    <a class="btn btn-mw-120 btn--cancel" href="@ViewBag.ReturnUrl">Back</a>
+                }
+                
+            </div>
+        </form>
+    </div>
+</section>
+
+@section Modals {
+    <partial name="_ConfirmModals">
+    <partial name="_CancelGradeModals">
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/grade-record.js"></script>
+}

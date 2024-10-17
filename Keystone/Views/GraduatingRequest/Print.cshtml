@@ -1,0 +1,84 @@
+@model GraduatingRequestViewModel
+@{
+    ViewData["Title"] = "Graduating Grouping Course Log " + @Model.Student.FullNameEn;
+    var searchReturnUrl = ViewBag.ReturnUrl;
+    var contextPath = $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+
+<section>
+    <div class="row">
+        <div class="ks-page-header col-lg-12">
+            <h2 class="ks-page-header__title">
+                <a class="btn-back" href="@searchReturnUrl">
+                    <i class="la la-angle-double-left mr-1"></i>Back
+                </a>
+            </h2>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="block block--underline">
+        <div class="block__title">
+            <header>
+                <h3 class="ks-page-header__title">@Model.Student.Code @Model.Student.FullNameEn</h3>
+            </header>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__body">
+                @if (Model.CourseGroups != null)
+                {
+                    <hr>
+                    <form id="js-save-change-curriculum" class="form-horizontal" asp-controller="ChangeCurriculum" asp-action="Submit" method="POST">
+                        <div class="form-group">
+                            <div class="row form-group">
+                                @if (Model.CourseGroups != null && Model.CourseGroups.Any()) 
+                                {
+                                    @foreach (var courseGroup in Model.CourseGroups)
+                                    {
+                                        if (courseGroup.Courses.Any())
+                                        {
+                                            <div class="col-6 mb-2">
+                                                <div class="mb-2">
+                                                    <h4 class="font-weight-700">@courseGroup.CourseGroupName</h4>
+                                                    <table class="table table-bordered">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="text-center">Code</th>
+                                                                <th>Name</th>
+                                                                <th class="text-center">Grade</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach (var detail in courseGroup.Courses)
+                                                            {
+                                                                <tr>
+                                                                    <td>@detail.CourseCode</td>
+                                                                    <td>@detail.CourseName</td>
+                                                                    <td>@Html.Raw(detail.GradeName)</td>
+                                                                </tr>
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/course-categorize.js"></script>
+}

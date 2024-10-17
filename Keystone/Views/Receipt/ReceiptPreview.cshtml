@@ -1,0 +1,27 @@
+@model ReportViewModel
+@{ 
+    ViewData["Title"] = "Registration Receipt Preview";
+    var receiptPreview = Model.Body as ReceiptPreviewViewModel;
+}
+
+<div class="row">
+    <div class="ks-page-header col-lg-12">
+        <a class="btn-back" href="@ViewBag.ReturnUrl">
+            <i class="la la-angle-double-left mr-1"></i>Back
+        </a>
+    </div>
+</div>
+
+<img id="js-muic-logo" src="~/images/logo-muic-url.png" hidden>
+
+<partial name="_PdfPreview" model="@Model">
+
+<section>
+    <div class="block__action-row pr-0">
+        <a class="btn btn-mw-120 btn--success" href="@ViewBag.ReturnUrl">Finish</a>
+    </div>
+</section>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/pdf-render/registration-receipt.js"></script>
+}

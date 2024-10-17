@@ -1,0 +1,33 @@
+@model Event
+
+<div class="block__title text-left height-3">
+    <header>@ViewData["Title"]</header>
+</div>
+
+<div class="block__body text-left height-3">
+    <div class="form-group">
+        <input asp-for="NameEn" type="text" class="form-control">
+        <label>English Name<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="NameEn"></span>
+    </div>
+
+    <div class="form-group">
+        <input asp-for="NameTh" type="text" class="form-control">
+        <label>Thai Name<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="NameTh"></span>
+    </div>
+
+    <div class="form-group">
+        <select asp-for="EventCategoryId" asp-items="ViewBag.EventCategories" class="chosen-select form-control js-event-category">
+            <option selected="true" disabled="disabled">Select</option>
+        </select>
+        <label for="EventCategoryId">Category</label>
+    </div>
+</div>
+
+<div class="block__action container">
+    <div class="block__action-row">
+        <button id="js-save-event" type="submit" class="btn btn-mw-120 btn--primary">Save</button>
+        <a asp-action="Index" class="btn btn-mw-120 btn--cancel">Cancel</a>
+    </div>
+</div>

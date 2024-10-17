@@ -1,0 +1,73 @@
+@model GroupRegistrationViewModel
+@{
+    ViewData["Title"] = "Group Registration";
+}
+
+<div class="row">
+    <div class="ks-page-header col-lg-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</div>
+
+<section class="block">
+    <form asp-controller="GroupRegistration" asp-action="Index" method="GET">
+         @Html.AntiForgeryToken()
+        <div class="block__body">
+            <div class="row form-group mb-0">
+                <div class="col-3">
+                    <select id="js-select-academic-level-id" class="chosen-select form-control js-cascade-academic-level" 
+                            asp-for="AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                        <option disabled selected>Select</option>
+                    </select>
+                    <label>Academic Level</label>
+                </div>
+                <div class="col-3">
+                    <select class="chosen-select form-control js-cascade-term" asp-for="TermId" asp-items="ViewBag.Terms">
+                        <option selected>Select</option>
+                    </select>
+                    <label>Term</label>
+                </div>
+                <div class="col-6 align-self-end">
+                    <button class="btn btn-mw-120 btn--primary mb-0" type="submit">
+                        <i class="la la-search mr-2"></i>
+                        <span class="bold">Search</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="flash-message-0"></div>
+    </form>
+</section>
+
+@if (Model.TermId > 0)
+{
+    <form id="group-registration-wizard">
+        <h3>Select students</h3>
+        <section class="js-select-students">
+            <partial name="_SelectStudents" model="@Model"/>
+        </section>
+
+        <h3>Select a plan</h3>
+        <section class="js-select-plan">
+            <partial name="_SelectPlan" model="@Model"/>
+        </section>
+
+        <h3>Confirm registration</h3>
+        <section class="js-select-schedule">
+            <partial name="_SelectSchedule" model="@Model"/>
+        </section>
+
+        <input asp-for="TermId" type="hidden">
+        <span id="js-term-id" hidden>@Model.TermId</span>
+    </form>
+}
+
+
+@section Modals {
+    <partial name="_CourseGradeInputModal" />
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/group-registration.js"></script>
+}

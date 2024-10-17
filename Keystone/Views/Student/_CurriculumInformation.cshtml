@@ -1,0 +1,130 @@
+@model Student
+@{
+    var index = 1;
+    var curriculum = Model.CurriculumInformations;
+    var tabPermission = Model.TabPermissions?.FirstOrDefault(x => x.Tab.ToUpper() == "CURRICULUM");
+    var isEditable = tabPermission?.IsWritable  ?? false;
+}
+
+@if(curriculum != null && curriculum.Any())
+{
+    <div class="tools text-right m-b-5">
+        @if (isEditable)
+        {
+            <a class='btn btn--primary' 
+               asp-controller="CurriculumInformation"
+               asp-action="Create"
+               asp-route-studentId="@curriculum[0].StudentId"
+               asp-route-facultyId="@curriculum[0].FacultyId"
+               asp-route-departmentId="@curriculum[0].DepartmentId"
+               asp-route-academiclevelId="@curriculum[0].Student.AcademicInformation.AcademicLevelId">
+                <i class="la la-plus mr-2 font-weight-800"></i>Add Curriculum Information
+            </a>
+        }
+    </div>
+    foreach(var item in curriculum)
+    {
+        <section class="ks-instructor-general-info">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel-group">
+                        <div class="block">
+                            <div class="block__body" style="position: relative;">
+                                <div class="text-nowrap text-right">
+                                    @if (isEditable)
+                                    {
+                                        <a asp-controller="CurriculumInformation"
+                                       asp-action="Edit"
+                                       asp-route-Id="@item.Id">
+                                            <i class="la la-edit edit btn btn--primary"></i>
+                                        </a>
+                                        <a data-toggle="modal" 
+                                       data-target="#delete-confirm-modal"
+                                       data-controller="CurriculumInformation"
+                                       data-action="Delete"
+                                       data-value="@item.Id">
+                                            <i class="la la-trash delete btn btn--primary"></i>
+                                        </a>
+                                    }
+                                </div>
+                                <div class="row">
+                                    <div class="form-group mb-3 col-md-3 col-xl-3">
+                                        <div class="section-title"><h4>Curriculum</h4></div>
+                                        <div class="form-control-plaintext">@item.CurriculumVersion?.Curriculum?.CodeAndName</div>
+                                    </div>
+                                    <div class="form-group mb-3 col-md-3 col-xl-9">
+                                        <div class="section-title"><h4>Curriculum Version</h4></div>
+                                        <div class="form-control-plaintext text-uppercase">@item.CurriculumVersion?.CodeAndName</div>
+                                    </div>
+                                </div>
+
+                                <hr/>
+
+                                <div class="row">
+                                    <div class="form-group mb-3 col-md-3 col-xl-3">
+                                        <div class="section-title"><h4>Division</h4></div>
+                                        <div class="form-control-plaintext">@item.Department?.NameEn</div>
+                                    </div>
+                                    <div class="form-group mb-3 col-md-3 col-xl-3">
+                                         <div class="section-title"><h4>Major</h4></div>
+                                        <div class="form-control-plaintext">@item.Department?.Faculty?.NameEn</div>
+                                    </div>
+                                    <div class="form-group mb-3 col-md-3 col-xl-3">
+                                        <div class="section-title"><h4>Study Plan</h4></div>
+                                        <div class="form-control-plaintext">@item.StudyPlan?.YearText</div>
+                                    </div>
+                                    <div class="form-group mb-3 col-md-3 col-xl-3">
+                                        <partial name="_BooleanActive" model="@item.IsActive" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="section-title"><h4>Specialization Information</h4></div>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover w-100x">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">#</th>
+                                                <th>Type</th>
+                                                <th>Name</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (item.SpecializationGroupInformations != null && item.SpecializationGroupInformations.Any())
+                                            {
+                                                foreach (var detail in item.SpecializationGroupInformations) 
+                                                {
+                                                    <tr>
+                                                        <td>@index</td>
+                                                        <td>@detail.SpecializationGroup?.TypeText</td>
+                                                        <td>@detail.SpecializationGroup?.NameEn</td>
+                                                    </tr>
+                                                    ++index;
+                                                }
+                                                index = 1;
+                                            }
+                                            else
+                                            {
+                                                <tr>
+                                                    <td colspan="3" class="text-center">
+                                                        <i class="text-danger">No Data</i>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!--end .block -->
+                    </div>
+                </div>
+                <!-- End General Information -->
+            </div>
+        </section>
+    }
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/curriculum-information.js"></script>
+}

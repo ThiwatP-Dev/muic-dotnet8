@@ -1,0 +1,118 @@
+<div id="selectable-sections-modal" class="modal fadeIn animated" tabindex="-1" role="dialog"
+     aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div id="modalWrapper">
+                <div class="block__title text-left">
+                    <header class="d-flex justify-content-between py-3">
+                        <h3 class="color-primary align-self-center">
+                            BG1001 - English I
+                        </h3>
+                        <div class="tools">
+                            <span class="form-group mb-0">
+                                <input id="js-section-search" class="form-control search-form--mini" type="text" name="section-number" placeholder="Section">
+                                <i class="la la-search inline-icon"></i>
+                            </span>
+                        </div>
+                    </header>
+                </div>
+
+                <div class="block mb-0">
+                    <div class="block__body">
+                        <div class="form-group d-flex justify-content-between">
+                            <a id="js-check-all" class="btn btn--primary mb-0">
+                                <i class="far fa-check-square mr-1"></i> Select All
+                            </a>
+                            <span class="align-self-center">
+                                <input id="js-seat-available" class="form-check-input" type="checkbox"/>
+                                <label class="enable-item m-0" for="js-seat-available">Only Available Seat</label>
+                            </span>
+                        </div>
+
+                        <div class="block p-3 js-suggestion-parent">
+                            <div class="media">
+                                <div>
+                                    <input id="item[0]" class="form-check-input js-selectable-section" 
+                                           type="checkbox" name="selectableSection" value="item.Id" checked/>
+                                    <label class="color-primary m-0" for="item[0]"></label>
+                                </div>
+                                <div class="mx-w-70x ml-2 mr-auto">
+                                    <div class="color-primary js-focus-item">Section 541</div>
+                                    <div class="font-size-12">
+                                        <p class="mb-0"><b>TUE</b> 09:00 - 12:00</p>
+                                        <p class="mb-0"><b>TUE</b> 13:00 - 16:00</p>
+                                    </div>
+                                </div>
+                                <div class="color-primary text-right">
+                                    <img class="align-top w-20 mr-1" src="~/images/seat.svg">
+                                    <span class="seat-count">9</span>
+                                    <div class="color-black font-size-12">
+                                        <p class="mb-0">Instructor Firstname</p>
+                                        <p class="mb-0">Rotcurtsni Secondname</p>
+                                        <p class="mb-0">Tructorins Thirdname</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="block p-3 js-suggestion-parent">
+                            <div class="media">
+                                <div>
+                                    <input id="item[1]" class="form-check-input js-selectable-section" 
+                                           type="checkbox" name="selectableSection" value="item.Id" checked/>
+                                    <label class="color-primary m-0" for="item[1]"></label>
+                                </div>
+                                <div class="mx-w-70x ml-2 mr-auto js-suggestion-parent">
+                                    <div class="color-primary js-focus-item">Section 542</div>
+                                    <div class="font-size-12">
+                                        <p class="mb-0"><b>TUE</b> 09:00 - 12:00</p>
+                                        <p class="mb-0"><b>TUE</b> 13:00 - 16:00</p>
+                                    </div>
+                                </div>
+                                <div class="color-primary text-right">
+                                    <img class="align-top w-20 mr-1" src="~/images/seat.svg">
+                                    <span class="seat-count">0</span>
+                                    <div class="color-black font-size-12">
+                                        <p class="mb-0">Instructor Firstname</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="block p-3 js-suggestion-parent">
+                            <div class="media">
+                                <div>
+                                    <input id="item[2]" class="form-check-input js-selectable-section" 
+                                           type="checkbox" name="selectableSection" value="item.Id" checked/>
+                                    <label class="color-primary m-0" for="item[2]"></label>
+                                </div>
+                                <div class="mx-w-70x ml-2 mr-auto js-suggestion-parent">
+                                    <div class="color-primary js-focus-item">Section 543</div>
+                                    <div class="font-size-12">
+                                        <p class="mb-0"><b>TUE</b> 09:00 - 12:00</p>
+                                        <p class="mb-0"><b>TUE</b> 13:00 - 16:00</p>
+                                    </div>
+                                </div>
+                                <div class="color-primary text-right">
+                                    <img class="align-top w-20 mr-1" src="~/images/seat.svg">
+                                    <span class="seat-count">37</span>
+                                    <div class="color-black font-size-12">
+                                        <p class="mb-0">Instructor Firstname</p>
+                                        <p class="mb-0">Rotcurtsni Secondname</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="block__action">
+                        <div class="block__action-row">
+                            <button id="js-select-section" class="btn btn-mw-120 btn--primary" type="button">Save</button>
+                            <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-mw-120 btn--cancel rounded">Close</a>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </div>
+    </div>
+</div>

@@ -1,0 +1,189 @@
+@model DeleteStudentViewModel
+@{ 
+    ViewData["Title"] = "Delete Students";
+}
+
+<section>
+    <div class="row">
+        <div class="ks-page-header col-lg-12">
+            <h2 class="ks-page-header__title">
+                <a class="btn-back" href="@ViewBag.ReturnUrl">
+                    <i class="la la-angle-double-left mr-1"></i>Back
+                </a>
+            </h2>
+        </div>
+    </div>
+
+    <div class="block block--underline">
+        <div class="block__title">
+            <header>Search Students</header>
+        </div>
+
+        <div class="block__body">
+            <form class="form-horizontal" asp-controller="DeleteStudent" asp-action="Delete" method="GET">
+                @Html.AntiForgeryToken()
+                <div class="row form-group m-b-30">
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels" data-placeholder="Select">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Academic Level<span class="text-danger">*</span></label>
+                    </div>
+
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-admission-round" asp-for="Criteria.AdmissionRoundId" asp-items="ViewBag.AdmissionRounds" data-placeholder="Select">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Admission Round</label>
+                    </div>
+
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="ViewBag.Faculties" data-placeholder="Select">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Division</label>
+                    </div>
+
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentId" asp-items="ViewBag.Departments" data-placeholder="Select">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Major</label>
+                    </div>
+                </div>
+
+                <div class="row form-group m-b-30">
+                    <div class="col-3">
+                        <input class="form-control" asp-for="Criteria.StudentCodeFrom" type="number">
+                        <label>Student Code From<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control" asp-for="Criteria.StudentCodeTo" type="number">
+                        <label>To<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control" asp-for="Criteria.FirstName" type="text">
+                        <label>First Name</label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control" asp-for="Criteria.LastName" type="text">
+                        <label>Last Name</label>
+                    </div>
+                </div>
+
+                <div class="row form-group mb-0">
+                    <div class="col-3">
+                        <select class="chosen-select form-control" asp-for="Criteria.NationalityId" asp-items="ViewBag.Nationalities" data-placeholder="Select">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Nationality</label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control" asp-for="Criteria.Status" asp-items="ViewBag.StudentStatus"></select>
+                        <label>Status</label>
+                    </div>
+                    <div class="col-3 align-self-end">
+                        <input id="IsNonRegist" class="form-check-input" asp-for="Criteria.NonRegistration" type="checkbox">
+                        <label for="IsNonRegist">Non-registration</label>
+                    </div>
+
+                    <input name="returnUrl" value="@ViewBag.ReturnUrl" type="hidden">
+
+                    <div class="col-3 align-self-end text-right text-nowrap">
+                        <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">
+                            <i class="la la-search mr-2"></i>Search
+                        </button>
+                        <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                            Reset
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@if (Model != null && Model.SearchDeleteStudents != null)
+{
+    <section class="row">
+        <div class="col-12">
+            <div class="block block--underline">
+                <div class="block__title">
+                    <header>Student List (@(Model?.SearchDeleteStudents?.Count ?? 0))</header>
+                </div>
+
+                <div class="block__body">
+                    <form class="form-horizontal" asp-controller="DeleteStudent" asp-action="Delete" method="POST">
+                        <div class="d-flex justify-content-between py-1 mb-2">
+                            <span class="color-primary font-weight-700">Choose Student</span>
+                            <span class="form-group mb-0">
+                                <input id="js-search" class="form-control search-form--mini" type="text" placeholder="Code or Name">
+                                <i class="la la-search inline-icon"></i>
+                            </span>
+                        </div>
+
+                        <div class="box-scroll__content border js-render-nicescroll p-0">
+                            <table id="js-delete-students" class="table table-bordered m-0">
+                                <thead class="scroll-header">
+                                    <tr>
+                                        <th class="w-25 text-center">
+                                            <input id="checkAll" class="js-check-all" name="Students" type="checkbox">
+                                            <label class="mt-2 mb-0 m-l-2" for="checkAll"></label>
+                                            <div class="text-center">
+                                                <span class="js-item-count">(0)</span>
+                                            </div>
+                                        </th>
+                                        <th class="w-125 text-center">Code</th>
+                                        <th class="w-300">Name</th>
+                                        <th class="w-250">Division</th>
+                                        <th class="w-250">Major</th>
+                                        <th class="w-115 text-center">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="js-items">
+                                    @if (Model.SearchDeleteStudents != null || Model.SearchDeleteStudents.Any())
+                                    {
+                                        for (int i = 0; i < Model.SearchDeleteStudents.Count; i++)
+                                        {
+                                            <tr class="js-suggestion-parent">
+                                                <td class="w-25">
+                                                    <input id="SearchDeleteStudents[@i]" class="form-check-input js-add-student" name="SearchDeleteStudents[@i].IsChecked" type="checkbox" value="@Model.SearchDeleteStudents[i].IsChecked">
+                                                    <label class="js-focus-item m-0" for="SearchDeleteStudents[@i]"></label>
+                                                </td>
+                                                <td class="w-125 text-center js-focus-item">@Model.SearchDeleteStudents[i].Code</td>
+                                                <td class="w-300 js-focus-item">@Model.SearchDeleteStudents[i].FullName</td>
+                                                <td class="w-250">@Model.SearchDeleteStudents[i].Faculty</td>
+                                                <td class="w-250">@Model.SearchDeleteStudents[i].Department</td>
+                                                <td class="w-125 text-center">@Model.SearchDeleteStudents[i].StudentStatusText</td>
+                                                <input name="SearchDeleteStudents[@i].StudentId" type="hidden" value="@Model.SearchDeleteStudents[i].StudentId">
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="6">
+                                                <i class="text-danger">No Data</i>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <input name="returnUrl" value="@ViewBag.ReturnUrl" type="hidden">
+
+                        <div class="block__action-row">
+                            <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+                            <a class="btn btn-mw-120 btn--cancel" href="@ViewBag.ReturnUrl">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/delete-students.js"></script>
+}

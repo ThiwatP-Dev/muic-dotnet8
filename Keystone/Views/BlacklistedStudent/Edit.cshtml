@@ -1,0 +1,19 @@
+@model BlacklistedStudent
+@{ 
+    ViewData["Title"] = "Edit Blacklisted Student"; 
+}
+
+<section class="row">
+    <div class="col-lg-12">
+        <div class="block block--underline">
+            <form asp-controller="BlacklistedStudent" asp-action="Edit" method="POST">
+                @Html.AntiForgeryToken()
+                <partial name="_Form">
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/blacklisted-student.js"></script>
+}

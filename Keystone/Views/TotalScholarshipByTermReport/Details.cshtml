@@ -1,0 +1,74 @@
+@model TotalStudentDetailViewModel
+@{
+    var index = 1;
+}
+
+<section class="row">
+ <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">
+            <a class="btn-back" href="@ViewBag.ReturnUrl">
+                <i class="la la-angle-double-left"></i>
+            </a>
+            <span>Total Student</span>
+        </h2>
+ </div>
+</section>
+
+<section>
+    <div class="block__body">
+        <div class="row form-group">
+            <div class="col-4">
+                <div class="form-control-label d-flex align-items-center">Term</div>
+                    <div class="form-control-plaintext">@Model.Term</div>
+            </div>
+            <div class="col-4">
+                <div class="form-control-label d-flex align-items-center">ScholarShip Type</div>
+                    <div class="form-control-plaintext">@Model.ScholarshipTypeNameEn</div>
+            </div>
+            <div class="col-4">
+                <div class="form-control-label d-flex align-items-center">Total Used Amount</div>
+                    <div class="form-control-plaintext">@Model.TotalUsedAmountText</div>
+            </div>
+        </div>
+    </div>  
+        <table class="table table-bordered js-report-table m-0 w-100x">
+            <thead>
+                <tr>
+                    <th class="text-center">#</th>
+                    <th class="text-center">Code</th>
+                    <th>Name</th>
+                    <th>Division</th>
+                    <th>Major</th>
+                    <th>Scholarship</th>
+                    <th class="text-right">Used Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null)
+                {
+                    foreach (var item in Model.TotalStudentDetails)
+                    {
+                        <tr>
+                            <td>@index</td>
+                            <td>@item.Code</td>
+                            <td>@item.FullNameEn</td>
+                            <td>@item.FacultyNameEn</td>
+                            <td>@item.DepartmentNameEn</td>
+                            <td>@item.ScholarshipNameEn</td>
+                            <td>@item.TotalAmountText</td>
+                        </tr>
+                        ++index;
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td class="text-center" colspan="7">
+                            <i class="text-danger">No data</i>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</section>

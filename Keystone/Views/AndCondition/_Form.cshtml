@@ -1,0 +1,58 @@
+@model AndCondition
+
+<div class="block__title">
+    <header>@ViewData["Title"]</header>
+</div>
+
+<div class="block__body">
+    <div class="row form-group">
+        <div class="col-6">
+            <select class="chosen-select form-control js-first-condition-type" asp-for="FirstConditionType" asp-items="ViewBag.ConditionTypes">
+                <option selected disabled>Select</option>
+            </select>
+            <label>Type</label>
+        </div>
+        <div class="col-6">
+            <select class="chosen-select form-control js-first-condition" asp-for="FirstConditionId" asp-items="ViewBag.FirstConditions">
+                <option selected disabled>Select</option>
+            </select>
+            <label>First Condition</label>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-6">
+            <select class="chosen-select form-control js-second-condition-type" asp-for="SecondConditionType" asp-items="ViewBag.ConditionTypes">
+                <option selected disabled>Select</option>
+            </select>
+            <label>Type</label>
+        </div>
+        <div class="col-6">
+            <select class="chosen-select form-control js-second-condition" asp-for="SecondConditionId" asp-items="ViewBag.SecondConditions">
+                <option selected disabled>Select</option>
+            </select>
+            <label>Second Condition</label>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-6">
+            <input class="form-control js-single-date" asp-for="ExpiredAt" type="text" autocomplete="off">
+            <label>Expired Date</label>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-6 form-check">
+            <input class="form-check-input" asp-for="IsActive" type="checkbox">
+            <label for="IsActive">Active</label>
+        </div>
+    </div>
+    <input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+    <div class="block__action container">
+        <div class="block__action-row">
+            <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+            <a class="btn btn-mw-120 btn--cancel" href="@ViewBag.ReturnUrl">Cancel</a>
+        </div>
+    </div>
+</div>

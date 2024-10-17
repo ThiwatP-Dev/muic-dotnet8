@@ -1,0 +1,19 @@
+@model AcademicCalendar
+@{ 
+    ViewData["Title"] = "Edit Academic Calendar"; 
+}
+
+<section class="row">
+    <div class="col-lg-12">
+        <div class="block block--underline">
+            <form class="ks-form container" asp-controller="AcademicCalendar" asp-action="Edit" method="post">
+                @Html.AntiForgeryToken()
+                <partial name="_Form"/>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/ajax-cascading/event-calendar.js"></script>
+}

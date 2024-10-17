@@ -1,0 +1,171 @@
+@model PagedResult<CumulativeGPAReportViewModel>
+@{
+    ViewData["Title"] = "Cumulative GPA Report";
+    var recordNumber = Model?.FirstRowOnPage;
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+
+<div class="row">
+    <div class="ks-page-header col-lg-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</div>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <form asp-controller="CumulativeGPAReport" asp-action="Index" class="form-horizontal" method="GET">
+                @Html.AntiForgeryToken()
+                <div class="block__body">
+                    <div class="row form-group m-b-30">
+                        <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels" data-placeholder="Select">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Academic Level<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-4">
+                            <h4 class="font-size-default m-y-4">Division</h4>
+                            <select class="chosen-select form-control js-cascade-multiple-faculty" asp-for="Criteria.FacultyIds" asp-items="ViewBag.Faculties" data-placeholder="Select" multiple></select>
+                        </div>
+                        <div class="col-4">
+                            <h4 class="font-size-default m-y-4">Major</h4>
+                            <select class="chosen-select form-control js-cascade-multiple-department" asp-for="Criteria.DepartmentIds" asp-items="ViewBag.Departments" data-placeholder="Select" multiple></select>
+                        </div>
+                    </div>
+                    
+                    <div class="row form-group m-b-30">
+                        <div class="col-4">
+                            <h4 class="font-size-default m-y-4">Batch</h4>
+                            <select class="chosen-select form-control" asp-for="Criteria.Batches" asp-items="ViewBag.Batches" data-placeholder="Select" multiple></select>
+                        </div>
+                        <div class="col-4">
+                            <h4 class="font-size-default m-y-4">Student Fee Type</h4>
+                            <select class="chosen-select form-control" asp-for="Criteria.StudentTypeIds" asp-items="ViewBag.StudentFeeTypes" data-placeholder="Select" multiple></select>
+                        </div>
+                        <div class="col-4">
+                            <h4 class="font-size-default m-y-4">Resident Type</h4>
+                            <select class="chosen-select form-control" asp-for="Criteria.ResidentTypeIds" asp-items="ViewBag.ResidentTypes" data-placeholder="Select" multiple></select>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-2">
+                            <input class="form-control" asp-for="Criteria.GPAFrom" type="number">
+                            <label>CGPA From</label>
+                        </div>
+                        <div class="col-2">
+                            <input class="form-control" asp-for="Criteria.GPATo" type="number">
+                            <label>CGPA To</label>
+                        </div>
+                        <div class="col-4">
+                            <h4 class="font-size-default m-y-4">Student Status</h4>
+                            <select class="chosen-select form-control" asp-for="Criteria.StudentStatuses" asp-items="ViewBag.StudentStatuses" data-placeholder="Select" multiple></select>
+                        </div>
+                        <div class="col-4 align-self-center text-right">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button type="reset" class="btn btn-mw-120 btn--reset mb-0 js-reset-btn">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <form class="form-horizontal export-excel-form" asp-controller="CumulativeGPAReport" asp-action="ExportExcel" method="POST">
+            <div class="block block--underline">
+                <div class="block__title">
+                    <div>
+                        <header>Search Result (@(Model?.RowCount ?? 0))</header>
+                            <header class="float-right">
+                            <input name="returnUrl" value="@contextPath" type="hidden">
+                            <button class="btn btn--primary mb-0 js-export-excel" type="submit">Export Excel</button>
+                        </header>
+                    </div>
+                </div>
+
+                <div class="block__body unset-overflow">
+                    <div class="table-responsive">
+                        <table class="table table-bordered m-0 w-100x">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">#</th>
+                                    <th class="text-center">Code</th>
+                                    <th>Name</th>
+                                    <th class="text-center">Major</th>
+                                    <th class="text-center">CGPA</th>
+                                    <th class="text-center">Registration Credit</th>
+                                    <th class="text-center">Completed Credit</th>
+                                    <th class="text-center">Student Fee Type</th>
+                                    <th class="text-center">Resident Type</th>
+                                    <th class="text-center">Admission Type</th>
+                                    <th class="text-center">Student Status</th>
+                                    <th class="text-center">Registration Term</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.Results.Any())
+                                {
+                                    var i = 0;
+                                    foreach (var item in Model.Results) 
+                                    {
+                                        <tr>
+                                            <td>@recordNumber</td>
+                                            <td>@item.StudentCode</td>
+                                            <td>@item.FullName</td>
+                                            <td>@item.Major</td>
+                                            <td>@item.CGPA</td>
+                                            <td>@item.CreditEarned</td>
+                                            <td>@item.CompleteCredit</td>
+                                            <td>@item.StudentType</td>
+                                            <td>@item.ResidentType</td>
+                                            <td>@item.AdmissionType</td>
+                                            <td>@item.StudentStatus</td>
+                                            <td>@item.RegistrationTerm</td>
+                                        </tr>
+                                        <input name="[@i].StudentCode" value="@item.StudentCode" type="hidden">
+                                        <input name="[@i].Title" value="@item.Title" type="hidden">
+                                        <input name="[@i].FirstName" value="@item.FirstName" type="hidden">
+                                        <input name="[@i].MidName" value="@item.MidName" type="hidden">
+                                        <input name="[@i].LastName" value="@item.LastName" type="hidden">
+                                        <input name="[@i].Major" value="@item.Major" type="hidden">
+                                        <input name="[@i].CGPA" value="@item.CGPA" type="hidden">
+                                        <input name="[@i].CreditEarned" value="@item.CreditEarned" type="hidden">
+                                        <input name="[@i].CompleteCredit" value="@item.CompleteCredit" type="hidden">
+                                        <input name="[@i].StudentType" value="@item.StudentType" type="hidden">
+                                        <input name="[@i].ResidentType" value="@item.ResidentType" type="hidden">
+                                        <input name="[@i].AdmissionType" value="@item.AdmissionType" type="hidden">
+                                        <input name="[@i].StudentStatus" value="@item.StudentStatus" type="hidden">
+                                        <input name="[@i].RegistrationTerm" value="@item.RegistrationTerm" type="hidden">
+                                        
+                                        i++;
+                                        recordNumber++;
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td class="text-center" colspan="11">
+                                            <i class="text-danger">No data</i>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/cumulative-gpa-report.js"></script>
+}

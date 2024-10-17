@@ -1,0 +1,107 @@
+@model StudentTransferViewModel
+@{ 
+    ViewData["Title"] = "Summary";
+    var index = 0;
+    var listIndex = 0;
+    var courseIndex = 0;
+}
+
+<input name="returnUrl" value="@ViewBag.ReturnUrl" type="hidden">
+<div class="form-group">
+    <input asp-for="StudentId" type="hidden">
+    <input asp-for="StudentCode" type="hidden">
+    <input asp-for="StudentFirstName" type="hidden">
+    <input asp-for="StudentLastName" type="hidden">
+    <input asp-for="CurriculumId" type="hidden">
+    <input asp-for="CurriculumVersionId" class="js-get-curriculum-version" type="hidden">
+    <input asp-for="CurriculumName" type="hidden">
+    <input asp-for="CurriculumVersionName" type="hidden">
+    <input asp-for="TransferUniversityId" type="hidden">
+    <input asp-for="CountChangedTime" type="hidden">
+
+    @foreach (var item in Model.StudentCourses)
+    {
+        <input asp-for="@Model.StudentCourses[courseIndex].TermId" type="hidden">
+        <input asp-for="@Model.StudentCourses[courseIndex].TermText" type="hidden">
+        <input asp-for="@Model.StudentCourses[courseIndex].CourseGroupId" type="hidden">
+        <input asp-for="@Model.StudentCourses[courseIndex].CourseGroupName" type="hidden">
+        <input asp-for="@Model.StudentCourses[courseIndex].CourseId" type="hidden">
+        <input asp-for="@Model.StudentCourses[courseIndex].CourseCode" type="hidden">
+        <input asp-for="@Model.StudentCourses[courseIndex].CourseName" type="hidden">
+        <input asp-for="@Model.StudentCourses[courseIndex].SectionId" type="hidden">
+        <input asp-for="@Model.StudentCourses[courseIndex].SectionNumber" type="hidden">
+        <input asp-for="@Model.StudentCourses[courseIndex].GradeId" type="hidden"/>
+        <input asp-for="@Model.StudentCourses[courseIndex].GradeName" type="hidden"/>
+        <input asp-for="@Model.StudentCourses[courseIndex].IsNewCourse" type="hidden"/>
+        <input asp-for="@Model.StudentCourses[courseIndex].RegistrationCourseId" type="hidden"/>
+        courseIndex++;
+    }
+
+    @foreach (var item in Model.StudentCourseEquivalents)
+    {
+        <input asp-for="@Model.StudentCourseEquivalents[index].RegistrationCourseId" type="hidden">
+        <input asp-for="@Model.StudentCourseEquivalents[index].TermId" type="hidden">
+        <input asp-for="@Model.StudentCourseEquivalents[index].NewCourseId" type="hidden">
+        <input asp-for="@Model.StudentCourseEquivalents[index].SectionId" type="hidden">
+        <input asp-for="@Model.StudentCourseEquivalents[index].CurrentCourseId" type="hidden">
+        <input asp-for="@Model.StudentCourseEquivalents[index].CurrentCourseGrade" type="hidden">
+        <input asp-for="@Model.StudentCourseEquivalents[index].GradeId" type="hidden">
+        <input asp-for="@Model.StudentCourseEquivalents[index].NewGradeId" type="hidden">
+        <input asp-for="@Model.StudentCourseEquivalents[index].GradeName" type="hidden">
+        <input asp-for="@Model.StudentCourseEquivalents[index].IsStarCourse" type="hidden">
+        index++;
+    }
+
+    <table id="js-match-course" class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Transfer Course</th>
+                <th class="text-center">Transfer Grade</th>
+                <th>Course</th>
+                <th class="text-center">Grade</th>
+                <th class="text-center">Star</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.StudentCourseEquivalents != null && Model.StudentCourseEquivalents.Any()) 
+            {
+                foreach (var item in Model.StudentCourseEquivalents)
+                {
+                    <tr>
+                        <td>
+                            @item.CurrentCourseName
+                        </td>
+                        <td>@item.CurrentCourseGrade</td>
+                        <td>@item.NewCourseName</td>
+                        <td>@item.GradeName</td>
+                        <td>
+                            <partial name="_BooleanCheck" model="@item.IsStarCourse"></partial>
+                        </td>
+                    </tr>
+
+                    listIndex++;
+                }
+            }
+            else
+            {
+                <tr>
+                    <td class="text-center" colspan="5">
+                        <i class="text-danger">No Data</i>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="form-group text-right mb-0">
+    @if (Model.StudentCourseEquivalents != null && Model.StudentCourseEquivalents.Any())
+    {
+        <button class="btn btn-mw-120 btn--primary" asp-action="Submit" type="submit">Save</button>
+    }
+    else
+    {
+        <a href="#!" class="btn btn-mw-120 btn--primary" data-toggle="modal" data-target="#confirm-modal" data-form-id="#js-save-change-curriculum">Save</a>
+    }
+    <button class="btn btn-mw-120 btn--cancel" asp-action="MatchCourses" type="submit">Cancel</button>
+</div>

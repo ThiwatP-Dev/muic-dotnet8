@@ -1,0 +1,55 @@
+@model StudentIdCardViewModel
+
+@if (Model == null)
+{
+    <div class="row form-group mb-0">
+        <div class="col-12 disable-item">
+            <i class="text-danger">No Data</i>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row form-group m-b-30">
+        <div class="col-4">
+            <div class="form-control-label d-flex align-items-center">Title</div>
+            <div class="form-control-plaintext">@Model.StudentIdCardDetail.Title</div>
+        </div>
+        <div class="col-4">
+            <div class="form-control-label d-flex align-items-center">First Name</div>
+            <div class="form-control-plaintext">@Model.StudentIdCardDetail.FirstName</div>
+        </div>
+        <div class="col-4">
+            <div class="form-control-label d-flex align-items-center">Last Name</div>
+            <div class="form-control-plaintext">@Model.StudentIdCardDetail.LastName</div>
+        </div>
+    </div>
+
+    <div class="row form-group m-b-30">
+        <div class="col-4">
+            <select class="chosen-select form-control js-cascade-examination-type" asp-for="ExaminationType" asp-items="ViewBag.ExaminationTypes">
+                <option selected disabled>Select</option>
+            </select>
+            <label>Examination Type<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-4">
+            <select class="chosen-select form-control js-cascade-examination-date" asp-for="ExaminationDate" asp-items="ViewBag.ExaminationDate">
+                <option selected disabled>Select</option>
+            </select>
+            <label>Examination Date<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-4">
+            <select class="chosen-select form-control js-cascade-examination-course" asp-for="CourseId" asp-items="ViewBag.ExaminationCourses">
+                <option selected disabled>Select</option>
+            </select>
+            <label>Course<span class="text-danger">*</span></label>
+        </div>
+    </div>
+
+    <input asp-for="StudentIdCardDetail.Code" type="hidden">
+    <input asp-for="StudentIdCardDetail.Title" type="hidden">
+    <input asp-for="StudentIdCardDetail.FirstName" type="hidden">
+    <input asp-for="StudentIdCardDetail.LastName" type="hidden">
+    <input asp-for="StudentIdCardDetail.ProfileImageURL" type="hidden">
+    <input class="js-error-message" asp-for="ErrorMessage" type="hidden">
+}

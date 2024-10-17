@@ -1,0 +1,95 @@
+@model List<RegistrationSlotCondition>
+@{
+    var index = 1;
+}
+
+<table class="table table-bordered m-0">
+    <thead>
+        <tr>
+            <th class="text-center">#</th>
+            <th>Condition Name</th>
+            <th>Conditions</th>
+            @* <th>Program</th>
+            <th>Division</th>
+            <th>Major</th>
+            <th>Batch code start</th>
+            <th>Batch code end</th>
+            <th>Last digit start</th>
+            <th>Last digit end</th> *@
+            @* <th class="text-center">Graduating</th> *@
+            @* <th class="text-center">Athlete</th> *@
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@index</td>
+                <td style="text-align: left !important;">@item.RegistrationCondition.Name</td>
+                <td style="text-align: left !important;">
+                    @if(@item.RegistrationCondition.AcademicLevel != null)
+                    {
+                        <b>Academic Level:</b> @item.RegistrationCondition.AcademicLevel?.NameEn <br>
+                    }
+                    @if(@item.RegistrationCondition.AcademicProgram != null)
+                    {
+                        <b>Academic Program:</b> @item.RegistrationCondition.AcademicProgram?.NameEn <br>
+                    }
+                    @if(@item.RegistrationCondition.Faculty != null)
+                    {
+                        <b>Division:</b> @item.RegistrationCondition.Faculty?.NameEn <br>
+                    }
+                    @if(@item.RegistrationCondition.Department != null)
+                    {
+                        <b>Major:</b> @item.RegistrationCondition.Department?.Code
+                    }
+                    @if(@item.RegistrationCondition.Batch != "")
+                    {
+                        <b>Batch:</b> @item.RegistrationCondition.Batch <br>
+                    }
+                    @if(@item.RegistrationCondition.LastDigit != "")
+                    {
+                        <b>Last Digit:</b> @item.RegistrationCondition.LastDigit <br>
+                    }
+                    @if(@item.RegistrationCondition.StudentCodeRange != "")
+                    {
+                        <b>Code Range:</b> @item.RegistrationCondition.StudentCodeRange <br>
+                    }
+                    @if(@item.RegistrationCondition.StudentCodes != null && @item.RegistrationCondition.StudentCodes != "")
+                    {
+                        <b>Student Codes:</b> @item.RegistrationCondition.StudentCodes
+                    }
+                </td>
+                @* <td><partial name="_StringReplaceJsonList" model="@item.RegistrationCondition.StudentCodes" /></td>
+                <td>@item.RegistrationCondition.AcademicProgram?.NameEn</td>
+                <td>@item.RegistrationCondition.Faculty?.NameEn</td>
+                <td>@item.RegistrationCondition.Department?.NameEn</td>
+                <td>@item.RegistrationCondition.BatchCodeStart</td>
+                <td>@item.RegistrationCondition.BatchCodeEnd</td>
+                <td>@item.RegistrationCondition.LastDigitStart</td>
+                <td>@item.RegistrationCondition.LastDigitEnd</td> *@
+                @* <td class="text-center">
+                    @if (item.RegistrationCondition.IsGraduating == null)
+                    {
+                        <span>All</span>
+                    }
+                    else if (item.RegistrationCondition.IsGraduating.Value)
+                    {
+                        <i class="la la-check"></i>
+                    }
+                </td> *@
+                @* <td class="text-center">
+                    @if (item.RegistrationCondition.IsAthlete == null)
+                    {
+                        <span>All</span>
+                    }
+                    else if (item.RegistrationCondition.IsAthlete.Value)
+                    {
+                        <i class="la la-check"></i>
+                    }
+                </td> *@
+            </tr>
+            ++index;
+        }
+    </tbody>
+</table>

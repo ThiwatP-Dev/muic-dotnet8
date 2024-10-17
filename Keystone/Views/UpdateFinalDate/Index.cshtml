@@ -1,0 +1,161 @@
+@model UpdateFinalDateViewModel
+@{ 
+    ViewData["Title"] = "Update Final Date";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+
+<section>
+    <div class="col-12">
+        <div class="ks-page-header col-lg-12">
+            <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+        </div>
+        <div class="block block--underline">
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="UpdateFinalDate" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group m-b-30">
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Academic Level<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="ViewBag.Terms">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Term<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.CodeAndName" type="text">
+                            <label>Course</label>
+                        </div>
+                        @* <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.SectionType" asp-items="ViewBag.SectionTypes">
+                                <option selected value="">All</option>
+                            </select>
+                            <label>Section Type</label>
+                        </div> *@
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.SectionFrom" type="text">
+                            <label>Section From</label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.SectionTo" type="text">
+                            <label>Section To</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.SectionStatus" asp-items="ViewBag.SectionStatuses">
+                                <option selected value="">All</option>
+                            </select>
+                            <label>Section Status</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.HaveFinal" asp-items="ViewBag.YesNoAnswer">
+                                <option selected value="">All</option>
+                            </select>
+                            <label>Has Final Date</label>
+                        </div>
+                        <div class="col align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+@if (Model != null && Model.Results.Any())
+{
+    <section>
+        <form class="form-horizontal" asp-controller="UpdateFinalDate" asp-action="Results" method="POST">
+            @Html.AntiForgeryToken()
+            <div class="col-12">
+                <div class="block block--underline">
+                    <div class="block__body">
+                        <div class="row form-group mb-3">
+                            <div class="col-2 form-group">
+                                <input class="form-control js-single-date" asp-for="FinalDate" type="text" autocomplete="off">
+                                <label>Final Date<span class="text-danger">*</span></label>
+                            </div>
+                            <div class="col-2 form-group">
+                                <input class="form-control js-time-mask" asp-for="FinalStart">
+                                <label>Start Time<span class="text-danger">*</span></label>
+                            </div>
+                            <div class="col-2 form-group">
+                                <input class="form-control js-time-mask" asp-for="FinalEnd">
+                                <label>End Time<span class="text-danger">*</span></label>
+                            </div>
+
+                            <input name="returnUrl" type="hidden" value="@contextPath">
+
+                            <div class="col-1 align-self-end text-right text-nowrap">
+                                <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">Save</button>
+                            </div>
+                        </div>
+                        
+                        <div class="table-responsive js-render-nicescroll">
+                            <table id="js-update-final-section" class="table table-bordered table-hover w-100x">
+                                <thead>
+                                    <tr>
+                                        <th class="w-50" rowspan="2">
+                                            <input id="check0" class="js-check-all" name="select-item" type="checkbox">
+                                            <label class="mt-2 mb-0 m-l-1" for="check0"></label>
+                                        </th>
+                                        <th>Course</th>
+                                        <th class="text-center">Section</th>
+                                        <th class="text-center">Final</th>
+                                        <th class="text-center">Total Student</th>
+                                        <th class="text-center">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="js-items">
+                                    @for (int i = 0; i < Model.Results.Count(); i++)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <input asp-for="@Model.Results[i].SectionId" type="hidden">
+                                                <input id="check@(i+1)"
+                                                       asp-for="@Model.Results[i].IsSelected" type="checkbox">
+                                                <label class="form-check-input m-0" for="check@(i+1)"></label>
+                                            </td>
+                                            <td>
+                                                <b>@Model.Results[i].CourseCodeAndCredit</b><br>
+                                                <b>@Model.Results[i].CourseName</b><br>
+                                                @Model.Results[i].InstructorName
+                                            </td>
+                                            <td>
+                                                @Model.Results[i].SectionNumber<br>
+                                                @Model.Results[i].SectionTypes
+                                            </td>
+                                            <td>@Model.Results[i].FinalDateTimeText</td>
+                                            <td>@Model.Results[i].SeatUsedText</td>
+                                            <td>
+                                                <partial name="_SectionStatus" model="@Model.Results[i].Status"></partial>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </section>
+}
+
+@section Scripts {
+    <script>
+        CheckList.renderCheckbox('#js-update-final-section');
+        $(".js-render-nicescroll").niceScroll();
+    </script>
+}

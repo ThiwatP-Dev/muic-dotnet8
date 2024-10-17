@@ -1,0 +1,151 @@
+@model StudentPetition
+@{
+    var index = 1;
+}
+
+<div class="block block--underline mb-0">
+    <div class="block__title">
+		<header>Student Information</header>
+	</div>
+
+    <div class="block__body">
+        <div class="row form-group mb-3">
+            <div class="col-4">
+                <div class="form-control-label d-flex align-items-center">Code</div>
+                <div class="form-control-plaintext text-wrap">@Model?.Student?.Code</div>
+            </div>
+            <div class="col-4">
+                <div class="form-control-label d-flex align-items-center">Name</div>
+                <div class="form-control-plaintext text-wrap">@Model?.Student?.FullNameEn</div>
+            </div>
+            <div class="col-4">
+                <div class="form-control-label d-flex align-items-center">GPA</div>
+                <div class="form-control-plaintext text-wrap">@Model?.Student?.AcademicInformation?.GPA</div>
+            </div>
+        </div>
+
+        <div class="row form-group mb-3">
+            <div class="col-4">
+                <div class="form-control-label d-flex align-items-center">Academic Level</div>
+                <div class="form-control-plaintext text-wrap">@Model?.Student?.AcademicInformation?.AcademicLevel?.NameEn</div>
+            </div>
+            <div class="col-4">
+                <div class="form-control-label d-flex align-items-center">Division</div>
+                <div class="form-control-plaintext text-wrap">@Model?.Student?.AcademicInformation?.Faculty?.ShortNameEn</div>
+            </div>
+            <div class="col-4">
+                <div class="form-control-label d-flex align-items-center">Major</div>
+                <div class="form-control-plaintext text-wrap">@Model?.Student?.AcademicInformation?.Department?.ShortNameEn</div>
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-4">
+                <div class="form-control-label d-flex align-items-center">Credit</div>
+                <div class="form-control-plaintext text-wrap">@Model?.Student?.AcademicInformation?.CreditComp</div>
+            </div>
+            <div class="col-4">
+                <div class="form-control-label d-flex align-items-center">Student Status</div>
+                <div class="form-control-plaintext text-wrap">@Model?.Student?.StudentStatusText</div>
+            </div>
+            <div class="col-4">
+                <div class="form-control-label d-flex align-items-center">Student Fee Type</div>
+                <div class="form-control-plaintext text-wrap">@Model?.Student?.StudentFeeType?.NameEn</div>
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-4">
+                <div class="form-control-label d-flex align-items-center">Resident Type</div>
+                <div class="form-control-plaintext text-wrap">@Model?.Student?.ResidentType?.NameEn</div>
+            </div>
+            <div class="col-4">
+                <div class="form-control-label d-flex align-items-center">Email</div>
+                <div class="form-control-plaintext text-wrap">@Model?.Email</div>
+            </div>
+            <div class="col-4">
+                <div class="form-control-label d-flex align-items-center">Phone Number</div>
+                <div class="form-control-plaintext text-wrap">@Model?.TelephoneNumber</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="block__title">
+		<header>Petition Detail</header>
+	</div>
+
+    <div class="block__body">
+        <div class="row form-group">
+            <div class="col-4">
+                <div class="form-control-label d-flex align-items-center">Petition</div>
+                <div class="form-control-plaintext text-wrap">@Model?.Petition?.NameEn</div>
+            </div>
+            <div class="col-4">
+                <div class="form-control-label d-flex align-items-center">Channel</div>
+                <div class="form-control-plaintext text-wrap">@Model?.ChannelText</div>
+            </div>
+            <div class="col-4">
+                <div class="form-control-label d-flex align-items-center">Status</div>
+                <div class="form-control-plaintext text-wrap">@Model?.StatusText</div>
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-12">
+                <div class="form-control-label d-flex align-items-center">Request</div>
+                <div class="form-control-plaintext text-wrap">@Model?.Request</div>
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-12">
+                <div class="form-control-label d-flex align-items-center">Remark</div>
+                <div class="form-control-plaintext text-wrap">@Model?.Remark</div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <span class="class-lookup-title mb-2">Petition Log</span>
+
+            <table class="table table-bordered table-hover w-100x">
+                <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th>Comment</th>
+                        <th>User</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.PetitionLogs != null && Model.PetitionLogs.Any())
+                    {
+                        foreach (var item in Model.PetitionLogs) 
+                        {
+                            <tr>
+                                <td class="text-center">@index</td>
+                                <td>@item.Comment</td>
+                                <td>@item.UpdatedBy</td>
+                                <td>@item.UpdatedAtText</td>
+                            </tr>
+                            ++index;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center">
+                                <i class="text-danger">No Data</i>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="block__action">
+        <div class="block__action-row">
+            <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-mw-120 btn--cancel rounded">Close</a>
+        </div>
+    </div>
+</div>

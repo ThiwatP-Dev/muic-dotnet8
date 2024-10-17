@@ -1,0 +1,306 @@
+@model QuestionnaireReportViewModel
+@{
+    ViewData["Title"] = "Questionnaire Report";
+}
+
+
+@if (!string.IsNullOrEmpty(ViewBag.ReturnUrl))
+{
+    <section class="row">
+        <div class="ks-page-header col-lg-12">
+            <h2 class="ks-page-header__title">
+                <a class="btn-back" href="@ViewBag.ReturnUrl">
+                    <i class="la la-angle-double-left mr-1"></i>Back
+                </a>
+            </h2>
+        </div>
+    </section>
+}
+
+<section class="d-print-none">
+    <div class="block block--underline">
+        <div class="block__title">
+            <header>@ViewData["Title"]</header>
+        </div>
+        
+        <form class="form-horizontal" asp-controller="QuestionnaireReport" asp-action="Index" method="GET">
+            @Html.AntiForgeryToken()
+            <div class="block__body">
+                @if (Model?.Summary != "s")
+                {
+                    <div class="row form-group m-b-30">
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels" data-placeholder="Select">
+                                    <option selected disabled>Select</option>
+                            </select>
+                            <label>Academic Level<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="ViewBag.Terms" data-placeholder="Select">
+                                    <option selected disabled>Select</option>
+                            </select>
+                            <label>Term<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-6">
+                            <select class="chosen-select form-control js-cascade-course" asp-for="Criteria.CourseId" asp-items="ViewBag.Courses" data-placeholder="Select">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Course<span class="text-danger">*</span></label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group m-b-30">
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-section" asp-for="Criteria.SectionId" asp-items="ViewBag.Sections" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Section Number<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.InstructorId" asp-items="ViewBag.Instructors" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Instructor<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-6">
+                            <h4 class="font-size-default m-y-4">Question Group</h4>
+                            <select class="chosen-select form-control" asp-for="Criteria.QuestionGroupIds" asp-items="ViewBag.QuestionGroups" data-placeholder="Select" multiple></select>
+                        </div>
+                    </div>
+
+                    <input name="returnUrl" value="@ViewBag.ReturnUrl" hidden>
+
+                    <div class="row form-group">
+                        <div class="col-12 align-self-end text-right text-nowrap">
+                            <button class="btn btn--primary btn-mw-120 m-r-5" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset js-reset-btn" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </form>
+    </div>
+</section>
+
+@if (Model != null)
+{
+    <section>
+        <div class="block block--underline">
+            <div class="block__body">
+                <div class="row form-group mb-30">
+                    <div class="col-12">
+                        <b>Current Time: </b>@Model?.CurrentTimeText
+                    </div>
+                </div>
+                <div class="row form-group mb-30">
+                    <div class="col-12">
+                        <b>Term: </b>@Model?.TermText
+                    </div>
+                </div>
+                <div class="row form-group mb-30">
+                    <div class="col-12">
+                        <b>Lecturer Name: </b>@Model?.LecturerNames
+                    </div>
+                </div>
+                <div class="row form-group mb-30">
+                    <div class="col-12">
+                        <b>Subject: </b>@Model?.CourseCodeAndName
+                    </div>
+                </div>
+                <div class="row form-group mb-30">
+                    <div class="col-12">
+                        <b>Section: </b>@Model?.SectionNumber
+                    </div>
+                </div>
+                <div class="row form-group mb-30">
+                    <div class="col-12">
+                        <b>Total Score: </b>@Model?.TotalScoreText
+                    </div>
+                </div>
+                <div class="row form-group mb-30">
+                    <div class="col-12">
+                        <b>Evaluated Count: </b>@Model?.EvaluatedCount
+                    </div>
+                </div>
+                <div class="row form-group mb-30">
+                    <div class="col-12">
+                        <b>Enrolled Student: </b>@Model?.TotalEnrolled
+                    </div>
+                </div>
+                @if (Model.Groups != null && Model.Groups.Any())
+                {
+                    for (int i = 0; i < Model.Groups.Count(); i++)
+                    {
+                        <div class="row form-group mb-30">
+                            <div class="col-12 m-b-30">
+                                <b>@((i + 1) + ".") @Model.Groups[i].NameEn</b>
+                            </div>
+                            @for (int j = 0; j < Model.Groups[i].Questions.Count(); j++)
+                            {
+                                <div class="col-12 m-b-30">
+                                    <b>@((i + 1) + "." + (j + 1)) @Model.Groups[i].Questions[j].QuestionEn</b>
+                                </div>
+                                
+                                <div class="col-12">
+                                    <div class="table-responsive m-b-30">
+                                        <table class="table table-bordered m-0">
+                                            @{
+                                                var answerText = "Answer";
+                                                decimal cummulativePercent = 0;
+                                                decimal allAnswer = Model.Groups[i].Questions[j].Responses?.Count() ?? 0;
+                                                @* decimal noComment = Model.Groups[i].Questions[j].Responses?.Where(x => !Model.Groups[i].Questions[j].Answers.Any(y => y.Value == x.Answer.Value))
+                                                                                                        ?.Count() ?? 0;
+                                                decimal validPercentageNoComment = allAnswer == 0 ? 0 : noComment / allAnswer * 100; *@
+                                                decimal totalAnswer = Model.TotalEnrolled;
+                                            }
+
+                                            @if (!Model.Groups[i].NameEn.Contains("Other"))
+                                            {
+                                                <thead>
+                                                    <tr>
+                                                        @if (Model?.Summary != "s")
+                                                        {
+                                                            <th></th>
+                                                        }
+                                                        
+                                                        <th></th>
+                                                        <th class="text-right">Frequency</th>
+                                                        <th class="text-right">Percent</th>
+                                                        <th class="text-right">Valid Percent</th>
+                                                        @if (Model?.Summary != "s")
+                                                        {
+                                                            <th class="text-right">Cummulative Percent</th>
+                                                        }
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @if (Model?.Summary != "s")
+                                                    {
+                                                        foreach (var answer in Model.Groups[i].Questions[j].Answers)
+                                                        {
+                                                            decimal frequency = Model.Groups[i].Questions[j].Responses?.Count(x => x.Answer.Value == answer.Value) ?? 0;
+                                                            decimal validPercent = allAnswer == 0 ? 0 : frequency / allAnswer * 100;
+                                                            cummulativePercent += validPercent;
+
+                                                            <tr>
+                                                                <td>@answerText</td>
+                                                                <td>@answer.AnswerEn</td>
+                                                                <td>@frequency</td>
+                                                                <td>
+                                                                    @((totalAnswer == 0 ? 0 : frequency / totalAnswer * 100).ToString(StringFormat.TwoDecimal))
+                                                                </td>
+                                                                <td>@validPercent.ToString(StringFormat.TwoDecimal)</td>
+                                                                <td>@cummulativePercent.ToString(StringFormat.TwoDecimal)</td>
+                                                            </tr>
+
+                                                            @(answerText = string.Empty);
+                                                        }
+
+                                                        @* <tr>
+                                                            <td></td>
+                                                            <td>no comment</td>
+                                                            <td>@noComment</td>
+                                                            <td>
+                                                                @((totalAnswer == 0 ? 0 : noComment / totalAnswer * 100).ToString(StringFormat.TwoDecimal))
+                                                            </td>
+                                                            <td>@validPercentageNoComment.ToString(StringFormat.TwoDecimal)</td>
+                                                            <td class="text-right">@((cummulativePercent + validPercentageNoComment).ToString(StringFormat.TwoDecimal))</td>
+                                                        </tr> *@
+                                                    }
+
+                                                    <tr>
+                                                        @if (Model?.Summary != "s")
+                                                        {
+                                                            <td></td>
+                                                        }
+                                                        
+                                                        <td>All Answer</td>
+                                                        <td class="text-right">@allAnswer</td>
+                                                        <td class="text-right">
+                                                            @((totalAnswer == 0 ? 0 : allAnswer / totalAnswer * 100).ToString(StringFormat.TwoDecimal))
+                                                        </td>
+                                                        <td class="text-right">100.00</td>
+                                                        @if (Model?.Summary != "s")
+                                                        {
+                                                            <td></td>
+                                                        }
+                                                    </tr>
+                                                </tbody>
+                                            }
+
+                                            @if (Model.Groups[i].NameEn.Contains("Other"))
+                                            {
+                                                <thead>
+                                                    <tr>
+                                                        <th class="text-center w-100">#</th>
+                                                        <th colspan="5">Comments and Suggestions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @if (Model.Groups[i].Questions[j].Responses?.Any(x => !string.IsNullOrEmpty(x.AnswerRemark) && !x.AnswerRemark.Contains("-")) ?? false)
+                                                    {
+                                                        int answerNumber = 1;
+                                                        @foreach (var answer in Model.Groups[i].Questions[j].Responses?.Where(x => !string.IsNullOrEmpty(x.AnswerRemark) && !x.AnswerRemark.Contains("-")))
+                                                        {
+                                                            <tr>
+                                                                <td class="text-center bg-white">@answerNumber</td>
+                                                                <td colspan="5" class="bg-white">@answer.AnswerRemark</td>
+                                                            </tr>
+                                                            answerNumber++;
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <tr>
+                                                            <td colspan="6" class="text-center">
+                                                                <i class="text-danger">No Answer</i>
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            }
+
+                                            @if (Model?.Summary != "s" && !Model.Groups[i].NameEn.Contains("Other"))
+                                            {
+                                                <tfoot>
+                                                    <tr>
+                                                        <td class="text-right"><b>No Answer</b></td>
+                                                        <td class="text-right">-</td>
+                                                        <td class="text-right js-col-total">@(Math.Abs(totalAnswer - allAnswer))</td>
+                                                        <td class="text-right js-col-total">@(Math.Abs(totalAnswer == 0 ? 0 : (totalAnswer - allAnswer) / totalAnswer * 100).ToString(StringFormat.TwoDecimal))</td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-right"><b>Total</b></td>
+                                                        <td></td>
+                                                        <td class="text-right js-col-total">@totalAnswer</td>
+                                                        <td class="text-right js-col-total">100.00</td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+                                                </tfoot>
+                                            }
+                                        </table>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </section>   
+}
+else 
+{
+    <div class="block block--underline">
+        <div class="block__title">
+            <header>Waiting for approval</header>
+        </div>
+    </div>
+}

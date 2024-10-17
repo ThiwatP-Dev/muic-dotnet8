@@ -1,0 +1,62 @@
+@model MaintenanceFee
+
+<div class="block__title text-left height-3">
+    <header>@ViewData["Title"]</header>
+</div>
+
+<div class="block__body text-left height-3">
+    <div class="form-group">
+        <select class="chosen-select form-control" asp-for="StudentGroupId" asp-items="ViewBag.StudentGroups">
+            <option selected disabled>Select</option>
+        </select>
+        <label for="StudentGroupId">Student Group</label>
+    </div>
+
+    <div class="form-group">
+        <select class="chosen-select form-control js-cascade-academic-level" asp-for="AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+            <option selected disabled>Select</option>
+        </select>
+        <label for="AcademicLevelId">Academic Level</label>
+    </div>
+
+    <div class="form-group">
+        <select class="chosen-select form-control js-cascade-term" asp-for="TermId" asp-items="ViewBag.Terms">
+            <option selected disabled>Select</option>
+        </select>
+        <label for="TermId">Term</label>
+    </div>
+
+    <div class="form-group">
+        <select class="chosen-select form-control js-cascade-faculty" asp-for="FacultyId" asp-items="ViewBag.Faculties">
+            <option selected>Select</option>
+        </select>
+        <label for="FacultyId">Division</label>
+    </div>
+
+    <div class="form-group">
+        <select class="chosen-select form-control js-cascade-department" asp-for="DepartmentId" asp-items="ViewBag.Departments">
+            <option selected>Select</option>
+        </select>
+        <label for="DepartmentId">Major</label>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" asp-for="Fee" type="number" min=0>
+        <label>Fee<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="Fee"></span>
+    </div>
+
+    <div class="row">
+        <div class="form-check">
+            <input class="form-check-input" asp-for="IsActive" type="checkbox">
+            <label for="IsActive">Active</label>
+        </div>
+    </div>
+</div>
+
+<div class="block__action container">
+    <div class="block__action-row">
+        <button type="submit" class="btn btn-mw-120 btn--primary">Save</button>
+        <a asp-action="Index" class="btn btn-mw-120 btn--cancel">Cancel</a>
+    </div>
+</div>

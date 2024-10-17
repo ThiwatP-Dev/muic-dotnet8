@@ -1,0 +1,104 @@
+@model List<ParentInformation>
+
+<section class="ks-other-status-info">
+    <div class="block block--underline">
+        <div class="block__title">
+            <header>Parent Information</header>
+            <div class="tools">
+                <a class="btn btn-mw-120 btn--primary" 
+                   href="#"
+                   data-toggle="modal" 
+                   data-target="#create-modal-parent">
+                    <i class="la la-plus mr-1 font-weight-800"></i> Add
+                </a>
+            </div>
+        </div>
+
+        <div class="block__body">
+            <div class="table-responsive">
+                <table class="table table-bordered m-0">
+                    <thead>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th>Name</th>
+                            <th>Relationship</th>
+                            <th class="text-center">Main Parent</th>
+                            <th class="text-center">Emergency Contact</th>
+                            <th>Contact</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            var index = 1;
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@index</td>
+                                    <td>@item.FullNameEn</td>
+                                    <td>@item.Relationship?.NameEn</td>
+                                    <td class="text-nowrap">
+                                    @if (item.IsMainParent)
+                                    {
+                                        <i class="la la-check"></i>
+                                    }
+                                    </td>
+                                    <td class="text-nowrap">
+                                        @if (item.IsEmergencyContact)
+                                        {
+                                            <i class="la la-check"></i>
+                                        }
+                                    </td>
+                                    <td>
+                                        <span class="d-block g-mb-5">
+                                            @item.TelephoneNumber1
+                                        </span>
+                                        <span class="d-block">
+                                            @item.Email
+                                        </span>
+                                    </td>
+                                    <td class="text-nowrap td-actions">
+                                        <a data-toggle="modal"
+                                           data-target="#details-parent-modal"
+                                           data-value="@item.Id">
+                                            <i class="la la-info info"></i>
+                                        </a>
+                                        <a data-toggle="modal"
+                                           data-target="#edit-parent-modal"
+                                           data-value="@item.Id">
+                                            <i class="la la-edit edit"></i>
+                                        </a>
+                                        <a data-toggle="modal" 
+                                           data-target="#delete-confirm-modal"
+                                           asp-controller="Parent"
+                                           asp-action="Delete"
+                                           asp-route-id="@item.Id"
+                                           asp-route-page="a">
+                                            <i class="la la-trash delete"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                index++;
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6">
+                                    <i class="text-danger">No Data</i>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<partial name="~/Views/Student/Parent/_CreateModal.cshtml" 
+         model="@(ViewData["StudentId"].ToString() == Guid.Empty.ToString() ? new ParentInformation()
+         : new ParentInformation { StudentId = (Guid)ViewData["StudentId"] })">
+<partial name="~/Views/Student/Parent/_EditModal.cshtml" model="new ParentInformation()">
+<partial name="~/Views/Student/Parent/_DetailsModal.cshtml" model="new ParentInformation()">

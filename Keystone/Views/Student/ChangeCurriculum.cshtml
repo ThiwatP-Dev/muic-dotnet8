@@ -1,0 +1,164 @@
+@model ChangeCurriculumViewModel
+@{ 
+    ViewData["Title"] = "Change Curriculum";
+}
+
+<section class="ks-student-info">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title collapsed" data-toggle="collapse" data-target="#change-curriculum-tab">
+                <header><b>Student Information</b></header>
+                <div class="tools">
+                    <div class="btn-group">
+                        <a class="btn btn--white btn--circle">
+                            <i class="la la-angle-down"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="change-curriculum-tab" class="collapse show" aria-expanded="true">
+                <div class="block__body">
+                    <div class="row form-group">
+                        <div class="col-3 align-self-center">
+                            <div class="form-control-label d-flex align-items-center">Student ID</div>
+                            <div class="form-control-plaintext">@Model.Code</div>
+                        </div>
+
+                        <div class="col-3 align-self-center">
+                            <div class="form-control-label d-flex align-items-center">Name</div>
+                            <div class="form-control-plaintext">@Model.FullName</div>
+                        </div> 
+                         
+                        <div class="col-3 align-self-center">
+                            <div class="form-control-label d-flex align-items-center">Admission Type</div>
+                            <div class="form-control-plaintext">@Model.AdmissionType</div>
+                        </div>
+                        
+                        <div class="col-3 align-self-center">
+                            <div class="form-control-label d-flex align-items-center">Scholarship</div>
+                            <div class="form-control-plaintext">@Model.Scholarship</div>
+                        </div>
+                    </div>  
+
+                    <div class="row form-group">
+                        <div class="col-3 align-self-center">
+                            <div class="form-control-label d-flex align-items-center">Graduated Class</div>
+                            <div class="form-control-plaintext">@Model.GraduatedClass</div>
+                        </div> 
+                        
+                        <div class="col-3 align-self-center">
+                            <div class="form-control-label d-flex align-items-center">Program</div>
+                            <div class="form-control-plaintext">@Model.Program</div>
+                        </div>
+                        
+                        <div class="col-6 align-self-center">
+                            <div class="form-control-label d-flex align-items-center">Curriculum</div>
+                            <div class="form-control-plaintext">@Model.CurriculumId - @Model.Curriculum</div>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-3 align-self-center">
+                            <div class="form-control-label d-flex align-items-center">Division</div>
+                            <div class="form-control-plaintext">@Model.Faculty</div>
+                        </div>
+
+                        <div class="col-3 align-self-center">
+                            <div class="form-control-label d-flex align-items-center">Major</div>
+                            <div class="form-control-plaintext">@Model.Department</div>
+                        </div> 
+                         
+                        <div class="col-3 align-self-center">
+                            <div class="form-control-label d-flex align-items-center">Minor</div>
+                            <div class="form-control-plaintext">@Model.Minor</div>
+                        </div>
+
+                        <div class="col-3 align-self-center">
+                            <div class="form-control-label d-flex align-items-center">Concentration</div>
+                            <div class="form-control-plaintext">@Model.Concentration</div>
+                        </div> 
+                    </div> 
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header><b>New Curriculum</b></header>
+            </div>
+
+            <div class="block__body">
+                <form asp-controller="Student" asp-action="ChangeCurriculum" method="POST">
+                    <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+                    <div class="row form-group">
+                        <div class="col-6">
+                            <select id="js-cascade-curriculum" class="chosen-select form-control" asp-for="CurriculumId" asp-items="@ViewBag.Curriculums">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Curriculum</label>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-control-label d-flex align-items-center">Division - Major</div>
+                            <div id="js-cascade-faculty" class="form-control-plaintext">@Model.FacultyText</div>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-12">
+                            <input class="form-control" asp-for="Description" type="text">
+                            <label>Remark</label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-6">
+                            <select class="chosen-select form-control" asp-items="@ViewBag.Users">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Approved by</label>
+                        </div>
+
+                        <div class="col-6">
+                            <input class="form-control js-single-date" type="text" autocomplete="off">
+                            <label>Approved At</label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-3">
+                            <input class="form-control" type="text">
+                            <label>Receipt No.</label>
+                        </div>
+
+                        <div class="col-3">
+                            <input class="form-control js-single-date" type="text" autocomplete="off">
+                            <label>Paid At</label>
+                        </div>
+
+                        <div class="col-3">
+                            <input class="form-control" type="text">
+                            <label>Fee</label>
+                        </div>
+
+                        <div class="col-3">
+                            <div class="text-center">
+                                <button class="btn btn--primary btn-mw-120 m-y-15 m-r-5" asp-route-returnUrl="@ViewBag.ReturnUrl" type="submit">Save</button>
+                                <a class="btn btn-mw-120 btn--cancel" asp-action="Details" asp-controller="Student" asp-route-id="@Model.StudentId" asp-route-tabIndex="1" asp-route-returnUrl="@ViewBag.ReturnUrl">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+                    <input asp-for="StudentId" type="hidden">
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- cascade removed -->

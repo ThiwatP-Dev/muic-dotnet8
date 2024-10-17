@@ -1,0 +1,25 @@
+.ms-container {
+    width: 100%;
+
+    .ms-search-input {
+        width: 100%;
+    }
+
+    .ms-selectable {
+        .ms-list {
+        
+            .ms-hover {
+                background-color: $primary;
+            }
+        }
+    }
+
+    .ms-selection {
+        .ms-list {
+        
+            .ms-hover {
+                background-color: $primary;
+            }
+        }
+    }  
+}

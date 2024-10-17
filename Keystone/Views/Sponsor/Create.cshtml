@@ -1,0 +1,14 @@
+@model Sponsor
+@{
+    ViewData["Title"] = "Add Sponsor";
+}
+
+<section id="data-table-form-v1" class="row">
+    <div class="col-lg-12">
+        <div class="block block--underline">
+            <form class="ks-form container" asp-controller="Sponsor" asp-action="Create" method="post">
+                <partial name="_Form"/>
+            </form>
+        </div>
+    </div>
+</section>

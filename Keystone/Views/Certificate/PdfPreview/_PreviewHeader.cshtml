@@ -1,0 +1,47 @@
+@model ReportViewModel
+
+@{
+    var certificate = Model.Body as CertificationViewModel;
+}
+
+<section class="row">
+    <div class="ks-page-header">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</section>
+
+<section id="certificate-preview" data-model="@JsonConvert.SerializeObject(Model)">
+    <div class="block block__body">
+        <iframe id="js-print-preview" class="w-100x h-85vh"></iframe>
+    </div>
+</section>
+
+<section>
+    <form asp-controller="Certificate" asp-action="RecordPrintingLog">
+        <input name="model.ReferenceNumber" type="hidden" value="@certificate.ReferenceNumber">
+        <input name="model.Language" type="hidden" value="@certificate.Language">
+        <input name="model.CertificationType" type="hidden" value="@certificate.CertificationType">
+        <input name="model.Purpose" type="hidden" value="@certificate.Purpose">
+        <input name="model.StudentId" type="hidden" value="@certificate.StudentId">
+        <input name="model.StudentCode" type="hidden" value="@certificate.StudentCode">
+        <input name="model.StudentFirstName" type="hidden" value="@certificate.StudentFirstName">
+        <input name="model.StudentLastName" type="hidden" value="@certificate.StudentLastName">
+        <input name="model.Gender" type="hidden" value="@certificate.Gender">
+        <input name="model.IsUrgent" type="hidden" value="@certificate.IsUrgent">
+        <input name="model.FacultyId" type="hidden" value="@certificate.FacultyId">
+        <input name="model.FacultyName" type="hidden" value="@certificate.FacultyName">
+        <input name="model.DepartmentId" type="hidden" value="@certificate.DepartmentId">
+        <input name="model.DepartmentName" type="hidden" value="@certificate.DepartmentName">
+        <input name="model.Amount" type="hidden" value="@certificate.Amount">
+        <input name="model.DocumentFee" type="hidden" value="@certificate.DocumentFee">
+        <input name="model.IsRequiredPayment" type="hidden" value="@certificate.IsRequiredPayment">
+        <input name="model.RunningNumber" type="hidden" value="@certificate.RunningNumber">
+        <input name="model.DocumentYear" type="hidden" value="@certificate.DocumentYear">
+        <input name="model.IsPaid" type="hidden" value="@certificate.IsPaid">
+        <input name="model.StudentCertificateId" type="hidden" value="@certificate.StudentCertificateId">
+        <div class="block__action-row pr-0">
+            <button class="btn btn-mw-120 btn--success" type="submit">Finish</button>
+        </div>
+    </form>
+</section>
+

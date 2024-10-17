@@ -1,0 +1,89 @@
+@model ScholarshipProfileViewModel
+@{
+    ViewData["Profile"] = "/images/default-profile-m.png";
+    ViewData["Title"] = "Scholarship Profile";
+}
+
+@if (!string.IsNullOrEmpty(ViewBag.ReturnUrl))
+{
+    <div class="row">
+        <div class="ks-page-header col-lg-12">
+            <a class="btn-back" href="@ViewBag.ReturnUrl">
+                <i class="la la-angle-double-left mr-1"></i>Back
+            </a>
+        </div>
+    </div>
+}
+
+<div class="row">
+    <div class="col-12">
+        <partial name="_ProfileHeader" />
+    </div>
+    <div class="col-12">
+        <div class="block">
+            <div class="block__body text-center height-3">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="tabs-scroller float-left"><i class="la la-angle-double-left"></i></div>
+                        <div class="tabs-scroller float-right"><i class="la la-angle-double-right"></i></div>
+
+                        <div class="nav-tabs-wrapper">
+                            <ul class="nav nav-tabs ks-tabs" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" href="#nav-tab-0" id="nav-link-0" data-toggle="tab">
+                                        Scholarship Information
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#nav-tab-1" id="nav-link-1" data-toggle="tab">
+                                        Voucher
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#nav-tab-2" id="nav-link-2" data-toggle="tab">
+                                        Financial Transaction
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#nav-tab-3" id="nav-link-3" data-toggle="tab">
+                                        Refund Information
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="tab-content">
+                            <div class="tab-pane show active" id="nav-tab-0" role="tabpanel">
+                                <partial name="_ScholarshipInformation" model="@Model"/>
+                            </div>
+                            <div class="tab-pane" id="nav-tab-1" role="tabpanel">
+                                <partial name="_Voucher" />
+                            </div>
+                            <div class="tab-pane" id="nav-tab-2" role="tabpanel">
+                                <partial name="_ScholarshipUsageInformation"/>
+                            </div>
+                            <div class="tab-pane" id="nav-tab-3" role="tabpanel">
+                                <partial name="_RefundInformation"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Modals {
+    <partial name="_AddScholarshipModal" model="@(Model == null ? new ScholarshipStudent() 
+                                                                : new ScholarshipStudent{ StudentId = Model.StudentId })">
+    <partial name="_EditScholarshipModal" model="new ScholarshipStudent()">
+    
+    <partial name="_VoucherInformationModal" model="new List<VoucherLog>()">
+
+    <partial name="_DeleteConfirmModals">
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/tabs.js"></script>
+    <script type="text/javascript" src="~/js/pages/scholarship-profile.js"></script>
+}

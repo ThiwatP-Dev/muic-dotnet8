@@ -1,0 +1,18 @@
+@model ReportViewModel
+@{ 
+    ViewData["Title"] = "Room Schedule Preview";
+}
+
+<div class="row">
+    <div class="ks-page-header col-lg-12">
+        <a class="btn-back" href="@ViewBag.ReturnUrl">
+            <i class="la la-angle-double-left mr-1"></i>Back
+        </a>
+    </div>
+</div>
+
+<partial name="_PdfPreview" model="@Model">
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/pdf-render/room-schedule.js"></script>
+}

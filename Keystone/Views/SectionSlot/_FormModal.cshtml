@@ -1,0 +1,143 @@
+@model SectionSlot
+@{
+    var isEdit = Model.Id != 0;
+}
+
+@if (!isEdit)
+{
+    <div class="row form-group">
+        <div class="col-4">
+            <select class="chosen-select form-control chosen-single js-default-select " asp-for="TeachingTypeId" asp-items="@ViewBag.TeachingTypes"></select>
+            <label>Teaching Type</label>
+        </div>
+        <div class="col-4">
+            <select class="chosen-select form-control chosen-single" asp-for="InstructorId" asp-items="@ViewBag.Instructors" data-placeholder="Select">
+                <option selected value="">Select</option>
+            </select>
+            <label>Instructor</label>
+        </div>
+        <div class="col-4">
+            <input class="form-control js-single-date js-cascade-date" asp-for="Date" type="text" autocomplete="off">
+            <label>Date</label>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-4">
+            <input class="form-control js-time-mask js-cascade-start-time" asp-for="StartTime" type="text" placeholder="hh:mm">
+            <label>Start Time</label>
+        </div>
+        <div class="col-4">
+            <input class="form-control js-time-mask js-cascade-end-time" asp-for="EndTime" type="text" placeholder="hh:mm">
+            <label>End Time</label>
+        </div>
+        <div class="col-4">
+            <select class="chosen-select form-control chosen-single js-default-select js-cascade-rooms" asp-for="RoomId" asp-items="@ViewBag.Rooms">
+                <option selected value="">Select</option>
+            </select>
+            <label>Room</label>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-4">
+            <select class="chosen-select form-control chosen-single js-default-select"
+                    asp-for="Status" asp-items="@ViewBag.Status">
+            </select>
+            <label>Status</label>
+        </div>
+        <div class="col-4">
+            <select class="chosen-select form-control chosen-single" asp-for="IsMakeUpClass" asp-items="@ViewBag.YesNoAnswer" data-placeholder="Select"></select>
+            <label for="IsMakeUpClass">Make Up Class</label>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row form-group">
+        <div class="col-4">
+            <select class="chosen-select form-control chosen-single js-default-select " asp-for="TeachingTypeId" asp-items="@ViewBag.TeachingTypes"></select>
+            <label>Teaching Type</label>
+        </div>
+        <div class="col-4">
+            <select class="chosen-select form-control chosen-single" asp-for="InstructorId" asp-items="@ViewBag.Instructors" data-placeholder="Select">
+                <option selected value="">Select</option>
+            </select>
+            <label>Instructor</label>
+        </div>
+        <div class="col-4">
+            <select class="chosen-select form-control chosen-single js-default-select" asp-for="RoomId" asp-items="@ViewBag.Rooms" disabled>
+                <option selected value="">Select</option>
+            </select>
+            <label>Room</label>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        @if (Model.Date >= DateTime.Now)
+        {
+            <div class="col-4">
+                <input class="form-control js-single-date js-cascade-date" asp-for="Date" type="text" autocomplete="off">
+                <label>Date</label>
+            </div>
+            <div class="col-4">
+                <input class="form-control js-time-mask" asp-for="StartTime" type="text" placeholder="hh:mm">
+                <label>Start Time</label>
+            </div>
+            <div class="col-4">
+                <input class="form-control js-time-mask" asp-for="EndTime" type="text" placeholder="hh:mm">
+                <label>End Time</label>
+            </div>
+        }
+        else
+        {
+            <div class="col-4 form-group">
+                <div class="form-control-label d-flex align-items-center">Date</div>
+                <div class="form-control-plaintext">@Model?.DateText</div>
+            </div>
+            <div class="col-4 form-group">
+                <div class="form-control-label d-flex align-items-center">Start Time</div>
+                <div class="form-control-plaintext">@Model?.StartTimeText</div>
+            </div>
+            <div class="col-4 form-group">
+                <div class="form-control-label d-flex align-items-center">End Time</div>
+                <div class="form-control-plaintext">@Model?.EndTimeText</div>
+            </div>
+            <input class="form-control" asp-for="Date" type="text" autocomplete="off" hidden>
+            <input asp-for="StartTime" hidden>
+            <input asp-for="EndTime" hidden>
+        }
+    </div>
+
+    <div class="row form-group">
+        <div class="col-4">
+            <select class="chosen-select form-control chosen-single js-default-select"
+                    asp-for="Status" asp-items="@ViewBag.Status">
+            </select>
+            <label>Status</label>
+        </div>
+        <div class="col-4">
+            <select class="chosen-select form-control chosen-single" asp-for="IsMakeUpClass" asp-items="@ViewBag.YesNoAnswer" data-placeholder="Select"></select>
+            <label for="IsMakeUpClass">Make Up Class</label>
+        </div>
+    </div>
+
+    <input asp-for="RoomId" type="hidden">
+}
+
+
+<div class="form-group">
+    <input class="form-control" asp-for="Remark" type="text">
+    <label>Remark</label>
+</div>
+
+<input asp-for="Id" type="hidden">
+<input asp-for="SectionId" type="hidden">
+<input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+
+<div class="block__action container">
+    <div class="block__action-row">
+        <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+        <a class="btn btn-mw-120 btn--cancel" data-dismiss="modal">Cancel</a>
+    </div>
+</div>

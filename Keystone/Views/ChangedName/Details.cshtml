@@ -1,0 +1,264 @@
+@model ChangedNameViewModel
+@{ 
+    ViewData["Title"] = "Maintenance Name";
+    var index = 1;
+}
+
+<div class="ks-page-header col-12">
+	<h2 class="ks-page-header__title">
+		<a class="btn-back" href="@ViewBag.ReturnUrl">
+			<i class="la la-angle-double-left"></i>
+		</a>
+		<span>@ViewData["Title"]</span>
+	</h2>
+</div>
+
+@if (Model != null)
+{
+    <section class="row">
+        <div class="col-12">
+            <form class="form-horizontal" asp-controller="ChangedName" asp-action="Save" method="POST" enctype="multipart/form-data">
+                <div class="block block--underline">
+                    <div class="block__title">
+                        <header>Student Information</header>
+                    </div>
+                    <div class="block__body">
+                        <div class="row form-group m-b-30">
+                            <div class="col-4">
+                                <div class="form-control-label d-flex align-items-center">Name</div>
+                                <div class="form-control-plaintext">@Model?.StudentName</div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-control-label d-flex align-items-center">Division</div>
+                                <div class="form-control-plaintext text-uppercase">@Model?.Faculty</div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-control-label d-flex align-items-center">Major</div>
+                                <div class="form-control-plaintext">@Model?.Department</div>
+                            </div>
+                        </div>
+                        <div class="row form-group m-b-30">
+                            <div class="col-4">
+                                <div class="form-control-label d-flex align-items-center">Curriculum Version</div>
+                                <div class="form-control-plaintext">@Model?.CurriculumVersion</div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-control-label d-flex align-items-center">GradClass</div>
+                                <div class="form-control-plaintext">@Model?.GradClassText</div>
+                            </div>
+                            <div class="col-4">
+                                <div class="form-control-label d-flex align-items-center">Graduated Date</div>
+                                <div class="form-control-plaintext">@Model?.GraduatedDate</div>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover w-100x">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Running No. / Year</th>
+                                        <th>Maintain Date</th>
+                                        <th>Reference No.</th>
+                                        <th>Name EN</th>
+                                        <th>ChangedName En</th>
+                                        <th>Name TH</th>
+                                        <th>ChangedName TH</th>
+                                        <th>District Registration Office</th>
+                                        <th>Date</th>
+                                        <th>Type</th>
+                                        <th>Document Url</th>
+                                        <th>Request At</th>
+                                        <th>Change By</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model != null && Model.StudentChangedNameLogs.Any())
+                                    {
+                                        foreach(var item in Model.StudentChangedNameLogs)
+                                        {
+                                            <tr>
+                                                <td rowspan="2">@index</td>
+                                                <td>@($"{ item.RunningNumber } / { item.Year }")</td>
+                                                <td>@item.ChangedAtText</td>
+                                                <td>@item.ReferenceNumber</td>
+                                                <td>@($"{ item.FirstNameEn } { item.LastNameEn }")</td>
+                                                <td>@($"{ item.ChangedFirstNameEn} { item.ChangedLastNameEn }")</td>
+                                                <td>@($"{ item.FirstNameTh } { item.LastNameTh }")</td>
+                                                <td>@($"{ item.ChangedFirstNameTh} { item.ChangedLastNameTh }")</td>
+                                                <td>@item.DistrictRegistrationOffice</td>
+                                                <td>@item.DistrictRegistrationAtText</td>
+                                                <td>@($"{ item.ChangedTypeText } - { item.NameTypeText }")</td>
+                                                <td>
+                                                    @if (item.DocumentUrl != null) 
+                                                    {
+                                                        <a href="#!" data-toggle="modal" data-target="#view-document-modal" data-value="@item.DocumentUrl">
+                                                            <i class="las la-image"></i>
+                                                        </a>
+                                                    }
+                                                </td>
+                                                <td>@item.RequestedAtText</td>
+                                                <td>@item.ChangedBy</td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="13">Remark: @item.Remark</td>
+                                            </tr>
+                                            ++index;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td class="text-center" colspan="14"><i class="text-danger">No Data</i></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <input name="studentCode" type="hidden" value="@Model.StudentCode">
+                        <input name="id" type="hidden" value="@Model.Id">
+                    </div>
+                </div>
+                <div class="block block--underline">
+                    <div class="block__title">
+                        <header>Government Reference Forename-Lastname Changed</header>
+                    </div>
+                    <div class="block__body">
+                        <div class="row form-group m-b-30">
+                            <div class="col-4">
+                                <div class="form-control-label d-flex align-items-center">Running No./Year</div>
+                                <div class="form-control-plaintext">  @($"{ Model.RunningNumber } / { Model.Year }") </div> 
+                            </div>
+                            <div class="col-4 @(Model.GraduatedDate == null ? "" : "d-none")">
+                                <input class="form-control js-single-date" asp-for="ChangedAtText" type="text" autocomplete="off">
+                                <label>Changed Date<span class="text-danger">*</span></label>
+                            </div>
+                            <div class="col-4 @(Model.GraduatedDate == null ? "" : "d-none")">
+                                <input class="form-control" asp-for="ReferenceNumber">
+                                <label>Reference No.<span class="text-danger">*</span></label>
+                                <span class="text-danger help-block" asp-validation-for="ReferenceNumber"></span>
+                            </div>
+                        </div>
+
+                        <div class="row form-group m-b-30 @(Model.GraduatedDate == null ? "" : "d-none")">
+                            <div class="col-6">
+                                <input class="form-control" asp-for="DistrictRegistrationOffice">
+                                <label>District Registration Office<span class="text-danger">*</span></label>
+                                <span class="text-danger help-block" asp-validation-for="DistrictRegistrationOffice"></span>
+                            </div>
+                            <div class="col-6">
+                                <input class="form-control js-single-date" asp-for="DistrictRegistrationAtText" type="text" autocomplete="off">
+                                <label>District Registration Date<span class="text-danger">*</span></label>
+                                <span class="text-danger help-block" asp-validation-for="DistrictRegistrationAtText"></span>
+                            </div>
+                        </div>
+
+                        <div class="row form-group m-b-30 @(Model.GraduatedDate == null ? "" : "d-none")">
+                            <div class="col-12">
+                                <input class="form-control" asp-for="Remark">
+                                <label>Remark</label>
+                            </div>
+                        </div>
+
+                        <div class="row form-group m-b-30 @(Model.GraduatedDate == null ? "" : "d-none")">
+                            <div class="col-6">
+                                <select class="chosen-select form-control" asp-for="ChangedType" asp-items="ViewBag.NameType" autofocus>
+                                </select>
+                                <label>Type</label>
+                            </div>
+                            <div class="col-6">
+                                <select class="chosen-select form-control" asp-for="ChangedFlag" asp-items="ViewBag.FlagType">
+                                </select>
+                                <label>Name Type</label>
+                            </div>
+                        </div>
+
+                        <div class="row form-group m-b-30">
+                            <div class="col-6">
+                                <div class="form-control-label d-flex align-items-center">Old English FirstName</div>
+                                <div class="form-control-plaintext">@Model?.OldFirstNameEn</div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-control-label d-flex align-items-center">Old Thai FirstName</div>
+                                <div class="form-control-plaintext">@Model?.OldFirstNameTh</div>
+                            </div>
+                        </div>
+
+                        <div class="row form-group m-b-30 @(Model.GraduatedDate == null ? "" : "d-none")">
+                            <div class="col-6">
+                                <input class="form-control" asp-for="NewFirstNameEn">
+                                <label>English FirstName<span class="text-danger">*</span></label>
+                                <span class="text-danger help-block" asp-validation-for="NewFirstNameEn"></span>
+                            </div>
+                            <div class="col-6">
+                                <input class="form-control" asp-for="NewFirstNameTh">
+                                <label>Thai FirstName<span class="text-danger">*</span></label>
+                                <span class="text-danger help-block" asp-validation-for="NewFirstNameTh"></span>
+                            </div>
+                        </div>
+
+                        <div class="row form-group m-b-30">
+                            <div class="col-6">
+                                <div class="form-control-label d-flex align-items-center">Old English LastName</div>
+                                <div class="form-control-plaintext text-uppercase">@Model?.OldLastNameEn</div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-control-label d-flex align-items-center">Old Thai LastName</div>
+                                <div class="form-control-plaintext">@Model?.OldLastNameTh</div>
+                            </div>
+                        </div>
+
+                        <div class="row form-group m-b-30 @(Model.GraduatedDate == null ? "" : "d-none")">
+                            <div class="col-6">
+                                <input class="form-control" asp-for="NewLastNameEn">
+                                <label>English LastName<span class="text-danger">*</span></label>
+                                <span class="text-danger help-block" asp-validation-for="NewLastNameEn"></span>
+                            </div>
+                            <div class="col-6">
+                                <input class="form-control" asp-for="NewLastNameTh">
+                                <label>Thai LastName<span class="text-danger">*</span></label>
+                                <span class="text-danger help-block" asp-validation-for="NewLastNameTh"></span>
+                            </div>
+                        </div>
+
+                        <h4 class="m-b-30">Document</h4>
+                        @if (!string.IsNullOrEmpty(Model?.DocumentUrl))
+                        {
+                            <div class="row form-group col-12">
+                                <img class="w-300" src="@Model.DocumentUrl">
+                            </div>
+                        }
+
+                        <div class="input-group @(Model.GraduatedDate == null ? "" : "d-none")">
+                            <input class="form-control m-r-15" asp-for="DocumentUrl" type="hidden">
+                            <input class="form-control m-r-15" id="filename" type="text">
+                            <input type="file" id="UploadFile" name="UploadFile" onchange="onSelectFile(this, 0);" />
+                            <a class="btn btn--primary mb-0 align-self-end" onclick="document.getElementById('UploadFile').click();">
+                                <i class="la la-file-upload"></i> Browse
+                            </a>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="block__action-row text-align-right pt-5">
+                                <button class="btn btn-mw-120 btn--success @(Model.GraduatedDate == null ? "" : "d-none")" type="submit">Save</button>
+                                <a class="btn btn-mw-120 btn--primary" asp-action="Index">Cancel</a>
+                                <a class="btn btn-mw-120 btn-danger"asp-action="Reject" asp-route-id="@Model.Id">Reject</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+}
+
+<partial name="~/Views/AdmissionStudent/_DocumentModal.cshtml">
+
+@section Scripts {
+    <script>
+        function onSelectFile(control, index) 
+        {
+            $("#filename").val(control.files[0].name);
+        }
+    </script>
+    <script type="text/javascript" src="~/js/pages/student-document.js"></script>
+}

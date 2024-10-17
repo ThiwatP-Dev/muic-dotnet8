@@ -1,0 +1,144 @@
+@model Section
+
+<div class="row">
+    <div class="ks-page-header col-lg-12">
+        <h2 class="ks-page-header__title">
+            <a class="btn-back" href="@ViewBag.ReturnUrl">
+                <i class="la la-angle-double-left mr-1"></i>Back
+            </a>
+        </h2>
+    </div>
+</div>
+
+<div class="block block--underline mb-0">
+    <div class="block__title">
+		<header>Section</header>
+	</div>
+
+    <div class="block__body">
+        <div class="row form-group mb-3">
+            <div class="col-6">
+                <div class="form-control-label d-flex align-items-center">Course</div>
+                <div class="form-control-plaintext text-wrap">@Model?.Course?.CourseAndCredit</div>
+            </div>
+            <div class="col-3">
+                <div class="form-control-label d-flex align-items-center">Section Number</div>
+                <div class="form-control-plaintext text-wrap">@Model?.Number</div>
+            </div>
+            <div class="col-3">
+                <div class="form-control-label d-flex align-items-center">Status</div>
+                <div class="form-control-plaintext text-wrap">@Model?.StatusText</div>
+            </div>
+        </div>
+
+        <div class="row form-group mb-3">
+            <div class="col-3">
+                <div class="form-control-label d-flex align-items-center">Seat Limit</div>
+                <div class="form-control-plaintext text-wrap">@Model?.SeatLimit</div>
+            </div>
+            <div class="col-3">
+                <div class="form-control-label d-flex align-items-center">Seat Used</div>
+                <div class="form-control-plaintext text-wrap">@Model?.SeatUsed</div>
+            </div>
+            <div class="col-3">
+                <div class="form-control-label d-flex align-items-center">Seat Available</div>
+                <div class="form-control-plaintext text-wrap">@Model?.SeatAvailable</div>
+            </div>
+            <div class="col-3">
+                <div class="form-control-label d-flex align-items-center">Planned Seat</div>
+                <div class="form-control-plaintext text-wrap">@Model?.PlanningSeat</div>
+            </div>
+        </div>
+
+        <div class="row form-group mb-3">
+            <div class="col-12">
+                <div class="form-control-label d-flex align-items-center">Remark</div>
+                <div class="form-control-plaintext text-wrap">@Model?.Remark</div>
+            </div>
+        </div>
+    
+        <div class="table-responsive">
+            <span class="class-lookup-title mb-2">Section Detail</span>
+            <table class="table table-bordered table-hover w-100x">
+                <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th class="text-center">Day</th>
+                        <th class="text-center">Time</th>
+                        <th>Room</th>
+                        <th>Teaching Type</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.SectionDetails != null && Model.SectionDetails.Any())
+                    {
+                        var index = 1;
+                        foreach (var item in Model.SectionDetails) 
+                        {
+                            <tr>
+                                <td class="text-center">@index</td>
+                                <td>@item.Dayofweek</td>
+                                <td>@item.Time</td>
+                                <td>@item.Room?.NameEn</td>
+                                <td>@item.TeachingType?.NameEn</td>
+                            </tr>
+                            ++index;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center">
+                                <i class="text-danger">No Data</i>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="table-responsive">
+            <span class="class-lookup-title">Section Slot</span>
+            <table class="table table-bordered table-hover w-100x">
+                <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th class="text-center">Date</th>
+                        <th class="text-center">Day</th>
+                        <th class="text-center">Time</th>
+                        <th>Room</th>
+                        <th>Teaching Type</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.SectionSlots != null && Model.SectionSlots.Any())
+                    {
+                        var index = 1;
+                        foreach (var item in Model.SectionSlots.OrderBy(x => x.Date)) 
+                        {
+                            <tr>
+                                <td>@index</td>
+                                <td>@item.DateText</td>
+                                <td>@item.Dayofweek</td>
+                                <td>@item.Time</td>
+                                <td>@item.Room?.NameEn</td>
+                                <td>@item.TeachingType?.NameEn</td>
+                                <td>@item.StatusText</td>
+                            </tr>
+                            ++index;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="7" class="text-center">
+                                <i class="text-danger">No Data</i>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

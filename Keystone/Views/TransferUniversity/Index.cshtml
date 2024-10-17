@@ -1,0 +1,133 @@
+@model PagedResult<TransferUniversity>
+@{ 
+    ViewData["Title"] = "Transfer University";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+    var recordNumber = Model?.FirstRowOnPage;
+}
+
+<section class="row">
+    <div class="ks-page-header col-lg-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+        <ul class="d-flex flex-md-row align-items-md-center float-right">
+            <li class="list-inline-item mx-3 mb-0">
+                <a class='btn btn--primary' asp-action="Create" asp-route-returnUrl="@contextPath">
+                    <i class="la la-plus mr-1 font-weight-800"></i> Add Transfer University
+                </a>
+            </li>
+        </ul>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Transfer University</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="TransferUniversity" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group mb-0">
+                        <div class="col-4">
+                            <input class="form-control" asp-for="Criteria.CodeAndName" type="text">
+                            <label>Name</label>
+                        </div>
+                        <div class="col-4">
+                            <select class="chosen-select form-control" asp-for="Criteria.CountryId" asp-items="ViewBag.Countries">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Country</label>
+                        </div>
+                        <div class="col-4 align-self-end text-right">
+                           <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.RowCount ?? 0))</header>
+            </div>
+            
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover w-100x">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th>OHEC Code</th>
+                                <th>English Name</th>
+                                <th>Thai Name</th>
+                                <th>Country</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Results.Any())
+                            {
+                                @foreach (var item in Model.Results) 
+                                {
+                                    <tr>
+                                        <td>@recordNumber</td>
+                                        <td>@item.OHECCode</td>
+                                        <td>@item.NameEn</td>
+                                        <td>@item.NameTh</td>
+                                        <td>@item.Country?.NameEn</td>
+                                        <td>
+                                            <partial name="_BooleanActive" model="@item.IsActive">
+                                        </td>
+                                        <td class="text-nowrap td-actions">
+                                            <a asp-controller="TransferUniversity"
+        	                                   asp-action="Details"
+        	                                   asp-route-id="@item.Id"
+								               asp-route-returnUrl="@contextPath">
+        	                                    <i class="la la-info info"></i>
+        	                                </a>
+                                            <a asp-controller="TransferUniversity" asp-action="Edit" asp-route-Id="@item.Id" asp-route-returnUrl="@contextPath">
+                                                <i class="la la-edit edit"></i>
+                                            </a>
+                                            <a data-toggle="modal" 
+                                               data-target="#delete-confirm-modal" 
+                                               data-controller="TransferUniversity"
+                                               data-action="Delete" 
+                                               data-value="@item.Id">
+                                                <i class="la la-trash delete"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    recordNumber++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="7">
+                                        <i class="text-danger">No Data</i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @(await Component.InvokeAsync<PagerViewComponent>(Model))
+    </div>
+</section>
+
+@section Modals {
+    <partial name="_DeleteConfirmModals">
+}

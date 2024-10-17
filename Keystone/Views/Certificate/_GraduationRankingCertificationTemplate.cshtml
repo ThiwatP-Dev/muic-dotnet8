@@ -1,0 +1,89 @@
+@model CertificationViewModel
+
+<partial name="_FormDetailsHeader" model="@Model">
+
+<div class="row form-group">
+    <div class="col-6">
+        <select class="chosen-select form-control js-cascade-academic-level" asp-for="AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+            <option selected disabled>Select</option>
+        </select>
+        <label>Academic Level</label>
+    </div>
+    <div class="col-6">
+        <input class="form-control" asp-for="DegreeName" type="text" autocomplete="off">
+        <label>Degree Name</label>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-6">
+        <select class="chosen-select form-control js-cascade-faculty" asp-for="FacultyId" asp-items="ViewBag.Faculties">
+            <option selected disabled>Select</option>
+        </select>
+        <label>Division</label>
+    </div>
+    <div class="col-6">
+        <select class="chosen-select form-control js-cascade-department" asp-for="DepartmentId" asp-items="ViewBag.Departments">
+            <option selected disabled>Select</option>
+        </select>
+        <label>Major</label>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-3">
+        <input class="form-control js-single-date" asp-for="GraduatedAt" type="text" autocomplete="off">
+        <label>Graduation Date</label>
+    </div>
+    <div class="col-3">
+        <input class="form-control" asp-for="GraduatedYear" type="number" asp-for="Year">
+        <label>Graduating Year</label>
+    </div>
+    <div class="col-2">
+        <input class="form-control" asp-for="CreditComp" type="text" autocomplete="off">
+        <label>Credit</label>
+    </div>
+    <div class="col-2">
+        <input class="form-control" asp-for="GPA" type="text" autocomplete="off">
+        <label>GPA</label>
+    </div>
+    <div class="col-2">
+        <input class="form-control" asp-for="VerifyCode" type="number" min=0>
+        <label>Verify Code</label>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-4">
+        <input class="form-control" asp-for="AllMajorRank" type="number" autocomplete="off">
+        <label>All Major Rank</label>
+    </div>
+    <div class="col-4">
+        <input class="form-control" asp-for="AllFacultyRank" type="number" autocomplete="off">
+        <label>All Division Rank</label>
+    </div>
+    <div class="col-4">
+        <input class="form-control" asp-for="AllEnrolleeRank" type="number" autocomplete="off">
+        <label>All Enrollee Rank</label>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-4">
+        <input class="form-control" asp-for="MajorRank" type="number" autocomplete="off">
+        <label>Major Rank</label>
+    </div>
+    <div class="col-4">
+        <input class="form-control" asp-for="FacultyRank" type="number" autocomplete="off">
+        <label>Division Rank</label>
+    </div>
+    <div class="col-4">
+        <input class="form-control" asp-for="EnrolleeRank" type="number" autocomplete="off">
+        <label>Enrollee Rank</label>
+    </div>
+</div>
+
+<input asp-for="Language" type="hidden">
+<input asp-for="Pronoun" type="hidden">
+<input asp-for="Possessive" type="hidden">
+<input asp-for="ErrorMessage" type="hidden">

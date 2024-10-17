@@ -1,0 +1,73 @@
+@model CheatingStatus
+
+<section class="row">
+	<div class="ks-page-header col-12">
+		<h2 class="ks-page-header__title">
+			<a class="btn-back" href="@ViewBag.ReturnUrl">
+				<i class="la la-angle-double-left"></i>
+			</a>
+			<span>Cheating Status Details</span>
+		</h2>
+	</div>
+</section>
+
+<section>
+	<div class="block block--underline">
+        <div class="block__body">
+            <div class="row form-group">
+                <div class="col-3">
+                    <div class="form-control-label d-flex align-items-center">Academic Level</div>
+                    <div class="form-control-plaintext">@Model?.Student?.AcademicInformation?.AcademicLevel?.NameEn</div>
+                </div>
+                <div class="col-3">
+                    <div class="form-control-label d-flex align-items-center">Term</div>
+                    <div class="form-control-plaintext">@Model?.Term?.TermText</div>
+                </div>
+                <div class="col-3">
+                    <div class="form-control-label d-flex align-items-center">Student Code</div>
+                    <div class="form-control-plaintext">@Model?.Student?.Code</div>
+                </div>
+                <div class="col-3">
+                    <div class="form-control-label d-flex align-items-center">Student Name</div>
+                    <div class="form-control-plaintext">@Model?.Student?.FullNameEn</div>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <div class="col-6">
+                    <div class="form-control-label d-flex align-items-center">Course</div>
+                    <div class="form-control-plaintext">@Model?.RegistrationCourse?.CourseNameAndNumber</div>
+                </div>
+                <div class="col-3">
+                    <div class="form-control-label d-flex align-items-center">Examination Type</div>
+                    <div class="form-control-plaintext">@Model?.ExaminationType?.NameEn</div>
+                </div>
+            </div> 
+
+            <div class="row form-group">
+                <div class="col-12">
+                    <div class="form-control-label d-flex align-items-center">Punish Type</div>
+                    <div class="form-control-plaintext">@Model?.Incident?.NameEn</div>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <div class="col-12">
+                    <div class="form-control-label d-flex align-items-center">Detail</div>
+                    <div class="form-control-plaintext">@Model?.Detail</div>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <div class="col-3">
+                    <div class="form-control-label d-flex align-items-center">Suspend From</div>
+                    <div class="form-control-plaintext">@Model?.FromTerm?.TermText</div>
+                </div>
+                <div class="col-3">
+                    <div class="form-control-label d-flex align-items-center">Suspend To</div>
+                    <div class="form-control-plaintext">@Model?.ToTerm?.TermText</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

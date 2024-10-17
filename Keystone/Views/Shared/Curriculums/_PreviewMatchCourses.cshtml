@@ -1,0 +1,170 @@
+@model StudentTransferViewModel
+@{
+    var index = 1;
+}
+
+<section>
+    <div class="row form-group">
+        @if (Model.CurrentCurriculumCourseGroupViewModels != null && Model.CurrentCurriculumCourseGroupViewModels.Any()) 
+        {
+            <div class="col-6 mb-2">
+                <h3 class="font-weight-700 mb-3">@Model.CurriculumVersionName</h3>
+                @foreach (var courseGroup in Model.CurrentCurriculumCourseGroupViewModels)
+                {
+                    <div class="table-responsive">
+                        <table id="grading-curriculum-export-@courseGroup.Sequence" class="table table-bordered table-hover w-100x">
+                            <thead>
+                                <tr>
+                                    <th colspan="5">@courseGroup.NameEn (@courseGroup.RequiredCreditCompleted @(courseGroup.RequiredCreditCompleted > 1 ? "Credits" : "Credit"))</th>
+                                </tr>
+                            </thead>
+                            @if(courseGroup.DescriptionEn != "" && courseGroup.DescriptionEn != null)
+                            {
+                                <tr>
+                                    <th colspan="5">@courseGroup.DescriptionEn</th>
+                                </tr>
+                            }
+
+                            @if (courseGroup.Courses != null && courseGroup.Courses.Any())
+                            {
+                                <thead>
+                                    <tr>
+                                        <th class="w-100"> Code</th>
+                                        <th> Name</th>
+                                        <th class="w-100"> Credit</th>
+                                        <th class="w-100">Grade</th>
+                                        <th class="w-120">Term</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (courseGroup.Courses != null)
+                                    {
+                                    foreach (var course in courseGroup.Courses) 
+                                    {
+                                        <tr>
+                                            <td>@course.CourseCode</td>
+                                            <td>@course.CourseNameEn</td>
+                                            <td>@course.CreditText</td>
+                                            <td>
+                                                @foreach (var grade in course.Grades)
+                                                {
+                                                    <span>@grade.RegisteredGradeName</span><br/>
+                                                }
+                                            </td>
+                                            <td>
+                                                @foreach (var grade in course.Grades)
+                                                {
+                                                    <span>@grade.TermText</span><br/>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="5">
+                                                <i class="text-danger">No Data</i>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            }
+                        </table>
+                    </div>
+                    <partial name="Curriculums/_CurriculumCourseGroup" model="@courseGroup.Children" />
+                    index++;
+                }
+            </div>
+        }
+
+        @if (Model.NewCurriculumCourseGroupViewModels != null && Model.NewCurriculumCourseGroupViewModels.Any()) 
+        {
+            <div class="col-6 mb-2">
+                <h3 class="font-weight-700 mb-3">@Model.NewCurriculumVersionName</h3>
+                @foreach (var courseGroup in Model.NewCurriculumCourseGroupViewModels)
+                {
+                    <div class="table-responsive">
+                        <table id="grading-curriculum-export-@courseGroup.Sequence" class="table table-bordered table-hover w-100x">
+                            <thead>
+                                <tr>
+                                    <th colspan="5">@courseGroup.NameEn (@courseGroup.RequiredCreditCompleted @(courseGroup.RequiredCreditCompleted > 1 ? "Credits" : "Credit"))</th>
+                                </tr>
+                            </thead>
+                            @if(courseGroup.DescriptionEn != "" && courseGroup.DescriptionEn != null)
+                            {
+                                <tr>
+                                    <th colspan="5">@courseGroup.DescriptionEn</th>
+                                </tr>
+                            }
+
+                            @if (courseGroup.Courses != null && courseGroup.Courses.Any())
+                            {
+                                <thead>
+                                    <tr>
+                                        <th class="w-100"> Code</th>
+                                        <th> Name</th>
+                                        <th class="w-100"> Credit</th>
+                                        <th class="w-100">Grade</th>
+                                        <th class="w-120">Term</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (courseGroup.Courses != null)
+                                    {
+                                    foreach (var course in courseGroup.Courses) 
+                                    {
+                                        <tr>
+                                            <td>@course.CourseCode</td>
+                                            <td>@course.CourseNameEn</td>
+                                            <td>@course.CreditText</td>
+                                            <td>
+                                                @foreach (var grade in course.Grades)
+                                                {
+                                                    <span>@grade.RegisteredGradeName</span><br/>
+                                                }
+                                            </td>
+                                            <td>
+                                                @foreach (var grade in course.Grades)
+                                                {
+                                                    <span>@grade.TermText</span><br/>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="5">
+                                                <i class="text-danger">No Data</i>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            }
+                        </table>
+                    </div>
+                    <partial name="Curriculums/_CurriculumCourseGroup" model="@courseGroup.Children" />
+                    index++;
+                }
+            </div>
+        }
+
+        @* @for (var groupIndex = 0; groupIndex < Model.StudentCourseCategorizations.Count; groupIndex++)
+        {
+            <input asp-for="@Model.StudentCourseCategorizations[groupIndex].CourseGroupId" type="hidden" />
+            <input asp-for="@Model.StudentCourseCategorizations[groupIndex].CourseGroupName" type="hidden" />
+            @for (var courseIndex = 0; courseIndex < Model.StudentCourseCategorizations[groupIndex].courseList.Count; courseIndex++)
+            {
+                <input asp-for="@Model.StudentCourseCategorizations[groupIndex].courseList[@courseIndex].CourseId" type="hidden" />
+                <input asp-for="@Model.StudentCourseCategorizations[groupIndex].courseList[@courseIndex].CourseCode" type="hidden" />
+                <input asp-for="@Model.StudentCourseCategorizations[groupIndex].courseList[@courseIndex].CourseName" type="hidden" />
+                <input asp-for="@Model.StudentCourseCategorizations[groupIndex].courseList[@courseIndex].GradeId" type="hidden" />
+                <input asp-for="@Model.StudentCourseCategorizations[groupIndex].courseList[@courseIndex].GradeName" type="hidden" />
+                <input asp-for="@Model.StudentCourseCategorizations[groupIndex].courseList[@courseIndex].CourseGroupId" type="hidden" />
+                <input asp-for="@Model.StudentCourseCategorizations[groupIndex].courseList[@courseIndex].TermId" type="hidden" />
+            }
+        } *@
+    </div>
+</section>

@@ -1,0 +1,68 @@
+@model AdmissionCurriculum
+
+<div class="block__body">
+    @Html.AntiForgeryToken()
+    <div class="row form-group m-b-30">
+        <div class="col-3">
+            <select class="chosen-select form-control js-cascade-academic-level" asp-for="AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                <option selected disabled>Select</option>
+            </select>
+            <label>Academic Level<span class="text-danger">*</span></label>
+            <span class="text-danger help-block" asp-validation-for="AcademicLevelId"></span>
+        </div>
+        <div class="col-2">
+            <select class="chosen-select form-control js-cascade-admission-term" asp-for="AdmissionTermId" asp-items="ViewBag.AdmissionTerms">
+                <option selected disabled>Select</option>
+            </select>
+            <label>Admission Term<span class="text-danger">*</span></label>
+            <span class="text-danger help-block" asp-validation-for="AdmissionTermId"></span>
+        </div>
+        <div class="col-3">
+            <select class="chosen-select form-control js-cascade-admission-round" asp-for="AdmissionRoundId" asp-items="ViewBag.AdmissionRounds">
+                <option selected disabled>Select</option>
+            </select>
+            <label>Admission Round<span class="text-danger">*</span></label>
+            <span class="text-danger help-block" asp-validation-for="AdmissionRoundId"></span>
+        </div>
+        <div class="col-3">
+            <select class="chosen-select form-control js-cascade-faculty" asp-for="FacultyId" asp-items="ViewBag.Faculties">
+                <option selected disabled>Select</option>
+            </select>
+            <label>Division<span class="text-danger">*</span></label>
+            <span class="text-danger help-block" asp-validation-for="FacultyId"></span>
+        </div>
+    </div>
+
+    <hr class="mb-0">
+
+    <div class="block__body">
+        <header class="font-weight-700 m-b-10">Curriculum List<span class="text-danger">*</span></header>
+        <div id="js-curriculums" class="block">
+            <div class="box-scroll__header d-flex justify-content-between pb-1">
+                <input id="checkAll" class="form-check-input js-check-all" type="checkbox"
+                       @(Model.Id == 0 ? "" : "checked")>
+                <label for="checkAll">Select All <span class="js-item-count">(@(Model.CurriculumVersions?.Count() ?? 0))</span></label>
+                <span class="form-group mb-0">
+                    <input id="js-search" class="form-control search-form--mini" type="text">
+                    <i class="la la-search inline-icon"></i>
+                </span>
+            </div>
+            <div class="js-render-nicescroll box-scroll__content js-items">
+                @if (Model != null && Model.CurriculumVersions != null)
+                {
+                    for (int i = 0; i < Model.CurriculumVersions.Count; ++i)
+                    {
+                        <div class="js-suggestion-parent">
+                            <input id="check@(i)" class="form-check-input" name="curriculumVersionIds"
+                                   value="@Model.CurriculumVersions[i].Id" type="checkbox" @(Model.AdmissionRoundId == 0 ? "" : "checked")>
+                            <label class="js-focus-item m-0" for="check@(i)">@Model.CurriculumVersions[i].CodeAndName</label>
+                            <hr class="w-100x">
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+        <input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+    </div>
+</div>

@@ -1,0 +1,151 @@
+@model PagedResult<AdmissionInformation>;
+@{
+    ViewData["Title"] = "Admission Student Report";
+    var examination = ViewBag.ExemptedExamination as List<ExemptedAdmissionExamination>;
+    var recordNumber = Model?.FirstRowOnPage;
+}
+
+<section class="row">
+    <div class="col-12">
+        <div id="admission-student-accordion1" class="panel-group">
+            <div class="block block--underline">
+                <div class="block__title collapsed" data-toggle="collapse" data-parent="#admission-student-accordion1" data-target="#admission-student-accordion1-1">
+                    <header>@ViewData["Title"]</header>
+                    <div class="tools">
+                        <a class="btn btn--white btn--circle">
+                            <i class="la la-angle-down"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="admission-student-accordion1-1" class="collapse show" aria-expanded="true">
+                    <div class="block__body">
+                        <form class="form-horizontal" asp-controller="AdmissionStudentReport" asp-action="Index" method="GET">
+                            @Html.AntiForgeryToken()
+                            <div class="row form-group m-b-30">
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="@ViewBag.AcademicLevels" data-placeholder="Select">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Academic Level<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-admission-round" asp-for="Criteria.AdmissionRoundId" asp-items="@ViewBag.AdmissionRounds" data-placeholder="Select">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Admission Round</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="@ViewBag.Faculties" data-placeholder="Select">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Division</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentId" asp-items="@ViewBag.Departments" data-placeholder="Select">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Major</label>
+                                </div>
+                            </div>
+
+                            <div class="row form-group m-b-30">
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-curriculum" asp-for="Criteria.CurriculumId" asp-items="@ViewBag.Curriculums" data-placeholder="Select">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Curriculum</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-curriculum-version" asp-for="Criteria.CurriculumVersionId" asp-items="@ViewBag.CurriculumVersions" data-placeholder="Select">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Curriculum Version</label>
+                                </div>
+                                <div class="col-2">
+                                    <input class="form-control js-single-date" asp-for="Criteria.StartedAt" type="text" autocomplete="off">
+                                    <label>Apply From</label>
+                                </div>
+                                <div class="col-2">
+                                    <input class="form-control js-single-date" asp-for="Criteria.EndedAt" type="text" autocomplete="off">
+                                    <label>Apply To</label>
+                                </div>
+                                <div class="col-2">
+                                    <select class="chosen-select form-control" asp-for="Criteria.Status" asp-items="@ViewBag.Statuses" data-placeholder="Select"></select>
+                                    <label>Status</label>
+                                </div>
+                            </div>
+
+                            <div class="row form-group">
+                                <div class="col-12 align-self-end text-right">
+                                    <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                        <i class="la la-search mr-2"></i>Search
+                                    </button>
+                                    <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                        Reset
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.RowCount ?? 0))</header>
+            </div>
+
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table class="table table-bordered js-report-table w-100x">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th>Code</th>
+                                <th>Name</th>
+                                <th>Division</th>
+                                <th>Major</th>
+                                <th>Curriculum</th>
+                                <th>Phone Number</th>
+                                <th>Email</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Results.Any())
+                            {
+                                foreach (var item in Model.Results)
+                                {
+                                    <tr>
+                                        <td>@recordNumber</td>
+                                        <td>@item.Student?.Code</td>
+                                        <td>@item.Student?.FullNameEn</td>
+                                        <td>@item.Faculty?.NameEn</td>
+                                        <td>@item.Department?.NameEn</td>
+                                        <td>@item.CurriculumVersion?.NameEn</td>
+                                        <td>@item.Student.TelephoneNumber1</td>
+                                        <td>@item.Student.Email</td>
+                                    </tr>
+                                    recordNumber++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="@(8 + examination.Count())">
+                                        <i class="text-danger">No Data</i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

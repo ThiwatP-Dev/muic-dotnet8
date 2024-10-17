@@ -1,0 +1,71 @@
+@model CoordinatorViewModel
+@{ 
+    ViewData["Title"] = "Manage Coordinator"; 
+}
+
+<section id="data-table-form-v1" class="row">
+    <div class="col-lg-12">
+        <div class="block block--underline">
+            <form class="ks-form container"
+                  asp-controller="Coordinator"
+                  asp-action="Manage"
+                  method="post"
+                  asp-route-AcademicLevelId="@Model.AcademicLevelId"
+                  asp-route-TermId="@Model.TermId">
+                
+                @Html.AntiForgeryToken()
+                
+                <div class="block__title text-left height-3">
+                    <header>@ViewData["Title"]</header>
+                </div>
+
+                <div class="block__body text-left height-3">
+                    <div class="row form-group">
+                        <div class="col-6">
+                            <div class="form-control-label d-flex align-items-center">Academic Level</div>
+                            <div class="form-control-plaintext">@ViewBag.AcademicLevel</div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-control-label d-flex align-items-center p-t-2">Term</div>
+                            <div id="js-get-term-coordinator" class="form-control-plaintext" data-id="@Model.TermId">@ViewBag.Term</div>
+                        </div>
+                    </div>
+                    <hr class="strong primary mb-4">
+                    <div class="form-group mb-5">
+                        <select id="js-cascade-course" class="chosen-select form-control" asp-items="@ViewBag.Courses" asp-for="@Model.CourseId">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Course<span class="text-danger">*</span></label>
+                        <span class="text-danger help-block"></span>
+                    </div>
+                    <div class="form-group">
+                        <div class="block js-instructors">
+                            <div class="box-scroll__header d-flex">
+                                <header class="color-primary font-weight-700">Select Coordinator</header>
+                            </div>
+                            <div class="js-render-nicescroll box-scroll__content">
+                                <h4>Instructors In Course</h4>
+                                <select id="assigned-instructors" class="chosen-select minimal-primary form-control js-cascade-instructors"
+                                        data-placeholder="Select" multiple asp-items="@ViewBag.InstructorsInCourse" asp-for="@Model.InstructorIds"></select>
+                                <h4 class="mt-5">All Instructors</h4>
+                                <select id="unassigned-instructors" class="chosen-select minimal-primary form-control js-cascade-instructors"
+                                        data-placeholder="Select" multiple asp-items="@ViewBag.ExceptedInstructors" asp-for="@Model.InstructorIds"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="block__action container">
+                        <div class="block__action-row">
+                            <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+                            <a class="btn btn-mw-120 btn--cancel" asp-action="Index"
+                               asp-route-academicLevelId="@Model.AcademicLevelId" asp-route-termId="@Model.TermId">Cancel</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/ajax-cascading/coordinator.js"></script>
+}

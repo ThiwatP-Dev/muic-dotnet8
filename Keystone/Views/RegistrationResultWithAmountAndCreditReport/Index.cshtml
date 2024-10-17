@@ -1,0 +1,360 @@
+@model RegistrationResultWithAmountAndCreditReportViewModel
+@{
+    ViewData["Title"] = "Registration Result With Amount And Credit Report";
+
+    var scholarshipGroup = new List<long> { KeystoneLibrary.Providers.ReceiptProvider.SPECIAL_FEE_TYPE_ID_SCHOLARSHIP };
+
+    //Move logic of column to be in code to share with export button
+    List<KeyValuePair<string, List<long>>> feeColumn = ViewData["feeColumn"] as List<KeyValuePair<string, List<long>>>;
+    feeColumn = feeColumn ?? new List<KeyValuePair<string, List<long>>>()
+    {
+        //From FeeItem
+        new KeyValuePair<string, List<long>> ("Tuition" , new List<long>{1}),        
+        new KeyValuePair<string, List<long>> ("Education Fee" , new List<long>{13}),
+        new KeyValuePair<string, List<long>> ("Late Registration Fee" , new List<long>{24}),
+        new KeyValuePair<string, List<long>> ("Late Payment Fee" , new List<long>{17}),
+        new KeyValuePair<string, List<long>> ("Insurance Fee" , new List<long>{15}),
+        new KeyValuePair<string, List<long>> ("Trimester Lump Sum Tution Fees" , new List<long>{7,9,10,11,33}),
+        new KeyValuePair<string, List<long>> ("Add/Drop Fee" , new List<long>{21}),
+        new KeyValuePair<string, List<long>> ("Scholarship" , scholarshipGroup),
+    };
+
+    var fileName = ViewData["fileName"];
+
+    var i = 1;
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="panel-group">
+            <div class="block block--underline d-print-none">
+                <div class="block__title">
+                    <header>@ViewData["Title"]</header>
+                </div>
+
+                <div class="collapse show" aria-expanded="true">
+                    <div class="block__body">
+                        <form class="form-horizontal" asp-controller="RegistrationResultWithAmountAndCreditReport" asp-action="Index" method="GET">
+                            @Html.AntiForgeryToken()
+
+                            <div class="row form-group m-b-30">
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels" data-placeholder="Select">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label for="Criteria.AcademicLevelId">Academic Level<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="ViewBag.Terms" data-placeholder="Select">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label for="Criteria.TermId">Term<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="ViewBag.Faculties" data-placeholder="Select">
+                                        <option selected value="">Select</option>
+                                    </select>
+                                    <label for="Criteria.FacultyId">Division</label>
+                                </div>
+                                <div class="col-3">
+                                   @* <select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentId" asp-items="ViewBag.Departments" data-placeholder="Select">
+                                        <option selected value="">Select</option>
+                                    </select>
+                                    <label for="Criteria.DepartmentId">Major</label>*@
+                                    <h4 class="font-size-default m-y-4">Major</h4>
+                                    <select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentIds"
+                                            asp-items="ViewBag.Departments" data-placeholder="Select" multiple>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row form-group m-b-30">
+                                <div class="col-2">
+                                    <input class="form-control" asp-for="Criteria.StartStudentBatch" type="number">
+                                    <label>Batch From</label>
+                                </div>
+                                <div class="col-2">
+                                    <input class="form-control" asp-for="Criteria.EndStudentBatch" type="number">
+                                    <label>To</label>
+                                </div>
+                                <div class="col-2">
+                                    <input class="form-control" asp-for="Criteria.StudentCode">
+                                    <label for="Criteria.StudentCode">Student Code</label>
+                                </div>
+                                <div class="col-3">
+                                    <input class="form-control" asp-for="Criteria.StudentCodeFrom" type="number">
+                                    <label>Student Code From</label>
+                                </div>
+                                <div class="col-3">
+                                    <input class="form-control" asp-for="Criteria.StudentCodeTo" type="number">
+                                    <label>To</label>
+                                </div>
+                            </div>
+
+                            <div class="row form-group mb-30">
+                                <div class="col-3">
+                                    <h4 class="font-size-default m-y-4">Student Status</h4>
+                                    <select class="chosen-select form-control" asp-for="Criteria.StudentStatuses" asp-items="ViewBag.StudentStatuses" data-placeholder="Select" multiple>
+                                    </select>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control" asp-for="Criteria.InvoiceType" asp-items="ViewBag.InvoiceType">
+                                        <option value="unconfirm">Unconfirmed</option>
+                                    </select>
+                                    <label>Type</label>
+                                </div>
+                                <div class="col-2">
+                                    <select class="chosen-select form-control" asp-for="Criteria.InvoiceRefundType" asp-items="ViewBag.InvoiceRefundType"></select>
+                                    <label>Invoice Type</label>
+                                </div>
+                                <div class="col-2">
+                                    <select class="chosen-select form-control" asp-for="Criteria.IsPaidAdmissionFee" asp-items="ViewBag.PaidStatuses"></select>
+                                    <label>Paid Status</label>
+                                </div>
+                                <div class="col-2">
+                                     <div class="form-check" style="position : absolute; bottom : 0">
+                                        <input class="form-check-input" type="checkbox" asp-for="Criteria.IsGroupStudent">
+                                        <label for="Criteria_IsGroupStudent" title="Group Student and discard refund paid status">Group Student</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row form-group mb-30">
+                                 <div class="col-2">
+                                    <input class="form-control js-single-date js-check-date" asp-for="Criteria.ReceiptDateFrom" type="text" autocomplete="off">
+                                    <label>Invoice From</label>
+                                </div>
+                                <div class="col-1">
+                                    <input class="form-control js-single-date js-check-date" asp-for="Criteria.ReceiptDateTo" type="text" autocomplete="off">
+                                    <label>To</label>
+                                </div>
+                                 <div class="col-2">
+                                    <input class="form-control" asp-for="Criteria.CreditFrom" type="text" min="0">
+                                    <label>Credit From</label>
+                                </div>
+                                <div class="col-1">
+                                    <input class="form-control" asp-for="Criteria.CreditTo" type="text" min="0">
+                                    <label>To</label>
+                                </div>
+                                 <div class="col-3">
+                                   @* <select class="chosen-select form-control" asp-for="Criteria.ResidentTypeId" asp-items="ViewBag.ResidentTypes">
+                                        <option value="">Select</option>
+                                    </select>
+                                    <label>Resident Type</label>*@
+                                    <h4 class="font-size-default m-y-4">Resident Type</h4>
+                                    <select class="chosen-select form-control" asp-for="Criteria.ResidentTypeIds" asp-items="ViewBag.ResidentTypes" multiple>
+                                    </select>
+                                </div>
+                                <div class="col-3">
+                                   @* <select class="chosen-select form-control" asp-for="Criteria.StudentFeeTypeId" asp-items="ViewBag.StudentFeeTypes">
+                                        <option value="">Select</option>
+                                    </select>
+                                    <label>Student Fee Type</label>*@
+                                    <h4 class="font-size-default m-y-4">Student Fee Type</h4>
+                                    <select class="chosen-select form-control" asp-for="Criteria.StudentFeeTypeIds" asp-items="ViewBag.StudentFeeTypes" multiple>
+                                    </select>
+                                </div>
+                            </div>
+                             <div class="row form-group mb-30">
+                                <div class="col-3">
+                                @*    <select class="chosen-select form-control" asp-for="Criteria.AdmissionTypeId" asp-items="ViewBag.AdmissionTypes">
+                                        <option value="">Select</option>
+                                    </select>
+                                    <label for="AdmissionTypeId">Admission Type</label>*@
+                                    <h4 class="font-size-default m-y-4">Admission Type</h4>
+                                    <select class="chosen-select form-control" asp-for="Criteria.AdmissionTypeIds" asp-items="ViewBag.AdmissionTypes" multiple>
+                                    </select>
+                                </div>
+                                 <div class="col-3">
+                                   @* <select class="chosen-select form-control" asp-for="Criteria.StudentFeeGroupId" asp-items="ViewBag.StudentFeeGroups">
+                                        <option value="">Select</option>
+                                    </select>
+                                    <label for="StudentFeeGroupId">Student Fee Group</label>*@
+                                    <h4 class="font-size-default m-y-4">Student Fee Group</h4>
+                                    <select class="chosen-select form-control" asp-for="Criteria.StudentFeeGroupIds" asp-items="ViewBag.StudentFeeGroups" multiple>
+                                        <option value="">Select</option>
+                                    </select>
+                                </div>
+                                <div class="col-3">
+                                    <input class="form-control js-single-date js-check-date" asp-for="Criteria.PaidDateFrom" type="text" autocomplete="off">
+                                    <label>Paid Date From</label>
+                                </div>
+                                <div class="col-3">
+                                    <input class="form-control js-single-date js-check-date" asp-for="Criteria.PaidDateTo" type="text" autocomplete="off">
+                                    <label>To</label>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-3">
+                                    <h4 class="font-size-default m-y-4">Intaked Term</h4>
+                                    <select class="chosen-select form-control js-cascade-multiple-term" asp-for="Criteria.TermIds" asp-items="ViewBag.Terms" data-placeholder="Select" multiple></select>
+                                </div>
+                                <div class="col align-self-end text-right text-nowrap">
+                                    <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit" name="ActionType" value="Export" onclick="this.form.submitted=this.value;">
+                                        <i class="la la-file-excel mr-2"></i>Save as Excel
+                                    </button>
+                                    <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit" name="ActionType" value="Page">
+                                        <i class="la la-search mr-2"></i>Search
+                                    </button>
+                                    <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                                        Reset
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="block block--underline">
+                    <div class="block__title">
+                        <header>Search Result (@(Model?.ReportItems?.Count ?? 0))</header>
+                        <h1 style="display:none">@(fileName ?? $"Registration Result of Amount and Credit Report As Of {DateTime.Now.ToShortDateString()}")</h1>
+                    </div>
+                    <div class="block__body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover js-report-table w-100x">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">#</th>
+                                        <th>Term</th>
+                                        <th>Division</th>
+                                        <th>Citizen ID</th>
+                                        <th>Code</th>
+                                        <th>Major</th>
+                                        <th>Title</th>
+                                        <th>F-Name</th>
+                                        <th>L-Name</th>
+                                        <th>Title (Thai)</th>
+                                        <th>F-Name (Thai)</th>
+                                        <th>L-Name (Thai)</th>
+                                        <th>Student Fee Type</th>
+                                        <th>Nationality</th>
+                                        <th>Telephone No.</th>
+                                        <th>Status</th>
+                                        <th>Advisor Title</th>
+                                        <th>Advisor F-Name</th>
+                                        <th>Advisor L-Name</th>
+                                        <th>Type</th>
+                                        <th>Total Subjects</th>
+                                        <th>Credit</th>
+                                        <th>Invoice Number</th>
+                                        @if (Model.Criteria?.ReceiptDateFrom.HasValue ?? false)
+                                        {
+                                            <th>Invoice Date</th>
+                                        }
+                                        @foreach (var key in feeColumn)
+                                        {
+                                            <th>@key.Key</th>
+                                        }
+                                        <th>Others</th>
+                                        <th>Total Amount</th>
+                                        <th>First Regist At</th>
+                                        <th>Paid</th>   
+                                        <th>Last Payment At</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model != null && Model.ReportItems != null)
+                                    {
+                                        @foreach (var item in Model.ReportItems)
+                                        {
+                                            <tr>
+                                                <td>@i</td>
+                                                <td>@item.Term</td>
+                                                <td>@item.Faculty</td>
+                                                <td>@item.StudentCitizenNumber</td>
+                                                <td>@item.StudentCode</td>
+                                                <td>@item.Department</td>
+                                                <td>@item.StudentTitleEn</td>
+                                                <td>@item.StudentFirstNameEn</td>
+                                                <td>@item.StudentLastNameEn</td>
+                                                <td>@item.StudentTitleTh </td>
+                                                <td>@item.StudentFirstNameTh</td>
+                                                <td>@item.StudentLastNameTh</td>
+                                                <td>@item.StudentFeeType</td>
+                                                <td>@item.StudentNationality</td>
+                                                <td>@item.StudentTelephoneNumber</td>
+                                                <td>@item.StudentStatus</td>
+                                                <td>@item.AdvisorTitle</td>
+                                                <td>@item.AdvisorFirstName</td>
+                                                <td>@item.AdvisorLastName</td>
+                                                <td>@item.InvoiceTypeText</td>
+                                                <td>@item.TotalRelatedCourse</td>
+                                                <td>@item.TotalRelatedCredit</td>
+                                                <td>@item.InvoiceNumber</td>    
+                                                @if (Model.Criteria?.ReceiptDateFrom.HasValue ?? false)
+                                                {
+                                                    <td>@item.InvoiceDateText</td>
+                                                }
+                                                @foreach (var key in feeColumn)
+                                                {
+                                                    <td class="text-right">@item.Items.Where(x => key.Value.Contains(x.FeeItemId)).Sum(x => x.Amount).ToString(StringFormat.Money)</td>
+                                                }
+                                                <td class="text-right">
+                                                    @((item.Items.Where(x => !feeColumn.SelectMany(y => y.Value).Contains(x.FeeItemId) ).Sum(x => x.Amount) 
+                                                        - item.Items.Sum(x => x.DiscountAmount) 
+                                                    ).ToString(StringFormat.Money))
+                                                </td>
+                                                <td class="text-right">@((item.TotalAmount
+                                                                             - (item.Items.Where(x => scholarshipGroup.Contains(x.FeeItemId)).Sum(x => x.Amount))
+                                                                         ).ToString(StringFormat.Money))</td>
+                                                <td>@item.FirstRegistrationDateText</td>
+                                                <td>
+                                                    @if (item.IsPaid)
+                                                    {
+                                                        <span class="ks-label bg-success">Paid</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="ks-label bg-danger">Unpaid</span>
+                                                    }
+                                                </td>         
+                                                <td>@item.LastPaymentDateText</td>
+                                            </tr>
+                                            ++i;
+                                        }
+                                    }
+                                </tbody>
+                                @if (Model != null && Model.ReportItems != null)
+                                {
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="20">Total @Model.ReportItems.Count records</td>
+                                            <td>@Model.ReportItems.Sum(x => x.TotalRelatedCourse)</td>
+                                            <td>@Model.ReportItems.Sum(x => x.TotalRelatedCredit)</td>
+                                            <td></td>
+                                            @if (Model.Criteria?.ReceiptDateFrom.HasValue ?? false)
+                                            {
+                                                <td></td>
+                                            }
+                                            @foreach (var key in feeColumn)
+                                            {
+                                                <td class="text-right">@Model.ReportItems.SelectMany(x => x.Items).Where(x => key.Value.Contains(x.FeeItemId)).Sum(x => x.Amount).ToString(StringFormat.Money)</td>
+                                            }
+                                            <td class="text-right">
+                                                @((Model.ReportItems.SelectMany(x => x.Items).Where(x => !feeColumn.SelectMany(y => y.Value).Contains(x.FeeItemId) ).Sum(x => x.Amount) 
+                                                            - Model.ReportItems.SelectMany(x => x.Items).Sum(x => x.DiscountAmount)                                                             
+                                                        ).ToString(StringFormat.Money))
+                                            </td>
+                                            <td class="text-right">@Model.ReportItems.Sum(x => x.TotalAmount
+                                                                                               - (x.Items.Where(y => scholarshipGroup.Contains(y.FeeItemId)).Sum(y => y.Amount))
+                                                                                         ).ToString(StringFormat.Money)</td>
+                                            <td colspan="3"></td>
+                                        </tr>
+                                    </tfoot>
+                                }
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+<script type="text/javascript" src="~/js/pages/registration-result-w-amount-n-credit-report.js"></script>
+}

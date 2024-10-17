@@ -1,0 +1,102 @@
+@model CurriculumVersionViewModel
+@{
+	var curriculumVersionId = Model.CurriculumVersion.Id == 0 ? (long?)null : Model.CurriculumVersion.Id;
+	var minorId = Model.MinorId == 0 ? (long?)null : Model.MinorId;
+	var concentrationId = Model.ConcentrationId == 0 ? (long?)null : Model.ConcentrationId;
+	var contextPath = $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+
+<div class="d-flex flex-column">
+	<div class="col-12 tools text-right">
+		<a class="btn btn--primary" 
+		   asp-controller="CourseGroup" 
+		   asp-action="CreateMainGroup" 
+		   asp-route-versionId="@curriculumVersionId" 
+		   asp-route-minorId="@minorId" 
+		   asp-route-concentrationId="@concentrationId" 
+		   asp-route-returnUrl="@contextPath">
+		   <i class="la la-plus mr-1 font-weight-800"></i> Add Main Group
+		</a>
+	</div>
+	@foreach(var courseGroup in Model.CurriculumVersion.CourseGroups)
+	{
+		var type = string.IsNullOrEmpty(courseGroup.TypeText) ? "" : courseGroup.TypeText;
+		//var minor = courseGroup.Minor == null ? "" : "Minor:" + courseGroup.Minor?.NameEn;
+		//var concentration = courseGroup.Concentration == null ? "" : "Concentration:" + courseGroup.Concentration?.NameEn;
+		//var groupName = $"{ courseGroup.NameEn } / Type:{ type } / { minor } / { concentration }";
+		<div class="col-12">
+			<div class="curriculum" id="parents-@courseGroup.Id">
+				<div class="curriculum__header">
+					<header class="mr-auto">
+						<h4 class="d-flex flex-column">
+							<span class="font-weight-700">
+								@courseGroup.NameEn (@courseGroup.Credit @(courseGroup.Credit > 1 ? "Credits" : "Credit"))
+							</span>
+							@if (!string.IsNullOrEmpty(courseGroup.DescriptionEn))
+							{
+								<div class="font-size-12 mt-1">
+									<span style="white-space: pre-wrap;">@courseGroup.DescriptionEn</span>
+								</div>
+							}
+							@* <div class="font-size-12 mt-1">
+								@if (!string.IsNullOrEmpty(courseGroup.Type))
+								{
+									<span>Type: @courseGroup.TypeText</span>
+								}
+
+								@if (courseGroup.SpecializationGroup?.Type == "m")
+								{
+									<span>Minor: @courseGroup.SpecializationGroup?.NameEn</span>	
+								}
+								else
+								{
+									<span>Concentration: @courseGroup.SpecializationGroup?.NameEn</span>		
+								}
+							</div> *@
+						</h4>
+					</header>
+
+					<div class="d-flex align-self-end">
+						<div class="actions-group mr-1">
+							<a class="popover-link js-curriculum-option" 
+								data-group-id="@courseGroup.Id" 
+								data-return-url="@contextPath">
+								<i class="la la-plus check"></i>
+							</a>
+							<a class="popover-link js-curriculum-edit-option" 
+								data-group-id="@courseGroup.Id" 
+								data-return-url="@contextPath">
+									<i class="la la-edit edit"></i>
+							</a>
+							<a data-toggle="modal" 
+								data-target="#delete-confirm-modal" 
+								data-controller="CourseGroup" 
+								data-action="DeleteCourseGroup" 
+								data-value="@courseGroup.Id"
+								data-return-url="@contextPath"
+								class="popover-link">
+								<i class="la la-trash delete"></i>
+							</a>
+						</div>
+						@if ((courseGroup.ChildCourseGroups != null && courseGroup.ChildCourseGroups.Any()) 
+							  || (courseGroup.CurriculumCourses != null && courseGroup.CurriculumCourses.Any()))
+						{
+							<a class="btn btn--white btn--circle" data-toggle="collapse" data-parent="#parents-@courseGroup.Id" data-target="#accordion-@courseGroup.Id-1">
+								<i class="la la-angle-down"></i>
+							</a>
+						}
+					</div>
+				</div>
+				<div id="accordion-@courseGroup.Id-1" class="collapse">
+					<div class="curriculum__content">
+						@{
+							var htmlString = "";
+							htmlString = UIHelper.GetChild(courseGroup, htmlString, contextPath);
+							@Html.Raw(htmlString)
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+</div>

@@ -1,0 +1,191 @@
+@model WaitingPaymentWithAddressReportViewModel
+@{
+    ViewData["Title"] = "Waiting Payment with Address Report";
+    var i = 1;
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="panel-group">
+            <div class="block block--underline d-print-none">
+                <div class="block__title">
+                    <header>@ViewData["Title"]</header>
+                </div>
+
+                <div class="collapse show" aria-expanded="true">
+                    <div class="block__body">
+                        <form class="form-horizontal" asp-controller="WaitingPaymentWithAddressReport" asp-action="Index" method="GET">
+                            @Html.AntiForgeryToken()
+
+                            <div class="row form-group m-b-30">
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels" data-placeholder="Select">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label for="Criteria.AcademicLevelId">Academic Level<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="ViewBag.Terms" data-placeholder="Select">
+                                        <option selected disabled>Select</option>
+                                    </select>   
+                                    <label for="Criteria.TermId">Term<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="ViewBag.Faculties" data-placeholder="Select">
+                                        <option selected value="">Select</option>
+                                    </select>
+                                    <label for="Criteria.FacultyId">Division</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentId" asp-items="ViewBag.Departments" data-placeholder="Select">
+                                        <option selected value="">Select</option>
+                                    </select>
+                                    <label for="Criteria.DepartmentId">Major</label>
+                                </div>
+                            </div>
+
+                            <div class="row form-group m-b-30">
+                                <div class="col-2">
+                                    <input class="form-control" asp-for="Criteria.StartStudentBatch" type="number">
+                                    <label>Batch From</label>
+                                </div>
+                                <div class="col-2">
+                                    <input class="form-control" asp-for="Criteria.EndStudentBatch" type="number">
+                                    <label>To</label>
+                                </div>
+                                <div class="col-2">
+                                    <input class="form-control" asp-for="Criteria.StudentCode">
+                                    <label for="Criteria.StudentCode">Student Code</label>
+                                </div>
+                                <div class="col-3">
+                                    <input class="form-control" asp-for="Criteria.StudentCodeFrom" type="number">
+                                    <label>Student Code From</label>
+                                </div>
+                                <div class="col-3">
+                                    <input class="form-control" asp-for="Criteria.StudentCodeTo" type="number">
+                                    <label>To</label>
+                                </div>
+                            </div>
+                            <div class="row form-group m-b-30">
+                                <div class="col-3">
+                                    <h4 class="font-size-default m-y-4">Student Status</h4>
+                                    <select class="chosen-select form-control" asp-for="Criteria.StudentStatuses" asp-items="ViewBag.StudentStatuses" data-placeholder="Select" multiple>
+                                    </select>
+                                </div>
+                                 <div class="col-2">
+                                    <input class="form-control" asp-for="Criteria.CreditFrom" type="text" min="0">
+                                    <label>Credit From</label>
+                                </div>
+                                <div class="col-1">
+                                    <input class="form-control" asp-for="Criteria.CreditTo" type="text" min="0">
+                                    <label>To</label>
+                                </div>
+                                 <div class="col-3">
+                                    <select class="chosen-select form-control" asp-for="Criteria.ResidentTypeId" asp-items="ViewBag.ResidentTypes">
+                                        <option value="">Select</option>
+                                    </select>
+                                    <label>Resident Type</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control" asp-for="Criteria.StudentFeeTypeId" asp-items="ViewBag.StudentFeeTypes">
+                                        <option value="">Select</option>
+                                    </select>
+                                    <label>Student Fee Type</label>
+                                </div>
+                            </div>
+                            <div class="row form-group mb-0">
+                                <div class="col-3">
+                                    <select class="chosen-select form-control" asp-for="Criteria.AdmissionTypeId" asp-items="ViewBag.AdmissionTypes">
+                                        <option value="">Select</option>
+                                    </select>
+                                    <label for="AdmissionTypeId">Admission Type</label>
+                                </div>
+                                 <div class="col-3">
+                                    <select class="chosen-select form-control" asp-for="Criteria.StudentFeeGroupId" asp-items="ViewBag.StudentFeeGroups">
+                                        <option value="">Select</option>
+                                    </select>
+                                    <label for="StudentFeeGroupId">Student Fee Group</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control" asp-for="Criteria.InvoiceType" asp-items="ViewBag.InvoiceType">
+                                        <option value="unconfirm">Unconfirmed</option>
+                                    </select>
+                                    <label>Type</label>
+                                </div>
+                                <div class="col-3 align-self-end text-right text-nowrap">
+                                    <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                        <i class="la la-search mr-2"></i>Search
+                                    </button>
+                                    <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                                        Reset
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="block block--underline">
+                    <div class="block__title">
+                        <header>Search Result (@(Model?.ReportItems?.Count ?? 0))</header>
+                    </div>
+                    <div class="block__body">
+                        <div class="p-b-30">
+                            <table class="table table-bordered table-hover js-report-table w-100x">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">#</th>
+                                        <th>Term</th>
+                                        <th>Code</th>
+                                        <th>Name</th>
+                                        <th>Status</th>
+                                        <th>Division</th>
+                                        <th>Major</th>
+                                        <th>Type</th>
+                                        <th>Credit</th>
+                                        <th>Amount</th>
+                                        <th>Address1</th>
+                                        <th>Address2</th>
+                                        <th>ZipCode</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model != null && Model.ReportItems != null)
+                                    {
+                                        @foreach (var item in Model.ReportItems)
+                                        {
+                                            <tr>
+                                                <td>@i</td>
+                                                <td>@item.Term</td>
+                                                <td>@item.StudentCode</td>
+                                                <td>@item.StudentName</td>
+                                                <td>@item.StudentStatus</td>
+                                                <td>@item.Faculty</td>
+                                                <td>@item.Department</td>
+                                                <td>@(string.IsNullOrEmpty(item.InvoiceType)? "Unconfirm": item.InvoiceType)</td>
+                                                <td>@item.TotalRelatedCredit</td>
+                                                <td class="text-right">@item.InvoiceTotalAmount.ToString(StringFormat.Money)</td>
+                                                <td>@item.AddressEn1</td>
+                                                <td>@item.AddressEn2</td>
+                                                <td>@item.ZipCode</td>
+                                            </tr>
+                                            ++i;
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>  
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/waiting-pament-w-address-report.js"></script>
+}

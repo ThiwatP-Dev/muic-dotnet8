@@ -1,0 +1,181 @@
+@model GradeMaintenanceViewModel;
+@{
+    ViewData["Title"] = "Grade Maintenance";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+    var index = 1;
+    var returnUrl = (string)ViewBag.ReturnUrl;
+}
+
+@if (!string.IsNullOrEmpty(returnUrl))
+{
+    <div class="row">
+        <div class="ks-page-header col-lg-12">
+            <h2 class="ks-page-header__title">
+                <a class="btn-back" href="@returnUrl">
+                    <i class="la la-angle-double-left mr-1"></i>Back
+                </a>
+            </h2>
+        </div>
+    </div>
+}
+
+<div class="row">
+    <div class="ks-page-header col-lg-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</div>
+
+<section class="block">
+    <form asp-controller="GradeMaintenance" asp-action="Index" method="GET">
+        @Html.AntiForgeryToken()
+        <div class="block__body">
+            <div class="row form-group mb-0">
+                <div class="col-3">
+                    <select class="chosen-select form-control js-cascade-academic-level" asp-items="ViewBag.AcademicLevels" asp-for="Criteria.AcademicLevelId">
+                        <option selected disabled>Select</option>
+                    </select>
+                    <label>Academic Level<span class="text-danger">*</span></label>
+                </div>
+                <div class="col-3">
+                    <select class="chosen-select form-control js-cascade-term" asp-items="ViewBag.Terms" asp-for="Criteria.TermId">
+                        <option selected disabled>Select</option>
+                    </select>
+                    <label>Term<span class="text-danger">*</span></label>
+                </div>
+                <div class="col-4">
+                    <input class="form-control" asp-for="Criteria.Code"/>
+                    <label>Student Code<span class="text-danger">*</span></label>
+                </div>
+                <div class="col-2 align-self-end">
+                    <button class="btn btn-mw-120 btn--primary mb-0" type="submit">
+                        <i class="la la-search mr-2"></i>
+                        <span class="bold">Search</span>
+                    </button>
+                </div>
+            </div>            
+        </div>
+    </form>
+</section>
+
+@if (Model != null)
+{
+    <section class="block">
+        <div class="block__body">
+            <div id="details-accordion1" class="panel-group">
+                <div class="block block--underline">
+                    <div class="block__title">
+                        <header class="align-self-center color-primary">Student Details</header>
+                        <div class="tools">
+                            <div class="btn-group">
+                                <a class="btn btn--white btn--circle" data-toggle="collapse" 
+                                data-parent="#details-accordion1" data-target="#details-accordion1-1">
+                                    <i class="la la-angle-down"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="details-accordion1-1" class="collapse show" aria-expanded="true">
+                        <div class="block__body">
+                            <div class="row">
+                                <div class="col-5 form-group mb-0">
+                                    <div class="form-control-label d-flex align-items-center font-weight-700">Name</div>
+                                    <div class="form-control-plaintext">@Model.StudentFullName</div>
+                                </div>
+                                <div class="col-5 form-group mb-0">
+                                    <div class="form-control-label d-flex align-items-center font-weight-700">Curriculum</div>
+                                    <div class="form-control-plaintext">@Model.CurriculumName</div>
+                                </div>
+                                <div class="col-2 form-group mb-0">
+                                    <a class="btn btn-mw-120 btn--primary"
+                                       asp-controller="AddingGrade"
+                                       asp-action="Index"
+                                       asp-route-code="@Model.Criteria.Code"
+                                       asp-route-returnUrl="@contextPath">
+                                       <span class="bold"><i class="la la-plus mr-2"></i>Add</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered m-0">
+                    <thead>
+                        <tr>
+                            <th class="text-center w-25">#</th>
+                            <th>Course</th>
+                            <th class="text-center w-150">Section</th>
+                            <th class="text-center w-150">Current Grade</th>
+                            <th class="text-center w-150">Grade Published</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.GradingInfo != null && Model.GradingInfo.Any())
+                        {
+                            foreach (var item in Model.GradingInfo)
+                            {
+                                <tr>
+                                    <td>@(index++)</td>
+                                    <td>
+                                        <b>@item.Course?.CodeAndCredit</b><br>
+                                        <b>@item.Course?.NameEn</b><br>
+                                        @item.MainInstructor?.FullNameEn
+
+                                    </td>
+                                    <td>
+                                        @item.SectionNumber<br> 
+                                        @item.Section?.SectionTypes
+                                    </td>
+                                    <td>@item.PreviousGrade</td>
+                                    <td>
+                                        <partial name="_BooleanResult" model="@item.IsGradePublished" />
+                                    </td>
+                                    <td class="td-actions text-nowrap">
+                                        <a class="js-grade-editor" data-toggle="modal"
+                                           data-target="#js-grade-editor-modal"
+                                           data-registrationCourseId="@item.RegistrationCourseId">
+                                             <i class="la la-edit edit"></i>
+                                        </a>
+                                        <a class="js-change-publication-confirm-modal"
+                                           data-toggle="modal" 
+                                           data-target="#js-change-publication-confirm-modal"
+                                           data-action="ChangePublicationStatus"
+                                           data-gradePublishedStatus="@item.IsGradePublished"
+                                           data-registrationCourseId="@item.RegistrationCourseId">
+                                            @if(item.IsGradePublished)
+                                            {
+                                                <i class="la la-eye-slash edit"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="la la-eye check"></i>
+                                            }
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else 
+                        {
+                            <tr>
+                                <td class="text-danger" colspan="6">No Data</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+}
+
+@section Modals {
+    <partial name="_GradeEditorModals" />
+    <partial name="_ChangePublishStatusModals"/>
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/grading-modification.js"></script>
+}

@@ -1,0 +1,175 @@
+@model GradeManagementViewModel
+@{
+    ViewData["Title"] = "Grading Record Management";
+}
+
+<div class="row">
+    <div class="ks-page-header">
+        <h2 class="ks-page-header__title">
+            <a class="btn-back" href="#!"
+               data-toggle="modal"
+               data-target="#confirm-redirection-modal"
+               data-controller="GradeManagement"
+               data-action="Index" 
+               data-route="academicLevelId=@Model.AcademicLevelId&termId=@Model.TermId">
+                <i class="la la-angle-double-left"></i>
+            </a>
+            <span>@ViewData["Title"]</span>
+        </h2>
+    </div>
+</div>
+
+@if (Model.CourseIds == null || !Model.CourseIds.Any())
+{
+    <section id="record-details">
+        <div class="block">
+            <div class="block__content">
+                <form class="form-horizontal" asp-action="Create" method="POST">
+                    <div class="row form-group">
+                        <div class="col-6">
+                            <h4 class="font-weight-700 mr-2">Record's Course<span class="text-danger">*</span></h4>
+                            <select id="js-selected-course" class="chosen-select form-control" asp-for="CourseIds" asp-items="@ViewBag.Courses"
+                                data-placeholder="No Selected Course" multiple></select>
+                        </div>
+                        @* <div class="col-4">
+                            <select class="chosen-select form-control" asp-for="StandardGradingGroupId" asp-items="@ViewBag.Groups">
+                                    <option selected disabled>Select</option>
+                            </select>
+                            <label class="font-weight-700 mr-2">Standard Grading Group<span class="text-danger">*</span></label>
+                        </div> *@
+                        <input asp-for="TermId" type="hidden">
+                        <input asp-for="AcademicLevelId" type="hidden">
+                        <div class="col-2 align-self-end text-center">
+                            <button class="btn btn--primary btn-mw-120" type="submit">
+                                <i class="la la-plus mr-2"></i>Add
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+}
+else
+{
+    <section id="record-details">
+        <div id="record-accordion1" class="panel-group">
+            <div class="block block--underline">
+                <div class="block__title collapsed">
+                    <header class="align-self-center font-weight-700 color-primary">Record's Course</header>
+                    <div class="tools pr-4">
+                        <div class="btn-group mr-0">
+                            <a class="btn btn--white btn--circle" data-toggle="collapse" data-parent="#record-accordion1" data-target="#record-accordion1-1">
+                                <i class="la la-angle-down"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div id="record-accordion1-1" class="collapse show" aria-expanded="true">
+                    <div class="block__body hidden">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th class="w-250">Code</th>
+                                                <th>Name</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model.Courses)
+                                            {
+                                                <tr>
+                                                    <td>@item.Code</td>
+                                                    <td>@item.NameEnAndCredit</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <form asp-controller="GradeManagement" asp-action="Reset" class="form-horizontal" method="GET">
+                                    <div class="block__body">
+                                        <div class="row form-group">
+                                            @* <div class="col-10">
+                                                <select class="chosen-select form-control" asp-items="ViewBag.Groups" asp-for="ResetStandardGradingGroupId">
+                                                    <option selected disabled>Select</option>
+                                                </select>
+                                                <label>Standard Grading Group</label>
+                                            </div> *@
+
+                                            @for (int i = 0 ; i < Model.CourseIds.Count ; ++i)
+                                            {
+                                                <input asp-for="@Model.ResetCourseIds[i]" type="hidden" value="@Model.CourseIds[i]">
+                                            }
+
+                                            <input id="js-grading-allocation-reset-id" asp-for="ResetGradingAllocationId" type="hidden">
+                                            <input asp-for="ResetTermId" type="hidden">
+                                            <input asp-for="ResetAcademicLevelId" type="hidden">
+                                            <div class="col-2 align-self-end text-right text-nowrap">
+                                                <button class="btn btn-mw-120 btn--primary" type="submit">
+                                                    <i class="mb-0 m-r-5"></i>
+                                                    <span class="bold">Reset</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="record-steps">
+        <form id="grading-wizard" method="POST">
+            <h3>Allocate Score</h3>
+            <section>
+                <partial name="GradingSteps/_Allocation">
+            </section>
+
+            <h3>Scoring</h3>
+            <section>
+                <partial name="GradingSteps/_Scoring">
+            </section>
+
+            <h3>Grading</h3>
+            <section>
+                <partial name="GradingSteps/_Grading" model="Model">
+            </section>
+
+            <h3>Confirm</h3>
+            <section>
+                <partial name="GradingSteps/_Result" model="Model">
+            </section>
+            
+            @for (int i=0 ; i<Model.CourseIds.Count ; ++i)
+            {
+                <input class="js-get-course-ids" asp-for="@Model.CourseIds[i]" type="hidden" value="@Model.CourseIds[i]">
+            }
+
+            <input asp-for="TermId" type="hidden">
+            <input asp-for="AcademicLevelId" type="hidden">
+            <input id="js-grading-allocation-id" asp-for="GradingAllocationId" type="hidden">
+            <input asp-for="@Model.GradingAllocationId" type="hidden">
+            <input asp-for="StandardGradingGroupId" type="hidden">
+        </form>
+    </section>
+}
+
+@section Modals {
+    <partial name="GradingSteps/_AllocationTemplateModals">
+    <partial name="GradingSteps/_SectionsModals">
+    <partial name="GradingSteps/_ResultEditGradeModals">
+    <partial name="_DeleteRowConfirmModals">
+    <partial name="_ConfirmRedirectionModals">
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/grade-management.js"></script>
+    <script type="text/javascript" src="~/js/pages/grade-modal.js"></script>
+}

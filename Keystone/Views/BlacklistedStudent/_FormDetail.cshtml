@@ -1,0 +1,63 @@
+@model BlacklistedStudent
+
+<div class="row form-group">
+    <div class="col-3">
+        <select class="chosen-select form-control" asp-for="TitleId" asp-items="@ViewBag.Titles" data-placeholder="Select" disabled>
+            <option selected disabled>Select</option>
+        </select>
+        <label>Title<span class="text-danger">*</span></label>
+    </div>
+    <div class="col-3">
+        <input class="form-control" asp-for="FirstNameEn" readonly>
+        <label>English First Name<span class="text-danger">*</span></label>
+    </div>
+    <div class="col-3">
+        <input class="form-control" asp-for="MidNameEn" readonly>
+        <label>English Middle Name</label>
+    </div>
+    <div class="col-3">
+        <input class="form-control" asp-for="LastNameEn" readonly>
+        <label>English Last Name<span class="text-danger">*</span></label>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-3">
+    </div>
+    <div class="col-3">
+        <input class="form-control" asp-for="FirstNameTh" readonly>
+        <label>Thai First Name<span class="text-danger">*</span></label>
+    </div>
+    <div class="col-3">
+        <input class="form-control" asp-for="MidNameTh" readonly>
+        <label>Thai Middle Name</label>
+    </div>
+    <div class="col-3">
+        <input class="form-control" asp-for="LastNameTh" readonly>
+        <label>Thai Last Name<span class="text-danger">*</span></label>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-3">
+        <select class="chosen-select form-control" asp-for="Gender" asp-items="@ViewBag.Genders" data-placeholder="Select" disabled>
+            <option selected disabled>Select</option>
+        </select>
+        <label>Gender<span class="text-danger">*</span></label>
+    </div>
+    <div class="col-3">
+        <input class="form-control js-single-date" asp-for="BirthDate" type="text" autocomplete="off" readonly>
+        <label>Birth Date<span class="text-danger">*</span></label>
+    </div>
+    <div class="col-3">
+        <input class="form-control" asp-for="CitizenNumber" readonly>
+        <label>Citizen Number</label>
+    </div>
+    <div class="col-3">
+        <input class="form-control" asp-for="Passport" readonly>
+        <label>Passport Number</label>
+    </div>
+</div>
+
+<input asp-for="TitleId" hidden>
+<input asp-for="Gender" hidden>

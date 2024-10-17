@@ -1,0 +1,19 @@
+@model AddDropFeeConfigurationViewModel
+@{ 
+    ViewData["Title"] = "Edit Drop Fee Configuration"; 
+}
+
+<section class="row">
+    <div class="col-lg-12">
+        <div class="block block--underline">
+            <form class="ks-form container" asp-controller="AddDropFeeConfiguration" asp-action="Edit" method="post">
+                @Html.AntiForgeryToken()
+                <partial name="_Form"/>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/add-drop-fee-configuration.js"></script>
+}

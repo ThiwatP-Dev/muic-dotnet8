@@ -1,0 +1,122 @@
+@model StudyPlanViewModel
+
+<div class="block__title">
+    <header class="w-100x">
+        @ViewData["Title"]
+        <div class="d-block mt-3">
+            <span id="js-curriculum-id" class="my-2 color-white font-size-14 badge bg-primary p-a-10" data-curriculum-id="@Model.CurriculumVersion.Id">
+                Code : @Model.CurriculumVersion?.Curriculum?.ReferenceCode
+            </span>
+        </div>
+        <div class="d-flex justify-content-between">
+            <h3 class="color-primary my-2 mr-auto">@Model.CurriculumVersion?.CodeAndName</h3>
+            <h3 class="color-secondary my-2">@Model.CurriculumVersion?.TotalCredit Credits</h3>
+        </div>
+    </header>
+</div>
+
+<div class="block__body">
+    <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+
+    <div class="row form-group m-b-15">
+        <div class="col-lg-3 col-md-6">
+            <input class="form-control" asp-for="Year" type="number" min="1">
+            <label>Year</label>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <input class="form-control" asp-for="Term" type="number" min="1">
+            <label>Term</label>
+        </div>
+    </div>
+
+    <div class="justify-content-end">
+        <table id="js-plans-1-1" class="table table-bordered">
+            <thead>
+                <tr>
+                    <th class="text-center w-50">#</th>
+                    <th>Course</th>
+                    <th class="text-right w-100">Credits</th>
+                    <th class="text-center w-85">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.CurriculumVersion.StudyPlans == null)
+                {
+                    <tr>
+                        <td>1</td>
+                        <td class="suggestion-parent">
+                            <input class="form-control__table js-course-suggestion" name="StudyPlan[0].CoursePlan" course-id="0" autocomplete="off">
+                            <ul class="suggestion-box js-course-suggestion-list">
+                                @foreach (var item in Model.CoursesPlan)
+                                {
+                                    <li class="suggestion-result js-course-suggestion-item" data-course-id="@item.Id" data-credit="@item.Credit">
+                                        @item.Code @item.NameEn
+                                    </li>
+                                }
+                            </ul>
+                        </td>
+                        <td>
+                            <input class="form-control__table text-right js-get-credit" name="StudyPlan[0].Credit" type="number" min="0">
+                        </td>
+                        <td class="text-nowrap td-actions">
+                            <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                            <i class="la la-trash delete"></i></a>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    var thisPlan = Model.CurriculumVersion.StudyPlans.FirstOrDefault();
+                    <span id="js-get-plan-id" hidden data-studyplan-id="@thisPlan.Id"></span>
+                    for (int i = 0; i < thisPlan.StudyCourses.Count; ++i)
+                    {
+                        var CourseId = thisPlan.StudyCourses[i].CourseId == null ? Convert.ToInt64("0") : thisPlan.StudyCourses[i].CourseId;
+                        <tr>
+                            <td>@(i+1)</td>
+                            <td class="suggestion-parent">
+                                <input class="form-control__table js-course-suggestion" name="StudyPlan[@i].CoursePlan" course-id="@CourseId" 
+                                       value="@thisPlan.StudyCourses[@i].CodeAndName" autocomplete="off">
+                                <ul class="suggestion-box js-course-suggestion-list">
+                                    @foreach (var item in Model.CoursesPlan)
+                                    {
+                                        <li class="suggestion-result js-course-suggestion-item" data-course-id="@item.Id" data-credit="@item.Credit">
+                                            @item.Code @item.NameEn
+                                        </li>
+                                    }
+                                </ul>
+                            </td>
+                            <td>
+                                <input class="form-control__table text-right js-get-credit" name="StudyPlan[@i].Credit" type="number" min="0"
+                                 value="@thisPlan.StudyCourses[@i].Credit" autocomplete="off">
+                            </td>
+                            <td class="text-nowrap td-actions">
+                                <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                <i class="la la-trash delete"></i></a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td class="d-none"></td>
+                    <td class="text-right border-right-0" colspan="2">Total Credits : </td>
+                    <td class="text-right border-right-0 border-left-0">
+                        <span id="js-total-credit"></span>
+                    </td>
+                    <td class="text-right border-left-0"></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+<input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+
+<div class="block__action container">
+    <div class="block__action-row">
+        <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+        <a class="btn btn-mw-120 btn--link" asp-controller="CurriculumVersion" asp-action="Details"
+        asp-route-id="@Model.CurriculumVersion.Id" asp-route-tabIndex="1" asp-route-returnUrl="@ViewBag.ReturnUrl">Cancel</a>
+    </div>
+</div>

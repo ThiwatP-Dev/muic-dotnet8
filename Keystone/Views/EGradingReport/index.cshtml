@@ -1,0 +1,151 @@
+@model FinalGradeViewModel
+@{ 
+    ViewData["Title"] = "E-Grading Report"; 
+    var index = 1;
+}
+
+<div class="row">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+        </ul>
+    </div>
+</div>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>E-Grading Report</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="EGradingReport" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group m-b-30">
+                        <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels"  data-placeholder="Select">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Academic Level<span class="text-danger">*</span></label>
+                        </div>
+                         <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="ViewBag.Terms" data-placeholder="Select">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Term<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-4">
+                            <select class="chosen-select form-control" asp-for="Criteria.TransferType" asp-items="ViewBag.TransferType" data-placeholder="Select">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Transfer Type<span class="text-danger">*</span></label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group m-b-30">
+                        <div class="col-12">
+                            <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="ViewBag.Faculties" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Division</label>
+                        </div>
+                    </div>
+
+                    <div class="row from-group m-b-30">
+                        <div class="col-12">
+                            <select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentIds" asp-items="ViewBag.Departments" data-placeholder="Select" multiple></select>
+                            <label>Major</label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group m-b-30">
+                        <div class="col-2">
+                            <input class="form-control" asp-for="Criteria.Code" type="text">
+                            <label>CourseCode</label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.CourseNumberFrom" type="text">
+                            <label>Code Number From</label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.CourseNumberTo" type="text">
+                            <label>Code Number To</label>
+                        </div>
+                        <div class="col-2">
+                            <input class="form-control" asp-for="Criteria.SectionFrom" type="text">
+                            <label>Section From</label>
+                        </div>
+                        <div class="col-2">
+                            <input class="form-control" asp-for="Criteria.SectionTo" type="text">
+                            <label>Section To</label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group mb-0">
+                        <div class="col-12 align-self-end text-right text-nowrap">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.FinalGradeDetails?.Count() ?? 0))</header>
+            </div>
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover w-100x m-0">
+                        <thead>
+                            <tr>
+                                <th class="text-center">No.</th>
+                                <th class="text-center">Course Code</th>
+                                <th class="text-center">Section</th>
+                                <th class="text-center">Barcode Number</th>
+                                <th class="text-center">Generated At</th>
+                                <th class="text-center">Published At</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.FinalGradeDetails.Any())
+                            {
+                                foreach (var item in Model.FinalGradeDetails)
+                                {
+                                    <tr>
+                                        <td>@index</td>
+                                        <td>@item.CourseCode</td>
+                                        <td>@item.SectionNumber</td>
+                                        <td>@item.BarcodeNumber</td>
+                                        <td>@item.GeneratedAt</td>
+                                        <td>@item.PublishedAt</td>
+                                    </tr>
+                                    index++;
+                                }
+                            }
+                            else
+                            {
+                                <div class="d-block text-center">
+                                    <tr>
+                                        <td colspan="11">
+                                            <i class="text-danger">No Data</i>
+                                        </td>
+                                    </tr>
+                                </div>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,20 @@
+@model Scholarship
+@{ 
+    ViewData["Title"] = "Edit Scholarship"; 
+}
+
+<section id="data-table-form-v1" class="row">
+    <div class="col-lg-12">
+        <div class="block block--underline">
+            <form class="ks-form container" asp-controller="Scholarship" asp-action="Edit" method="post">
+                @Html.AntiForgeryToken()
+                <partial name="_Form"/>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/commons/basic-addable-table.js"></script>
+    <script type="text/javascript" src="~/js/pages/scholarship.js"></script>
+}

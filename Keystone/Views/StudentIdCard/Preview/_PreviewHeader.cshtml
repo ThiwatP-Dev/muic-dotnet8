@@ -1,0 +1,22 @@
+@model ReportViewModel
+
+<section class="row">
+    <div class="ks-page-header">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</section>
+
+<section id="id-card-preview" data-model="@JsonConvert.SerializeObject(Model)">
+    <div class="block block__body">
+        <iframe id="js-print-preview" class="w-100x h-85vh"></iframe>
+    </div>
+</section>
+
+<section>
+    <div class="block__action-row pr-0">
+        <form asp-action="Finish">
+            <input name="model" type="hidden" value="@JsonConvert.SerializeObject(Model.Body)" />
+            <input type="submit" class="btn btn-mw-120 btn--success" value="Finish" />
+        </form>
+    </div>
+</section>

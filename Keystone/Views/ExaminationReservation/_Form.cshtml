@@ -1,0 +1,130 @@
+@model ExaminationReservation
+
+<div class="block__title text-left height-3">
+    <header>@ViewData["Title"]</header>
+</div>
+
+<div class="block__body text-left height-3">
+    <div class="form-group">
+        <select class="chosen-select form-control js-cascade-academic-level-exam" asp-for="AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+            <option selected disabled>Select</option>
+        </select>
+        <label>Academic Level<span class="text-danger">*</span></label>
+    </div>
+
+    <div class="form-group">
+        <select class="chosen-select form-control js-cascade-term-exam" asp-for="TermId" asp-items="ViewBag.Terms">
+            <option selected disabled>Select</option>
+        </select>
+        <label>Term<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="TermId"></span>
+    </div>
+
+    <div class="form-group">
+        <select class="chosen-select form-control js-cascade-course-master-only" asp-for="CourseId" asp-items="ViewBag.Courses">
+            <option selected disabled>Select</option>
+        </select>
+        <label>Course<span class="text-danger">*</span></label>
+    </div>
+
+    <div class="form-group">
+        <select class="chosen-select form-control js-cascade-section" asp-for="SectionId" asp-items="ViewBag.Sections">
+            <option selected disabled>Select</option>
+        </select>
+        <label>Section<span class="text-danger">*</span>(Section Master Only)</label>
+        <span class="text-danger help-block" asp-validation-for="SectionId"></span>
+    </div>
+
+    <div class="form-group">
+        <select class="chosen-select form-control" asp-for="InstructorId" asp-items="ViewBag.Instructors">
+            <option value="0" selected disabled>Select</option>
+        </select>
+        <label>Instructor</label>
+    </div>
+
+    <div class="form-group">
+        <select class="chosen-select form-control" asp-for="ExaminationTypeId" asp-items="ViewBag.ExaminationTypes">
+            <option selected disabled>Select</option>
+        </select>
+        <label>Examination Type<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="ExaminationTypeId"></span>
+    </div>
+
+     <div class="form-group">
+        <input class="form-control js-single-date" asp-for="Date" type="text" autocomplete="off">
+        <label>Date<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="Date"></span>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control js-time-mask" asp-for="StartTimeText" type="text" placeholder="hh:mm" autocomplete="off">
+        <label>Start Time<span class="text-danger">*</span></label>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control js-time-mask" asp-for="EndTimeText" type="text" placeholder="hh:mm" autocomplete="off">
+        <label>End Time<span class="text-danger">*</span></label>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" asp-for="StudentRemark" type="text">
+        <label>Student Remark</label>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" asp-for="ProctorRemark" type="text">
+        <label>Proctor Remark</label>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-4">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" asp-for="AbsentInstructor">
+                <label for="AbsentInstructor">Absent/Join other section</label>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" asp-for="UseProctor">
+                <label for="UseProctor">Use Proctor</label>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" asp-for="AllowBooklet">
+                <label for="AllowBooklet">Allow Booklet</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-4">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" asp-for="AllowCalculator">
+                <label for="AllowCalculator">Allow Calculator</label>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" asp-for="AllowAppendix">
+                <label for="AllowAppendix">Allow Appendix</label>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" asp-for="AllowOpenbook">
+                <label for="AllowOpenbook">Open book</label>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+<input name="Status" type="hidden" value="@Model.Status">
+
+<div class="block__action container">
+    <div class="block__action-row">
+        <button type="submit" class="btn btn-mw-120 btn--primary">Save</button>
+        <a asp-action="Index" class="btn btn-mw-120 btn--cancel" asp-route-returnUrl="@ViewBag.ReturnUrl">Cancel</a>
+    </div>
+</div>

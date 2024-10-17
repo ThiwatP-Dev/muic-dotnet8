@@ -1,0 +1,76 @@
+@model SectionPeriod
+
+<div class="block__title text-left height-3">
+    <header>@ViewData["Title"]</header>
+</div>
+
+<div class="block__body text-left height-3">
+    <div class="form-group">
+        <select class="chosen-select form-control js-cascade-academic-level" asp-for="AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+            <option selected disabled>Select</option>
+        </select>
+        <label>Academic Level<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="AcademicLevelId"></span>
+    </div>
+    <div class="form-group">
+        <select class="chosen-select form-control js-cascade-term" asp-for="TermId" asp-items="ViewBag.Terms">
+            <option selected disabled>Select</option>
+        </select>
+        <label>Term<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="TermId"></span>
+    </div>
+    <div class="form-group">
+        <input class="form-control js-single-date" asp-for="StartedAt" type="text" autocomplete="off">
+        <label>Start At<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="StartedAt"></span>
+    </div>
+    <div class="form-group">
+        <input class="form-control js-time-mask" asp-for="StartedTime">
+        <label>Start Time</label>
+    </div>
+    <div class="form-group">
+        <input class="form-control js-single-date" asp-for="EndedAt" type="text" autocomplete="off">
+        <label>End At<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="EndedAt"></span>
+    </div>
+    <div class="form-group">
+        <input class="form-control js-time-mask" asp-for="EndedTime">
+        <label>End Time</label>
+    </div>
+    <div class="form-group">
+        <input class="form-control js-single-date" asp-for="NoMakeupClassFrom" type="text" autocomplete="off">
+        <label>No Makeup Class From<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="NoMakeupClassFrom"></span>
+    </div>
+    <div class="form-group">
+        <input class="form-control js-single-date" asp-for="NoMakeupClassTo" type="text" autocomplete="off">
+        <label>No Makeup Class To<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="NoMakeupClassTo"></span>
+    </div>
+    <div class="form-group">
+        <input class="form-control js-single-date" asp-for="NoReserveableFrom" type="text" autocomplete="off">
+        <label>No Reserveable From<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="NoReserveableFrom"></span>
+    </div>
+    <div class="form-group">
+        <input class="form-control js-single-date" asp-for="NoReserveableTo" type="text" autocomplete="off">
+        <label>No Reserveable To<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="NoReserveableTo"></span>
+    </div>
+
+    <div class="row">
+        <div class="form-check">
+            <input class="form-check-input" asp-for="IsActive" type="checkbox">
+            <label for="IsActive">Active</label>
+        </div>
+    </div>
+</div>
+
+<input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+
+<div class="block__action container">
+    <div class="block__action-row">
+        <button type="submit" class="btn btn-mw-120 btn--primary" asp-route-returnUrl="@ViewBag.ReturnUrl">Save</button>
+        <a asp-action="Index" class="btn btn-mw-120 btn--cancel" asp-route-returnUrl="@ViewBag.ReturnUrl">Cancel</a>
+    </div>
+</div>

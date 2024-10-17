@@ -1,0 +1,78 @@
+@model GraduatingRequestViewModel
+@{
+    var logIndex = 1;
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>
+                    <h3 class="ks-page-header__title">Status</h3>
+                </header>
+            </div>
+            <div class="block__body">
+                <div class="row form-group">
+                    <div class="col-6 text-center">
+                        <h2>@Model.GraduatingRequest?.StatusText</h2>
+                    </div>
+                    <div class="col-6 text-center">
+                        <a class="btn btn-mw-120 btn--primary"
+                           data-toggle="modal" 
+                           data-target="#change-status-modal"
+                           data-request-id="@Model.GraduatingRequestId">
+                            Change Status
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>
+                    <h3 class="ks-page-header__title">Status Log</h3>
+                </header>
+            </div>
+            <div class="block__body">
+                <table id="js-curriculum-search" class="table table-bordered m-0">
+                    <thead>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th class="text-center">Status</th>
+                            <th>Remark</th>
+                            <th class="text-center">Date</th>
+                            <th>User</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.GraduatingRequestLogs != null && Model.GraduatingRequestLogs.Any())
+                        {
+                            foreach (var item in Model.GraduatingRequestLogs) 
+                            {
+                                <tr>
+                                    <td>@logIndex</td>
+                                    <td>@item.StatusText</td>
+                                    <td>@item.Remark</td>
+                                    <td>@item.UpdatedDateTimeText</td>
+                                    <td>@item.UpdatedByFullName</td>
+                                </tr>
+                                ++logIndex;
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5">
+                                    <i class="text-danger">No Data</i>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>

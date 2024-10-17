@@ -1,0 +1,177 @@
+@model List<SectionReportViewModel>
+@{ 
+    ViewData["Title"] = "Section Report Preview";
+    var recordNumber = 1;
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.Count ?? 0))</header>
+            </div>
+
+            <div class="block__body">
+                <div class="row">
+                    <div class="col ks-page-header">
+                        <a class="btn-back"
+                           href="@ViewBag.ReturnUrl">
+                            <i class="la la-angle-double-left mr-1"></i>Back
+                        </a>
+                    </div>
+                    <div class="col text-right">
+                        <a id="section-file-name" hidden></a>
+                        <input class="section-worksheet-name" value="Section Report @DateTime.Now.ToString(StringFormat.ShortDate).Replace("/", "-")" hidden>
+                        <button class="btn btn-mw-120 btn--primary mb-0 js-export-excel">Export Excel</button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table id="section-report-export" class="table table-bordered table-hover w-100x">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th>Code</th>
+                                <th>Course</th>
+                                <th>Credit</th>
+                                <th class="text-center">Section</th>
+                                <th class="text-center">Section Type</th>
+                                <th>Main Instructor</th>
+                                <th>Master/Joint</th>
+                                <th>Division</th>
+                                <th>Day</th>
+                                <th>Time</th>
+                                <th>Instructor</th>
+                                <th>Room</th>
+                                <th>Midterm</th>
+                                <th>Final</th>
+                                <th>Open Section Date</th>
+                                <th>Close Section Date</th>
+                                <th class="text-center">Seat Available</th>
+                                <th class="text-center">Seat Limit</th>
+                                <th class="text-center">Student</th>
+                                <th class="text-center">Total Student</th>
+                                <th>Approved Date</th>
+                                @* <th>Approved By</th> *@
+                                <th>Create By</th>
+                                <th class="text-center">Open/Close</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Any())
+                            {
+                                foreach (var item in Model) 
+                                {
+                                    <tr>
+                                        <td>@recordNumber</td>
+                                        <td>@item.CodeAndSpecialChar</td>
+                                        <td>@item.CourseNameEn</td>
+                                        <td>@item.CreditText</td>
+                                        <td>@item.Number</td>
+                                        <td>@item.SectionTypes</td>
+                                        <td>@item.MainInstructorFullNameEn</td>
+                                        <td>
+                                            @if(item.ParentSectionId == 0 || item.ParentSectionId == null)
+                                            {
+                                                @for (var i = 0; i < item.JointSections.Count(); i++)
+                                                {
+                                                    if (i != item.JointSections.Count() - 1)
+                                                    {
+                                                        <span>@item.JointSections[i].CodeAndSpecialChar (@item.JointSections[i].Number),</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span> @item.JointSections[i].CodeAndSpecialChar (@item.JointSections[i].Number)</span>
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <span>@item.ParentCodeAndSpecialChar (@item.ParentSectionNumber)</span>
+                                            }
+                                        </td>
+                                        <td>@item.FacultyNameEn</td>
+                                        @if (item.SectionDetails != null && item.SectionDetails.Any())
+                                        {
+                                            <td>
+                                                @foreach (var detail in item.SectionDetails)
+                                                {
+                                                    <span>@detail.Dayofweek</span><br>
+                                                }
+                                            </td>
+                                            <td>
+                                                @foreach (var detail in item.SectionDetails)
+                                                {
+                                                    <span>@detail.StartTimeText - @detail.EndTimeText</span><br>
+                                                }
+                                            </td>
+                                            <td>
+                                                @foreach (var detail in item.SectionDetails)
+                                                {
+                                                    foreach (var instructorFullNameEn in detail.InstructorSections)
+                                                    {
+                                                        <span>@instructorFullNameEn</span><br>
+                                                    }
+                                                }
+                                            </td>
+                                            <td>
+                                                @foreach (var detail in item.SectionDetails)
+                                                {
+                                                    <span>@detail.RoomNameEn</span><br>
+                                                }
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        }
+                                        <td>@item.MidtermDateTime</td>
+                                        <td>@item.FinalDateTime</td>
+                                        <td>@item.OpenedSectionAtText</td>
+                                        <td>@item.ClosedSectionAtText</td>
+                                        <td>@item.SeatAvailable</td>
+                                        <td>@item.SeatLimit</td>
+                                        <td>@item.SeatUsed</td>
+                                        <td>@item.TotalSeatUsed</td>
+                                        <td>@item.ApprovedAtText</td>
+                                        <td>@item.CreatedByText</td>
+                                        <td>
+                                            <partial name="_BooleanClose" model="@item.IsClosed">
+                                        </td>
+                                        <td>
+                                            <partial name="_ApproveStatus" model="@item.Status">
+                                        </td>
+                                    </tr>
+                                    recordNumber++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="21">
+                                        <i class="text-danger">No Data</i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="row">
+                    <div class="col text-nowrap text-right">
+                        <a id="section-file-name" hidden></a>
+                        <input class="section-worksheet-name" value="Section Report @DateTime.Now.ToString(StringFormat.ShortDate).Replace("/", "-")" hidden>
+                        <button class="btn btn-mw-120 btn--primary mb-0 js-export-excel">Export Excel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/section-report.js"></script>
+}

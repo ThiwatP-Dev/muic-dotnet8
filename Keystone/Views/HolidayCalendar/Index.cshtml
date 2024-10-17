@@ -1,0 +1,131 @@
+@model HolidayCalendarViewModel
+@{
+    ViewData["Title"] = "Holiday Calendar";
+    var holidayCalendarsJson = Json.Serialize(Model?.Details).ToString();
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Room Calendar</header>
+            </div>
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="HolidayCalendar" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group m-b-30">
+                        <div class="col-3">
+                            <input class="form-control js-single-date js-check-date" asp-for="Criteria.FromDate" type="text" autocomplete="off">
+                            <label>From</label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control js-single-date js-check-date" asp-for="Criteria.ToDate" type="text" autocomplete="off">
+                            <label>To</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.IsCancel" asp-items="ViewBag.Answers"></select>
+                            <label>Cancel</label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group m-b-30">
+                        <div class="col-12 align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.Details?.Count ?? 0))</header>
+            </div>
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover js-report-table w-100x">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Remark</th>
+                                <th>Is Cancel</th>
+                                <th>Allow Make Up</th>
+                                <th>Start At</th>
+                                <th>End At</th>
+                                <th>Last Update By</th>
+                                <th>Last Update At</th>
+                                <th class="text-center"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Details != null)
+                            {
+                                var i = 1;
+                                @foreach (var item in Model.Details)
+                                {
+                                    <tr>
+                                        <td>@i</td>
+                                        <td>@item.MuicId</td>
+                                        <td>@item.Title</td>
+                                        <td>@item.Remark</td>
+                                        <td>@(item.IsCancel ? "Cancel" : "")</td>
+                                        <td>@(item.IsAllowMakeup ? "Yes" : "No")</td>
+                                        <td>@item.Start.ToString(StringFormat.DayShortMonthYear)</td>
+                                        <td>@item.End.ToString(StringFormat.DayShortMonthYear)</td>
+                                        <td>@item.UpdatedBy</td>
+                                        <td>@item.UpdatedAt.AddHours(7).ToString(StringFormat.ShortDateTime)</td>
+                                        <td class="text-nowrap td-actions">
+                                            <a data-toggle="modal"
+                                               data-target="#holiday-classes-modal"
+                                               data-value="@item.Id"
+                                               title="Details">
+                                                <i class="la la-info info"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    ++i;
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row no-margin">
+    <div class="col-12 p-a-0">
+        <div class="block">
+            <div class="block__body">
+                <div id="calendar" data-events="@holidayCalendarsJson"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/holiday-calendar.js"></script>
+}
+
+<partial name="_DeleteConfirmModals" />
+
+<div id="holiday-classes-modal" class="modal fadeIn animated js-details-modal" tabindex="-1" role="dialog"
+     aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div id="modalWrapper-holiday-classes-details">
+            </div>
+        </div>
+    </div>
+</div>

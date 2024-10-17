@@ -1,0 +1,109 @@
+@model PagedResult<CurriculumCourseGroup>
+@{ 
+    ViewData["Title"] = "Course Group Name";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+    var recordNumber = Model?.FirstRowOnPage;
+}
+
+<section class="row">
+    <div class="ks-page-header col-lg-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+        <ul class="d-flex flex-md-row align-items-md-center float-right">
+            <li class="list-inline-item mx-3 mb-0">
+                <a class="btn btn--primary" 
+                   asp-action="Create"
+                   asp-route-returnUrl="@contextPath">
+                    <i class="la la-plus mr-1 font-weight-800"></i> Add Course Group Name
+                </a>
+            </li>
+        </ul>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="CurriculumCourseGroup" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group m-b-30">
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.CodeAndName" type="text">
+                            <label>Name</label>
+                        </div>
+                        <div class="col-6 align-self-end">
+                            <button class="btn btn--primary btn-mw-120 mb-0 m-r-5" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+    @if (Model != null)
+    {
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.RowCount ?? 0))</header>
+            </div>
+            
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover w-100x">
+                        <thead>
+                            <tr>
+                                <th class="text-center w-25">#</th>
+                                <th>English Name</th>
+                                <th>Thai Name</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Results)
+                            {
+                                <tr>
+                                    <td>@recordNumber</td>
+                                    <td>@item.NameEn</td>
+                                    <td>@item.NameTh</td>
+                                    <td>
+                                        <partial name="_BooleanActive" model="@item.IsActive" />
+                                    </td>
+                                    <td class="text-nowrap td-actions">
+                                        <a asp-controller="CurriculumCourseGroup" 
+                                           asp-action="Edit" 
+                                           asp-route-Id="@item.Id"
+                                           asp-route-returnUrl="@contextPath">
+                                            <i class="la la-edit edit"></i>
+                                        </a>
+                                        <a data-toggle="modal"
+                                           data-target="#delete-confirm-modal"
+                                           data-controller="CurriculumCourseGroup"
+                                           data-action="Delete"
+                                           data-value="@item.Id"
+                                           asp-route-returnUrl="@contextPath">
+                                            <i class="la la-trash delete"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                recordNumber++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @(await Component.InvokeAsync<PagerViewComponent>(Model))
+    }
+    </div>
+</section>
+
+<partial name="_DeleteConfirmModals" />

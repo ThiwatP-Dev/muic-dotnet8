@@ -1,0 +1,12 @@
+@model ReportViewModel
+@{ 
+    ViewData["Title"] = "Master Application Preview";
+}
+<img id="js-default-student" src="@(Model.ProfileImageURL == null ? "/images/default-profile-m.png" : Model.ProfileImageURL)" hidden>
+<img id="js-default-logo" src="~/images/logo-muic-2.png" hidden>
+
+<partial name="Preview/_PreviewHeader" model="@Model">
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/pdf-render/master-application-form.js"></script>
+}

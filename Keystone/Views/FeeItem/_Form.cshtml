@@ -1,0 +1,75 @@
+@model FeeItem
+
+<div class="block__title text-left height-3">
+    <header>@ViewData["Title"]</header>
+</div>
+
+<div class="block__body text-left height-3">
+    <div class="form-group">
+        <input asp-for="Code" type="text" class="form-control" maxlength="50">
+        <label for="Code">Code<span class="text-danger">*</span></label>
+    </div>
+
+    <div class="form-group">
+        <input asp-for="NameEn" type="text" class="form-control" maxlength="200">
+        <label for="NameEn">English Name<span class="text-danger">*</span></label>
+    </div>
+    
+    <div class="form-group">
+        <input asp-for="NameTh" type="text" class="form-control" maxlength="200">
+        <label for="NameTh">Thai Name<span class="text-danger">*</span></label>
+    </div>
+
+    <div class="form-group">
+        <input asp-for="FormalNameEn" type="text" class="form-control" maxlength="200">
+        <label for="FormalNameEn">Formal English Name<span class="text-danger">*</span></label>
+    </div>
+    
+    <div class="form-group">
+        <input asp-for="FormalNameTh" type="text" class="form-control" maxlength="200">
+        <label for="FormalNameTh">Formal Thai Name<span class="text-danger">*</span></label>
+    </div>
+    
+    <div class="form-group">
+        <input asp-for="AccountCode" type="text" class="form-control" maxlength="200">
+        <label for="AccountCode">Account Code</label>
+    </div>
+
+    <div class="form-group">
+        <select asp-for="FeeGroupId" asp-items="ViewBag.FeeGroups" class="chosen-select form-control">
+            <option selected="true" disabled="disabled">Select</option>
+        </select>
+        <label for="FeeGroupId">Fee Group</label>
+    </div>
+
+    <div class="form-group">
+        <input type="number" min="0" class="form-control" asp-for="DefaultPrice">
+        <label for="DefaultPrice">Default Amount<span class="text-danger">*</span></label>
+    </div>
+
+    <div class="form-group">
+        <input type="text" class="form-control" asp-for="Remark">
+        <label for="Remark">Remark</label>
+    </div>
+
+    <div class="row">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" asp-for="IsEditable">
+            <label for="IsEditable">Editable</label>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" asp-for="IsActive">
+            <label for="IsActive">Active</label>
+        </div>
+    </div>
+</div>
+
+<div class="block__action container">
+    <div class="block__action-row">
+        <button type="submit" class="btn btn-mw-120 btn--primary">Save</button>
+        <a asp-action="Index" class="btn btn-mw-120 btn--cancel">Cancel</a>
+    </div>
+</div>

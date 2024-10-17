@@ -1,0 +1,75 @@
+@model Student
+
+<div class="block block--underline mb-0">
+    <div class="block__title">
+		<header>Student Registration Course List @Model?.RegistrationTermText</header>
+        <header class="float-right">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </header>
+	</div>
+
+    <div class="block__body">
+        <div class="row form-group mb-3">
+            <div class="col-6">
+                <div class="form-control-label d-flex align-items-center"><b>Student Code</b></div>
+                <div class="form-control-plaintext text-wrap">@Model?.Code</div>
+            </div>
+            <div class="col-6">
+                <div class="form-control-label d-flex align-items-center"><b>Student Name</b></div>
+                <div class="form-control-plaintext text-wrap">@Model?.FullNameEn</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="block__body">
+        <div class="row form-group mb-3">
+            <div class="table-responsive">
+                <table class="table table-bordered m-0">
+                    <thead>
+                        <tr>
+                            <th class="text-center w-50">#</th>
+                            <th>Course</th>
+                            <th class="text-center w-75">Section</th>
+                            <th class="text-center w-200">Section Type</th>
+                            <th class="text-center w-100">Paid</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if(Model?.RegistrationCourses != null && Model.RegistrationCourses.Any())
+                        {
+                            var i = 1;
+                            @foreach(var item in Model?.RegistrationCourses)
+                            {
+                                <tr>
+                                    <td class="text-center w-50">@i</td>
+                                    <td>
+                                        <b>@item.Course?.CodeAndCredit</b><br>
+                                        <b>@item.Course?.NameEn</b><br>
+                                        @item.Section?.MainInstructor?.FullNameEn
+                                    </td>
+                                    <td class="text-center w-75">@item.Section?.Number</td>
+                                    <td class="text-center w-200">@item.Section?.SectionTypes</td>
+                                    <td class="text-center w-100"><partial name="_BooleanCheck" model="@item.IsPaid"></td>
+                                </tr>
+                            i++;
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center text-danger">No Data</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="block__action">
+        <div class="block__action-row">
+            <a class="btn btn-mw-120 btn--cancel rounded" href="javascript:void(0);" data-dismiss="modal">Close</a>
+        </div>
+    </div>
+</div>
+    

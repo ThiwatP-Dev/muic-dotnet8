@@ -1,0 +1,36 @@
+@model List<AcademicCalendarViewModel>
+@{
+    ViewData["Title"] = "Academic Calendar";
+    var academicCalendarsJson = Json.Serialize(Model).ToString();
+}
+
+<section class="row">
+    <div class="ks-page-header col-lg-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+        <ul class="d-flex flex-md-row align-items-md-center float-right">
+            <li class="list-inline-item mx-3 mb-0">
+                <a class="btn btn--primary" asp-action="Create">
+                   <i class="la la-plus mr-1 font-weight-800"></i> Add Schedule
+                </a>
+            </li>
+        </ul>
+    </div>
+</section>
+
+<div class="container-fluid calendar">
+    <div class="row no-margin">
+        <div class="col-xl-12 p-a-0">
+            <div class="block">
+                <div class="block__body">
+                    <div id="calendar" data-events="@academicCalendarsJson"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/calendar.js"></script>
+}
+
+<partial name="_DeleteConfirmModals" />

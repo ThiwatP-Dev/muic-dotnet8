@@ -1,0 +1,202 @@
+@model PagedResult<RepeatStudentReprotViewModel>
+@{
+    ViewData["Title"] = "Repeat Student Report";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+
+<section class="d-print-none">
+    <div class="block block--underline">
+        <div class="block__title">
+            <header>@ViewData["Title"]</header>
+        </div>
+        <form class="form-horizontal" asp-controller="RepeatStudentReport" asp-action="Index" method="GET">
+            @Html.AntiForgeryToken()
+            <div class="block__body">
+                <div class="row form-group m-b-30">
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Academic Level<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="ViewBag.Faculties">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Division</label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentId" asp-items="ViewBag.Departments">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Major</label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control" asp-for="Criteria.AbilityId" asp-items="ViewBag.Abilities">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Ability</label>
+                    </div>
+                </div>
+                <div class="row form-group m-b-30">
+                    <div class="col-3">
+                        <input class="form-control" asp-for="Criteria.StartStudentBatch" type="number">
+                        <label>Batch Start</label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control" asp-for="Criteria.EndStudentBatch" type="number">
+                        <label>Batch End</label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control" asp-for="Criteria.Code" type="text">
+                        <label>Code</label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control" asp-for="Criteria.NationalityId" asp-items="ViewBag.Nationalities" data-placeholder="Select">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Nationality</label>
+                    </div>
+                </div>
+
+                <div class="row form-group m-b-30">
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-curriculum" asp-for="Criteria.CurriculumId" asp-items="ViewBag.Curriculums">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Curriculum</label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-curriculum-version" asp-for="Criteria.CurriculumVersionId" asp-items="ViewBag.CurriculumVersions" data-placeholder="Select">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Curriculum Version</label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control" asp-for="Criteria.FirstName" type="text">
+                        <label>First Name</label>
+                    </div> 
+                    <div class="col-3">
+                        <input class="form-control" asp-for="Criteria.LastName" type="text">
+                        <label>Last Name</label>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-3">
+                        <select class="chosen-select form-control" asp-for="Criteria.Status" asp-items="ViewBag.Statuses" data-placeholder="Select"></select>
+                        <label>Status</label>
+                    </div>
+                    <div class="col-3 align-self-end">
+                        <input class="form-check-input" asp-for="Criteria.IsGradeNotPass" type="checkbox">
+                        <label for="Criteria_IsGradeNotPass">Grade Not Pass Only</label>
+                    </div>
+                    <div class="col align-self-end text-right text-nowrap">
+                        <button class="btn btn--primary btn-mw-120 m-r-5" type="submit">
+                            <i class="la la-search mr-2"></i>Search
+                        </button>
+                        <a id="js-reset-btn" class="btn btn-mw-120 btn--reset mb-0" asp-action="Index">Reset</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <form id="export-excel-form" class="form-horizontal" asp-controller="RepeatStudentReport" asp-action="ExportExcel" method="POST">
+            <div class="block block--underline">
+                <div class="block__title">
+                    <header>Search Result (@(Model?.RowCount ?? 0))</header>
+                </div>
+                @Html.AntiForgeryToken()
+                <div class="block__body">
+                    <div class="table-responsive unset-overflow">
+                        <table id="js-repeat-student" class="table table-bordered w-100x">
+                            <thead>
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Title</th>
+                                    <th>Name</th>
+                                    <th class="text-center">Major</th>
+                                    <th>Course</th>
+                                    <th class="text-center">1</th>
+                                    <th class="text-center">2</th>
+                                    <th>3</th>
+                                    <th class="text-center">Passing Grede</th>
+                                    <th>Advisor Title</th>
+                                    <th>Advisor Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.Results.Any())
+                                {
+                                    for (var i = 0; i < Model.Results.Count(); i++)
+                                    {
+                                       <tr class='@(Model.Results[i].GradeNameAndTerms.Count() > 2 ? "bg-danger-pastel" : "")'>
+                                            @* <input name="[@i].StudentCode" value="@Model.Results[i].StudentCode" type="hidden">
+                                            <input name="[@i].FullName" value="@Model.Results[i].FullName" type="hidden">
+                                            <input name="[@i].Title" value="@Model.Results[i].Title" type="hidden">
+                                            <input name="[@i].StudentFirstName" value="@Model.Results[i].StudentFirstName" type="hidden">
+                                            <input name="[@i].StudentMidName" value="@Model.Results[i].StudentMidName" type="hidden">
+                                            <input name="[@i].StudentLastName" value="@Model.Results[i].StudentLastName" type="hidden">
+                                            <input name="[@i].Department" value="@Model.Results[i].Department" type="hidden">
+                                            <input name="[@i].CourseAndCredit" value="@Model.Results[i].CourseAndCredit" type="hidden">
+                                            <input name="[@i].AdvisorFullName" value="@Model.Results[i].AdvisorFullName" type="hidden">
+                                            <input name="[@i].GradePassing" value="@Model.Results[i].GradePassing" type="hidden"> *@
+                                            <td>@Model.Results[i].StudentCode</td>
+                                            <td>@Model.Results[i].Title</td>
+                                            <td>@Model.Results[i].FullName</td>
+                                            <td>@Model.Results[i].Department</td>
+                                            <td>@Model.Results[i].CourseAndCredit</td>
+                                            @if(Model.Results[i].GradeNameAndTerms.Count() > 2)
+                                            {
+                                                for (var j = 0; j < 2; j++)
+                                                {
+                                                    <td>@Model.Results[i].GradeNameAndTerms[j]</td>
+                                                    @* <input name="[@i].GradeNameAndTerms[@j]" value="@Model.Results[i].GradeNameAndTerms[j]" type="hidden"> *@
+                                                }
+                                                <td>
+                                                    @(string.Join(", ", Model.Results[i].GradeNameAndTerms.Skip(2)))
+                                                    @* @for (var j = 2; j < Model.Results[i].GradeNameAndTerms.Count(); j++)
+                                                    {
+                                                        <input name="[@i].GradeNameAndTerms[@j]" value="@Model.Results[i].GradeNameAndTerms[j]" type="hidden">
+                                                    } *@
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                for (var j = 0; j < 2; j++)
+                                                {
+                                                    <td>@Model.Results[i].GradeNameAndTerms[j]</td>
+                                                    @* <input name="[@i].GradeNameAndTerms[@j]" value="@Model.Results[i].GradeNameAndTerms[j]" type="hidden"> *@
+                                                }
+                                                <td></td>
+                                            }
+                                            <td>@Model.Results[i].GradePassing</td>
+                                            <td>@Model.Results[i].AdvisorTitleEn</td>
+                                            <td>@Model.Results[i].AdvisorFullName</td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="11" class="text-center">
+                                            <i class="text-danger">No Data</i>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/repeat-student-report.js"></script>
+}

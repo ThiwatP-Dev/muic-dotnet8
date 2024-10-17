@@ -1,0 +1,199 @@
+@model RegistrationConditionViewModel
+@{
+	ViewData["Title"] = "Registration Condition";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+    var recordNumber = 1;
+}
+<div class="row">
+    <div class="ks-page-header col-lg-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</div>
+
+<section>
+    <div class="block block--underline">
+        <div class="block__body">
+            <form asp-action="Index">
+                <div class="row form-group mb-0">
+                    <div class="col-4">
+                        <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="@ViewBag.AcademicLevels">
+                            <option selected>Select</option>
+                        </select>
+                        <label>Academic Level</label>
+                    </div>
+                    <div class="col-4">
+                        <select class="chosen-select form-control js-cascade-academic-program" asp-for="Criteria.AcademicProgramId" asp-items="@ViewBag.AcademicPrograms">
+                            <option selected>Select</option>
+                        </select>
+                        <label>Academic Program</label>
+                    </div>
+                    <div class="col-4">
+                        <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="@ViewBag.Faculties">
+                            <option selected>Select</option>
+                        </select>
+                        <label>Division</label>
+                    </div>
+                </div>
+                <br/>
+                <div class="row form-group mb-0">
+                    <div class="col-4">
+                        <select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentId" asp-items="@ViewBag.Departments">
+                            <option selected>Select</option>
+                        </select>
+                        <label>Major</label>
+                    </div>
+                    <div class="col-4">
+                        <input class="form-control" asp-for="Criteria.Name" />
+                        <label>Name</label>
+                    </div>
+
+                    <div class="col align-self-end text-right">
+                        <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">
+                            <i class="la la-search mr-2"></i>Search
+                        </button>
+                        <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                            Reset
+                        </button>
+                        <input name="returnUrl" value="@contextPath" hidden>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@if(Model != null)
+{
+    <section class="row">
+        <div class="col-12">
+            <div class="block block--underline">
+                <div class="block__title">
+                    <header>Search Result (@(Model?.RegistrationConditions?.Count ?? 0))</header>
+                    <div class="tools">
+                    <a class="btn btn--primary btn-mw-120 mb-0" 
+                        asp-action="Create"
+                        asp-route-returnUrl="@contextPath">
+                        <i class="la la-plus mr-1 font-weight-800"></i> Add Registration Condition
+                    </a>
+                </div>
+                </div>
+                
+                <div class="block__body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover js-report-table w-100x">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">#</th>
+                                    <th>Name</th>
+                                    <th>Description</th>
+                                    <th> Condition
+                                        @* Academic Level <br>
+                                        Academic Program <hr/>
+                                        Division <br>
+                                        Major *@
+                                    </th>
+                                    @* <th>Division <br>Major</th> *@
+                                    @* <th>
+                                        Code Range <br>
+                                        Batch <br>
+                                        Last Digit <hr/>
+                                        Student Codes
+                                    </th> *@
+                                    @* <th></th> *@
+                                    <th class="text-center">Status</th>
+                                    <th class="text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.RegistrationConditions.Any())
+                                {
+                                    @foreach (var item in Model.RegistrationConditions) 
+                                    {
+                                        <tr>
+                                            <td >@recordNumber</td>
+                                            <td>@item.Name</td>
+                                            <td>@item.Description</td>
+                                            <td>
+                                                @if(@item.AcademicLevel != null)
+                                                {
+                                                    <b>Academic Level:</b> @item.AcademicLevel?.NameEn <br>
+                                                }
+                                                @if(@item.AcademicProgram != null)
+                                                {
+                                                    <b>Academic Program:</b> @item.AcademicProgram?.NameEn <br>
+                                                }
+                                                @if(@item.Faculty != null)
+                                                {
+                                                    <b>Division:</b> @item.Faculty?.NameEn <br>
+                                                }
+                                                @if(@item.Department != null)
+                                                {
+                                                    <b>Major:</b> @item.Department?.Code
+                                                }
+                                                @if(@item.Batch != "")
+                                                {
+                                                    <b>Batch:</b> @item.Batch <br>
+                                                }
+                                                @if(@item.LastDigit != "")
+                                                {
+                                                    <b>Last Digit:</b> @item.LastDigit <br>
+                                                }
+                                                @if(@item.StudentCodeRange != "")
+                                                {
+                                                    <b>Code Range:</b> @item.StudentCodeRange <br>
+                                                }
+                                                @if(@item.StudentCodes != null && @item.StudentCodes != "")
+                                                {
+                                                    <b>Student Codes:</b> @item.StudentCodes
+                                                }
+                                            </td>
+                                            @* <td>
+                                                <b>Batch:</b> @item.Batch <br>
+                                                <b>Last Digit:</b> @item.LastDigit <hr/>
+                                                <b>Code Range:</b> @item.StudentCodeRange <br>
+                                                <b>Student Codes:</b> @item.StudentCodes
+                                            </td> *@
+                                            <td >
+                                                <partial name="_BooleanActive" model="@item.IsActive">
+                                            </td>
+                                            <td  class="text-nowrap td-actions">
+                                                <a asp-controller="RegistrationCondition" asp-action="Edit" asp-route-Id="@item.Id" asp-route-returnUrl="@contextPath">
+                                                    <i class="la la-edit edit"></i>
+                                                </a>
+                                                <a data-toggle="modal" 
+                                                data-target="#delete-confirm-modal" 
+                                                data-controller="RegistrationCondition" 
+                                                data-action="Delete" 
+                                                data-value="@item.Id">
+                                                    <i class="la la-trash delete"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        recordNumber++;
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="6">
+                                            <i class="text-danger">No Data</i>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+@section Modals {
+    <partial name="_DeleteConfirmModals">
+    <partial name="Detail" model="new RegistrationConditionDetailViewModel()" />
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/registration-condition.js"></script>
+}

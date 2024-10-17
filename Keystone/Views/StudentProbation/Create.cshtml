@@ -1,0 +1,286 @@
+@model StudentProbationViewModel
+@{ 
+    ViewData["Title"] = "Add Probation Student";
+    var index = 0;
+}
+
+<div class="row">
+	<div class="ks-page-header col-lg-12">
+		<h2 class="ks-page-header__title">
+			<a class="btn-back" href="@ViewBag.ReturnUrl">
+				<i class="la la-angle-double-left mr-1"></i>Back
+			</a>
+		</h2>
+	</div>
+</div>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Add Probation Student</header>
+                <div class="tools">
+                    <div class="btn-group">
+                        <a class="btn btn--white btn--circle">
+                            <i class="la la-angle-down"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-action="Create" method="GET">
+                    @Html.AntiForgeryToken()
+                    <input name="returnUrl" value="@ViewBag.ReturnUrl" type="hidden">
+                    <div class="row form-group">
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Academic Level<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="ViewBag.Faculties">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Faculty</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentId" asp-items="ViewBag.Departments">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Department</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.Status" asp-items="ViewBag.StudentStatuses">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Student Status</label>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.StartTermId" asp-items="ViewBag.Terms">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Start Term<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.EndTermId" asp-items="ViewBag.Terms">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>End Term<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.GPAFrom" type="number">
+                            <label>GPA From<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.GPATo" type="number">
+                            <label>GPA To<span class="text-danger">*</span></label>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.StartStudentBatch" type="number">
+                            <label>Batch From</label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.EndStudentBatch" type="number">
+                            <label>To</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.SortBy" asp-items="ViewBag.SortBy">
+                            </select>
+                            <label>Sort By</label>
+                        </div>
+                    </div>
+                    
+                    <div class="row form-group">
+                        <div class="col-12 align-self-end text-right text-nowrap">
+                            <button class="btn btn--primary btn-mw-120 m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="button">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (Model != null && Model.Terms != null && Model.Students != null)
+{
+    <section class="row">
+        <div class="col-12">
+                <div class="block block--underline">
+                    <div class="block__title">
+                    <form id="form-export-excel" class="ks-form container" asp-action="ExportExcel" method="POST">
+                        <header>Student List (@Model?.Students?.Count())</header>
+                        <div class="tools pr-4">
+                            @* <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="button" data-target="SendEmail" onclick="submitForm('SendEmail')">
+                                <i class="la la-envelope mr-2 font-weight-700"></i>Send E-mail
+                            </button> *@
+                            @Html.AntiForgeryToken()
+                            <input asp-for="Criteria.Code" hidden>
+                            <input asp-for="Criteria.AcademicLevelId" hidden>
+                            <input asp-for="Criteria.StudentCodeFrom" hidden>
+                            <input asp-for="Criteria.StudentCodeTo" hidden>
+                            <input asp-for="Criteria.DepartmentId" hidden>
+                            <input asp-for="Criteria.FacultyId" hidden>
+                            <input asp-for="Criteria.Status" hidden>
+                            <input asp-for="Criteria.StartTermId" hidden>
+                            <input asp-for="Criteria.EndTermId" hidden>
+                            <input asp-for="Criteria.GPAFrom" hidden>
+                            <input asp-for="Criteria.GPATo" hidden>
+                            <input asp-for="Criteria.StartStudentBatch" hidden>
+                            <input asp-for="Criteria.EndStudentBatch" hidden>
+                            <input asp-for="Criteria.SortBy" hidden>
+                            <button class="btn btn--primary js-export-excel" type="submit">
+                                Export Excel
+                            </button>
+                        </div>
+                    </form>
+                    </div>
+                    <form id="js-submit-probation-student" method="POST">
+                    <input type="hidden" id="target" name="target" />
+                    <div class="block__body">
+                        <div class="row form-group">
+                            <div class="col-3">
+                                <select class="chosen-select form-control" asp-for="ProbationTermId" asp-items="ViewBag.Terms">
+                                    <option selected disabled>Select</option>
+                                </select>
+                                <label>Probation Term<span class="text-danger">*</span></label>
+                            </div>
+                            <div class="col-3">
+                                <select class="chosen-select form-control" class="js-get-probation-id" asp-for="ProbationId" asp-items="ViewBag.Probations">
+                                    <option selected value="">Select</option>
+                                </select>
+                                <label>Probation</label>
+                            </div>
+                            <div class="col-3">
+                                <select class="chosen-select form-control" class="js-get-retire-id" asp-for="RetireId" asp-items="ViewBag.Retires">
+                                    <option selected value="">Select</option>
+                                </select>
+                                <label>Retire</label>
+                            </div>
+                            <div class="col-1">
+                                <div class="form-control-label d-flex align-items-center">Remark</div>
+					            <div class="form-control-plaintext">X = Studying</div>
+                            </div>
+                            <div class="col-2 text-right">
+                                <button class="btn btn-mw-120 btn--primary mb-0" type="button" data-target="Create" onclick="submitForm('Create')">
+                                    <i class="la la-save mr-2 font-weight-700"></i>Save
+                                </button>
+                            </div>
+                        </div>
+                        <div class="js-render-nicescroll p-0">
+                            <table id="js-probation-student" class="table table-bordered m-0 w-100x">
+                                <thead class="scroll-header">
+                                    <tr>
+                                        <th class="text-center no-print w-50">
+                                            <input id="check-all" class="js-check-all" name="select-item" type="checkbox">
+                                            <label for="check-all"></label><br>
+                                            <span class="js-item-count">(0)</span>
+                                        </th>
+                                        <th>Code</th>
+                                        <th>Title</th>
+                                        <th>Name</th>
+                                        @* <th>Midle Name</th> *@
+                                        @* <th>Last Name</th> *@
+                                        <th>Major</th>
+                                        <th>Curriculum</th>
+                                        <th>Advisor Title</th>
+                                        <th>Advisor Name</th>
+                                        @* <th>Advisor Last Name</th> *@
+                                        @* <th class="text-center">CGPA</th> *@
+                                        @foreach (var term in Model.Terms) 
+                                        {
+                                            <th class="text-center">@term.TermText</th>
+                                        }
+                                    </tr>
+                                </thead>
+                                <tbody class="js-items">
+                                    @foreach (var item in Model.Students) 
+                                    {
+                                        <tr class="js-suggestion-parent">
+                                            <td class="text-center no-print">
+                                                <input id="check@(index)" class="js-check-student" name="Students[@index].IsCheck" type="checkbox" />
+                                                <label class="form-check-input m-0" for="check@(index)"></label>
+                                            </td>
+                                            <td>
+                                                @item.StudentCode
+                                                <input class="js-get-guid" name="Students[@index].StudentId" value="@item.StudentId" type="hidden"/>
+                                                <input class="js-check-send-email" name="Students[@index].IsSendEmail" value="@item.IsSendEmail" type="hidden"/>
+                                                <input class="js-get-gpa" name="Students[@index].StudentGPA" value="@item.StudentGPA" type="hidden"/>
+                                            </td>
+                                            <td>
+                                                @item.StudentTitle
+                                            </td>
+                                            <td>
+                                                @item.StudentFullName
+                                            </td>
+                                            @* <td>
+                                                @item.StudentMidName
+                                            </td>
+                                            <td>
+                                                @item.StudentLastName
+                                            </td> *@
+                                            <td>
+                                                @item.DepartmentCode
+                                            </td>
+                                            <td>
+                                                @item.CurriculumVersionNameEn
+                                            </td>
+                                            <td>
+                                                @item.AdvisorTitle
+                                            </td>
+                                            <td>
+                                                @item.AdvisorFullName
+                                            </td>
+                                            @* <td>
+                                                @item.AdvisorLastName
+                                            </td> *@
+                                            @* <td class="text-center">
+                                                @String.Format("{0:N2}",(Math.Truncate(item.StudentGPA * 100) / 100))
+                                            </td> *@
+                                            @foreach (var gpa in item.TermGPAs) 
+                                            {
+                                                if(gpa.IsProbation)
+                                                {
+                                                    <td>
+                                                        <span class="text-danger">@gpa.DisplayText</span>
+                                                    </td>
+                                                }
+                                                else 
+                                                {
+                                                    <td>
+                                                        <span>@gpa.DisplayText</span>
+                                                    </td>
+                                                }
+                                            }
+                                        </tr>
+                                        index++;
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="block__action-row">
+                        <input id="target" name="target" type="hidden" />
+                        <button class="btn btn-mw-120 btn--primary" type="button" data-target="Create" onclick="submitForm('Create')">
+                            <i class="la la-save mr-2 font-weight-700"></i>Save
+                        </button>
+                    </div>
+                    </form>
+                </div>
+        </div>
+    </section>
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/probation-student.js"></script>
+}

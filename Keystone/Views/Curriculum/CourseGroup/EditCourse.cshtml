@@ -1,0 +1,27 @@
+@model CourseGroup
+@{ 
+    ViewData["Title"] = "Edit Course";
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <form class="ks-form container" asp-controller="CourseGroup" asp-action="EditCourse" method="POST">
+                @Html.AntiForgeryToken()
+                <input name="courseGroupId" value="@Model.Id" type="hidden">
+                <partial name="~/Views/Curriculum/CourseGroup/_CourseForm.cshtml" model="@Model.CurriculumCourses">
+            </form>
+        </div>
+    </div>
+    <input asp-for="RequiredGradeId" type="hidden">
+    <input asp-for="Type" type="hidden">
+</section>
+
+@section Modals {
+    <partial name="_DeleteRowConfirmModals">
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/curriculum-edit-course.js"></script>
+    <script type="text/javascript" src="~/js/pages/curriculum-course-group.js"></script>
+}

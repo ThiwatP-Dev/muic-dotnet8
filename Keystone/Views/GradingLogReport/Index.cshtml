@@ -1,0 +1,137 @@
+@model PagedResult<GradingLogGroupReportViewModel>
+@{
+    ViewData["Title"] = "Grading Log Report";
+    var recordNumber = Model?.FirstRowOnPage;
+}
+
+<section class="d-print-none">
+    <div class="block block--underline">
+        <div class="block__title">
+            <header>Grading Log Report</header>
+        </div>
+        <form asp-controller="GradingLogReport" asp-action="Index" class="form-horizontal" method="GET">
+            @Html.AntiForgeryToken()
+            <div class="block__body">
+                <div class="row form-group m-b-30">
+                    <div class="col-3">
+                        <input class="form-control" asp-for="Criteria.CodeAndName" type="text">
+                        <label>Student Code or Name</label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-academic-level" asp-items="ViewBag.AcademicLevels" asp-for="Criteria.AcademicLevelId">
+                            <option selected>Select</option>
+                        </select>
+                        <label>Academic Level<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-term" asp-items="ViewBag.Terms" asp-for="Criteria.TermId">
+                            <option selected>Select</option>
+                        </select>
+                        <label>Term<span class="text-danger">*</span></label>
+                    </div>
+                     <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-faculty" asp-items="ViewBag.Faculties" asp-for="Criteria.FacultyId">
+                            <option selected>Select</option>
+                        </select>
+                        <label>Division</label>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-department" asp-items="ViewBag.Departments" asp-for="Criteria.DepartmentId">
+                            <option selected>Select</option>
+                        </select>
+                        <label>Major</label>
+                    </div>
+                    <div class="col-6">
+                        <select class="chosen-select form-control js-cascade-course" asp-items="ViewBag.Courses" asp-for="Criteria.CourseId">
+                            <option selected>Select</option>
+                        </select>
+                        <label>Course</label>
+                    </div>
+                    <div class="col-3 align-self-end text-right text-nowrap">
+                        <button class="btn btn-mw-120 btn--primary" type="submit">
+                            <i class="la la-search mb-0 m-r-5"></i>
+                            <span class="bold">Search</span>
+                        </button>
+                        <button type="reset" class="btn btn-mw-120 btn--reset mb-0 js-reset-btn">
+                            Reset
+                        </button>
+                    </div>
+                </div>            
+            </div>
+        </form>
+    </div>
+</section>
+    
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title d-print-none">
+                <header class="block__title-info">
+                    <div class="row">
+                        <div class="col-6 info-group">
+                            <h5><b>Search Result (@(Model?.RowCount ?? 0))</b></h5>
+                        </div>
+                    </div>
+                </header>
+            </div>
+            <div class="block__body">
+                <div class="table-responsive unset-overflow">
+                    <table class="table table-bordered js-report-table table-hover font-size-12">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th>Course</th>
+                                <th class="text-center">Section</th>
+                                <th class="text-center">Previous Grade</th>
+                                <th class="text-center">Current Grade</th>
+                                <th class="text-center">Approved Date</th>
+                                <th>Approved By</th>
+                                <th>Remark</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Results.Any())
+                            {
+                                foreach (var item in Model.Results) 
+                                {
+                                    <tr>
+                                        <td>
+                                            <b>@item.Code</b>
+                                        </td>
+                                        <td colspan="7">
+                                            <b>@item.Name (@item.Faculty, @item.Department)</b>
+                                        </td>
+                                    </tr>
+
+                                    foreach (var detail in item.Details)
+                                    {
+                                        <tr>
+                                            <td>@recordNumber</td>
+                                            <td>@detail.Course</td>
+                                            <td>@detail.Section</td>
+                                            <td>@detail.PreviousGrade</td>
+                                            <td>@detail.CurrentGrade</td>
+                                            <td>@detail.ApprovedAt</td>
+                                            <td>@detail.ApprovedBy</td>
+                                            <td>@detail.Remark</td>
+                                        </tr>
+                                        recordNumber++;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td class="text-center text-danger" colspan="10">No data</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

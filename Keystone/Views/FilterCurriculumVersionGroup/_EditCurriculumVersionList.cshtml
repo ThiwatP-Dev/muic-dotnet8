@@ -1,0 +1,76 @@
+@model FilterCurriculumVersionGroupViewModel
+@{ 
+    ViewData["Title"] = "Edit Curriculum Version Group";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>@ViewData["Title"]</header>
+            </div>
+            <form class="ks-form container" asp-controller="FilterCurriculumVersionGroup" asp-action="Edit" method="POST">
+                @Html.AntiForgeryToken()
+                <div class="block__action container">
+                    <div class="block__action-row">
+                        <a data-toggle="modal" 
+                           class="btn btn-mw-120 btn--primary"
+                           data-target="#add-filter-curriculum-version-modal">
+                            <i class="la la-plus info"></i>Add Curriculum Versions
+                        </a>
+                    </div>
+                </div>
+                <div class="row form-group m-b-30">
+                    <div class="col-12 form-group table-responsive">
+                        <table class="table table-bordered m-0">
+                            <thead>
+                                <tr>
+                                    <th class="w-25 text-center">#</th>
+                                    <th>Curriculum Version</th>
+                                    <th>Division</th>
+                                    <th>Major</th>
+                                    <th>Curriculum</th>
+                                    <th class="text-center w-120">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.CurriculumVersions != null && Model.CurriculumVersions.Any())
+                                {
+                                    for (var i = 0; i < Model.CurriculumVersions.Count; i++)
+                                    {
+                                        <tr>
+                                            <td>@(i+1)</td>
+                                            <td>@Model.CurriculumVersions[i].CodeAndName</td>
+                                            <td>@Model.CurriculumVersions[i].Faculty</td>
+                                            <td>@Model.CurriculumVersions[i].Department</td>
+                                            <td>@Model.CurriculumVersions[i].Curriculum</td>
+                                            <td class="text-nowrap td-actions">
+                                                <a data-toggle="modal" 
+                                                   data-target="#delete-confirm-modal" 
+                                                   data-controller="FilterCurriculumVersionGroup"
+                                                   data-action="DeleteCurriculumVersion" 
+                                                   data-value="@Model.CurriculumVersions[i].FilterCurriculumVersionGroupDetailId"
+                                                   data-return-url="@contextPath">
+                                                    <i class="la la-trash delete"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="7">
+                                            <i class="text-danger">No Data</i>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>   
+                </div>   
+            </form>
+        </div>
+    </div>
+</section>

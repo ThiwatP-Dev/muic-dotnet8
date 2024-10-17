@@ -1,0 +1,19 @@
+@model Announcement
+@{ 
+    ViewData["Title"] = "Add Announcement"; 
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <form class="ks-form container" asp-controller="Announcement" asp-action="Create" method="POST">
+                @Html.AntiForgeryToken()
+                <partial name="_Form">
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/ajax-cascading/announcement-channel-cascade.js"></script>
+}

@@ -1,0 +1,16 @@
+@model Student
+
+<div id="registration-course-details-modal" class="modal fadeIn animated js-registration-course-detailsl" tabindex="-1" role="dialog"
+     aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div id="modalWrapper-registration-course-details">
+                <partial name="_DetailsInfo"/>
+            </div> 
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/delete-all-course-modal.js"></script>
+}

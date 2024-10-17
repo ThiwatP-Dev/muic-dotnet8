@@ -1,0 +1,92 @@
+@model StudentPetition
+@{
+    var index = 1;
+}
+
+<div class="block__title">
+    <header>@ViewData["Title"]</header>
+</div>
+
+<div class="block__body">
+    <div class="row form-group">
+        <div class="col-4">
+            <div class="form-control-label d-flex align-items-center">Code</div>
+            <div class="form-control-plaintext text-wrap">@Model?.Student?.Code</div>
+        </div>
+        <div class="col-8">
+            <div class="form-control-label d-flex align-items-center">Name</div>
+            <div class="form-control-plaintext text-wrap">@Model?.Student?.FullNameEn</div>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-12">
+            <div class="form-control-label d-flex align-items-center">Request</div>
+            <div class="form-control-plaintext text-wrap">@Model?.Request</div>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-4">
+            <select class="chosen-select form-control" asp-for="Status" asp-items="ViewBag.Statuses"></select>
+            <label>Status</label>
+        </div>
+        <div class="col-8">
+            <input class="form-control" asp-for="Remark" type="text">
+            <label>Remark</label>
+        </div>
+    </div>
+</div>
+
+<div class="form-group">
+    <div class="block__title">
+        <header>Petition Log</header>
+    </div>
+
+    <div class="block__body">
+        <table class="table table-bordered m-0">
+            <thead>
+                <tr>
+                    <th class="text-center w-50">#</th>
+                    <th>Comment</th>
+                    <th>User</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.PetitionLogs != null && Model.PetitionLogs.Any())
+                {
+                    foreach (var item in Model.PetitionLogs) 
+                    {
+                        <tr>
+                            <td>@index</td>
+                            <td>@item.Comment</td>
+                            <td>@item.UpdatedBy</td>
+                            <td>@item.UpdatedAtText</td>
+                        </tr>
+                        ++index;
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4" class="text-center">
+                            <i class="text-danger">No Data</i>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    <div>
+</div>
+
+<input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+
+<div class="block__action container">
+    <div class="block__action-row row">
+        <div class="col-12 mt-4">
+            <button class="btn btn-mw-120 btn--primary" asp-route-returnUrl="@ViewBag.ReturnUrl" type="submit">Save</button>
+            <a class="btn btn-mw-120 btn--cancel" href="@ViewBag.ReturnUrl">Cancel</a>
+        </div>
+    </div>
+</div>

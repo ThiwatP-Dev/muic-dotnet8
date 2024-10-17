@@ -1,0 +1,55 @@
+@model StudentCodeRange
+@Html.AntiForgeryToken()
+
+<div class="block__title">
+    <header>@ViewData["Title"]</header>
+</div>
+
+<div class="block__body">
+    <div class="form-group">
+        <select class="chosen-select form-control js-cascade-academic-level" asp-for="AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+            <option selected disabled>Select</option>
+        </select>
+        <label>Academic Level<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="AcademicLevelId"></span>
+    </div>
+
+    <div class="form-group">
+        <select class="chosen-select form-control js-cascade-admission-round" asp-for="AdmissionRoundId" asp-items="ViewBag.AdmissionRounds">
+            <option selected disabled>Select</option>
+        </select>
+        <label>Admission Round<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="AdmissionRoundId"></span>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-6">
+            <input class="form-control js-started-code" asp-for="StartedCode" type="text">
+            <label>Start Code<span class="text-danger">*</span></label>
+            <span class="text-danger help-block" asp-validation-for="StartedCode"></span>
+        </div>
+
+        <div class="col-6">
+            <input class="form-control js-ended-code" asp-for="EndedCode" type="text">
+            <label>End Code<span class="text-danger">*</span></label>
+            <span class="text-danger help-block" asp-validation-for="EndedCode"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-check">
+            <input class="form-check-input" asp-for="IsActive" type="checkbox">
+            <label for="IsActive">Active</label>
+        </div>
+    </div>
+</div>
+
+<input class="js-student-code-range-id" asp-for="Id" type="hidden">
+<input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+
+<div class="block__action container">
+    <div class="block__action-row">
+        <button class="btn btn-mw-120 btn--primary js-confirm-button" type="button">Save</button>
+        <a class="btn btn-mw-120 btn--cancel" href="@ViewBag.ReturnUrl">Cancel</a>
+    </div>
+</div>

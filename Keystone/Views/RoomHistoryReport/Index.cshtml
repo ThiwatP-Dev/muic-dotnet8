@@ -1,0 +1,180 @@
+@model PagedResult<RoomHistoryReportViewModel>
+@{
+    ViewData["Title"] = "Room History Report";
+    var index = Model == null ? 1 : Model.FirstRowOnPage;
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="panel-group">
+            <div class="block block--underline d-print-none">
+                <div class="block__title">
+                    <header>@ViewData["Title"]</header>
+                </div>
+
+                <div class="collapse show" aria-expanded="true">
+                    <div class="block__body">
+                        <form class="form-horizontal" asp-controller="RoomHistoryReport" asp-action="Index" method="GET">
+                            @Html.AntiForgeryToken()
+                            <div class="row form-group m-b-30">
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-campus" asp-for="Criteria.CampusId" asp-items="ViewBag.Campuses">
+                                        <option selected value="">Select</option>
+                                    </select>
+                                    <label>Campus</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-building" asp-for="Criteria.BuildingId" asp-items="ViewBag.Buildings">
+                                        <option selected value="">Select</option>
+                                    </select>
+                                    <label>Building</label>
+                                </div>
+                                <div class="col-3">
+                                    <input class="form-control" asp-for="Criteria.Floor" type="text">
+                                    <label>Floor</label>
+                                </div>
+                                <div class="col-3">
+                                    <input class="form-control" asp-for="Criteria.CodeAndName" type="text">
+                                    <label>Room</label>
+                                </div>
+                            </div>
+
+                            <div class="row form-group m-b-30">
+                                <div class="col-3">
+                                    <input class="form-control js-single-date" asp-for="Criteria.StartedAt" type="text" autocomplete="off">
+                                    <label>Date From<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-3">
+                                    <input class="form-control js-single-date" asp-for="Criteria.EndedAt" type="text" autocomplete="off">
+                                    <label>Date To<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control" asp-for="Criteria.Type" asp-items="ViewBag.UsingTypes">
+                                        <option selected value="">All</option>
+                                    </select>
+                                    <label>Using Type<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control" asp-for="Criteria.IsCancel" asp-items="ViewBag.Answers"></select>
+                                    <label>Cancel</label>
+                                </div>
+                            </div>
+
+                            <div class="row form-group">
+                                <div class="col-3">
+                                    <select class="chosen-select form-control" asp-for="Criteria.IsMakeUp" asp-items="ViewBag.Answers"></select>
+                                    <label>Make Up</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control" asp-for="Criteria.OrderBy" asp-items="ViewBag.OrderBy"></select>
+                                    <label>Order By</label>
+                                </div>
+                                <div class="col-6 align-self-end text-right">
+                                    <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                        <i class="la la-search mr-2"></i>Search
+                                    </button>
+                                    <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                                        Reset
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Summary</header>
+            </div>
+            <div class="block__body text-left height-3">
+                <div class="row form-group mb-0">
+                    <div class="col-md-3">
+                        <div class="form-control-label d-flex align-items-center">Total Active</div>
+                        <div class="form-control-plaintext">@ViewBag.TotalActive?.ToString(StringFormat.NumberString)</div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-control-label d-flex align-items-center">Total Cancel</div>
+                        <div class="form-control-plaintext">@ViewBag.TotalCancel?.ToString(StringFormat.NumberString)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="block block--underline">
+                    <div class="block__title">
+                        <header>Search Result (@(Model?.RowCount ?? 0))</header>
+                    </div>
+
+                    <div class="block__body">
+                        <div class="table-responsive">
+                             <table class="table table-bordered table-hover js-report-table w-100x">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">#</th>
+                                        <th>Building</th>
+                                        <th class="text-center">Floor</th>
+                                        <th>Room</th>
+                                        <th class="text-center">Date</th>
+                                        <th class="text-center">Time</th>
+                                        <th>Type</th>
+                                        <th class="text-center">Reservation Date</th>
+                                        <th>Reservation By</th>
+                                        <th class="text-center">Status</th>
+                                        <th class="text-center">Make up</th>
+                                        <th>Remark</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model != null && Model.Results != null && Model.Results.Any())
+                                    {
+                                        foreach (var item in Model.Results)
+                                        {
+                                            <tr>
+                                                <td>@index</td>
+                                                <td>@item.Building</td>
+                                                <td>@item.Floor</td>
+                                                <td>@item.Name</td>
+                                                <td>@item.DateText</td>
+                                                <td>@item.TimeDisplay</td>
+                                                <td>@item.UsingType</td>
+                                                <td>@item.CreatedAtText</td>
+                                                <td>@item.CreatedBy</td>
+                                                <td>
+                                                    <partial name="_BooleanActiveCancel" model="@item.Cancel">
+                                                </td>
+                                                <td>
+                                                    <partial name="_BooleanResult" model="@item.MakeUp">
+                                                </td>
+                                                <td>
+                                                    @item.CourseAndInstructor
+                                                    @item.Remark
+                                                </td>
+                                            </tr>
+                                            ++index;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="12">
+                                                <i class="text-danger">No Data</i>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script src="~/js/pages/ajax-cascading/building-cascade.js"></script>
+}

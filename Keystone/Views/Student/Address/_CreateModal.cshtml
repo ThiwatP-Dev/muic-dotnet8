@@ -1,0 +1,20 @@
+@model StudentAddress
+
+<div id="create-modal-address" class="modal fadeIn animated js-modal-form" tabindex="-1" role="dialog"
+     aria-hidden="true" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+		<div class="modal-content">
+			<div class="block block--underline mb-0">
+				<div class="block__title">
+					<header>Add Student Address</header>
+				</div>
+				<div class="block__body">
+					<form class="ks-form container py-0" asp-controller="Address" asp-action="Create" asp-route-page="@ViewData["Page"]" method="POST">
+						@Html.AntiForgeryToken()
+						<partial name="~/Views/Student/Address/_Form.cshtml" model="@(Model == null ? new StudentAddress() : new StudentAddress { StudentId = @Model.StudentId })" />
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

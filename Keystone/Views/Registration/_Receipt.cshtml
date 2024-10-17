@@ -1,0 +1,86 @@
+@model List<Receipt>
+@{
+    var index = 1;
+    var studentCode = Model.Any() ? Model.First().Student?.Code : null;
+    var termId = Model.Any() ? Model.First().TermId : null;
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+
+<section class="ks-general-info">
+    <div class="block block--underline">
+        <div class="block__body">
+            <div class="table-responsive mb-4">
+                <table class="table table-bordered m-0">
+                    <thead>
+                        <tr>
+                            <th class="text-center w-50">#</td>
+                            <th class="text-center">Term</th>
+                            <th>Receipt No.</th>
+                            <th class="text-center">Receipt Date</th>
+                            <th>Receipt By</th>
+                            <th class="text-center">Printed Date</th>
+                            <th>Printed By</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center w-200">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@index</td>
+                                <td>@item.Term?.TermText</td>
+                                <td class="receipt-id">@item.Number</td>
+                                <td>@item.CreatedAtText</td>
+                                <td>@item.CreatedByFullNameEn</td>
+                                <td>@item.PrintedAtText</td>
+                                <td>@item.PrintedBy</td>
+                                <td>
+                                    @if (item.IsCancel)
+                                    {
+                                        <span class="ks-label bg-danger">Cancel</span>
+                                    }
+                                    else 
+                                    {
+                                        <span class="ks-label bg-success">Active</span>
+                                    }
+                                </td>
+                                <td class="text-center td-actions">
+                                    <a class="js-receipt-detail"
+                                       data-toggle="modal"
+                                       data-target="#js-receipt-details-modal"
+                                       data-type="receipt-details"
+                                       data-receipt-id="@item.Id">
+                                        <i class="la la-info info"></i>
+                                    </a>
+                                    <a asp-controller="Receipt"
+                                       asp-action="ReceiptPreview"
+                                       asp-route-Id="@item.Id"
+                                       asp-route-returnUrl="@contextPath">
+                                        <i class="la la-print info"></i>
+                                    </a>
+                                    <a class="js-copy-receipt"
+                                       data-toggle="modal"
+                                       data-target="#js-receipt-details-modal"
+                                       data-type="transaction"
+                                       data-receipt-id="@item.Id">
+                                        <i class="la la-copy edit"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            ++index;
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="block__action">
+                <div class="block__action-row">
+                    <a class="btn btn-mw-120 btn--primary" asp-controller="Receipt" asp-action="Index"
+                       asp-route-studentCode="@studentCode" asp-route-termId="@termId">
+                        <i class="la la-file-text mr-1"></i>All Receipts
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

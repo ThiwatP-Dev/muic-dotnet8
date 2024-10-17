@@ -1,0 +1,40 @@
+@model List<ScholarshipBudget>
+
+<div class="js-render-nicescroll box-scroll__content">
+    <div class="table-responsive mb-4">
+        <table class="table table-bordered m-0">
+            <thead>
+                <tr>
+                    <th class="w-125">Division</th>
+                    <th class="w-125">Major</th>
+                    <th class="w-100">Curriculum</th>
+                    <th class="text-right w-50">Amount</th>
+                    <th class="text-center w-25">Year</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null)
+                {
+                    foreach (var item in Model) 
+                    {
+                        <tr>
+                            <td>@item.Faculty?.NameEn</td>
+                            <td>@item.Department?.NameEn</td>
+                            <td>@item.Curriculum?.AbbreviationEn</td>
+                            <td>@item.AmountText</td>
+                            <td>@item.TotalYear</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td class="text-center" colspan="6">
+                            <i class="text-danger">No Data</i>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

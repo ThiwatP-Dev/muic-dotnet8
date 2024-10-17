@@ -1,0 +1,178 @@
+@model Room
+
+<div class="block__title">
+    <header>@ViewData["Title"]</header>
+</div>
+
+<div class="block__body">
+    <div class="form-group">
+        <input class="form-control" asp-for="NameEn" type="text">
+        <label>English Name<span class="text-danger">*</span></label>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" asp-for="NameTh" type="text">
+        <label>Thai Name</label>
+    </div>
+    
+    <div class="form-group">
+        <input class="form-control" asp-for="Floor" type="number" min=0>
+        <label>Floor</label>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" asp-for="Capacity" type="number" min=0>
+        <label>Capacity</label>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" asp-for="ExaminationCapacity" type="number" min=0>
+        <label>Examination Capacity</label>
+    </div>
+
+    <div class="form-group">
+        <select class="chosen-select form-control js-cascade-campus" asp-for="CampusId" asp-items="ViewBag.Campuses">
+            <option selected disabled>Select</option>
+        </select>
+        <label>Campus</label>
+    </div>
+
+    <div class="form-group">
+        <select class="chosen-select form-control js-cascade-building" asp-for="BuildingId" asp-items="ViewBag.Buildings">
+            <option selected disabled>Select</option>
+        </select>
+        <label>Building<span class="text-danger">*</span></label>
+    </div>
+
+    <div class="form-group">
+        <select class="chosen-select form-control" asp-for="RoomTypeId" asp-items="ViewBag.RoomTypes">
+            <option selected disabled>Select</option>
+        </select>
+        <label>Room Type<span class="text-danger">*</span></label>
+    </div>
+
+    <div class="row">
+        <div class="form-check">
+            <input class="form-check-input" asp-for="IsAllowLecture" type="checkbox">
+            <label for="IsAllowLecture">Allow Lecture</label>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-check">
+            <input class="form-check-input" asp-for="IsAllowSearch" type="checkbox">
+            <label for="IsAllowSearch">Allow Search</label>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-check">
+            <input class="form-check-input" asp-for="AllowStudent" type="checkbox">
+            <label for="AllowStudent">Allow Student</label>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-check">
+            <input class="form-check-input" asp-for="AllowInstructor" type="checkbox">
+            <label for="AllowInstructor">Allow Instructor</label>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-check">
+            <input class="form-check-input" asp-for="AllowStaff" type="checkbox">
+            <label for="AllowStaff">Allow Staff / Admin</label>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="form-check">
+            <input class="form-check-input" asp-for="IsActive" type="checkbox">
+            <label for="IsActive">Active</label>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="form-check">
+            <input class="form-check-input" asp-for="IsOnline" type="checkbox">
+            <label for="IsOnline">Online</label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <table id="js-add-facility" class="table table-bordered m-0">
+            <thead>
+                <tr>
+                    <th class="text-center w-50">#</th>
+                    <th>Facility</th>
+                    <th class="text-center w-150">Amount</th>
+                    <th class="text-center w-150">Active</th>
+                    <th class="text-center w-100">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.RoomFacilities != null && Model.RoomFacilities.Any())
+                {
+                    for (int i = 0; i < Model.RoomFacilities.Count; ++i)
+                    {
+                        <tr>
+                            <td>
+                                @(i + 1)
+                                <input asp-for="RoomFacilities[i].Id" type="hidden">
+                                <input asp-for="RoomFacilities[i].RoomId" type="hidden">
+                            </td>
+                            <td>
+                                <select class="chosen-select form-control" asp-for="RoomFacilities[i].FacilityId" asp-items="ViewBag.Facilities">
+                                    <option selected disabled>Select</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input class="form-control__table js-default-zero js-click-highlight" asp-for="RoomFacilities[i].Amount" type="number">
+                            </td>
+                            <td>
+                                <select class="form-control__table" asp-for="RoomFacilities[i].IsActive" asp-items="ViewBag.ActiveStatuses"></select>
+                            </td>
+                            <td class="text-nowrap td-actions">
+                                <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                    <i class="la la-trash delete"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td>
+                            1
+                        </td>
+                        <td>
+                            <select class="chosen-select form-control" name="RoomFacilities[0].FacilityId" asp-items="ViewBag.Facilities">
+                                <option selected disabled>Select</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input class="form-control__table js-default-zero js-click-highlight" name="RoomFacilities[0].Amount" type="number" value="0">
+                        </td>
+                        <td>
+                            <select class="form-control__table" name="RoomFacilities[0].IsActive" asp-items="ViewBag.ActiveStatuses"></select>
+                        </td>
+                        <td class="text-nowrap td-actions">
+                            <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                <i class="la la-trash delete"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="block__action container">
+    <div class="block__action-row">
+        <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+        <a class="btn btn-mw-120 btn--cancel" asp-action="Index">Cancel</a>
+    </div>
+</div>

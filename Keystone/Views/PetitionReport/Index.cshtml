@@ -1,0 +1,161 @@
+@model PetitionReportViewModel
+@{ 
+    ViewData["Title"] = "Petition Report"; 
+    var index = 1;
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+
+<div class="row">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</div>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Petition</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="PetitionReport" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group m-b-30">
+                        <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Academic Level<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="ViewBag.Terms">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Term<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-4">
+                            <select class="chosen-select form-control" asp-for="Criteria.PetitionId" asp-items="ViewBag.Petitions">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Petition</label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group m-b-30">
+                        <div class="col-4">
+                        <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="ViewBag.Faculties">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Division</label>
+                        </div>
+                        <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentId" asp-items="ViewBag.Departments">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Major</label>
+                        </div>
+                        <div class="col-4">
+                            <select class="chosen-select form-control" asp-for="Criteria.Channel" asp-items="ViewBag.Channels">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Channel</label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-4">
+                            <input class="form-control" asp-for="Criteria.Code" type="text">
+                            <label>Student Code</label>
+                        </div>
+                        <div class="col-4">
+                            <input class="form-control" asp-for="Criteria.CodeAndName" type="text">
+                            <label>Name</label>
+                        </div>
+                        <div class="col-4">
+                            <select class="chosen-select form-control" asp-for="Criteria.Status" asp-items="ViewBag.Statuses">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Status</label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-12 align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.PetitionReportDetails?.Count() ?? 0))</header>
+            </div>
+
+            <div class="block__body">
+                <div class="p-4">
+                    <table class="table table-bordered table-hover js-report-table w-100x">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th>Petition</th>
+                                <th class="text-center">Request</th>
+                                <th class="text-center">Accept</th>
+                                <th class="text-center">Reject</th>
+                                <th class="text-center">Total</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.PetitionReportDetails != null && Model.PetitionReportDetails.Any())
+                            {
+                                foreach (var item in Model.PetitionReportDetails) 
+                                {
+                                    <tr>
+                                        <td>@index</td>
+                                        <td>@item.PetitionName</td>
+                                        <td>@item.Request</td>
+                                        <td>@item.Accept</td>
+                                        <td>@item.Reject</td>
+                                        <td>@item.Total</td>
+                                        <td class="text-nowrap td-actions">
+                                            <a asp-controller="PetitionManagement"
+                                               asp-action="Index"
+                                               asp-route-returnUrl="@contextPath"
+                                               asp-route-academicLevelId="@Model.Criteria.AcademicLevelId"
+                                               asp-route-termId="@Model.Criteria.TermId"
+                                               asp-route-petitionId="@item.PetitionId">
+                                                <i class="la la-user edit"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    ++index;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="12">
+                                        <i class="text-danger">No Data</i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @(await Component.InvokeAsync<PagerViewComponent>(Model))
+    </div>
+</section>

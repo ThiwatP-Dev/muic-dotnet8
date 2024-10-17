@@ -1,0 +1,160 @@
+@model AddStudentScholarshipViewModel
+@{
+    ViewData["Title"] = "Add Students";
+    var returnUrl = ViewBag.ReturnUrl;
+}
+
+<div class="row">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</div>
+
+<section>
+    <div class="block block--underline">
+        <div class="block__title">
+            <header>Search Students</header>
+        </div>
+        <div class="block__body">
+            <form asp-controller="Scholarship" asp-action="AddStudents" method="GET">
+                @Html.AntiForgeryToken()
+                <div class="row form-group m-b-30">
+                    <div class="col-3">
+                        <input class="form-control" asp-for="Criteria.Code" type="text">
+                        <label>Code</label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control" asp-for="Criteria.FirstName" type="text">
+                        <label>Name</label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control" asp-for="Criteria.StartStudentBatch" type="number">
+                        <label for="Criteria.StartStudentBatch">Batch Start<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control" asp-for="Criteria.EndStudentBatch" type="number">
+                        <label for="Criteria.EndStudentBatch">Batch End<span class="text-danger">*</span></label>
+                    </div>
+                </div>
+
+                <div class="row form-group m-b-30">
+                    <div class="col-4">
+                        <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                            <option selected>Select</option>
+                        </select>
+                        <label>Academic Level<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-4">
+                        <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="ViewBag.Faculties">
+                            <option selected>Select</option>
+                        </select>
+                        <label>Division</label>
+                    </div>
+                    <div class="col-4">
+                        <select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentId" asp-items="ViewBag.Departments">
+                            <option selected>Select</option>
+                        </select>
+                        <label>Major</label>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.StartTermId" asp-items="ViewBag.AdmissionTerms">
+                            <option selected>Select</option>
+                        </select>
+                        <label>From Admission Term</label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.EndTermId" asp-items="ViewBag.AdmissionTerms">
+                            <option selected>Select</option>
+                        </select>
+                        <label>To Admission Term</label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control" asp-for="Criteria.IsAthlete" asp-items="ViewBag.YesNoAnswers"
+                                data-placeholder="All">
+                        </select>
+                        <label>Athlete</label>
+                    </div>
+                    <div class="col-3 text-right align-self-end">
+                        <button class="btn btn-mw-120 btn--primary mb-0" type="submit">
+                            <i class="la la-search mr-2"></i>Search
+                        </button>
+                    </div>
+                </div>
+                <input name="returnUrl" type="hidden" value="@returnUrl">
+                <input asp-for="Criteria.ScholarshipId" type="hidden">
+            </form>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="block block--underline">
+        <div class="block__title">
+            <header>Student List</header>
+        </div>
+        <div class="block__body">
+            <form asp-action="AddStudents" method="POST">
+                <div class="block js-students">
+                    <div class="box-scroll__header d-flex justify-content-between pb-1">
+                        <input id="checkAll" class="form-check-input js-check-all" type="checkbox">
+                        <label for="checkAll">Select All <span class="js-item-count">(@(Model?.AddStudents?.Count() ?? 0))</span></label>
+                        <span class="form-group mb-0">
+                            <input id="js-search" class="form-control search-form--mini" type="text" placeholder="Student Code or Name">
+                            <i class="la la-search inline-icon"></i>
+                        </span>
+                    </div>
+                    <!-- nice scroll box -->
+                    <div class="js-render-nicescroll box-scroll__content js-items">
+                        @if (Model.AddStudents != null && Model.AddStudents.Any())
+                        {
+                            for (int i = 0; i < Model.AddStudents.Count(); i++)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="js-suggestion-parent">
+                                            <input id="@Model.AddStudents[i].Code" class="form-check-input" 
+                                                   name="StudentIds" type="checkbox" value="@Model.AddStudents[i].StudentId" 
+                                                   checked="@Model.AddStudents[i].IsExist" disabled="@Model.AddStudents[i].IsExist">
+                                            <label class="js-focus-item m-0" for="@Model.AddStudents[i].Code">@Model.AddStudents[i].Code</label>
+                                            <label class="js-focus-item m-0" for="@Model.AddStudents[i].Code">@Model.AddStudents[i].FullNameEn</label>
+                                            <hr class="w-100x">
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        
+                    </div>
+                </div>
+                <input name="Id" type="hidden" value="@Model.Criteria.ScholarshipId">
+                <input name="returnUrl" type="hidden" value="@returnUrl">
+                <div class="col-12 text-right align-self-end">
+                    <button class="btn btn-mw-120 btn--primary mb-0" type="submit">Save</button>
+                    <a asp-action="Students" asp-route-ScholarshipId="@Model.Criteria.ScholarshipId" asp-route-returnUrl="@returnUrl"
+                       class="btn btn-mw-120 btn--cancel mb-0">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            //Check list function
+            CheckList.renderCheckbox('.js-students');
+
+            //Search function (Element Suggestion)
+            $('#js-search').on('keyup', function() {
+                let keywords = $(this).val();
+                InputSuggestion.elementSuggest(keywords, '.js-suggestion-parent');
+            })
+
+            //Nice scroll function
+            $(".js-render-nicescroll").niceScroll();
+        })
+    </script>
+}

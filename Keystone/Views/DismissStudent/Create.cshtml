@@ -1,0 +1,183 @@
+@model DismissStudentViewModel
+@{ 
+    ViewData["Title"] = "Add Dismiss Student"; 
+}
+
+<section class="row">
+    <div class="ks-page-header col-12">
+            <a class="btn-back" href="@ViewBag.ReturnUrl">
+				<i class="la la-angle-double-left mr-1"></i>
+                <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+			</a>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block">
+            <form asp-controller="DismissStudent" asp-action="Create" method="GET">
+                <div class="block__body">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group m-b-30">
+                        <div class="col-3">
+                            <input class="form-control" name="code" type="text">
+                            <label>Student Code</label>
+                        </div>
+
+                        <input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+
+                        <div class="col-9 align-self-end text-left text-nowrap">
+                            <button class="btn btn--primary btn-mw-120 m-l-5" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                        </div>
+                    </div>
+
+                    <hr class="mb-0">
+
+                    <div class="block__body">
+                        <div class="row form-group">
+                            <div class="col-4">
+                                <h4>Student Information</h4>
+                            </div>
+                        </div>
+                        @if (Model != null)
+                        {
+                            <div class="row form-group">
+                                <div class="col-3 align-self-center">
+                                    <div class="form-control-label d-flex align-items-center">Code</div>
+                                    <div class="form-control-plaintext">@Model.Code</div>
+                                </div>
+                                <div class="col-3 align-self-center">
+                                    <div class="form-control-label d-flex align-items-center">Name</div>
+                                    <div class="form-control-plaintext">@Model.FullName</div>
+                                </div>
+                                <div class="col-3 align-self-center">
+                                    <div class="form-control-label d-flex align-items-center">Academic Level</div>
+                                    <div class="form-control-plaintext">@Model.AcademicLevel</div>
+                                </div>
+                                <div class="col-3 align-self-center">
+                                    <div class="form-control-label d-flex align-items-center">Division</div>
+                                    <div class="form-control-plaintext">@Model.Faculty</div>
+                                </div> 
+                            </div>
+
+                            <div class="row form-group">
+                                <div class="col-3 align-self-center">
+                                    <div class="form-control-label d-flex align-items-center">Major</div>
+                                    <div class="form-control-plaintext">@Model.Department</div>
+                                </div>
+                                <div class="col-3 align-self-center">
+                                    <div class="form-control-label d-flex align-items-center">Curriculum</div>
+                                    <div class="form-control-plaintext">@Model.Curriculum</div>
+                                </div>
+                                <div class="col-3 align-self-center">
+                                    <div class="form-control-label d-flex align-items-center">CurriculumVersion</div>
+                                    <div class="form-control-plaintext">@Model.CurriculumVersion</div>
+                                </div> 
+                                <div class="col-3 align-self-center">
+                                    <div class="form-control-label d-flex align-items-center">AdmissionTerm</div>
+                                    <div class="form-control-plaintext">@Model.Term</div>
+                                </div>
+                            </div>  
+                            
+                            <div class="row form-group">
+                                <div class="col-3 align-self-center">
+                                    <div class="form-control-label d-flex align-items-center">GPA</div>
+                                    <div class="form-control-plaintext">@Model.GPA</div>
+                                </div> 
+                                <div class="col-3 align-self-center">
+                                    <div class="form-control-label d-flex align-items-center">Credit</div>
+                                    <div class="form-control-plaintext">@Model.CreditEarned</div>
+                                </div>
+                                <div class="col-3 align-self-center">
+                                    <div class="form-control-label d-flex align-items-center">Advisor</div>
+                                    <div class="form-control-plaintext">@Model.Advisor</div>
+                                </div>
+                            </div>
+                        }
+
+                        <div class="table-responsive">
+                            @if (Model.Terms != null)
+                            {
+                                <table class="table table-bordered m-0">
+                                    <thead>
+                                        <tr>
+                                            @foreach (var term in Model.Terms) 
+                                            {
+                                                <th class="text-center" colspan="@term.AcademicYearAndTermDetails.Count">@term.AcademicYear</th>
+                                            }
+                                        </tr>
+                                        <tr>
+                                            @foreach (var term in Model.Terms) 
+                                            {
+                                                foreach (var termDetail in term.AcademicYearAndTermDetails)
+                                                {
+                                                    <th class="text-center">@termDetail.AcademicTerm</th>
+                                                }
+                                            }
+                                        </tr>
+                                    </thead>
+                                    <tbody class="js-items">
+                                        <tr>
+                                            @foreach (var gpa in Model.TermGPAs) 
+                                            {
+                                                <td>
+                                                    @if (gpa.GPA.HasValue) 
+                                                    {
+                                                        @if (gpa.GPA.Value == -1) 
+                                                        {
+                                                            @String.Format("{0}", "X");
+                                                        }
+                                                        else
+                                                        {
+                                                            @String.Format("{0:N2}",(Math.Truncate(gpa.GPA.Value * 100) / 100));
+                                                        }
+                                                    }
+                                                </td>
+                                            }
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@if (Model != null)
+{
+    <section class="row">
+        <div class="col-12">
+            <form asp-controller="DismissStudent" asp-action="Create" method="POST">
+                <div class="block block--underline">
+                    <div class="block__body">
+                        <div class="row form-group">
+                            <div class="col-5">
+                                <select class="chosen-select form-control" asp-for="ProbationId" asp-items="ViewBag.Probations" data-placeholder="Select">
+                                    <option selected disabled>Select</option>
+                                </select>
+                                <label>Probation<span class="text-danger">*</span></label>
+                            </div>
+                            <div class="col-3">
+                                <input class="form-control" asp-for="Remark" type="text">
+                                <label>Remark</label>
+                            </div>
+                            
+                            <input asp-for="TermId" type="hidden">
+                            <input asp-for="StudentId" type="hidden">
+                            
+                            <div class="block__action-row align-self-end">
+                                <button class="btn btn-mw-120 btn--primary" asp-route-code="@Model.Code" type="submit">Save</button>
+                                <a class="btn btn-mw-120 btn--cancel" asp-action="Index" asp-route-returnUrl="@ViewBag.ReturnUrl">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+}

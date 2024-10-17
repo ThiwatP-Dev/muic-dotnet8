@@ -1,0 +1,73 @@
+<div class="block block--underline mb-0">
+    <div class="block__body">
+        <h4 class="mb-3 font-weight-bold">Student Information</h4>
+        <div class="row form-group">
+            <div class="col">
+                <input id="js-input-batch-code-start" class="form-control">
+                <label>Start Code / Batch</label>
+            </div>
+            <span class="d-flex align-self-center">-</span>
+            <div class="col">
+                <input id="js-input-batch-code-end" class="form-control">
+                <label>End Code / Batch</label>
+            </div>
+            <div class="col">
+                <input id="js-input-admission-date-start" type="text" class="form-control js-single-date">
+                <label>Start Admission Date</label>
+            </div>
+            <span class="d-flex align-self-center">-</span>
+            <div class="col">
+                <input id="js-input-admission-date-end" type="text" class="form-control js-single-date">
+                <label>End Admission Date</label>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col">
+                <select id="js-select-faculty" asp-items="@Model.Faculties" class="form-control js-cascade-faculty">
+                    <option selected disabled>Select</option>
+                </select>
+                <label>Division</label>
+            </div>
+            <div class="col">
+                <select id="js-select-department" asp-items="@Model.Departments" class="form-control js-cascade-department">
+                    <option selected disabled>Select</option>
+                </select>
+                <label>Major</label>
+            </div>
+        </div>
+        <h4 class="mb-3 font-weight-bold">Grade</h4>
+        <div class="row form-group">
+            <div class="col">
+                <input id="js-input-grade-release-date-start" type="text" class="form-control js-single-date">
+                <label>Grade Released Date</label>
+            </div>
+            <span class="d-flex align-self-center">-</span>
+            <div class="col">
+                <input id="js-input-grade-release-date-end" type="text" class="form-control js-single-date">
+                <label>End Grade Released Date</label>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col flex-row">
+                <h4>Courses with grade
+                    <a data-toggle="modal"
+                       data-target="#courses-grade-modal">
+                        <i class="la la-edit"></i>
+                    </a>
+                </h4>
+                <ul id="js-filter-list"><i>No Selected Course</i></ul>
+            </div>
+            <div class="col align-self-end text-right">
+                <button id="js-search-student" class="btn btn-mw-120 btn--primary" type="button">
+                    <i class="la la-search mr-2"></i>
+                    <span class="bold">Search</span>
+                </button>
+            </div>
+        </div>
+
+        <hr>
+        <div id="SelectStudents">
+            <partial name="_StudentList" model="@Model"/>
+        </div>
+    </div>
+</div>

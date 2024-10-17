@@ -1,0 +1,149 @@
+@model Scholarship
+@{ 
+    ViewData["Title"] = "Scholarship Detail";
+}
+
+<section>
+	<div class="row">
+		<div class="ks-page-header col-12">
+			<h2 class="ks-page-header__title">
+				<a class="btn-back" href="@ViewBag.ReturnUrl">
+					<i class="la la-angle-double-left mr-1"></i>Back
+				</a>
+			</h2>
+		</div>
+	</div>
+
+    <div class="block block--underline">
+        <div class="block__body">
+            <div class="row form-group">
+				<div class="col-6">
+					<div class="form-control-label d-flex align-items-center">English Name</div>
+					<div class="form-control-plaintext">@Model.NameEn</div>
+				</div>
+				<div class="col-6">
+					<div class="form-control-label d-flex align-items-center">Thai Name</div>
+					<div class="form-control-plaintext">@Model.NameTh</div>
+				</div>
+			</div>
+
+            <div class="row form-group">
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Start Term</div>
+					<div class="form-control-plaintext">@Model.StartedTerm?.TermText</div>
+				</div>
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">End Term</div>
+					<div class="form-control-plaintext">@Model.EndedTerm?.TermText</div>
+				</div>
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Minimum GPA</div>
+					<div class="form-control-plaintext">@Model.MinimumGPA</div>
+				</div>
+                <div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Maximum GPA</div>
+					<div class="form-control-plaintext">@Model.MaximumGPA</div>
+				</div>
+			</div>
+
+            <div class="row form-group">
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Scholarship Type</div>
+					<div class="form-control-plaintext">@Model.ScholarshipType?.NameEn</div>
+				</div>
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Sponsor</div>
+					<div class="form-control-plaintext">@Model.Sponsor?.NameEn</div>
+				</div>
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Limited Amount</div>
+					<div class="form-control-plaintext">@Model.LimitedAmountText</div>
+				</div>
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Default Amount</div>
+					<div class="form-control-plaintext">@Model.DefaultAmountText</div>
+				</div>
+			</div>
+
+            <div class="row form-group">
+                <div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Total Year</div>
+					<div class="form-control-plaintext">@Model.TotalYear</div>
+				</div>
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Repeatable Registration</div>
+					<div class="form-control-plaintext">
+						<partial name="_BooleanResult" model="@Model.AllowRepeatedRegistration">
+					</div>
+				</div>
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Contract</div>
+					<div class="form-control-plaintext">
+						<partial name="_BooleanResult" model="@Model.HaveContract">
+					</div>
+				</div>
+                <div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Active</div>
+					<div class="form-control-plaintext">
+						<partial name="_BooleanResult" model="@Model.IsActive">
+					</div>
+				</div>
+			</div>
+
+            <div class="row form-group">
+				<div class="col-12">
+					<div class="form-control-label d-flex align-items-center">Remark</div>
+					<div class="form-control-plaintext">@Model.Remark</div>
+				</div>
+			</div>
+
+			<div class="table-responsive">
+				<div class="form-control-label d-flex align-items-center mb-3">Budget Details</div>
+                <table class="table table-bordered table-hover w-100x">
+                    <thead>
+                        <tr>
+                            <th>Fee Group</th>
+                            <th class="text-right">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+						@if (Model != null && Model.BudgetDetails != null)
+						{
+							foreach (var item in Model.BudgetDetails) 
+                        	{
+                        	    <tr>
+                        	        <td>@item.FeeGroup?.NameEn</td>
+                        	        <td>@item.AmountText</td>
+                        	    </tr>
+                        	}
+						}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="table-responsive">
+				<div class="form-control-label d-flex align-items-center mb-3">Payment Conditions</div>
+                <table class="table table-bordered table-hover w-100x">
+                    <thead>
+                        <tr>
+                            <th>Fee Item</th>
+                            <th class="text-right">Percentage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+						@if (Model != null && Model.ScholarshipFeeItems != null)
+						{
+							foreach (var item in Model.ScholarshipFeeItems) 
+                        	{
+                        	    <tr>
+                        	        <td>@item.FeeItem?.NameEn</td>
+                        	        <td>@item.PercentageText %</td>
+                        	    </tr>
+                        	}
+						}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+	</div>
+</section>

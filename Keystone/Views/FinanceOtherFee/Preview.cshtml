@@ -1,0 +1,20 @@
+@model ReportViewModel
+@{ 
+    ViewData["Title"] = "Finance Other Fee Preview";
+}
+
+<div class="row">
+    <div class="ks-page-header col-lg-12">
+        <a class="btn-back" href="@ViewBag.ReturnUrl">
+            <i class="la la-angle-double-left mr-1"></i>Back
+        </a>
+    </div>
+</div>
+
+<img id="js-muic-logo" src="~/images/logo-muic-url.png" hidden>
+
+<partial name="_PdfPreview" model="@Model">
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/pdf-render/finance-other-fee-receipt.js"></script>
+}

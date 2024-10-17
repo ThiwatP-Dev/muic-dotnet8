@@ -1,0 +1,537 @@
+@model PrerequisiteFormViewModel
+
+<div class="block__title">
+    <header>@ViewData["Title"]</header>
+</div>
+
+<div class="block__body">
+    <div class="row form-group">
+        <div class="col-6">
+            @if (Model.CourseId == 0)
+            {
+                <select class="chosen-select form-control" asp-for="CourseId" asp-items="ViewBag.Courses">
+                    <option selected disabled>Select</option>
+                </select>
+                <label>Course<span class="text-danger">*</span></label>
+                <span class="text-danger help-block" asp-validation-for="CourseId"></span>
+            }
+            else
+            {
+                <div class="form-control-label d-flex align-items-center">Course</div>
+				<div class="form-control-plaintext">@Model?.CourseName</div>
+                <input asp-for="CourseId" type="hidden">
+            }
+        </div>
+        <div class="col-6">
+            @if (!Model.CurriculumVersionId.HasValue)
+            {
+                <select class="chosen-select form-control" asp-for="CurriculumVersionId" asp-items="ViewBag.CurrirulumVersions">
+                    <option selected disabled>Select</option>
+                </select>
+                <label>Curriculum Version<span class="text-danger">*</span></label>
+                <span class="text-danger help-block" asp-validation-for="CurriculumVersionId"></span>
+            }
+            else
+            {
+                <div class="form-control-label d-flex align-items-center">Curriculum Version</div>
+				<div class="form-control-plaintext">@Model?.CurriculumVersionName</div>
+                <input asp-for="CurriculumVersionId" type="hidden">
+            }
+        </div>
+    </div>
+
+    <div class="form-group">
+        <table id="js-and-condition" class="table table-bordered m-0">
+            <thead>
+                <tr>
+                    <th class="text-center w-100">#</th>
+                    <th>Condition</th>
+                    <th class="text-center w-100">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.AndConditionIds != null && Model.AndConditionIds.Any())
+                {
+                    for (int i = 0; i < Model.AndConditionIds.Count; ++i)
+                    {
+                        <tr>
+                            <td>@(i+1)</td>
+                            <td>
+                                <select class="chosen-select form-control" asp-for="AndConditionIds[i]" asp-items="ViewBag.AndConditions">
+                                    <option selected value="">Select</option>
+                                </select>
+                            </td>
+                            <td class="text-nowrap td-actions">
+                                <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                    <i class="la la-trash delete"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td>1</td>
+                        <td>
+                            <select class="chosen-select form-control" name="AndConditionIds[0]" asp-items="ViewBag.AndConditions">
+                                <option selected value="">Select</option>
+                            </select>
+                        </td>
+                        <td class="text-nowrap td-actions">
+                            <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                <i class="la la-trash delete"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="form-group">
+        <table id="js-or-condition" class="table table-bordered m-0">
+            <thead>
+                <tr>
+                    <th class="text-center w-100">#</th>
+                    <th>Condition</th>
+                    <th class="text-center w-100">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.OrConditionIds != null && Model.OrConditionIds.Any())
+                {
+                    for (int i = 0; i < Model.OrConditionIds.Count; ++i)
+                    {
+                        <tr>
+                            <td>@(i+1)</td>
+                            <td>
+                                <select class="chosen-select form-control" asp-for="OrConditionIds[i]" asp-items="ViewBag.OrConditions">
+                                    <option selected value="">Select</option>
+                                </select>
+                            </td>
+                            <td class="text-nowrap td-actions">
+                                <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                    <i class="la la-trash delete"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td>1</td>
+                        <td>
+                            <select class="chosen-select form-control" name="OrConditionIds[0]" asp-items="ViewBag.OrConditions">
+                                <option selected value="">Select</option>
+                            </select>
+                        </td>
+                        <td class="text-nowrap td-actions">
+                            <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                <i class="la la-trash delete"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="form-group">
+        <table id="js-grade-condition" class="table table-bordered m-0">
+            <thead>
+                <tr>
+                    <th class="text-center w-100">#</th>
+                    <th>Condition</th>
+                    <th class="text-center w-100">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.GradeConditionIds != null && Model.GradeConditionIds.Any())
+                {
+                    for (int i = 0; i < Model.GradeConditionIds.Count; ++i)
+                    {
+                        <tr>
+                            <td>@(i+1)</td>
+                            <td>
+                                <select class="chosen-select form-control" asp-for="GradeConditionIds[i]" asp-items="ViewBag.GradeConditions">
+                                    <option selected value="">Select</option>
+                                </select>
+                            </td>
+                            <td class="text-nowrap td-actions">
+                                <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                    <i class="la la-trash delete"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td>1</td>
+                        <td>
+                            <select class="chosen-select form-control" name="GradeConditionIds[0]" asp-items="ViewBag.GradeConditions">
+                                <option selected value="">Select</option>
+                            </select>
+                        </td>
+                        <td class="text-nowrap td-actions">
+                            <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                <i class="la la-trash delete"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="form-group">
+        <table id="js-course-group-condition" class="table table-bordered m-0">
+            <thead>
+                <tr>
+                    <th class="text-center w-100">#</th>
+                    <th>Condition</th>
+                    <th class="text-center w-100">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.CourseGroupConditionIds != null && Model.CourseGroupConditionIds.Any())
+                {
+                    for (int i = 0; i < Model.CourseGroupConditionIds.Count; ++i)
+                    {
+                        <tr>
+                            <td>@(i+1)</td>
+                            <td>
+                                <select class="chosen-select form-control" asp-for="CourseGroupConditionIds[i]" asp-items="ViewBag.CourseGroupConditions">
+                                    <option selected value="">Select</option>
+                                </select>
+                            </td>
+                            <td class="text-nowrap td-actions">
+                                <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                    <i class="la la-trash delete"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td>1</td>
+                        <td>
+                            <select class="chosen-select form-control" name="CourseGroupConditionIds[0]" asp-items="ViewBag.CourseGroupConditions">
+                                <option selected value="">Select</option>
+                            </select>
+                        </td>
+                        <td class="text-nowrap td-actions">
+                            <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                <i class="la la-trash delete"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="form-group">
+        <table id="js-term-condition" class="table table-bordered m-0">
+            <thead>
+                <tr>
+                    <th class="text-center w-100">#</th>
+                    <th>Condition</th>
+                    <th class="text-center w-100">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.TermConditionIds != null && Model.TermConditionIds.Any())
+                {
+                    for (int i = 0; i < Model.TermConditionIds.Count; ++i)
+                    {
+                        <tr>
+                            <td>@(i+1)</td>
+                            <td>
+                                <select class="chosen-select form-control" asp-for="TermConditionIds[i]" asp-items="ViewBag.TermConditions">
+                                    <option selected value="">Select</option>
+                                </select>
+                            </td>
+                            <td class="text-nowrap td-actions">
+                                <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                    <i class="la la-trash delete"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td>1</td>
+                        <td>
+                            <select class="chosen-select form-control" name="TermConditionIds[0]" asp-items="ViewBag.TermConditions">
+                                <option selected value="">Select</option>
+                            </select>
+                        </td>
+                        <td class="text-nowrap td-actions">
+                            <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                <i class="la la-trash delete"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="form-group">
+        <table id="js-gpa-condition" class="table table-bordered m-0">
+            <thead>
+                <tr>
+                    <th class="text-center w-100">#</th>
+                    <th>Condition</th>
+                    <th class="text-center w-100">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.GPAConditionIds != null && Model.GPAConditionIds.Any())
+                {
+                    for (int i = 0; i < Model.GPAConditionIds.Count; ++i)
+                    {
+                        <tr>
+                            <td>@(i+1)</td>
+                            <td>
+                                <select class="chosen-select form-control" asp-for="GPAConditionIds[i]" asp-items="ViewBag.GPAConditions">
+                                    <option selected value="">Select</option>
+                                </select>
+                            </td>
+                            <td class="text-nowrap td-actions">
+                                <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                    <i class="la la-trash delete"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td>1</td>
+                        <td>
+                            <select class="chosen-select form-control" name="GPAConditionIds[0]" asp-items="ViewBag.GPAConditions">
+                                <option selected value="">Select</option>
+                            </select>
+                        </td>
+                        <td class="text-nowrap td-actions">
+                            <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                <i class="la la-trash delete"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="form-group">
+        <table id="js-credit-condition" class="table table-bordered m-0">
+            <thead>
+                <tr>
+                    <th class="text-center w-100">#</th>
+                    <th>Condition</th>
+                    <th class="text-center w-100">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.CreditConditionIds != null && Model.CreditConditionIds.Any())
+                {
+                    for (int i = 0; i < Model.CreditConditionIds.Count; ++i)
+                    {
+                        <tr>
+                            <td>@(i+1)</td>
+                            <td>
+                                <select class="chosen-select form-control" asp-for="CreditConditionIds[i]" asp-items="ViewBag.CreditConditions">
+                                    <option selected value="">Select</option>
+                                </select>
+                            </td>
+                            <td class="text-nowrap td-actions">
+                                <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                    <i class="la la-trash delete"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td>1</td>
+                        <td>
+                            <select class="chosen-select form-control" name="CreditConditionIds[0]" asp-items="ViewBag.CreditConditions">
+                                <option selected value="">Select</option>
+                            </select>
+                        </td>
+                        <td class="text-nowrap td-actions">
+                            <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                <i class="la la-trash delete"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="form-group">
+        <table id="js-total-course-group" class="table table-bordered m-0">
+            <thead>
+                <tr>
+                    <th class="text-center w-100">#</th>
+                    <th>Condition</th>
+                    <th class="text-center w-100">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.TotalCourseGroupConditionIds != null && Model.TotalCourseGroupConditionIds.Any())
+                {
+                    for (int i = 0; i < Model.TotalCourseGroupConditionIds.Count; ++i)
+                    {
+                        <tr>
+                            <td>@(i+1)</td>
+                            <td>
+                                <select class="chosen-select form-control" asp-for="TotalCourseGroupConditionIds[i]" asp-items="ViewBag.TotalCourseGroupConditions">
+                                    <option selected value="">Select</option>
+                                </select>
+                            </td>
+                            <td class="text-nowrap td-actions">
+                                <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                    <i class="la la-trash delete"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td>1</td>
+                        <td>
+                            <select class="chosen-select form-control" name="TotalCourseGroupConditionIds[0]" asp-items="ViewBag.TotalCourseGroupConditions">
+                                <option selected value="">Select</option>
+                            </select>
+                        </td>
+                        <td class="text-nowrap td-actions">
+                            <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                <i class="la la-trash delete"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="form-group">
+        <table id="js-batch-condition" class="table table-bordered m-0">
+            <thead>
+                <tr>
+                    <th class="text-center w-100">#</th>
+                    <th>Condition</th>
+                    <th class="text-center w-100">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.BatchConditionIds != null && Model.BatchConditionIds.Any())
+                {
+                    for (int i = 0; i < Model.BatchConditionIds.Count; ++i)
+                    {
+                        <tr>
+                            <td>@(i+1)</td>
+                            <td>
+                                <select class="chosen-select form-control" asp-for="BatchConditionIds[i]" asp-items="ViewBag.BatchConditions">
+                                    <option selected value="">Select</option>
+                                </select>
+                            </td>
+                            <td class="text-nowrap td-actions">
+                                <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                    <i class="la la-trash delete"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td>1</td>
+                        <td>
+                            <select class="chosen-select form-control" name="BatchConditionIds[0]" asp-items="ViewBag.BatchConditions">
+                                <option selected value="">Select</option>
+                            </select>
+                        </td>
+                        <td class="text-nowrap td-actions">
+                            <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                <i class="la la-trash delete"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="form-group">
+        <table id="js-ability-condition" class="table table-bordered m-0">
+            <thead>
+                <tr>
+                    <th class="text-center w-100">#</th>
+                    <th>Condition</th>
+                    <th class="text-center w-100">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.AbilityConditionIds != null && Model.AbilityConditionIds.Any())
+                {
+                    for (int i = 0; i < Model.AbilityConditionIds.Count; ++i)
+                    {
+                        <tr>
+                            <td>@(i+1)</td>
+                            <td>
+                                <select class="chosen-select form-control" asp-for="AbilityConditionIds[i]" asp-items="ViewBag.AbilityConditions">
+                                    <option selected value="">Select</option>
+                                </select>
+                            </td>
+                            <td class="text-nowrap td-actions">
+                                <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                    <i class="la la-trash delete"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td>1</td>
+                        <td>
+                            <select class="chosen-select form-control" name="AbilityConditionIds[0]" asp-items="ViewBag.AbilityConditions">
+                                <option selected value="">Select</option>
+                            </select>
+                        </td>
+                        <td class="text-nowrap td-actions">
+                            <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                <i class="la la-trash delete"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="block__action-row">
+        <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+        <a class="btn btn-mw-120 btn--cancel" asp-action="Index">Cancel</a>
+    </div>
+</div>

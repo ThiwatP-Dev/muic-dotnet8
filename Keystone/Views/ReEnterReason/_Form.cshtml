@@ -1,0 +1,34 @@
+@model ReEnterReason
+
+<div class="block__title">
+    <header>@ViewData["Title"]</header>
+</div>
+
+<div class="block__body">
+    <div class="form-group">
+        <input class="form-control" asp-for="DescriptionEn" type="text">
+        <label>English Description<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="DescriptionEn"></span>
+    </div>
+    
+    <div class="form-group">
+        <input class="form-control" asp-for="DescriptionTh" type="text">
+        <label>Thai Description<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="DescriptionTh"></span>
+    </div>
+
+    <div class="row">
+        <div class="form-check">
+            <input class="form-check-input" asp-for="IsActive" type="checkbox">
+            <label for="IsActive">Active</label>
+        </div>
+    </div>
+    <input asp-for="CreatedBy" type="hidden">
+</div>
+
+<div class="block__action container">
+    <div class="block__action-row">
+        <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+        <a class="btn btn-mw-120 btn--cancel" asp-action="Index">Cancel</a>
+    </div>
+</div>

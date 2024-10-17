@@ -1,0 +1,44 @@
+@page
+@model LoginModel
+@{
+    ViewData["Title"] = "Log in";
+}
+
+<section class="login-wrapper animated fadeIn">
+    <div class="block brd-top--primary">
+        <div class="block__title">
+            <header>
+                <div class="logo">
+                    <img class="logo__img" src="~/images/logo-muic-2.png" alt="Keystone-Logo"/>  
+                    <span class="logo__title font-weight-400">Sky+ Keystone</span>
+                </div>
+                <h3>
+                    Sign in
+                </h3>
+            </header>
+        </div>
+        <div class="block__body h-3">
+            <form id="js-login-form" method="post" asp-area="Identity" asp-page="/Account/Login">
+                <div class="text-danger text-center" asp-validation-summary="ModelOnly"></div> 
+                <div class="form-group">
+                    <label asp-for="Input.Username"></label>
+                    <input asp-for="Input.Username" autofocus type="text" class="form-control">
+                    <span asp-validation-for="Input.Username" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Input.Password"></label>
+                    <input asp-for="Input.Password" type="password" class="form-control">
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                </div>
+            </form>
+        </div>
+        <div class="block__action">
+            <div class="block__action-row">
+                <a href="#" onclick="$('#js-login-form').submit()" class="btn btn-mw-120 btn--primary mb-0">
+                    Sign in
+                    <i class="fas fa-arrow-circle-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>

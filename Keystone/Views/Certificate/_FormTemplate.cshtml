@@ -1,0 +1,27 @@
+@model CertificationViewModel
+
+<div class="row form-group mb-0">
+    <div class="col-3">
+        <input class="form-control js-single-date" asp-for="BirthDate" type="text" autocomplete="off" />
+        <label>Birth Day</label>       
+    </div>
+
+    <div class="col-3">
+        <input class="form-control" asp-for="VerifyCode"/>
+        <label>Verify Code</label>
+    </div>
+
+    <div class="col-3">
+        <select class="chosen-select form-control" asp-for="AcademicLevelId">
+            <option selected disabled>Select</option>
+        </select>
+        <label>Academic Level</label>
+    </div>
+
+    <div class="col-3">
+        <select class="chosen-select form-control" asp-for="Year">
+            <option selected disabled>Select</option>
+        </select>
+        <label>Year</label>
+    </div>
+</div>

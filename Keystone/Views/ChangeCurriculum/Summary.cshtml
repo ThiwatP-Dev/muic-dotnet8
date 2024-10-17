@@ -1,0 +1,47 @@
+@model StudentTransferViewModel
+@{ 
+    ViewData["Title"] = "Summary";
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>@ViewData["Title"]</header>
+            </div>
+
+            <div class="block__body">
+                <div class="row form-group mb-2">
+                    <div class="col-3">
+                        <div class="form-control-label d-flex align-items-center">Student Code</div>
+                        <div class="form-control-plaintext">@Model.StudentCode</div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-control-label d-flex align-items-center">Student Name</div>
+                        <div class="form-control-plaintext">@Model.StudentFirstName @Model.StudentLastName</div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-control-label d-flex align-items-center">New Curriculum</div>
+                        <div class="form-control-plaintext">@Model.CurriculumName - @Model.CurriculumVersionName</div>
+                    </div>
+                </div>
+
+                @if (Model.StudentCourseCategorizations != null)
+                {
+                    <hr>
+                    <form id="js-save-change-curriculum" class="form-horizontal" asp-controller="ChangeCurriculum" method="POST">
+                        <partial name="Curriculums/_Summary" model="@Model" />
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Modals {
+  <partial name="_ConfirmModals" />
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/course-categorize.js"></script>
+}

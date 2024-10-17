@@ -1,0 +1,67 @@
+@model CurriculumVersion
+
+<form asp-controller="CurriculumVersion" asp-action="SaveSpecializationGroup" method="POST">
+    <div class="block__body">
+        <div class="form-group">
+            <input asp-for="@Model.Id" type="hidden">
+            <table id="js-specialization-group" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th class="text-center w-50">#</th>
+                        <th>Specialization Group</th>
+                        <th class="text-center w-85">Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.CurriculumSpecializationGroups.Any())
+                    {
+                        @for (var i = 0; i < Model.CurriculumSpecializationGroups.Count(); i++)
+                        {
+                            <tr>
+                                <td class="text-center w-75">
+                                    @(i + 1)
+                                </td>
+                                <td>
+                                    <select class="chosen-select" asp-for="@Model.CurriculumSpecializationGroups[i].SpecializationGroupId" asp-items="ViewBag.SpecializationGroups" data-placeholder="Select">
+                                        <option value="0" selected disabled></option>
+                                    </select>
+                                </td>
+                                <td class="text-nowrap td-actions">
+                                    <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                        <i class="la la-trash delete"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td class="text-center w-75">
+                                1
+                            </td>
+                            <td>
+                                <select class="chosen-select" name="CurriculumSpecializationGroups[0].SpecializationGroupId" asp-items="ViewBag.SpecializationGroups" data-placeholder="Select">
+                                    <option value="0" selected disabled></option>
+                                </select>
+                            </td>
+                            <td class="text-nowrap td-actions">
+                                <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                    <i class="la la-trash delete"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+
+    <div class="block__action container">
+        <div class="block__action-row">
+            <button class="btn btn-mw-120 btn--primary" type="submit"><i class="la la-save mr-1 font-weight-800"></i>Save</button>
+        </div>
+    </div>
+</form>

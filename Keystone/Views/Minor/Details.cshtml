@@ -1,0 +1,114 @@
+@model SpecializationGroupViewModel
+@{
+	ViewData["Title"] = "Minor Detail";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+
+<section>
+	<div class="row">
+		<div class="ks-page-header col-12">
+			<h2 class="ks-page-header__title">
+				<a class="btn-back" asp-controller="Minor" asp-action="Index">
+					<i class="la la-angle-double-left mr-1"></i>Back
+				</a>
+			</h2>
+		</div>
+	</div>
+
+	<div class="block block--underline">
+		<div class="block__title">
+            <header>@Model.NameEn</header>
+            <div class="tools pr-4">
+                <a class="btn btn--primary" 
+                   asp-controller="CourseGroup" 
+                   asp-action="CreateGroup"
+                   asp-route-specialGroupId="@Model.Id"
+                   asp-route-isSpecialGroup="@ViewBag.IsSpecialGroup"
+                   asp-route-returnUrl="@contextPath">
+                    <i class="la la-plus mr-1 font-weight-800"></i> Add Course Group
+                </a>
+            </div>
+        </div>
+		<div class="block__body">
+			<div class="d-flex flex-column">
+                @foreach(var courseGroup in Model.CourseGroups.Where(x => x.CourseGroupId == null))
+                {
+                    var type = string.IsNullOrEmpty(courseGroup.TypeText) ? "" : courseGroup.TypeText;
+                    <div class="col-12">
+                        <div class="curriculum" id="parents-@courseGroup.Id">
+                            <div class="curriculum__header">
+                                <header class="mr-auto">
+                                    <h4 class="d-flex flex-column">
+                                        <span class="font-weight-700">
+                                            @courseGroup.NameEn (@courseGroup.Credit @(courseGroup.Credit > 1 ? "Credits" : "Credit"))
+                                        </span>
+
+                                        <div class="font-size-12 mt-1">
+                                            @if (!string.IsNullOrEmpty(courseGroup.Type))
+                                            {
+                                                <span>Type: @courseGroup.TypeText</span>
+                                            }
+                                        </div>
+                                    </h4>
+                                </header>
+
+                                <div class="d-flex align-self-end">
+                                    <div class="actions-group mr-1">
+                                        <a class="popover-link js-curriculum-option" 
+                                           data-group-id="@courseGroup.Id" 
+                                           data-return-url="@contextPath"
+                                           data-special-group-id="@Model.Id"
+                                           data-special-group="@ViewBag.IsSpecialGroup">
+                                            <i class="la la-plus check"></i>
+                                        </a>
+                                        <a class="popover-link js-curriculum-edit-option" 
+                                           data-group-id="@courseGroup.Id" 
+                                           data-return-url="@contextPath"
+                                           data-special-group-id="@Model.Id"
+                                           data-special-group="@ViewBag.IsSpecialGroup">
+                                                <i class="la la-edit edit"></i>
+                                        </a>
+                                        <a data-toggle="modal" 
+                                           data-target="#delete-confirm-modal" 
+                                           data-controller="CourseGroup" 
+                                           data-action="DeleteCourseGroup" 
+                                           data-value="@courseGroup.Id"
+                                           data-return-url="@contextPath"
+                                           class="popover-link">
+                                            <i class="la la-trash delete"></i>
+                                        </a>
+                                    </div>
+                                    @if ((courseGroup.ChildCourseGroups != null && courseGroup.ChildCourseGroups.Any()) 
+                                         || (courseGroup.CurriculumCourses != null && courseGroup.CurriculumCourses.Any()))
+                                    {
+                                        <a class="btn btn--white btn--circle" data-toggle="collapse" data-parent="#parents-@courseGroup.Id" data-target="#accordion-@courseGroup.Id-1">
+                                            <i class="la la-angle-down"></i>
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                            <div id="accordion-@courseGroup.Id-1" class="collapse">
+                                <div class="curriculum__content">
+                                    @{
+                                        var htmlString = "";
+                                        htmlString = UIHelper.GetChild(courseGroup, htmlString, contextPath, ViewBag.IsSpecialGroup);
+                                        @Html.Raw(htmlString)
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+		</div>
+	</div>
+</section>
+
+@section Modals {
+	<partial name="_DeleteConfirmModals">
+	<partial name="_DeleteRowConfirmModals">
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/curriculum-details.js"></script>
+}

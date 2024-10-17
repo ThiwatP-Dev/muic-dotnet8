@@ -1,0 +1,107 @@
+@model AdmissionStudentViewModel
+@{
+    ViewData["Profile"] = (Model.Student?.ProfileImageURL == null) ? "../images/img100x100.jpg" : Model.Student?.ProfileImageURL ;
+    ViewData["Title"] = $"{ @Model.Student?.Code } - { Model.Student?.FullNameEn }";
+    ViewData["SubTitle"] = $"{ @Model.Student?.AcademicInformation?.Faculty?.NameEn }, { @Model.Student?.AcademicInformation?.Department?.NameEn }";
+    ViewData["LastUpdate"] = Model.Student?.LastUpdate;
+    ViewData["StudentId"] = Model.Student?.Id;
+    ViewData["IsStudentInformationFilled"] = Model.IsStudentInformationFilled;
+    ViewData["Page"] = "a";
+}
+
+<section class="row">
+    <div class="col-md-12">
+        <div class="tabs-scroller float-left"><i class="la la-angle-double-left"></i></div>
+        <div class="tabs-scroller float-right"><i class="la la-angle-double-right"></i></div>
+        <div class="nav-tabs-wrapper">
+            <ul class="nav nav-tabs ks-tabs" role="tablist">
+                <li class="nav-item">
+                    <a id="nav-link-0" class="nav-link active" href="#nav-tab-0" data-toggle="tab" data-savable="true">
+                        General
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a id="nav-link-1" class="nav-link" href="#nav-tab-1" data-toggle="tab" data-savable="true">
+                        Admission
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a id="nav-link-2" class="nav-link" href="#nav-tab-2" data-toggle="tab" data-savable="true">
+                        Academic
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a id="nav-link-3" class="nav-link" href="#nav-tab-3" data-toggle="tab" data-savable="true">
+                        Document
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a id="nav-link-4" class="nav-link" href="#nav-tab-4" data-toggle="tab" data-savable="false">
+                        Address
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a id="nav-link-5" class="nav-link" href="#nav-tab-5" data-toggle="tab">
+                        Contact
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a id="nav-link-6" class="nav-link" href="#nav-tab-6" data-toggle="tab" data-savable="false">
+                        Parent
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div id="student-profile-tab-content" class="tab-content">
+            <div id="nav-tab-0" class="tab-pane show active" role="tabpanel">
+                <partial name="_GeneralInfo" model="Model.Student">
+            </div>
+            <div id="nav-tab-1" class="tab-pane" role="tabpanel">
+                <partial name="_AdmissionInfo" model="Model.AdmissionStudentInformation">
+            </div>
+            <div id="nav-tab-2" class="tab-pane" role="tabpanel">
+                <partial name="_AcademicInfo" model="Model.Student.AcademicInformation">
+            </div>
+            <div id="nav-tab-3" class="tab-pane" role="tabpanel">
+                <partial name="_DocumentInfo" model="Model.StudentRequiredDocument">
+            </div>
+            <div id="nav-tab-4" class="tab-pane" role="tabpanel">
+                <partial name="_AddressInfo" model="Model.Student.StudentAddresses">
+            </div>
+            <div id="nav-tab-5" class="tab-pane" role="tabpanel">
+                <partial name="_ContactInfo" model="Model.Student">
+            </div>
+            <div id="nav-tab-6" class="tab-pane" role="tabpanel">
+                <partial name="_ParentInfo" model="Model.Student.ParentInformations">
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Modals {
+    <partial name="_ConfirmChangeStatusModal">
+    <partial name="_DeleteConfirmModals">
+    <partial name="_DeleteRowConfirmModals">
+}
+
+@section Scripts {
+    <!-- ajax Cascade -->
+    <script type="text/javascript" src="~/js/helpers/address-selects-helper.js"></script>
+    <script type="text/javascript" src="~/js/pages/ajax-cascading/card-expiration.js"></script>
+    <script type="text/javascript" src="~/js/pages/citizen-passport-trigger.js"></script>
+    <script type="text/javascript" src="~/js/pages/student-profile.js"></script>
+
+    <!-- Modal -->
+    <script type="text/javascript" src="~/js/pages/address.js"></script>
+    <script type="text/javascript" src="~/js/pages/parent.js"></script>
+
+    <!-- Page UI function -->
+    <script type="text/javascript" src="~/js/pages/tabs.js"></script>
+    <script type="text/javascript" src="~/js/pages/admission-student.js"></script>
+    <script type="text/javascript" src="~/js/pages/student-document.js"></script>
+    <script type="text/javascript" src="~/js/plugins/webcam-easy.min.js"></script>
+    <script type="text/javascript" src="~/js/pages/webcam.js"></script>
+}
+    
+<partial name="~/Views/Shared/Student/_UploadProfileModal.cshtml">

@@ -1,0 +1,57 @@
+@model SchedulePlanViewModel
+@{
+    ViewData["Title"] = "Schedule List";
+}
+
+<section class="ks-heading">
+    <div class="col-12 px-3 py-3">
+        <header class="ks-page-header__title">Plan: Main Plan</header>
+        <div class="table-responsive my-3">
+            <table class="table table-bordered table--sm w-100x mb-0">
+                <thead>
+                    <tr>
+                        <th>Division</th>
+                        <th>Courses</th>
+                        <th class="text-center">Registrable Student</th>
+                        <th class="text-center">Total Schedule</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Vincent Mary School of Science and Technology</td>
+                        <td>@(String.Join(", ", @Model.Courses.Select(x => x.Code)))</td>
+                        <td>20</td>
+                        <td>@Model.Schedules.Count</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<section class="m-t-200">
+    <form asp-controller="Plan" class="w-100x">
+        <div class="block block--underline mb-0">
+            <div class="block__title sticky bg-white d-flex justify-content-between mx-1">
+                <header class="color-primary align-self-center">
+                    @ViewData["Title"]
+                </header>
+            </div>
+            <div class="block__body">
+                <partial name="_ScheduleList" />
+            </div>
+        </div>
+        
+        <nav class="navbar fixed-bottom navbar-expand-sm bg-white">
+            <div class="d-block ml-auto">
+                <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+                <a asp-action="Manage" asp-route-Id="item.Id" class="btn btn-mw-120 btn--cancel">Cancel</a>
+            </div>
+        </nav>
+    </form>
+</section>
+
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/schedule-list.js"></script>
+}

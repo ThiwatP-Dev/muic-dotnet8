@@ -1,0 +1,274 @@
+@model PagedResult<CheatingStatisticReportViewModel>
+@{
+    ViewData["Title"] = "Cheating Statistic Report";
+    var recordNumber = Model?.FirstRowOnPage;
+}
+
+<section class="row">
+    <div class="col-12">
+        <div id="cheating-statistic-report-accordion1">
+			<div class="block block--underline">
+                <div class="block__title collapsed" data-toggle="collapse" data-parent="#cheating-statistic-report-accordion1" data-target="#cheating-statistic-report-accordion1-1">
+                    <header>@ViewData["Title"]</header>
+                    <div class="tools">
+                        <a class="btn btn--white btn--circle">
+                            <i class="la la-angle-down"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="cheating-statistic-report-accordion1-1" class="collapse show" aria-expanded="true">
+                    <div class="block__body">
+                        <form class="form-horizontal" asp-controller="CheatingStatisticReport" asp-action="Index" method="GET">
+                            @Html.AntiForgeryToken()
+                            <div class="row form-group m-b-30">
+                                <div class="col-4">
+                                    <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels" data-placeholder="Select">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Academic Level<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-4">
+                                    <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.StartTermId" asp-items="ViewBag.Terms" data-placeholder="Select">
+                                        <option selected value="">Select</option>
+                                    </select>
+                                    <label>Term From</label>
+                                </div>
+                                <div class="col-4">
+                                    <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.EndTermId" asp-items="ViewBag.Terms" data-placeholder="Select">
+                                        <option selected value="">Select</option>
+                                    </select>
+                                    <label>Term To</label>
+                                </div>
+                            </div>
+
+                            <div class="row form-group m-b-30">
+                                <div class="col-4">
+                                    <select class="chosen-select form-control" asp-for="Criteria.ExaminationTypeId" asp-items="ViewBag.ExaminationTypes" data-placeholder="Select">
+                                        <option selected value="">All</option>
+                                    </select>
+                                    <label>Examination Type</label>
+                                </div>
+                                <div class="col-4">
+                                    <select class="chosen-select form-control js-report-type" asp-for="Criteria.Type" asp-items="ViewBag.ReportTypes" data-placeholder="Select"></select>
+                                    <label>Report Type<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-4 js-check-student-course">
+                                    <select class="chosen-select form-control" asp-for="Criteria.CourseId" asp-items="ViewBag.Courses" data-placeholder="Select" disabled>
+                                        <option selected value="">Select</option>
+                                    </select>
+                                    <label>Course</label>
+                                </div>
+                            </div>
+
+                            <div class="row form-group m-b-30">
+                                <div class="col-4 js-check-faculty-department">
+                                    <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="ViewBag.Faculties" data-placeholder="Select" disabled>
+                                        <option selected value="">Select</option>
+                                    </select>
+                                    <label>Division</label>
+                                </div>
+                                <div class="col-4 js-check-faculty-department">
+                                    <select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentId" asp-items="ViewBag.Departments" data-placeholder="Select" disabled>
+                                        <option selected value="">Select</option>
+                                    </select>
+                                    <label>Major</label>
+                                </div>
+                                <div class="col-2">
+                                    <input class="form-control js-check-student-batch" asp-for="Criteria.StartStudentBatch" type="text" disabled>
+                                    <label>Batch From</label>
+                                </div>
+                                <div class="col-2">
+                                    <input class="form-control js-check-student-batch" asp-for="Criteria.EndStudentBatch" type="text" disabled>
+                                    <label>Batch To</label>
+                                </div>
+                            </div>
+
+                            <div class="row form-group">
+                                <div class="col-12 text-right align-self-end text-nowrap">
+                                    <button class="btn btn--primary btn-mw-120 mb-0 m-r-5" type="submit">
+                                        <i class="la la-search mr-2"></i>Search
+                                    </button>
+                                    <button class="btn btn-mw-120 btn--white mb-0 js-reset-btn" type="reset">
+                                        Reset
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+			</div>
+		</div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        @if (Model != null && Model.Results.Any())
+        {
+            var cheatingReport = Model.Results[0] ?? null;
+            <div class="block block--underline">
+                <div class="block__title">
+                    <div class="row">
+                        @if (Model.Criteria != null)
+                        {
+                            <header class="block__title-info">
+                                <h3 class="text-center">Term @(cheatingReport.TermText)</h3>
+                            </header>
+                        
+                            if (Model.Criteria.Type == "b")
+                            {
+                                <header class="block__title-info">
+                                    <h3 class="text-center">Batch @(Model.Criteria.StartStudentBatch + " - " + Model.Criteria.EndStudentBatch)</h3>
+                                </header>
+                            }
+                        }
+
+                        <div class="col-6">
+                            <header>Search Result (@(Model?.RowCount ?? 0))</header>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="block__body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered m-0 js-report-table w-100x">
+                            @if (Model.Criteria.Type == "f")
+                            {
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">#</th>
+                                        <th>Division</th>
+                                        @foreach (var item in @cheatingReport.TermHeader)
+                                        {
+                                            <th class="text-center">@item.TermText</th>
+                                        }
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model != null && Model.Results.Any())
+                                    {
+                                        foreach (var item in Model.Results)
+                                        {
+                                            <tr>
+                                                <td>@recordNumber</td>
+                                                <td>@item.Faculty</td>
+                                                @for (int i = 0; i < @cheatingReport.TermHeader.Count; i++)
+                                                {
+                                                    var isEqual = false;
+                                                    for (int j = 0; j < item.StatisticCheatingFaculties.Count; j++)
+                                                    {
+                                                        if (item.StatisticCheatingFaculties[j].Term == @cheatingReport.TermHeader[i].TermText)
+                                                        {
+                                                            <td>@item.StatisticCheatingFaculties[j].StudentCount</td>
+                                                            isEqual = true;
+                                                        }
+                                                    }
+
+                                                    if (!isEqual) {
+                                                        <td>0</td>
+                                                    }
+                                                }
+                                            </tr>
+                                            recordNumber++;
+                                        }
+                                    }
+                                </tbody>
+                            }
+                            else if (Model.Criteria.Type == "b")
+                            {
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">#</th>
+                                        <th>Batch</th>
+                                        @foreach (var item in @cheatingReport.TermHeader)
+                                        {
+                                            <th class="text-center">@item.TermText</th>
+                                        }
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model != null && Model.Results.Any())
+                                    {
+                                        foreach (var item in Model.Results)
+                                        {
+                                            <tr>
+                                                <td>@recordNumber</td>
+                                                <td>@item.Batch</td>
+                                                @for (int i = 0; i < @cheatingReport.TermHeader.Count; i++)
+                                                {
+                                                    var isEqual = false;
+                                                    for (int j = 0; j < item.StatisticCheatingBatches.Count; j++)
+                                                    {
+                                                        if (item.StatisticCheatingBatches[j].Term == cheatingReport.TermHeader[i].TermText)
+                                                        {
+                                                            <td>@item.StatisticCheatingBatches[j].StudentCount</td>
+                                                            isEqual = true;
+                                                        }
+                                                    }
+
+                                                    if (!isEqual) {
+                                                        <td>0</td>
+                                                    }
+                                                }
+                                            </tr>
+                                            recordNumber++;
+                                        }
+                                    }
+                                </tbody>
+                            }
+                            else if (Model.Criteria.Type == "t")
+                            {
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">#</th>
+                                        <th>Code</th>
+                                        <th>Course</th>
+                                        @foreach (var item in @cheatingReport.TermHeader)
+                                        {
+                                            <th class="text-center">@item.TermText</th>
+                                        }
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model != null && Model.Results.Any())
+                                    {
+                                        foreach (var item in Model.Results)
+                                        {
+                                            <tr>
+                                                <td>@recordNumber</td>
+                                                <td>@item.CourseCode</td>
+                                                <td>@item.CourseName</td>
+                                                @for (int i = 0; i < @cheatingReport.TermHeader.Count; i++)
+                                                {
+                                                    var isEqual = false;
+                                                    for (int j = 0; j < item.StatisticCheatingTerms.Count; j++)
+                                                    {
+                                                        if (item.StatisticCheatingTerms[j].Term == cheatingReport.TermHeader[i].TermText)
+                                                        {
+                                                            <td>@item.StatisticCheatingTerms[j].StudentCount</td>
+                                                            isEqual = true;
+                                                        }
+                                                    }
+
+                                                    if (!isEqual) {
+                                                        <td>0</td>
+                                                    }
+                                                }
+                                            </tr>
+                                            recordNumber++;
+                                        }
+                                    }
+                                </tbody>
+                            }
+                        </table>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/cheating-statistic-report.js"></script>
+}

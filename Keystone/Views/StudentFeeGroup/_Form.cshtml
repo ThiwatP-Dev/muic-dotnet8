@@ -1,0 +1,268 @@
+﻿@model StudentFeeGroup
+@{
+    var index = 1;
+}
+
+<div class="block block--underline">
+    <div class="block__title">
+        <header>@ViewData["Title"]</header>
+    </div>
+    
+    <div class="block__body">
+        <div class="row form-group">
+            <div class="col-3">
+                <input class="form-control" asp-for="Code" type="text" autocomplete="off">
+                <label>Code<span class="text-danger">*</span></label>
+            </div>
+            <div class="col-3">
+                <input class="form-control" asp-for="Name" type="text">
+                <label>Name<span class="text-danger">*</span></label>
+            </div>
+            <div class="col-6">
+                <input class="form-control" asp-for="Remark" type="text" autocomplete="off">
+                <label>Remark</label>
+            </div>
+        </div>
+
+        <hr>
+
+        <header class="color-primary font-weight-700 mb-3">Group Details</header>
+        <div class="row form-group">
+            <div class="col-2">
+                <select class="chosen-select form-control js-cascade-academic-level" asp-for="AcademicLevelId"
+                        asp-items="ViewBag.AcademicLevels" data-placeholder="Select">
+                    <option selected disabled>Select</option>
+                </select>
+                <label>Academic Level<span class="text-danger">*</span></label>
+            </div>
+            <div class="col-2">
+                <input class="form-control" asp-for="StartedBatch" type="text">
+                <label>Batch Start</label>
+            </div>
+            <div class="col-2">
+                <input class="form-control" asp-for="EndedBatch" type="text">
+                <label>End</label>
+            </div>
+            <div class="col-2">
+                <select class="chosen-select form-control js-cascade-term" asp-for="StartedTermId"
+                        asp-items="ViewBag.Terms" data-placeholder="Select">
+                    <option selected value="">Select</option>
+                </select>
+                <label>Term From</label>
+            </div>
+            <div class="col-2">
+                <select class="chosen-select form-control js-cascade-term" asp-for="EndedTermId"
+                        asp-items="ViewBag.Terms" data-placeholder="Select">
+                    <option selected value="">Select</option>
+                </select>
+                <label>To</label>
+            </div>
+            <div class="col-2">
+                <select class="chosen-select form-control" asp-for="IsThai" asp-items="ViewBag.ThaiStatuses"></select>
+                <label>Thai/Non-Thai</label>
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-3">
+                <select class="chosen-select form-control js-cascade-faculty" asp-for="FacultyId" asp-items="ViewBag.Faculties"
+                        data-placeholder="Select">
+                    <option selected value="">Select</option>
+                </select>
+                <label>Division<label>
+            </div>
+            <div class="col-3">
+                <select class="chosen-select form-control js-cascade-department" asp-for="DepartmentId" asp-items="ViewBag.Departments"
+                        data-placeholder="Select">
+                    <option selected value="">Select</option>
+                </select>
+                <label>Major</label>
+            </div>
+            <div class="col-3">
+                <select class="chosen-select form-control js-cascade-curriculum" asp-for="CurriculumId" asp-items="ViewBag.Curriculums" data-placeholder="Select">
+                    <option selected value="">Select</option>
+                </select>
+                <label>Curriculum<label>
+            </div>
+            <div class="col-3">
+                <select class="chosen-select form-control js-cascade-curriculum-version" asp-for="CurriculumVersionId" asp-items="ViewBag.CurriculumVersions"
+                        data-placeholder="Select">
+                    <option selected value="">Select</option>
+                </select>
+                <label>Curriculum Version</label>
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-3">
+                <select class="chosen-select form-control" asp-for="NationalityId" asp-items="ViewBag.Nationalities"
+                        data-placeholder="Select">
+                    <option selected value="">Select</option>
+                </select>
+                <label>Nationality</label>
+            </div>
+            <div class="col-3">
+                <select class="chosen-select form-control" asp-for="StudentFeeTypeId" asp-items="ViewBag.StudentFeeTypes" data-placeholder="Select"></select>
+                <label>Student Fee Type</label>
+            </div>
+            <div class="col-2 form-check align-self-end">
+                <input class="form-check-input" asp-for="IsForIntensive" type="checkbox">
+                <label for="IsForIntensive">Intensive Only</label>
+            </div>
+            <div class="col-2 form-check align-self-end">
+                <input class="form-check-input" asp-for="IsLumpsumPayment" type="checkbox">
+                <label for="IsLumpsumPayment">Lumpsum Payment</label>
+            </div>
+            <div class="col-2 form-check align-self-end">
+                <input class="form-check-input" asp-for="IsActive" type="checkbox">
+                <label for="IsActive">Active</label>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="form-group my-4">
+            <table id="js-term-fee-list" class="table table-bordered m-0">
+                <thead>
+                    <tr>
+                        <th class="w-25 text-center">#</th>
+                        <th>Fee Item</th>
+                        <th class="w-150 text-center">Batch From</th>
+                        <th class="w-150 text-center">Batch To</th>
+                        <th class="w-150 text-center">Term From</th>
+                        <th class="w-150 text-center">Term To</th>
+                        <th class="w-150 text-center text-nowrap">Term Type</th>
+                        <th class="w-75 text-center">Term</th>
+                        <th class="w-100 text-center text-nowrap">Calculate Type</th>
+                        <th class="w-150 text-right">Amount</th>
+                        <th class="w-75 text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="js-items">
+                    @if (Model.TermFees == null || !Model.TermFees.Any())
+                    {
+                        <tr>
+                            <td>
+                                @index
+                                <input name="TermFees[0].Id" type="hidden">
+                            </td>
+                            
+                            <td>
+                                <select class="chosen-select form-control" name="TermFees[0].FeeItemIdAllowNull" asp-items="ViewBag.FeeItems" data-placeholder="Select">
+                                    <option selected disabled>Select</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input class="form-control__table" name="TermFees[0].StartedBatch" type="number">
+                            </td>
+                            <td>
+                                <input class="form-control__table" name="TermFees[0].EndedBatch" type="number">
+                            </td>
+                            <td>
+                                <select class="chosen-select form-control js-cascade-term" name="TermFees[0].StartedTermId" asp-items="ViewBag.Terms" data-placeholder="Select">
+                                    <option selected value="">Select</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="chosen-select form-control js-cascade-term" name="TermFees[0].EndedTermId" asp-items="ViewBag.Terms" data-placeholder="Select">
+                                    <option selected value="">Select</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="chosen-select form-control" name="TermFees[0].TermTypeId" asp-items="ViewBag.TermTypes" data-placeholder="Select">
+                                    <option selected value="">Select</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input class="form-control__table" name="TermFees[0].Term" type="number">
+                            </td>
+                            <td>
+                                <select class="chosen-select form-control" name="TermFees[0].CalculateType" asp-items="ViewBag.CalculateTypes" data-placeholder="Select">
+                                    <option selected value="">Select</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input class="form-control__table js-amount-value" name="TermFees[0].AmountAllowNull" type="number">
+                            </td>
+                            <td class="text-nowrap td-actions">
+                                <a class="js-del-row" href="#!" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                    <i class="la la-trash delete"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        for (int i = 0; i < Model.TermFees.Count; ++i)
+                        {
+                            <tr>
+                                <td>
+                                    @(i + 1)
+                                    <input asp-for="TermFees[i].Id" type="hidden">
+                                </td>
+                                <td>
+                                    <select class="chosen-select form-control" asp-for="TermFees[i].FeeItemIdAllowNull" asp-items="ViewBag.FeeItems" data-placeholder="Select">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input class="form-control__table" asp-for="TermFees[i].StartedBatch" type="number">
+                                </td>
+                                <td>
+                                    <input class="form-control__table" asp-for="TermFees[i].EndedBatch" type="number">
+                                </td>
+                                <td>
+                                    <select class="chosen-select form-control" asp-for="TermFees[i].StartedTermId" asp-items="ViewBag.Terms" data-placeholder="Select">
+                                        <option selected value="">Select</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="chosen-select form-control" asp-for="TermFees[i].EndedTermId" asp-items="ViewBag.Terms" data-placeholder="Select">
+                                        <option selected value="">Select</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="chosen-select form-control" asp-for="TermFees[i].TermTypeId" asp-items="ViewBag.TermTypes" data-placeholder="Select">
+                                        <option selected value="">Select</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input class="form-control__table" asp-for="TermFees[i].Term" type="number">
+                                </td>
+                                <td>
+                                    <select class="chosen-select form-control" asp-for="TermFees[i].CalculateType" asp-items="ViewBag.CalculateTypes" data-placeholder="Select">
+                                        <option selected value="">Select</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input class="form-control__table js-amount-value" asp-for="TermFees[i].AmountAllowNull" type="number">
+                                </td>
+                                <td class="text-nowrap td-actions">
+                                    <a class="js-del-row" href="#!" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                        <i class="la la-trash delete"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    
+                </tbody>
+                @* <tfoot>
+                    <tr>
+                        <td class="border-right-0 js-no-index"></td>
+                        <td class="text-right border-left-0 border-right-0" colspan="8">Total Selected Amount : </td>
+                        <td class="text-right border-left-0 border-right-0 js-total-amount"></td>
+                        <td class="border-left-0"></td>
+                    </tr>
+                </tfoot> *@
+            </table>
+        </div>
+
+        <input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+
+        <div class="block__action-row pb-0">
+            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">Save</button>
+            <a class="btn btn-mw-120 btn--cancel mb-0" href="@ViewBag.ReturnUrl">Cancel</a>
+        </div>
+    </div>
+</div>

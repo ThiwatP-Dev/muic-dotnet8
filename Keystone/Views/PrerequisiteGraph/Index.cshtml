@@ -1,0 +1,82 @@
+@model PrerequisiteGraphViewModel
+@{ 
+    ViewData["Title"] = "Prerequisite Graph"; 
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Prerequisite</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="PrerequisiteGraph" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group">
+                        <div class="col-6">
+                            <select class="chosen-select form-control" asp-for="Criteria.CurriculumVersionId" asp-items="ViewBag.CurriculumVersions">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Curriculum Version<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-6 align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="block block--underline">
+    <div class="block__title">
+        <header>View Condition Graph</header>
+    </div>
+    <div class="block__body">
+        @if (Model != null && !String.IsNullOrEmpty(Model.GraphSource))
+        {
+            <div id='curriculum-conditions-graph' style="max-width: 100%; overflow: auto;"></div>
+            <script type='txt/vnd.graphviz' id='viz-text'>
+                @if (Model != null && !String.IsNullOrEmpty(Model.GraphSource))
+                {
+                    @Html.Raw(Model.GraphSource);
+                }
+            </script>
+        }
+        else
+        {
+            <i class="text-danger">No Data aaa</i>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/viz-muic.js"></script>
+    <script type="text/javascript" src="~/js/svg-pan-zoom.js"></script>
+    <script>
+        var result;
+        try {
+            var text = $('#viz-text').text();
+            result = Viz(text, "svg");
+        } catch (e) {
+            console.error(e.toString());
+        }
+        $('#curriculum-conditions-graph').html(result);
+        window.zoomGraph = svgPanZoom($('#curriculum-conditions-graph').find("svg")[0], {
+          zoomEnabled: true,
+          controlIconsEnabled: true,
+          fit: true,
+          center: true,
+          zoomScaleSensitivity: 0.4,
+          minZoom: 0.5,
+          maxZoom: 10
+        });
+    </script>
+}

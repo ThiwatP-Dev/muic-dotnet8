@@ -1,0 +1,107 @@
+@model TransferUniversity
+@{
+	ViewData["Title"] = @Model.NameEn;
+    var index = 1;
+	var returnUrl = ViewBag.ReturnUrl;
+}
+
+<section>
+	<div class="row">
+		<div class="ks-page-header col-lg-12">
+			<h2 class="ks-page-header__title">
+				<a class="btn-back" href="@returnUrl">
+					<i class="la la-angle-double-left mr-1"></i>Back
+				</a>
+			</h2>
+		</div>
+	</div>
+
+	<div class="block block--underline">
+		<div class="block__title">
+			<header>
+				<h3 class="ks-page-header__title">@Model.NameEn</h3>
+			</header>
+		</div>
+
+		<div class="block__body">
+			<div class="row form-group">
+				<div class="col-6">
+					<div class="form-control-label d-flex align-items-center">OHEC Code</div>
+					<div class="form-control-plaintext">@Model.OHECCode</div>
+				</div>
+				<div class="col-6">
+					<div class="form-control-label d-flex align-items-center">Country</div>
+					<div class="form-control-plaintext">@Model.Country?.NameEn</div>
+				</div>
+			</div>
+
+			<div class="row form-group">
+				<div class="col-6">
+					<div class="form-control-label d-flex align-items-center">English Name</div>
+					<div class="form-control-plaintext">@Model.NameEn</div>
+				</div>
+				<div class="col-6">
+					<div class="form-control-label d-flex align-items-center">Thai Name</div>
+					<div class="form-control-plaintext">@Model.NameTh</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section>
+	<div class="block block--underline">
+		<div class="block__title">
+			<header>
+				<h3 class="ks-page-header__title">Course</h3>
+			</header>
+		</div>
+
+		<div class="block__body">
+			<div class="table-responsive">
+				<table class="table table-bordered m-0">
+        		    <thead>
+        		        <tr>
+        		            <th class="text-center">#</th>
+							<th>Academic Level</th>
+        		            <th>Code</th>
+            	            <th>English Name</th>
+							<th>Thai Name</th>
+							<th>Transcript Name</th>
+            	            <th>Description</th>
+            	            <th>Credit</th>
+            	            <th class="text-center">Show in Transcript</th>
+            	            <th class="text-center">Calculate Credit</th>
+        		            <th class="text-center">Status</th>
+        		        </tr>
+        		    </thead>
+        		    <tbody>
+        		        @foreach(var item in Model.Courses) 
+        		        {
+        		            <tr>
+								<td>@index</td>
+            	                <td>@item.AcademicLevel?.NameEn</td>
+								<td>@item.Code</td>
+        		                <td>@item.NameEn</td>
+								<td>@item.NameTh</td>
+								<td>@($"{ item.TranscriptNameEn1 } { item.TranscriptNameEn2 } { item.TranscriptNameEn3 }")</td>
+            	                <td>@item.DescriptionEn</td>
+								<td>@item.CreditText</td>
+            	                <td>
+            	                    <partial name="_BooleanResult" model="@item.IsShowInTranscript">
+            	                </td>
+            	                <td>
+            	                    <partial name="_BooleanResult" model="@item.IsCalculateCredit">
+            	                </td>
+            	                <td>
+            	                    <partial name="_BooleanActive" model="@item.IsActive">
+            	                </td>
+        		            </tr>
+        		            ++index;
+        		        }
+        		    </tbody>
+        		</table>
+			</div>
+		</div>
+	</div>
+</section>

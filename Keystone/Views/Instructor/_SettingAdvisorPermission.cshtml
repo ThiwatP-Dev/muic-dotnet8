@@ -1,0 +1,148 @@
+@model InstructorSettingViewModel
+
+<section>
+    <div class="block block--underline">
+        <div class="block__title">
+            <header>University Level</header>
+        </div>
+        <div class="block__body text-left height-3">
+            <div class="row form-group mb-3">
+                <div class="col-10">
+                    <select id="js-select-role-university-level" asp-items="ViewBag.Roles" class="chosen-select form-control"
+                            name="RoleId" data-placeholder="Select">
+                        <option selected disabled>Select</option>
+                    </select>
+                    <label>Role</label>
+                </div>
+                <div class="col-2 align-self-center">
+                    <a id="js-add-role-university-level" class="btn btn-mw-120 btn--primary">
+                        <i class="la la-plus mr-1 font-weight-800"></i> Add
+                    </a>
+                </div>
+            </div>
+            <div id="js-role-members">
+                <table id="js-roles-university-level" class="table table-bordered table-hover w-100x">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Role</th>
+                            <th class="text-center w-250">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model == null || Model.UniversityRoles == null || !Model.UniversityRoles.Any())
+                        {
+                            <tr>
+                                <td>
+                                    <span class="js-show-role-university-level"></span>
+                                    <input class="js-get-roleId-university-level" name="UniversityRoles[0].Id" type="hidden">
+                                    <input class="js-get-roleName-university-level" name="UniversityRoles[0].Name" type="hidden">
+                                </td>
+
+                                <td class="td-actions text-nowrap">
+                                    <a href="#!" class="js-del-row" data-toggle="modal"
+                                    data-target="#delete-row-confirm-modal">
+                                        <i class="la la-trash delete"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            for (int i = 0; i < Model.UniversityRoles.Count; ++i)
+                            {
+                                <tr>
+                                    <td>
+                                        <span class="js-show-role-university-level">@Model.UniversityRoles[i].Name</span>
+                                        <input class="js-get-roleId-university-level" name="UniversityRoles[@i].Id" type="hidden" value="@Model.UniversityRoles[i].Id">
+                                        <input class="js-get-roleName-university-level" name="UniversityRoles[@i].Name" type="hidden" value="@Model.UniversityRoles[i].Name">
+                                    </td>
+
+                                    <td class="td-actions text-nowrap">
+                                        <a href="#!" class="js-del-row" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                            <i class="la la-trash delete"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="block block--underline">
+        <div class="block__title">
+            <header>Major Level</header>
+        </div>
+        <div class="block__body text-left height-3">
+            <div class="row form-group mb-3">
+                <div class="col-10">
+                    <select id="js-select-role-major-level" asp-items="ViewBag.Roles" class="chosen-select form-control"
+                            name="RoleId" data-placeholder="Select">
+                        <option selected disabled>Select</option>
+                    </select>
+                    <label>Role</label>
+                </div>
+                <div class="col-2 align-self-center">
+                    <a id="js-add-role-major-level" class="btn btn-mw-120 btn--primary">
+                        <i class="la la-plus mr-1 font-weight-800"></i> Add
+                    </a>
+                </div>
+            </div>
+            <div id="js-role-members">
+                <table id="js-roles-major-level" class="table table-bordered table-hover w-100x">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Role</th>
+                            <th class="text-center w-250">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model == null || Model.MajorRoles == null || !Model.MajorRoles.Any())
+                        {
+                            <tr>
+                                <td>
+                                    <span class="js-show-role-major-level"></span>
+                                    <input class="js-get-roleId-major-level" name="MajorRoles[0].Id" type="hidden">
+                                    <input class="js-get-roleName-major-level" name="MajorRoles[0].Name" type="hidden">
+                                </td>
+
+                                <td class="td-actions text-nowrap">
+                                    <a href="#!" class="js-del-row" data-toggle="modal"
+                                    data-target="#delete-row-confirm-modal">
+                                        <i class="la la-trash delete"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            for (int i = 0; i < Model.MajorRoles.Count; ++i)
+                            {
+                                <tr>
+                                    <td>
+                                        <span class="js-show-role-major-level">@Model.MajorRoles[i].Name</span>
+                                        <input class="js-get-roleId-major-level" name="MajorRoles[@i].Id" type="hidden" value="@Model.MajorRoles[i].Id">
+                                        <input class="js-get-roleName-major-level" name="MajorRoles[@i].Name" type="hidden" value="@Model.MajorRoles[i].Name">
+                                    </td>
+
+                                    <td class="td-actions text-nowrap">
+                                        <a href="#!" class="js-del-row" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                            <i class="la la-trash delete"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="text-right">
+    <button type="submit" class="btn btn-mw-120 btn--primary">Save</button>
+</div>
+

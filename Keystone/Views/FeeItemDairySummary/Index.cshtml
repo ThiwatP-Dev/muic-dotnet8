@@ -1,0 +1,135 @@
+@model FeeItemDairySummaryViewModel
+@{ 
+    ViewData["Title"] = "Summary Report by Date (Feetype)";
+    var index = 1;
+}
+
+<section class="row ">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="FeeItemDairySummary" asp-action="Index" method="GET">
+                    <div class="row form-group m-b-30">
+                        <div class="col-4">
+                            <select class="chosen-select form-control" asp-for="Criteria.AcademicLevelId" asp-items="@ViewBag.AcademicLevels" data-placeholder="Select">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Academic Level<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-4">
+                            <input class="form-control js-single-date" asp-for="Criteria.StartedAt" type="text" autocomplete="off">
+                            <label>Date From<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-4">
+                            <input class="form-control js-single-date" asp-for="Criteria.EndedAt" type="text" autocomplete="off">
+                            <label>Date To<span class="text-danger">*</span></label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-4">
+                            <select class="chosen-select form-control" asp-for="Criteria.FeeGroupId" asp-items="@ViewBag.FeeGroups" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Fee Group</label>
+                        </div>
+                        <div class="col-4">
+                            <h4 class="font-size-default m-y-4">Fee Item</h4>
+                            <select class="chosen-select form-control" asp-for="Criteria.FeeItemIds" asp-items="ViewBag.FeeItems" data-placeholder="Select" multiple></select>
+                        </div>
+                        <div class="col-4 align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (Model != null && Model.FeeItemTerms.Any())
+{
+    var firstFeeItem = Model.FeeItemTerms[0];
+    <section class="row">
+        <div class="col-12">
+            <div class="block block--underline">
+                <div class="block__title">
+                    <div class="row">
+                        <header class="block__title-info">
+                            <h3 class="text-center">SUMMARY REPORT BY DATE (FEE TYPE)</h3>
+                        </header>
+                        <header class="block__title-info">
+                            <h4 class="text-center">DATE BETWEEN @(Model.Criteria.StartedAt + " AND " + Model.Criteria.EndedAt)</h4>
+                        </header>
+                    </div>
+                </div>
+
+                <div class="block__body">
+                    <div class="p-4">
+                        <table class="table table-bordered w-100x js-report-table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th class="text-center">Fee Code</th>
+                                    <th>Fee Type</th>
+                                    <th class="text-right">@firstFeeItem.AcademicLevelHeader</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.FeeItemTerms != null && Model.FeeItemTerms.Any())
+                                {
+                                    foreach (var term in Model.FeeItemTerms)
+                                    {
+                                        foreach (var item in term.FeeItemDetails)
+                                        {
+                                            <tr>
+                                                <td>@item.DateText</td>
+                                                <td>@item.FeeCode</td>
+                                                <td>@item.FeeType</td>
+                                                <td>@item.AmountText</td>
+                                            </tr>
+                                            index ++;
+                                        }
+
+                                        <tr class="bg-secondary-lighter">
+                                            <td>Total By Year Semester @term.TotalBySemester</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>@term.GrandTotalText</td>
+                                        </tr>
+                                    }
+
+                                    <tr class="bg-secondary-lighter">
+                                        <td><b>Grand Total</b></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td><b>@Model.GrandTotal</b></td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="8">
+                                            <i class="text-danger">No Data</i>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}

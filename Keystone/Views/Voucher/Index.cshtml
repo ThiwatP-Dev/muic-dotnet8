@@ -1,0 +1,149 @@
+@model PagedResult<Voucher>
+@{ 
+    ViewData["Title"] = "Voucher";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+    var recordNumber = Model?.FirstRowOnPage;
+}
+
+<section class="row d-print-none">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+        <ul class="d-flex flex-md-row align-items-md-center float-right">
+            <li class="list-inline-item mx-3 mb-0">
+                <a class="btn btn--primary" asp-action="Create" asp-route-returnUrl="@contextPath">
+                    <i class="la la-plus mr-1 font-weight-800"></i> Add Voucher
+                </a>
+            </li>
+        </ul>
+    </div>
+</section>
+
+<section class="row d-print-none">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="Voucher" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group m-b-30">
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-academic-level"
+                                    asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Academic Level<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="@ViewBag.Terms" data-placeholder="Select">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Term<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.Code" type="text">
+                            <label>Student Code</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.Status" asp-items="@ViewBag.Statuses" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Status</label>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-3">
+                            <input class="form-control js-single-date js-check-date" asp-for="Criteria.RequestedFrom" type="text" autocomplete="off">
+                            <label>Request From</label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control js-single-date js-check-date" asp-for="Criteria.RequestedTo" type="text" autocomplete="off">
+                            <label>To</label>
+                        </div>
+                        <div class="col-6 align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.RowCount ?? 0))</header>
+            </div>
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover w-100x m-0">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th>Code</th>
+                                <th>Name</th>
+                                <th>Scholarship</th>
+                                <th>Term</th>
+                                <th class="text-right">Amount</th>
+                                <th class="text-center">Requested Date</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Results.Any())
+                            {
+                                foreach (var item in Model.Results)
+                                {
+                                    <tr>
+                                        <td>@recordNumber</td>
+                                        <td>@item.Student?.Code</td>
+                                        <td>@item.Student?.FullNameEn</td>
+                                        <td>@item.ScholarshipStudent?.Scholarship?.NameEn</td>
+                                        <td>@item.Term?.TermText</td>
+                                        <td>@item.TotalAmountText</td>
+                                        <td>@item.RequestedAtText</td>
+                                        <td>@item.StatusText</td>
+                                        <td class="text-nowrap td-actions">
+                                            <a asp-controller="Voucher" 
+                                               asp-action="Edit" 
+                                               asp-route-id="@item.Id"
+                                               asp-route-returnUrl="@contextPath">
+                                               <i class="la la-edit edit"></i>
+                                            </a>
+                                            <a data-toggle="modal" 
+                                               data-target="#delete-confirm-modal" 
+                                               asp-controller="Voucher" 
+                                               asp-action="Delete" 
+                                               asp-route-Id="@item.Id"
+                                               asp-route-returnUrl="@contextPath">
+                                                <i class="la la-trash delete"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    recordNumber++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="9">
+                                        <i class="text-danger">No Data</i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            @(await Component.InvokeAsync<PagerViewComponent>(Model))
+        </div>
+    </div>
+</section>
+
+<partial name="_DeleteConfirmModals" />

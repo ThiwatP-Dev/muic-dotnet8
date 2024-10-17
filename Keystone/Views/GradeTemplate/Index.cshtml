@@ -1,0 +1,79 @@
+@model IEnumerable<GradeTemplateViewModel>
+
+@{ 
+    ViewData["Title"] = "Grade Template";
+    var index = 1;
+}
+
+<section class="row">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+        <ul class="d-flex flex-md-row align-items-md-center float-right">
+            <li class="list-inline-item mx-3 mb-0">
+                <a class="btn btn--primary" asp-controller="GradeTemplate" asp-action="Create">
+                    <i class="la la-plus mr-1 font-weight-800"></i> Add Grade Template
+                </a>
+            </li>
+        </ul>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__body text-left height-3">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover w-100x mb-0">
+                        <thead>
+                            <tr>
+                                <th class="text-center w-25">#</th>
+                                <th class="text-center w-125">Template Name</th>
+                                <th class="text-center w-125">Grades</th>
+                                <th class="text-center w-125">Status</th>
+                                <th class="text-nowrap text-center w-150">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Any())
+                            {
+                                foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@(index++)</td>
+                                        <td asp-for="Name">@item.Name</td>
+                                        <td>@string.Join(" / ", item.Grades.Select(x => x.Name))</td>
+                                        <td>
+                                            <partial name="_BooleanActive" model="@item.IsActive"/>
+                                        </td>
+                                        <td class="text-nowrap td-actions">
+                                            <a asp-controller="GradeTemplate" 
+                                               asp-action="Edit" 
+                                               asp-route-id="@item.Id">
+                                               <i class="la la-edit edit"></i>
+                                            </a>
+                                            <a data-toggle="modal" 
+                                               data-target="#delete-confirm-modal" 
+                                               data-controller="GradeTemplate" 
+                                               data-action="Delete"
+                                               data-value="@item.Id">
+                                               <i class="la la-trash delete"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="5"><i class="text-danger">No data found</i></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<partial name="_DeleteConfirmModals" />

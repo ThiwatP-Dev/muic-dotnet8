@@ -1,0 +1,36 @@
+@{
+    var ScheduleSections = ViewData["ScheduleSections"] as List<ScheduleViewModel>;
+}
+
+@if (ScheduleSections != null)
+{
+    foreach (var item in ScheduleSections)
+    {
+        <div class="p-3">
+            <div class="d-flex class-lookup-details">
+                <div class="mr-auto">
+                    <div class="class-lookup-title">
+                        @item.CourseCode
+                        <span class="class-lookup-title-sub"> (@item.Section)</span>
+                    </div>
+                    <div class="class-lookup-title font-weight-700">@item.CourseName</div>
+                </div>
+                <div class="color-primary">
+                    <img class="align-top w-20" src="/images/seat.svg"> @item.SeatAvailable
+                </div>
+            </div>
+            @foreach(var time in item.ScheduleTimes)
+            {
+                <div class="class-lookup-details">
+                    <span class="class-lookup-details-half mb-1">@time.DayOfWeek</span> 
+                    <span class="class-lookup-details-half text-right">@time.Time</span>
+                    <span class="class-lookup-details-half font-weight-700">@time.Room</span>
+                    <span class="class-lookup-details-half font-weight-700 text-right">
+                        @time.InstructorNameEn
+                    </span>
+                </div>
+            }
+        </div>
+        <hr>
+    }
+}

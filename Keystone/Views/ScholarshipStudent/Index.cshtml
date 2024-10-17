@@ -1,0 +1,129 @@
+@model PagedResult<ScholarshipStudent>
+@{
+    ViewData["Title"] = "Scholarship Student";
+    var recordNumber = Model?.FirstRowOnPage;
+}
+
+<section class="row">
+    <div class="ks-page-header col-lg-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</section>
+
+<section class="block">
+    <form class="form-horizontal" asp-controller="ScholarshipStudent" asp-action="Index" method="GET">
+        @Html.AntiForgeryToken()
+        <div class="block__body">
+            <div class="row form-group m-b-30">
+                <div class="col-4">
+                    <select class="chosen-select form-control js-cascade-academic-level" data-placeholder="Select"
+                            asp-items="ViewBag.AcademicLevels" asp-for="Criteria.AcademicLevelId">
+                        <option selected>Select</option>
+                    </select>
+                    <label>Academic Level</label>
+                </div>
+                <div class="col-4">
+                    <select class="chosen-select form-control js-cascade-faculty" data-placeholder="Select"
+                            asp-items="ViewBag.Faculties" asp-for="Criteria.FacultyId">
+                        <option selected>Select</option>
+                    </select>
+                    <label>Division</label>
+                </div>
+                <div class="col-4">
+                    <select class="chosen-select form-control js-cascade-department" data-placeholder="Select"
+                            asp-items="ViewBag.Departments" asp-for="Criteria.DepartmentId">
+                        <option selected>Select</option>
+                    </select>
+                    <label>Major</label>
+                </div>
+            </div>
+            <div class="row form-group m-b-30">
+                <div class="col-4">
+                    <select class="chosen-select form-control js-cascade-scholarship-type" data-placeholder="Select"
+                            asp-items="ViewBag.ScholarshipTypes" asp-for="Criteria.ScholarshipTypeId">
+                        <option selected>Select</option>
+                    </select>
+                    <label>Scholarship Type</label>
+                </div>
+                <div class="col-4">
+                    <select class="chosen-select form-control js-cascade-scholarship" data-placeholder="Select"
+                            asp-items="ViewBag.Scholarships" asp-for="Criteria.ScholarshipId">
+                        <option selected>Select</option>
+                    </select>
+                    <label>Scholarship</label>
+                </div>
+                <div class="col-4">
+                    <select class="chosen-select form-control" data-placeholder="Select"
+                            asp-items="ViewBag.ApprovedStatus" asp-for="Criteria.IsApproved">
+                    </select>
+                    <label>Approved</label>
+                </div>
+            </div>
+            <div class="row form-group mb-0">
+                <div class="col-4 form-check align-self-center">
+                    <input class="form-check-input" type="checkbox">
+                    <label>Effective</label>
+                </div>
+                <div class="col-8 align-self-end text-right">
+                    <button class="btn btn--primary btn-mw-120  mb-0 m-r-5" type="submit">
+                        <i class="la la-search mr-2"></i>Search
+                    </button>
+                    <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                        Reset
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.RowCount ?? 0))</header>
+            </div>
+
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table id="js-scholarshipstudent" class="table table-bordered table-hover w-100x">
+                        <thead>
+                            <tr>
+                                <th class="text-center w-25">#</th>
+                                <th>Student Code</th>
+                                <th>Student Name</th>
+                                <th>Division</th>
+                                <th>Major</th>
+                                <th>Scholarship</th>
+                                <th>Approved Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null)
+                            {
+                                foreach (var item in Model.Results)
+                                {
+                                    <tr>
+                                        <td rowspan="1">@recordNumber</td>
+                                        <td>@item.Student?.Code</td>
+                                        <td>@item.Student?.FirstNameEn</td>
+                                        <td>@item.Student?.AcademicInformation?.Faculty?.NameEn</td>
+                                        <td>@item.Student?.AcademicInformation?.Department?.NameEn</td>
+                                        <td>@item.Scholarship?.NameEn</td>
+                                        <td>@item.ApprovedAtText</td>
+                                    </tr>
+                                    recordNumber++;
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @(await Component.InvokeAsync<PagerViewComponent>(Model))
+    </div>
+</section>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/ajax-cascading/scholarshiptype-cascade.js"></script>
+}

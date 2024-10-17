@@ -1,0 +1,121 @@
+@model StudentTransferViewModel
+@{
+    var index = 0;
+    var listIndex = 0;
+}
+
+<div class="form-group">
+    <input class="js-transfer-university-id" asp-for="TransferUniversityId" type="hidden">
+    <input asp-for="StudentId" type="hidden">
+    <input asp-for="StudentCode" type="hidden">
+    <input asp-for="StudentFirstName" type="hidden">
+    <input asp-for="StudentLastName" type="hidden">
+    <input asp-for="CurriculumId" type="hidden">
+    <input asp-for="CurriculumVersionId" class="js-get-curriculum-version" type="hidden">
+    <input asp-for="CurriculumName" type="hidden">
+    <input asp-for="CurriculumVersionName" type="hidden">
+    <input asp-for="CountChangedTime" type="hidden">
+
+    @foreach (var item in Model.StudentCourses)
+    {
+        <input asp-for="@Model.StudentCourses[index].TermId" type="hidden">
+        <input asp-for="@Model.StudentCourses[index].TermText" type="hidden">
+        <input asp-for="@Model.StudentCourses[index].CourseGroupId" type="hidden">
+        <input asp-for="@Model.StudentCourses[index].CourseGroupName" type="hidden">
+        <input asp-for="@Model.StudentCourses[index].CourseId" type="hidden">
+        <input asp-for="@Model.StudentCourses[index].CourseCode" type="hidden">
+        <input asp-for="@Model.StudentCourses[index].CourseName" type="hidden">
+        <input asp-for="@Model.StudentCourses[index].SectionId" type="hidden">
+        <input asp-for="@Model.StudentCourses[index].SectionNumber" type="hidden">
+        <input asp-for="@Model.StudentCourses[index].GradeId" type="hidden"/>
+        <input asp-for="@Model.StudentCourses[index].GradeName" type="hidden"/>
+        <input asp-for="@Model.StudentCourses[index].IsNewCourse" type="hidden"/>
+         <input asp-for="@Model.StudentCourses[index].RegistrationCourseId" type="hidden">
+        index++;
+    }
+
+    <table id="js-match-course" class="table table-bordered">
+        <thead class="scroll-header">
+            <tr>
+                <th class="w-75 text-center">
+                    <input id="checkAll" class="js-check-all" name="Courses" type="checkbox">
+                    <label class="mt-2 mb-0 m-l-2" for="checkAll"></label>
+                    <div class="text-center">
+                        <span class="js-item-count">(0)</span>
+                    </div>
+                </th>
+                <th class="text-center w-100">Term</th>
+                <th class="w-500">Current Course</th>
+                <th class="text-center w-100">Grade</th>
+                <th>New Course</th>
+                <th class="text-center w-200">In Curriculum</th>
+                <th class="text-center w-100">Grade</th>
+                <th class="text-center w-75">Star</th>
+                <th class="text-center w-100">Action</th>
+            </tr>
+        </thead>
+        <tbody class="js-items">
+            @if (Model.StudentCourseEquivalents != null && Model.StudentCourseEquivalents.Any()) 
+            {
+                @foreach (var item in Model.StudentCourseEquivalents)
+                {
+                    <tr class="js-suggestion-parent">
+                        <td class="text-center">
+                            <input id="StudentCourseEquivalents[@listIndex]" class="form-check-input course-equivalent-check" name="StudentCourseEquivalents[@listIndex].IsChecked" type="checkbox" value="@Model.StudentCourseEquivalents[@listIndex].IsChecked">
+                            <label class="js-focus-item m-0" for="StudentCourseEquivalents[@listIndex]"></label>
+                        </td>
+                        <td>@item.TermText</td>
+                        <td>
+                            @item.CurrentCourseName
+                            <input asp-for="@Model.StudentCourseEquivalents[listIndex].CurrentCourseId" type="hidden"/>
+                            <input asp-for="@Model.StudentCourseEquivalents[listIndex].RegistrationCourseId" type="hidden"/>
+                            <input asp-for="@Model.StudentCourseEquivalents[listIndex].PreviousGrade" type="hidden"/>
+                            <input asp-for="@Model.StudentCourseEquivalents[listIndex].GradeId" type="hidden"/>
+                        </td>
+                        <td>@Model.StudentCourseEquivalents[listIndex].PreviousGrade</td>
+                        <td>                            
+                            <input class="js-cascade-term" asp-for="@Model.StudentCourseEquivalents[listIndex].TermId" type="hidden">
+                            <select class="chosen-select form-control js-new-course"
+                                    asp-for="@Model.StudentCourseEquivalents[listIndex].NewCourseId" 
+                                    asp-items="@Model.StudentCourseEquivalents[listIndex].CourseSelectList"
+                                    data-placeholder="Select">
+                            </select>
+                        </td>
+                        <td>
+                            <partial name="_BooleanResult" model="@item.InCurriculum" />
+                        </td>
+                        <td>
+                            <select class="chosen-select-no-search form-control js-cascade-grade" asp-items="@ViewBag.Grades"
+                                    asp-for="@Model.StudentCourseEquivalents[listIndex].NewGradeId" data-placeholder="Select">
+                                <option value="" selected>Select</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input id="SearchDeleteStudents[@listIndex]" class="form-check-input" asp-for="@Model.StudentCourseEquivalents[listIndex].IsStarCourse" type="checkbox">
+                            <label class="js-focus-item m-0" for="SearchDeleteStudents[@listIndex]"></label>
+                        </td>
+                        <td class="td-actions text-nowrap">
+                            <a class="js-del-row" href="#!" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                <i class="la la-trash delete"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    listIndex++;
+                }
+            }
+            else
+            {
+                <tr>
+                    <td class="text-center" colspan="9">
+                        <i class="text-danger">No Data</i>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="form-group text-right mb-0">
+    <button class="btn btn-mw-120 btn--primary" asp-action="Summary" type="submit" method="POST">Next</button>
+    <button class="btn btn-mw-120 btn--cancel" asp-action="Index" type="submit" method="GET">Cancel</button>
+</div>

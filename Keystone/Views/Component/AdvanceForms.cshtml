@@ -1,0 +1,1025 @@
+@{
+    ViewData["Title"] = "Advance Forms and Their Components";
+}
+
+<section class="row">
+    <div class="col-12">
+        <em class="text-caption mb-2">Input Suggestion & Mask Form
+            <span class="color-warning ml-3">***recommended to mainly use with text type input</span>
+        </em>
+        <div class="block">
+            <div class="block__body">
+                <div class="row">
+                    <div class="col-6">
+                        <form>
+                            <div class="row form-group">
+                                <div class="col-12 mb-4">
+                                    <input type="text" class="form-control js-number-mask">
+                                    <label>Simple 2 Digits Mask Input</label>
+                                </div>
+                                <div class="col-12 mb-4">
+                                    <input type="text" class="form-control js-time-mask">
+                                    <label>Time Mask with Suggestion Input</label>
+                                </div>
+                                <div class="col-12 suggestion-parent">
+                                    <input class="form-control js-suggestion" placeholder="Type 'i', 'a' or 0">
+                                    <label>Suggestion Input</label>
+                                    <ul class="suggestion-box js-suggestion-list">
+                                        <li class="suggestion-result js-suggestion-item">001 Item A</li>
+                                        <li class="suggestion-result js-suggestion-item">002 Item B</li>
+                                        <li class="suggestion-result js-suggestion-item">003 Item C</li>
+                                        <li class="suggestion-result js-suggestion-item">004 Item D</li>
+                                        <li class="suggestion-result js-suggestion-item">005 Item E</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-6">        
+<script type="text/plain" class="language-markup"><form>
+    <div class="row form-group">
+        <div class="col-12 mb-4">
+            <input type="text" class="form-control js-number-mask">
+            <label>Simple 2 Digits Mask Input</label>
+        </div>
+        <div class="col-12 mb-4">
+            <input type="text" class="form-control js-time-mask">
+            <label>Time Mask with Suggestion Input</label>
+        </div>
+        <div class="col-12 suggestion-parent">
+            <input class="form-control js-suggestion" placeholder="Type 'i', 'a' or 0">
+            <label>Suggestion Input</label>
+            <ul class="suggestion-box js-suggestion-list">
+                <li class="suggestion-result js-suggestion-item">001 Item A</li>
+                <li class="suggestion-result js-suggestion-item">002 Item B</li>
+                <li class="suggestion-result js-suggestion-item">003 Item C</li>
+                <li class="suggestion-result js-suggestion-item">004 Item D</li>
+                <li class="suggestion-result js-suggestion-item">005 Item E</li>
+            </ul>
+        </div>
+    </div>
+</form>
+.
+.
+.
+[javascript]
+$(document).ready(function() {
+    //Mask input function
+    InputMask.renderTimeMask();
+    InputMask.renderNumberMask();
+})
+</script>     
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <em class="text-caption mb-2">Date Picker Input Form</em>
+        <div class="block">
+            <div class="block__body">
+                <div class="row">
+                    <div class="col-6">
+                        <form>
+                            <div class="row form-group">
+                                <div class="col-12 mb-4">
+                                    <input type="text" class="form-control js-single-date">
+                                    <label>Single Date Input</label>
+                                </div>
+                                <div class="col-12 mb-4">
+                                    <input type="text" class="form-control js-month-year">
+                                    <label>Month & Year Input</label>
+                                </div>
+                                <div class="col-12 mb-4">
+                                    <input type="text" class="form-control js-single-year">
+                                    <label>Single Year Input</label>
+                                </div>
+                                <div class="col-12">
+                                    <input type="text" class="form-control js-date-time">
+                                    <label>Date & Time Input</label>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-6">
+<script type="text/plain" class="language-markup"><form>
+    <div class="row form-group">
+        <div class="col-12 mb-4"">
+            <input type="text" class="form-control js-single-date">
+            <label>Single Date Input</label>
+        </div>
+        <div class="col-12 mb-4"">
+            <input type="text" class="form-control js-month-year">
+            <label>Month & Year Input</label>
+        </div>
+        <div class="col-12 mb-4">
+            <input type="text" class="form-control js-single-year">
+            <label>Single Year Input</label>
+        </div>
+        <div class="col-12">
+            <input type="text" class="form-control js-date-time">
+            <label>Date & Time Input</label>
+        </div>
+    </div>
+</form>
+</script>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <em class="text-caption mb-2">Checkbox List with Check All
+        </em>
+        <div class="block">
+            <div class="block__body">
+                <div class="row">
+                    <div class="col-6">
+                        <header class="mb-3">Checkbox List in Block with Nice Scroll</header>
+                        <form>
+                            <div class="block js-checklist-1">
+                                <div class="box-scroll__header d-flex justify-content-between pb-1">
+                                    <input id="check0" class="form-check-input js-check-all" type="checkbox"/>
+                                    <label for="check0">Select All <span class="js-item-count">(0)</span></label>
+                                    <span class="form-group mb-0">
+                                        <input id="js-search" class="form-control search-form--mini" type="text" placeholder="Item Name">
+                                        <i class="la la-search inline-icon"></i>
+                                    </span>
+                                </div>
+                                <!-- nice scroll box -->
+                                <div class="js-render-nicescroll box-scroll__content js-items">
+                                    <div class="js-suggestion-parent">
+                                        <input id="check1" class="form-check-input" name="checklist-1" type="checkbox" value="1"/>
+                                        <label class="js-focus-item m-0" for="check1">Item 1</label>
+                                        <hr class="w-100x">
+                                    </div>
+                                    <div class="js-suggestion-parent">
+                                        <input id="check2" class="form-check-input" name="checklist-1" type="checkbox" value="2"/>
+                                        <label class="js-focus-item m-0" for="check2">Item 2</label>
+                                        <hr class="w-100x">
+                                    </div>
+                                    <div class="js-suggestion-parent">
+                                        <input id="check3" class="form-check-input" name="checklist-1" type="checkbox" value="3"/>
+                                        <label class="js-focus-item m-0" for="check3">Item 3</label>
+                                        <hr class="w-100x">
+                                    </div>
+                                    <div class="js-suggestion-parent">
+                                        <input id="check4" class="form-check-input" name="checklist-1" type="checkbox" value="2"/>
+                                        <label class="js-focus-item m-0" for="check4">Item 4</label>
+                                        <hr class="w-100x">
+                                    </div>
+                                    <div class="js-suggestion-parent">
+                                        <input id="check5" class="form-check-input" name="checklist-1" type="checkbox" value="3"/>
+                                        <label class="js-focus-item m-0" for="check5">Item 5</label>
+                                        <hr class="w-100x">
+                                    </div>
+                                    <div class="js-suggestion-parent">
+                                        <input id="check6" class="form-check-input" name="checklist-1" type="checkbox" value="2"/>
+                                        <label class="js-focus-item m-0" for="check6">Item 6</label>
+                                        <hr class="w-100x">
+                                    </div>
+                                    <div class="js-suggestion-parent">
+                                        <input id="check7" class="form-check-input" name="checklist-1" type="checkbox" value="3"/>
+                                        <label class="js-focus-item m-0" for="check7">Item 7</label>
+                                        <hr class="w-100x">
+                                    </div>
+                                    <div class="js-suggestion-parent">
+                                        <input id="check8" class="form-check-input" name="checklist-1" type="checkbox" value="2"/>
+                                        <label class="js-focus-item m-0" for="check8">Item 8</label>
+                                        <hr class="w-100x">
+                                    </div>
+                                    <div class="js-suggestion-parent">
+                                        <input id="check9" class="form-check-input" name="checklist-1" type="checkbox" value="3"/>
+                                        <label class="js-focus-item m-0" for="check9">Item 9</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-6">
+<script type="text/plain" class="language-markup"><header class="mb-3">Checkbox List in Block with Nice Scroll</header>
+<form>
+    <div class="block js-checklist-1">
+        <div class="box-scroll__header d-flex justify-content-between pb-1">
+            <input id="check0" class="form-check-input js-check-all" type="checkbox"/>
+            <label for="check0">Select All <span class="js-item-count">(0)</span></label>
+            <span class="form-group mb-0">
+                <input id="js-search" class="form-control search-form--mini" type="text" placeholder="Item Name">
+                <i class="la la-search inline-icon"></i>
+            </span>
+        </div>
+        <!-- nice scroll box -->
+        <div class="js-render-nicescroll box-scroll__content js-items">
+            <div class="js-suggestion-parent">
+                <input id="check1" class="form-check-input" name="checklist-1" type="checkbox" value="1"/>
+                <label class="js-focus-item m-0" for="check1">Item 1</label>
+                <hr class="w-100x">
+            </div>
+            <div class="js-suggestion-parent">
+                <input id="check2" class="form-check-input" name="checklist-1" type="checkbox" value="2"/>
+                <label class="js-focus-item m-0" for="check2">Item 2</label>
+                <hr class="w-100x">
+            </div>
+            <div class="js-suggestion-parent">
+                <input id="check3" class="form-check-input" name="checklist-1" type="checkbox" value="3"/>
+                <label class="js-focus-item m-0" for="check3">Item 3</label>
+                <hr class="w-100x">
+            </div>
+            <div class="js-suggestion-parent">
+                <input id="check4" class="form-check-input" name="checklist-1" type="checkbox" value="2"/>
+                <label class="js-focus-item m-0" for="check4">Item 4</label>
+                <hr class="w-100x">
+            </div>
+            <div class="js-suggestion-parent">
+                <input id="check5" class="form-check-input" name="checklist-1" type="checkbox" value="3"/>
+                <label class="js-focus-item m-0" for="check5">Item 5</label>
+                <hr class="w-100x">
+            </div>
+            <div class="js-suggestion-parent">
+                <input id="check6" class="form-check-input" name="checklist-1" type="checkbox" value="2"/>
+                <label class="js-focus-item m-0" for="check6">Item 6</label>
+                <hr class="w-100x">
+            </div>
+            <div class="js-suggestion-parent">
+                <input id="check7" class="form-check-input" name="checklist-1" type="checkbox" value="3"/>
+                <label class="js-focus-item m-0" for="check7">Item 7</label>
+                <hr class="w-100x">
+            </div>
+            <div class="js-suggestion-parent">
+                <input id="check8" class="form-check-input" name="checklist-1" type="checkbox" value="2"/>
+                <label class="js-focus-item m-0" for="check8">Item 8</label>
+                <hr class="w-100x">
+            </div>
+            <div class="js-suggestion-parent">
+                <input id="check9" class="form-check-input" name="checklist-1" type="checkbox" value="3"/>
+                <label class="js-focus-item m-0" for="check9">Item 9</label>
+            </div>
+        </div>
+    </div>
+</form>
+.
+.
+.
+[javascript]
+$(document).ready(function() {
+    //Check list function
+    CheckList.renderCheckbox('.js-checklist-1');
+
+    //Search function (Element Suggestion)
+    $('#js-search').on('keyup', function() {
+        let keywords = $(this).val();
+        InputSuggestion.elementSuggest(keywords, '.js-suggestion-parent');
+    })
+
+    //Nice scroll function
+    $(".js-render-nicescroll").niceScroll();
+})
+</script>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-6">
+                        <div>
+                            <header class="mb-3">Checkbox Item List</header>
+                            <a id="js-check-all" class="btn btn-mw--120 btn--primary mb-3"></a>
+                        </div>
+                        <form>
+                            <div class="block px-3 py-2">
+                                <div class="media">
+                                    <div class="align-self-center pt-2">
+                                        <input id="item1" class="form-check-input js-checklist-2" type="checkbox" name="checklist-2" value="1" checked/>
+                                        <label class="color-primary m-0" for="item1"></label>
+                                    </div>
+                                    <div class="align-self-center mx-w-70x ml-2 mr-auto">
+                                        <div class="color-primary">Item 1</div>
+                                        <div class="font-size-12">
+                                            <span>Description</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="block px-3 py-2">
+                                <div class="media">
+                                    <div class="align-self-center pt-2">
+                                        <input id="item2" class="form-check-input js-checklist-2" type="checkbox" name="checklist-2" value="2" checked/>
+                                        <label class="color-primary m-0" for="item2"></label>
+                                    </div>
+                                    <div class="align-self-center mx-w-70x ml-2 mr-auto">
+                                        <div class="color-primary">Item 2</div>
+                                        <div class="font-size-12">
+                                            <span>Description</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="block px-3 py-2">
+                                <div class="media">
+                                    <div class="align-self-center pt-2">
+                                        <input id="item3" class="form-check-input js-checklist-2" type="checkbox" name="checklist-2" value="3" checked/>
+                                        <label class="color-primary m-0" for="item3"></label>
+                                    </div>
+                                    <div class="align-self-center mx-w-70x ml-2 mr-auto">
+                                        <div class="color-primary">Item 3</div>
+                                        <div class="font-size-12">
+                                            <span>Description</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="block px-3 py-2">
+                                <div class="media">
+                                    <div class="align-self-center pt-2">
+                                        <input id="item4" class="form-check-input js-checklist-2" type="checkbox" name="checklist-2" value="4" checked/>
+                                        <label class="color-primary m-0" for="item4"></label>
+                                    </div>
+                                    <div class="align-self-center mx-w-70x ml-2 mr-auto">
+                                        <div class="color-primary">Item 4</div>
+                                        <div class="font-size-12">
+                                            <span>Description</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="block px-3 py-2">
+                                <div class="media">
+                                    <div class="align-self-center pt-2">
+                                        <input id="item5" class="form-check-input js-checklist-2" type="checkbox" name="checklist-2" value="5" checked/>
+                                        <label class="color-primary m-0" for="item5"></label>
+                                    </div>
+                                    <div class="align-self-center mx-w-70x ml-2 mr-auto">
+                                        <div class="color-primary">Item 5</div>
+                                        <div class="font-size-12">
+                                            <span>Description</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="block px-3 py-2">
+                                <div class="media">
+                                    <div class="align-self-center pt-2">
+                                        <input id="item6" class="form-check-input js-checklist-2" type="checkbox" name="checklist-2" value="6" checked/>
+                                        <label class="color-primary m-0" for="item6"></label>
+                                    </div>
+                                    <div class="align-self-center mx-w-70x ml-2 mr-auto">
+                                        <div class="color-primary">Item 6</div>
+                                        <div class="font-size-12">
+                                            <span>Description</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-6">
+<script type="text/plain" class="language-markup"><div>
+    <header class="mb-3">Checkbox Item List</header>
+    <a id="js-check-all" class="btn btn-mw--120 btn--primary mb-3"></a>
+</div>
+<form>
+    <div class="block px-3 py-2">
+        <div class="media">
+            <div class="align-self-center pt-2">
+                <input id="item1" class="form-check-input js-checklist-2" type="checkbox" name="checklist-2" value="1" checked/>
+                <label class="color-primary m-0" for="item1"></label>
+            </div>
+            <div class="align-self-center mx-w-70x ml-2 mr-auto">
+                <div class="color-primary">Item 1</div>
+                <div class="font-size-12">
+                    <span>Description</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="block px-3 py-2">
+        <div class="media">
+            <div class="align-self-center pt-2">
+                <input id="item2" class="form-check-input js-checklist-2" type="checkbox" name="checklist-2" value="2" checked/>
+                <label class="color-primary m-0" for="item2"></label>
+            </div>
+            <div class="align-self-center mx-w-70x ml-2 mr-auto">
+                <div class="color-primary">Item 2</div>
+                <div class="font-size-12">
+                    <span>Description</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="block px-3 py-2">
+        <div class="media">
+            <div class="align-self-center pt-2">
+                <input id="item3" class="form-check-input js-checklist-2" type="checkbox" name="checklist-2" value="3" checked/>
+                <label class="color-primary m-0" for="item3"></label>
+            </div>
+            <div class="align-self-center mx-w-70x ml-2 mr-auto">
+                <div class="color-primary">Item 3</div>
+                <div class="font-size-12">
+                    <span>Description</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="block px-3 py-2">
+        <div class="media">
+            <div class="align-self-center pt-2">
+                <input id="item4" class="form-check-input js-checklist-2" type="checkbox" name="checklist-2" value="4" checked/>
+                <label class="color-primary m-0" for="item4"></label>
+            </div>
+            <div class="align-self-center mx-w-70x ml-2 mr-auto">
+                <div class="color-primary">Item 4</div>
+                <div class="font-size-12">
+                    <span>Description</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="block px-3 py-2">
+        <div class="media">
+            <div class="align-self-center pt-2">
+                <input id="item5" class="form-check-input js-checklist-2" type="checkbox" name="checklist-2" value="5" checked/>
+                <label class="color-primary m-0" for="item5"></label>
+            </div>
+            <div class="align-self-center mx-w-70x ml-2 mr-auto">
+                <div class="color-primary">Item 5</div>
+                <div class="font-size-12">
+                    <span>Description</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="block px-3 py-2">
+        <div class="media">
+            <div class="align-self-center pt-2">
+                <input id="item6" class="form-check-input js-checklist-2" type="checkbox" name="checklist-2" value="6" checked/>
+                <label class="color-primary m-0" for="item6"></label>
+            </div>
+            <div class="align-self-center mx-w-70x ml-2 mr-auto">
+                <div class="color-primary">Item 6</div>
+                <div class="font-size-12">
+                    <span>Description</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+.
+.
+.
+[javascript]
+$(document).ready(function() {
+    //Check list function
+    CheckList.renderCheckAllBtn('.js-checklist-2', '#js-check-all')
+})
+</script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <em class="text-caption mb-2">Multiple Select List</em>
+        <div class="block">
+            <div class="block__body">
+                <div class="row">
+                    <div class="col-12 mb-3">
+                        <form>
+                            <a id="js-all-switch" class="btn btn--primary unchecked">
+                                <i class="far fa-check-square mr-1"></i> Select All
+                            </a>
+                            <select class="js-multi-selectlist" multiple="multiple">
+                                <option value="1">Item 1</option>
+                                <option value="2">Item 2</option>
+                                <option value="3">Item 3</option>
+                                <option value="4">Item 4</option>
+                                <option value="5">Item 5</option>
+                                <option value="6">Item 6</option>
+                                <option value="7">Item 7</option>
+                            </select>
+                        </form>
+                    </div>
+                    <div class="col-12">
+<script type="text/plain" class="language-markup"><form>
+    <a id="js-all-switch" class="btn btn--primary unchecked">
+        <i class="far fa-check-square mr-1"></i> Select All
+    </a>
+    <select class="js-multi-selectlist" multiple="multiple">
+        <option value="1">Item 1</option>
+        <option value="2">Item 2</option>
+        <option value="3">Item 3</option>
+        <option value="4">Item 4</option>
+        <option value="5">Item 5</option>
+        <option value="6">Item 6</option>
+        <option value="7">Item 7</option>
+    </select>
+</form>
+.
+.
+.
+[javascript]
+$(document).ready(function() {
+    //Multiple Select list function (with niceScroll)
+    MultiSelect.renderMultiSelectWithSearch('.js-multi-selectlist')
+    $(".ms-list").niceScroll();
+})
+</script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <em class="text-caption mb-2">Row Add & Delete Able Table</em>
+        <div class="block">
+            <div class="block__body">
+                <div class="row">
+                    <div class="col-12">
+                        <form>
+                            <div class="form-group">
+                                <table id="js-row-add-able" class="col-12 table table-bordered m-0 js-checklist-3">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center w-50">#</td>
+                                            <th class="w-50">
+                                                <input id="checklist3-check-all" class="js-check-all" name="checklist3" type="checkbox">
+                                                <label class="mt-2 mb-0" for="checklist3-check-all"></label>
+                                            </th>
+                                            <th>Item</th>
+                                            <th>Input</th>
+                                            <th>Chosen Select</th>
+                                            <th class="text-center w-100">Status</th>
+                                            <th class="text-nowarp text-center w-75">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="js-items">
+                                        <tr>
+                                            <td>1</td>
+                                            <td>
+                                                <input id="Model[0].Item1" name="checklist3" type="checkbox">
+                                                <label class="form-check-input" for="Model[0].Item1"></label>
+                                            </td>
+                                            <td>Static Cell</td>
+                                            <td>
+                                                <input id="Model[0].Item2" class="form-control__table" name="Model[0].Item2" value="Value 1">
+                                            </td>
+                                            <td>
+                                                <select id="Model[0].Item3" class="chosen-select form-control chosen-single" 
+                                                        name="Model[0].Item3" data-placeholder="Select">
+                                                        <option val="" disabled>Select</option>
+                                                        <option val="1" selected>Choice 1</option>
+                                                        <option val="2">Choice 2</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <i class="color-success la la-check"></i>
+                                            </td>
+                                            
+                                            <td class="text-center td-actions">
+                                                <a class="js-del-row" 
+                                                   href="#" 
+                                                   data-toggle="modal" 
+                                                   data-target="#delete-row-confirm-modal">
+                                                    <i class="la la-trash delete"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-12">
+<script type="text/plain" class="language-markup"><form>
+    <div class="form-group">
+        <table id="js-row-add-able" class="col-12 table table-bordered m-0 js-checklist-3">
+            <thead>
+                <tr>
+                    <th class="text-center w-50">#</td>
+                    <th class="w-50">
+                        <input id="checklist3-check-all" class="js-check-all" name="checklist3" type="checkbox">
+                        <label class="mt-2 mb-0" for="checklist3-check-all"></label>
+                    </th>
+                    <th>Item</th>
+                    <th>Input</th>
+                    <th>Chosen Select</th>
+                    <th class="text-center w-100">Status</th>
+                    <th class="text-nowarp text-center w-75">Action</th>
+                </tr>
+            </thead>
+            <tbody class="js-items">
+                <tr>
+                    <td>1</td>
+                    <td>
+                        <input id="Model[0].Item1" name="checklist3" type="checkbox">
+                        <label class="form-check-input" for="Model[0].Item1"></label>
+                    </td>
+                    <td>Static Cell</td>
+                    <td>
+                        <input id="Model[0].Item2" class="form-control__table" name="Model[0].Item2" value="Value 1">
+                    </td>
+                    <td>
+                        <select id="Model[0].Item3" class="chosen-select form-control chosen-single" 
+                                name="Model[0].Item3" data-placeholder="Select">
+                                <option val="" disabled>Select</option>
+                                <option val="1" selected>Choice 1</option>
+                                <option val="2">Choice 2</option>
+                        </select>
+                    </td>
+                    <td>
+                        <i class="color-success la la-check"></i>
+                    </td>
+                    
+                    <td class="text-center td-actions">
+                        <a class="js-del-row" 
+                           href="#" 
+                           data-toggle="modal" 
+                           data-target="#delete-row-confirm-modal">
+                            <i class="la la-trash delete"></i>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</form>
+.
+.
+.
+[javascript]
+$(document).ready(function() {
+    //Check list function
+    CheckList.renderCheckbox('.js-checklist-3');
+    $('#checklist3-check-all').on('change', function() {
+        CheckList.renderCheckbox('.js-checklist-3');
+    })
+
+    //Row add able table
+    var inputTable = new RowAddAble({
+        TargetTable: '#js-row-add-able',
+        ButtonTitle: 'Add a New Row'
+    })
+    inputTable.RenderButton();
+})
+</script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <em class="text-caption mb-2">Hidden Row Toggle / Sub Row Table</em>
+        <div class="block">
+            <div class="block__body">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <table id="js-row-toggle" class="table table-bordered table-hover w-100x">
+                                <thead>
+                                    <tr>
+                                        <th class="w-25"></th>
+                                        <th>Item</th>
+                                        <th class="text-center w-100">Status</th>
+                                        <th class="text-nowarp text-center w-125">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="hidden-row-toggle span-column"><i class="fas fa-plus-circle"></i></td>
+                                        <td>Main Detail</td>
+                                        <td>
+                                            <i class="color-danger la la-close"></i>
+                                        </td>
+                                        <td class="text-nowrap td-actions span-column">
+                                            <a href="#!">
+                                                <i class="la la-info info"></i>
+                                            </a>
+                                            <a href="#!">
+                                                <i class="la la-edit edit"></i>
+                                            </a>
+                                            <a href="#!">
+                                                <i class="la la-trash delete"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr class="hidden-row d-none">
+                                        <td colspan="2" style="text-align: left !important">Sub Detail</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="hidden-row-toggle span-column"><i class="fas fa-plus-circle"></i></td>
+                                        <td>Main Detail 2</td>
+                                        <td>
+                                            <i class="color-danger la la-close"></i>
+                                        </td>
+                                        <td class="text-nowrap td-actions span-column">
+                                            <a href="#!">
+                                                <i class="la la-info info"></i>
+                                            </a>
+                                            <a href="#!">
+                                                <i class="la la-edit edit"></i>
+                                            </a>
+                                            <a href="#!">
+                                                <i class="la la-trash delete"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr class="hidden-row d-none">
+                                        <td colspan="2" style="text-align: left !important">Sub Detail 2</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-6">
+<script type="text/plain" class="language-markup"><div class="form-group">
+    <table id="js-row-toggle" class="table table-bordered table-hover w-100x">
+        <thead>
+            <tr>
+                <th class="w-25"></th>
+                <th>Item</th>
+                <th class="text-center w-100">Status</th>
+                <th class="text-nowarp text-center w-125">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="hidden-row-toggle span-column"><i class="fas fa-plus-circle"></i></td>
+                <td>Main Detail</td>
+                <td>
+                    <i class="color-danger la la-close"></i>
+                </td>
+                <td class="text-nowrap td-actions span-column">
+                    <a href="#!">
+                        <i class="la la-info info"></i>
+                    </a>
+                    <a href="#!">
+                        <i class="la la-edit edit"></i>
+                    </a>
+                    <a href="#!">
+                        <i class="la la-trash delete"></i>
+                    </a>
+                </td>
+            </tr>
+            <tr class="hidden-row d-none">
+                <td colspan="2" style="text-align: left !important">Sub Detail</td>
+            </tr>
+            <tr>
+                <td class="hidden-row-toggle span-column"><i class="fas fa-plus-circle"></i></td>
+                <td>Main Detail 2</td>
+                <td>
+                    <i class="color-danger la la-close"></i>
+                </td>
+                <td class="text-nowrap td-actions span-column">
+                    <a href="#!">
+                        <i class="la la-info info"></i>
+                    </a>
+                    <a href="#!">
+                        <i class="la la-edit edit"></i>
+                    </a>
+                    <a href="#!">
+                        <i class="la la-trash delete"></i>
+                    </a>
+                </td>
+            </tr>
+            <tr class="hidden-row d-none">
+                <td colspan="2" style="text-align: left !important">Sub Detail 2</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-12">
+        <em class="text-caption mb-2">Sweet Alert
+            <span class="color-warning ml-3">***single pop-up only, for confirm pop-up please use modal instead</span>
+        </em>
+        <div class="block">
+            <div class="block__body">
+                <div class="row">
+                    <div class="col-6">
+                        <button id="js-alert-success" type="button" class="btn btn-mw-120 btn--success rounded">Success Alert</button>
+                        <button id="js-alert-error" type="button" class="btn btn-mw-120 btn--danger rounded">Error Alert</button>
+                        <button id="js-alert-warning" type="button" class="btn btn-mw-120 btn--warning rounded">Warning Alert</button>
+                        <button id="js-alert-info" type="button" class="btn btn-mw-120 btn--info rounded">Info Alert</button>
+                    </div>
+                    <div class="col-6">
+<script type="text/plain" class="language-markup">
+<button id="js-alert-success" type="button" class="btn btn-mw-120 btn--success rounded">Success Alert</button>
+<button id="js-alert-error" type="button" class="btn btn-mw-120 btn--danger rounded">Error Alert</button>
+<button id="js-alert-warning" type="button" class="btn btn-mw-120 btn--warning rounded">Warning Alert</button>
+<button id="js-alert-info" type="button" class="btn btn-mw-120 btn--info rounded">Info Alert</button>
+.
+.
+.
+[javascript]
+$(document).ready(function() {
+    //Sweet alert function
+    $('#js-alert-success').click(function() {
+        Alert.renderAlert("Success", "This is success alert.", "success");
+    })
+    $('#js-alert-error').click(function() {
+        Alert.renderAlert("Error", "This is error alert!", "error");
+    })
+    $('#js-alert-warning').click(function() {
+        Alert.renderAlert("Warning", "This is warning alert!", "warning");
+    })
+    $('#js-alert-info').click(function() {
+        Alert.renderAlert("Info", "This is info alert.", "info");
+    })
+})
+</script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <em class="text-caption mb-2">Wizard steps</em>
+        <form id="example-form-wizard">
+            <h3>Step I</h3>
+            <section>
+                <div class="block block--underline mb-0">
+                    <div class="block__title">
+                        <header class="color-primary">Step I</header>
+                    </div>
+                    <div class="block__body">
+                        <span>Step I - Forms and/or Contents</span>
+                    </div>
+                </div>
+            </section>
+
+            <h3>Select II</h3>
+            <section>
+                <div class="block block--underline mb-0">
+                    <div class="block__title">
+                        <header class="color-primary">Step II</header>
+                    </div>
+                    <div class="block__body">
+                        <span>Step II - Forms and/or Contents</span>
+                    </div>
+                </div>
+            </section>
+
+            <h3>Confirm</h3>
+            <section>
+                <div class="block block--underline mb-0">
+                    <div class="block__title">
+                        <header class="color-primary">Confirm</header>
+                    </div>
+                    <div class="block__body">
+                        <span>Confirm previous forms</span>
+                    </div>
+                </div>
+            </section>
+        </form>
+<script type="text/plain" class="language-markup"><form id="example-form-wizard">
+    <h3>Step I</h3>
+    <section>
+        <div class="block block--underline mb-0">
+            <div class="block__title">
+                <header class="color-primary">Step I</header>
+            </div>
+            <div class="block__body">
+                <span>Step I - Forms and/or Contents</span>
+            </div>
+        </div>
+    </section>
+
+    <h3>Select II</h3>
+    <section>
+        <div class="block block--underline mb-0">
+            <div class="block__title">
+                <header class="color-primary">Step II</header>
+            </div>
+            <div class="block__body">
+                <span>Step II - Forms and/or Contents</span>
+            </div>
+        </div>
+    </section>
+
+    <h3>Confirm</h3>
+    <section>
+        <div class="block block--underline mb-0">
+            <div class="block__title">
+                <header class="color-primary">Confirm</header>
+            </div>
+            <div class="block__body">
+                <span>Confirm previous forms</span>
+            </div>
+        </div>
+    </section>
+</form>
+.
+.
+.
+[javascript]
+$(document).ready(function() {
+    //Wizard steps function
+    var exampleForm = $('#example-form-wizard');
+
+    exampleForm.steps({
+        headerTag: "h3",
+        bodyTag: "section",
+        transitionEffect: "slideLeft",
+        onStepChanging: function (event, currentIndex, newIndex)
+        {
+            exampleForm.validate().settings.ignore = ":disabled,:hidden";
+            return exampleForm.valid();
+        },
+        onFinishing: function (event, currentIndex)
+        {
+            exampleForm.validate().settings.ignore = ":disabled";
+            return exampleForm.valid();
+        }
+    });
+})
+</script>
+    </div>
+</section>
+
+@section Modals {
+    <partial name="_DeleteRowConfirmModals" />
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('pre').addClass('h-35vh js-render-nicescroll')
+
+            //Mask input function
+            InputMask.renderTimeMask();
+            InputMask.renderNumberMask();
+
+            //Element Suggestion function
+            $('#js-search').on('keyup', function() {
+                let keywords = $(this).val();
+                InputSuggestion.elementSuggest(keywords, '.js-suggestion-parent');
+            })
+
+            //Nice scroll function
+            $(".js-render-nicescroll").niceScroll();
+
+            //Check list function
+            CheckList.renderCheckbox('.js-checklist-1');
+            CheckList.renderCheckAllBtn('.js-checklist-2', '#js-check-all')
+            CheckList.renderCheckbox('.js-checklist-3');
+            $('#checklist3-check-all').on('change', function() {
+                CheckList.renderCheckbox('.js-checklist-3');
+            })
+
+            //Multiple Select list function
+            MultiSelect.renderMultiSelectWithSearch('.js-multi-selectlist')
+            $(".ms-list").niceScroll();
+
+            //Row add able table
+            var inputTable = new RowAddAble({
+                TargetTable: '#js-row-add-able',
+                ButtonTitle: 'Add a New Row'
+            })
+            inputTable.RenderButton();
+
+            //Sweet alert function
+            $('#js-alert-success').click(function() {
+                Alert.renderAlert("Success", "This is success alert.", "success");
+            })
+            $('#js-alert-error').click(function() {
+                Alert.renderAlert("Error", "This is error alert!", "error");
+            })
+            $('#js-alert-warning').click(function() {
+                Alert.renderAlert("Warning", "This is warning alert!", "warning");
+            })
+            $('#js-alert-info').click(function() {
+                Alert.renderAlert("Info", "This is info alert.", "info");
+            })
+
+            //Wizard steps function
+            var exampleForm = $('#example-form-wizard');
+
+            exampleForm.steps({
+                headerTag: "h3",
+                bodyTag: "section",
+                transitionEffect: "slideLeft",
+                onStepChanging: function (event, currentIndex, newIndex)
+                {
+                    exampleForm.validate().settings.ignore = ":disabled,:hidden";
+                    return exampleForm.valid();
+                },
+                onFinishing: function (event, currentIndex)
+                {
+                    exampleForm.validate().settings.ignore = ":disabled";
+                    return exampleForm.valid();
+                }
+            });
+        })
+    </script>
+}

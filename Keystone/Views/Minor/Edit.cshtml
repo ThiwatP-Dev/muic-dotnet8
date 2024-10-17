@@ -1,0 +1,15 @@
+@model SpecializationGroup
+@{
+    ViewData["Title"] = "Edit Minor";
+ }
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <form class="ks-form container" asp-controller="Minor" asp-action="Edit" method="POST">
+                @Html.AntiForgeryToken()
+                <partial name="_Form"/>
+            </form>
+        </div>
+    </div>
+</section>

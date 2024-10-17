@@ -1,0 +1,52 @@
+@model List<RegistrationChangeCourseLogViewModel>
+@{
+    var index = 1;
+}
+<div class="table-responsive">
+    <table class="table table-bordered table-hover w-100x">
+        <thead>
+            <tr>
+                <th class="text-center">#</th>
+                <th>Previous Course</th>
+                <th>Changed Course</th>
+                <th class="text-center">Previous Star</th>
+                <th class="text-center">Changed Star</th>
+                <th class="text-center">Previous Transfer</th>
+                <th class="text-center">Changed Transfer</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@(index++)</td>
+                        <td>@item.Previous.CourseAndCredit</td>
+                        <td>@item.Changed.CourseAndCredit</td>
+                        <td>
+                            <partial name="_BooleanResult" model="@item.Previous.IsStarCourse"></partial>
+                        </td>
+                        <td>
+                            <partial name="_BooleanResult" model="@item.Changed.IsStarCourse"></partial>
+                        </td>
+                        <td>
+                            <partial name="_BooleanResult" model="@item.Previous.IsTransfer"></partial>
+                        </td>
+                        <td>
+                            <partial name="_BooleanResult" model="@item.Changed.IsTransfer"></partial>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td class="text-center" colspan="7">
+                        <i class="text-danger">No data</i>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

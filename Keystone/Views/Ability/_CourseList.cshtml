@@ -1,0 +1,67 @@
+@model List<CurriculumCourse>
+
+<section id="curriculum">
+	<div class="block pt-3 px-2">
+		<div id="study-plan-tab-content" class="tab-content">
+			<div id="nav-tab-0" class="tab-pane fadeIn faster animated show active" role="tabpanel">
+				<div class="d-flex flex-column">
+					<div class="block__body">
+						<div class="row form-group">
+							<div class="col-8 section-title">
+								<h4>Manage Courses</h4>
+							</div>
+							<div class="col-4 align-self-end text-right">
+								<a class="btn btn-mw-120 btn--primary" data-toggle="modal"
+									data-target="#ability-course-modal-create">
+									<i class="la la-plus mr-2"></i>
+									Add Course
+								</a>
+							</div>
+						</div>
+						<div class="form-group mt-4">
+							<table id="js-tuition-fee-table" class="table table-bordered w-100x">
+								<thead>
+									<tr>
+										<th class="text-center">Sequence</th>
+										<th>Name</th>
+										<th class="text-center">Must Take</th>
+										<th class="text-center">Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									@foreach (var item in Model)
+									{
+										<tr>
+											<td>@item.Sequence</td>
+											<td>@item.Course.CourseAndCredit</td>
+											<td class="text-center">
+												<partial name="_BooleanResult" model="@item.IsMustTake" />
+											</td>
+											<td class="text-nowrap td-actions">
+												<a data-toggle="modal" 
+													data-target="#ability-course-modal-edit"
+													data-curriculum-course-id="@item.Id"
+													data-sequence="@item.Sequence"
+													data-specialization-group-id="@item.CourseGroup.SpecializationGroupId">
+													<i class="la la-edit edit"></i>
+												</a>
+												<a data-toggle="modal" 
+													data-target="#delete-confirm-modal" 
+													data-controller="Ability"
+													data-action="DeleteCourse" 
+													data-value="@item.Id"
+													data-return-url="@ViewBag.ReturnUrl">
+													<i class="la la-trash delete"></i>
+												</a>
+											</td>
+										</tr>
+									}
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

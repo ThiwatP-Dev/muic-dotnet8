@@ -1,0 +1,46 @@
+<div id="active-modal" class="modal fadeIn animated" tabindex="-1" role="dialog"
+     aria-hidden="true" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+		<div class="modal-content">
+			<div class="block mb-0">
+				<div class="block__body">
+                    <form asp-action="Active" method="POST">
+                        <div class="block__title">
+                            <header>Active</header>
+                        </div>
+                        <div class="block__body">
+                            <div class="row form-group">
+                                <div class="col-4">
+                                    <input id="active" class="form-check-input" name="isActive" type="radio" value="true">
+                                    <label for="active">Active</label>
+                                </div>
+                                <div class="col-4">
+                                    <input id="inactive" class="form-check-input" name="isActive" type="radio" value="false">
+                                    <label for="inactive">Inactive</label>
+                                </div>
+                                <div class="col-4">
+                                    <input id="approved-at" class="form-control js-single-date" name="approvedAt" autocomplete="off">
+                                    <label for="approved-at">Approve Date</label>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-12">
+                                    <input id="remark" class="form-control" name="remark">
+                                    <label for="remark">Remark</label>
+                                </div>
+                            </div>
+                        </div>
+                        <input name="scholarshipId" type="hidden">
+                        <input name="studentId" type="hidden">
+                        <div class="block__action">
+                            <div class="block__action-row">
+                                <button id="js-save-status" class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+                                <a class="btn btn-mw-120 btn--cancel rounded" href="javascript:void(0);" data-dismiss="modal">Close</a>
+                            </div>
+                        </div>
+                    </form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

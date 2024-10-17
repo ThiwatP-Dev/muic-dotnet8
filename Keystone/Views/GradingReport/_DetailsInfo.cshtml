@@ -1,0 +1,66 @@
+@model GradingLogViewModel
+@{
+    var index = 1;
+}
+
+<div class="block block--underline mb-0">
+    <div class="block__title">
+		<header>List Grading Log</header>
+	</div>
+    
+    <div class="block__body">
+        <div class="form-group">
+            <div class="form-control-label d-flex align-items-center">Student</div>
+            <div class="form-control-plaintext text-wrap">@($"{ Model.StudentCode } : { Model.StudentName }")</div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-control-label d-flex align-items-center">Course</div>
+            <div class="form-control-plaintext text-wrap">@($"{ Model.Course } { (string.IsNullOrEmpty(Model.Section) ? string.Empty : $"({ Model.Section })") }")</div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover w-100x">
+                <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th class="text-center">Previous Grade</th>
+                        <th class="text-center">Current Grade</th>
+                        <th class="text-center">Updated Date</th>
+                        <th class="text-center">Updated By</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Details != null && Model.Details.Any())
+                    {
+                        foreach (var item in Model.Details) 
+                        {
+                            <tr>
+                                <td class="text-center">@index</td>
+                                <td class="text-center">@item.PreviousGrade</td>
+                                <td class="text-center">@item.CurrentGrade</td>
+                                <td class="text-center">@item.ApprovedAt</td>
+                                <td class="text-center">@item.ApprovedBy</td>
+                            </tr>
+                            ++index;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center">
+                                <i class="text-danger">No Data</i>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="block__action">
+        <div class="block__action-row">
+            <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-mw-120 btn--cancel rounded">Close</a>
+        </div>
+    </div>
+</div>

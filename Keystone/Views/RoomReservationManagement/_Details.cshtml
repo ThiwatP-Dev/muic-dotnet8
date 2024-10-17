@@ -1,0 +1,190 @@
+@model RoomReservationViewModel
+@{ 
+    ViewData["Title"] = "Room Reservation Detail"; 
+	var recordNumber = 1;
+}
+
+<div class="block block--underline">
+    <div class="block__title">
+		<header class="color-primary">@ViewData["Title"]</header>
+	</div>
+	<div class="block__body">
+		<div class="row form-group">
+			<div class="col-6">
+				<div class="form-control-label d-flex align-items-center"><b>Academic Level</b></div>
+				<div class="form-control-plaintext">@Model.AcademicLevelNameEn</div>
+			</div>
+			<div class="col-6">
+				<div class="form-control-label d-flex align-items-center"><b>Term</b></div>
+				<div class="form-control-plaintext">@Model.TermText</div>
+			</div>
+		</div>
+		<div class="row form-group">
+			<div class="col-6">
+				<div class="form-control-label d-flex align-items-center"><b>Name</b></div>
+				<div class="form-control-plaintext">@Model.Title</div>
+			</div>
+			<div class="col-6">
+				<div class="form-control-label d-flex align-items-center"><b>Phone Number</b></div>
+				<div class="form-control-plaintext">@Model.PhoneNumber</div>
+			</div>
+		</div>
+		<div class="row form-group">
+			<div class="col-6">
+				<div class="form-control-label d-flex align-items-center"><b>Email</b></div>
+				<div class="form-control-plaintext">@Model.Email</div>
+			</div>
+			<div class="col-6">
+				<div class="form-control-label d-flex align-items-center"><b>Room</b></div>
+				<div class="form-control-plaintext">@Model.Room</div>
+			</div>
+		</div>
+		<div class="row form-group">
+			<div class="col-6">
+				<div class="form-control-label d-flex align-items-center"><b>Sender Type</b></div>
+				<div class="form-control-plaintext">@Model.SenderTypeText</div>
+			</div>
+			<div class="col-6">
+				<div class="form-control-label d-flex align-items-center"><b>Using Type</b></div>
+				<div class="form-control-plaintext">@Model.UsingTypeText</div>
+			</div>
+		</div>
+		<div class="row form-group">
+			<div class="col-3">
+				<div class="form-control-label d-flex align-items-center"><b>Date From</b></div>
+				<div class="form-control-plaintext">@Model.DateFromText</div>
+			</div>
+			<div class="col-3">
+				<div class="form-control-label d-flex align-items-center"><b>Date To</b></div>
+				<div class="form-control-plaintext">@Model.DateToText</div>
+			</div>
+			<div class="col-3">
+				<div class="form-control-label d-flex align-items-center"><b>Start Time</b></div>
+				<div class="form-control-plaintext">@Model.StartedAtText</div>
+			</div>
+			<div class="col-3">
+				<div class="form-control-label d-flex align-items-center"><b>End Time</b></div>
+				<div class="form-control-plaintext">@Model.EndedAtText</div>
+			</div>
+		</div>
+		<div class="row form-group">
+			<div class="col-12">
+				<div class="form-control-label d-flex align-items-center"><b>Status</b></div>
+				<div class="form-control-plaintext"><partial name="_RoomReservationStatus" model="@Model.Status"></div>
+			</div>
+		</div>
+		<div class="row form-group">
+			<div class="col-12">
+				<div class="form-control-label d-flex align-items-center"><b>Description</b></div>
+				<div class="form-control-plaintext">@Model.Description</div>
+			</div>
+		</div>
+		<div class="row form-group">
+			<div class="col-12">
+				<div class="form-control-label d-flex align-items-center"><b>Remark</b></div>
+				<div class="form-control-plaintext">@Model.Remark</div>
+			</div>
+		</div>
+		<hr>
+	</div>
+	<div class="block__body">
+		<div class="section-title">
+			<h4>Repeat Day</h4>
+		</div>
+		<div class="row form-group">
+			<div class="col-3">
+				<div class="form-control-label d-flex align-items-center">Sunday</div>
+				<div class="form-control-plaintext">
+					<partial name="_BooleanResult" model="@Model.IsSunday">
+				</div>
+			</div>
+			<div class="col-3">
+				<div class="form-control-label d-flex align-items-center">Monday</div>
+				<div class="form-control-plaintext">
+					<partial name="_BooleanResult" model="@Model.IsMonday">
+				</div>
+			</div>
+			<div class="col-3">
+				<div class="form-control-label d-flex align-items-center">Tuesday</div>
+				<div class="form-control-plaintext">
+					<partial name="_BooleanResult" model="@Model.IsTuesday">
+				</div>
+			</div>
+			<div class="col-3">
+				<div class="form-control-label d-flex align-items-center">Wednesday</div>
+				<div class="form-control-plaintext">
+					<partial name="_BooleanResult" model="@Model.IsWednesday">
+				</div>
+			</div>
+		</div>
+		<div class="row form-group m-b-5">
+			<div class="col-3">
+				<div class="form-control-label d-flex align-items-center">Thursday</div>
+				<div class="form-control-plaintext">
+					<partial name="_BooleanResult" model="@Model.IsThursday">
+				</div>
+			</div>
+			<div class="col-3">
+				<div class="form-control-label d-flex align-items-center">Friday</div>
+				<div class="form-control-plaintext">
+					<partial name="_BooleanResult" model="@Model.IsFriday">
+				</div>
+			</div>
+			<div class="col-3">
+				<div class="form-control-label d-flex align-items-center">Saturday</div>
+				<div class="form-control-plaintext">
+					<partial name="_BooleanResult" model="@Model.IsSaturday">
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="block__body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover w-100x">
+                <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th>Room</th>
+                        <th class="text-center">Day</th>
+                        <th class="text-center">Date</th>
+                        <th class="text-center">Time</th>
+                        <th class="text-center">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Results.Any())
+                    {
+                        foreach (var item in Model.Results) 
+                        {
+                            <tr>
+                                <td class="text-center">@recordNumber</td>
+                                <td>@item.RoomNameEn</td>
+								<td class="text-center">@item.Dayofweek</td>
+								<td class="text-center">@item.DateText</td>
+                                <td class="text-center">@item.Time</td>
+                                <td class="text-center">
+                                    <partial name="_BooleanResult" model="@(!item.IsCancel)">
+                                </td>
+                            </tr>
+                            recordNumber++;
+                        }
+                    }
+                    else 
+                    {
+                        <tr>
+                            <td colspan="6"  class="text-center">
+                                <i class="text-danger">No Data</i>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+	<input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+    <div class="block__action">
+        <div class="block__action-row">
+            <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-mw-120 btn--cancel rounded">Close</a>
+        </div>
+    </div>
+</div>

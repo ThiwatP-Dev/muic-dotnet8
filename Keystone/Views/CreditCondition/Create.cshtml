@@ -1,0 +1,15 @@
+@model CreditCondition
+@{ 
+    ViewData["Title"] = "Add Credit Condition"; 
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <form class="ks-form container" asp-controller="CreditCondition" asp-action="Create" method="POST">
+                @Html.AntiForgeryToken()
+                <partial name="_Form"/>
+            </form>
+        </div>
+    </div>
+</section>

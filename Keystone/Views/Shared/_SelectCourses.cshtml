@@ -1,0 +1,41 @@
+@model List<ScheduleViewModel>
+@{
+    var index = 0;
+}
+
+@if (Model != null)
+{
+    foreach (var item in Model)
+    {
+        <tr>
+            <td class="text-uppercase">
+                <b>@item.CourseCode @item.CourseCreditText</b><br>
+                <b>@item.CourseName</b><br>
+                @item.MainInstructor
+            </td>
+            <td class="text-center">@item.Section</td>
+            <td class="text-center">@item.SectionType</td>
+            <td class="text-uppercase">
+                @foreach (var time in item.ScheduleTimes)
+                {
+                    <p>@time.DayOfWeek (@time.Time)</p>
+                }
+            </td>
+            <td class="text-center">@item.SeatLimit</td>
+            <td class="text-center">@item.SeatUsed</td>
+            <td class="text-center">@item.SeatAvailable</td>
+            <td>
+                <input id="@index" class="form-check-input js-checkbox-course" name="select-course" type="checkbox"
+                       data-course-id="@item.CourseId" data-section-id="@item.Id">
+                <label class="m-0" for="@index"></label>
+                <span class="js-get-course-name" hidden>@item.CourseName</span>
+                <span class="js-get-section-number" hidden>@item.Section</span>
+                <span class="js-get-course-code" hidden>@item.CourseCode</span>
+                <span class="js-get-course-credit" hidden>@item.CourseCreditText</span>
+                <span class="js-get-registration-credit" hidden>@item.RegistrationCourseCredit</span>
+                <span class="js-get-course-instructor" hidden>@item.MainInstructor</span>
+            </td>
+        </tr>
+        index++;
+    }
+}

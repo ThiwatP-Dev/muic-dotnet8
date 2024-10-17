@@ -1,0 +1,132 @@
+@model List<CourseGroupViewModel>
+
+@if (Model != null)
+{
+    <div class="table-responsive">
+        @foreach (var courseGroup in Model)
+        {
+            <table id="curriculum-export-@courseGroup.Sequence" class="table table-bordered table-hover w-100x">
+                <thead>
+                    <tr>
+                        <th colspan="4" style="text-align: left; background-color: #dee2e6;">@courseGroup.FullPathName?.ToUpper()</th>
+                        <th colspan="4" style="text-align: right; background-color: #dee2e6;">Total Credits: @courseGroup.RequiredCreditCompleted @(courseGroup.RequiredCreditCompleted > 1 ? "Credits" : "Credit")</th>
+                    </tr>
+                </thead>
+                @if (courseGroup.DescriptionEn != "" && courseGroup.DescriptionEn != null)
+                {
+                    <tr>
+                        <th colspan="8" style="white-space: pre-wrap; text-align: left; background-color: #dee2e6;">@courseGroup.DescriptionEn</th>
+                    </tr>
+                }
+
+                @if (courseGroup.Courses != null && courseGroup.Courses.Any())
+                {
+                    <thead>
+                        <tr>
+                            <th class="w-150" style="text-align: left; background-color: #dee2e6;">Code</th>
+                            <th style="text-align: left; background-color: #dee2e6;">Name</th>
+                            <th style="text-align: left; background-color: #dee2e6;">Course Equivalent</th>
+                            <th class="w-150" style="text-align: left; background-color: #dee2e6;">Credit</th>
+                            <th class="w-150" style="text-align: left; background-color: #dee2e6;">Passing Grade</th>
+                            <th class="w-100" style="text-align: left; background-color: #dee2e6;">Grade</th>
+                            <th class="w-150" style="text-align: left; background-color: #dee2e6;">Term</th>
+                            <th style="text-align: left; background-color: #dee2e6;">Remark</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (courseGroup.Courses != null)
+                        {
+                            foreach (var course in courseGroup.Courses) 
+                            {
+                                <tr style="border: 1px solid #dee2e6;">
+                                    <td>@course.CourseCode</td>
+                                    <td>@course.CourseNameEn</td>
+                                    <td>@course.CourseEquivalentName</td>
+                                    <td>@course.CreditText</td>
+                                    <td>@course.RequiredGradeName</td>
+                                    <td>
+                                        @foreach (var grade in course.Grades)
+                                        {
+                                            @if (grade.IsGradePublished)
+                                            {
+                                                <span>@grade.RegisteredGradeName</span><br/>
+                                            }
+                                            else 
+                                            {
+                                                <span class="text-danger">@grade.RegisteredGradeName</span><br/>
+                                            }
+                                        }
+                                    </td>
+                                    <td>
+                                        @foreach (var grade in course.Grades)
+                                        {
+                                            @if (grade.IsGradePublished)
+                                            {
+                                                <span>@grade.TermText</span><br/>
+                                            }
+                                            else 
+                                            {
+                                                <span class="text-danger">@grade.TermText</span><br/>
+                                            }
+                                        }
+                                    </td>
+                                    <td>@course.Remark</td>
+                                </tr>
+                            }
+                            <tr></tr>
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="7">
+                                    <i class="text-danger">No Data</i>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                }
+                else 
+                {
+                    <thead>
+                        <tr>
+                            <th class="w-150"></th>
+                            <th></th>
+                            <th></th>
+                            <th class="w-150"></th>
+                            <th class="w-150"></th>
+                            <th class="w-100"></th>
+                            <th class="w-100"></th>
+                            <th class="w-150"></th>
+                        </tr>
+                    </thead>
+                }
+                @* <tfoot>
+                    <tr style="background-color: #dee2e6;">
+                        <td colspan="8">Required Credits Completed: @courseGroup.RequiredCreditCompleted @(courseGroup.RequiredCreditCompleted > 1 ? "Credits" : "Credit")</td>
+                        @* <td colspan="3">Total Credits Completed: @courseGroup.TotalCreditsCompleted @(courseGroup.TotalCreditsCompleted > 1 ? "Credits" : "Credit")</td>
+                        <td colspan="2">
+                            @if (courseGroup.IsCompleted)
+                            {
+                                <div class="text-right">
+                                    <span>Status:</span>
+                                    <span class="ks-label bg-success mx-3 mb-1">Completed</span>
+                                </div>
+                            }
+                            else 
+                            {
+                                <div class="text-right">
+                                    <span>Status:</span>
+                                    <span class="ks-label bg-danger mx-3 mb-1">Pending</span>
+                                </div>
+                            }
+                        </td> 
+                    </tr>
+                </tfoot> *@
+            </table>
+            @if (courseGroup.Children != null && courseGroup.Children.Any())
+            {
+                <partial name="_CourseGroupVerification" model="@courseGroup.Children" />
+            }
+        }
+    </div>
+}

@@ -1,0 +1,136 @@
+@model PagedResult<ResponseViewModel>
+@{ 
+    ViewData["Title"] = "Response"; 
+    var recordNumber = Model?.FirstRowOnPage;
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Response</header>
+            </div>
+
+            <div class="block__body">
+                <form asp-controller="Response" asp-action="Index" class="form-horizontal" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group m-b-30">
+                        <div class="col-4">
+                            <select class="chosen-select form-control"
+                                    asp-items="ViewBag.Questionnaires" asp-for="Criteria.QuestionnaireId">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Questionnaire</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control"
+                                    asp-items="ViewBag.ResponseTypes" asp-for="Criteria.ResponseType">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Response Type</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-academic-level"
+                                    asp-items="ViewBag.AcademicLevels" asp-for="Criteria.AcademicLevelId">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Academic Level<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-2">
+                            <select class="chosen-select form-control js-cascade-term"
+                                    asp-items="ViewBag.Terms" asp-for="Criteria.TermId">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Term<span class="text-danger">*</span></label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group mb-0">
+                        <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-course"
+                                    asp-items="ViewBag.Courses" asp-for="Criteria.CourseId">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Course</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-section"
+                                    asp-items="ViewBag.Sections" asp-for="Criteria.SectionId">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Section</label>
+                        </div>
+                        <div class="col-5 align-self-end text-right text-nowrap">
+                            <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">
+                                <i class="la la-search mr-2"></i>
+                                <span class="bold">Search</span>
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.RowCount ?? 0))</header>
+            </div>
+            
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover w-100x">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th>English Name</th>
+                                <th>Thai Name</th>
+                                <th class="text-center">Question Group</th>
+                                <th class="text-center">Question</th>
+                                <th class="text-center">Response</th>
+                                <th class="text-center">Percentage</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Results.Any())
+                            {
+                                foreach (var item in Model.Results) 
+                                {
+                                    <tr>
+                                        <td>@recordNumber</td>
+                                        <td>@item.NameEn</td>
+                                        <td>@item.NameTh</td>
+                                        <td>@item.QuestionGroupCount</td>
+                                        <td>@item.QuestionCount</td>
+                                        <td>@item.Response</td>
+                                        <td>@item.PercentageText</td>
+                                        <td class="text-nowrap td-actions">
+                                            <a asp-controller="Response">
+                                                <i class="la la-info info"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    recordNumber++;
+                                }
+                            }
+                            else 
+                            {
+                                <tr>
+                                    <td colspan="8" class="text-center">No Data</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @(await Component.InvokeAsync<PagerViewComponent>(Model))
+    </div>
+</section>

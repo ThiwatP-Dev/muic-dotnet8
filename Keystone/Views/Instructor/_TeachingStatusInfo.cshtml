@@ -1,0 +1,84 @@
+@model Instructor
+@{
+    var index = 1;
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+
+@if (Model != null && Model.InstructorTeachingStatuses != null)
+{
+    foreach (var item in Model.InstructorTeachingStatuses)
+    {
+        <div class="row">
+            <div class="col-12">
+                <div id="teaching-status-accordion@(index)">
+                    <div class="block">
+                        <div class="block__title collapsed" data-toggle="collapse" data-parent="#teaching-status-accordion@(index)" data-target="#teaching-status-accordion@(index)-@(index)">
+                            <header>@item.Term</header>
+                            <div class="tools">
+                                <div class="btn-group">
+                                    <a class="btn btn--white btn--circle">
+                                        <i class="la la-angle-down"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="teaching-status-accordion@(index)-@(index)" class="collapse" aria-expanded="true">
+                            <div class="block__body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">Code</th>
+                                            <th>Course</th>
+                                            <th class="text-center">Section</th>
+                                            <th class="text-center">Date-Time</th>
+                                            <th class="text-center">Room</th>
+                                            <th class="text-center">Midterm</th>
+                                            <th class="text-center">Final</th>
+                                            <th class="text-center">Close</th>
+                                            <th class="text-center">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var instructorSection in item.InstructorTeachingDetails)
+                                        {
+                                            <tr>
+                                                <td>@instructorSection.CourseCode</td>
+                                                <td>@instructorSection.CourseName</td>
+                                                <td>@instructorSection.Section</td>
+                                                <td>
+                                                    <partial name="_StringLoop" model="@instructorSection.SectionDetails"></partial>
+                                                </td>
+                                                <td>
+                                                    <partial name="_StringLoop" model="@instructorSection.Rooms"></partial>
+                                                </td>
+                                                <td>@instructorSection.Midterm</td>
+                                                <td>@instructorSection.Final</td>
+                                                <td>
+                                                    <partial name="_BooleanCheck" model="@instructorSection.IsClosed">
+                                                </td>
+                                                <td class="text-nowrap td-actions">
+                                                    <a asp-controller="QuestionnaireReport"
+                                                    asp-action="Index"
+                                                    asp-route-AcademicLevelId="@instructorSection.AcademicLevelId"
+                                                    asp-route-TermId="@instructorSection.TermId"
+                                                    asp-route-CourseId="@instructorSection.CourseId"
+                                                    asp-route-SectionId="@instructorSection.SectionId"
+                                                    asp-route-ReturnUrl="@contextPath"
+                                                    asp-route-Summary="s">
+                                                       <i class="fas fa-star"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        ++index;
+    }
+}

@@ -1,0 +1,350 @@
+@model StudentRegistrationCoursesViewModel
+@{
+    var index = 1;
+}
+@if(Model != null)
+{
+    @foreach (var item in Model.TransferCourse)
+    {
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel-group" id="registration-course-accordion@(index)">
+                    <div class="block">
+                        <div class="block__title collapsed" data-toggle="collapse" data-parent="#registration-course-accordion@(index)" data-target="#registration-course-accordion@(index)-@(index)">
+                            <header>Transfer</header>
+                            <div class="tools">
+                                <div class="btn-group">
+                                    <a class="btn btn--white btn--circle">
+                                        <i class="la la-angle-down"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="registration-course-accordion@(index)-@(index)" class="collapse" aria-expanded="true">
+                            <div class="block__body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">Code</th>
+                                            <th>Course</th>
+                                            <th class="text-center">Credit</th>
+                                            <th class="text-center">Grade</th>
+                                            <th class="text-center">Grade Published</th>
+                                            <th class="text-center">Paid</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var registrationCourse in item.RegistrationCourses)
+                                        {
+                                            <tr>
+                                                <td>@registrationCourse.Course?.Code</td>
+                                                <td>@registrationCourse.Course?.NameEn</td>
+                                                <td>@registrationCourse.Course?.CreditText</td>
+                                                <td>@(string.IsNullOrEmpty(registrationCourse.GradeName) ? registrationCourse.GradeName : registrationCourse.GradeName.ToUpper() + (registrationCourse.IsStarCourse ? "*" : ""))</td>
+                                                <td>
+                                                    <partial name="_BooleanResult" model="@registrationCourse.IsGradePublished"></partial>
+                                                </td>
+                                                <td>
+                                                    <partial name="_BooleanResult" model="@registrationCourse.IsPaid"></partial>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td class="text-center"><b>Total Transfer Credit</b></td>
+                                            <td class="text-center"><b>@item.TotalCreditText</b></td>
+                                        </tr>
+                                    </tfoot> 
+                                </table>
+
+                                @if (item.RegistrationLogs != null && item.RegistrationLogs.Any())
+                                {
+                                    <div>
+                                        <header>Registration Logs</header>
+                                    </div>
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th rowspan="2" class="w-25">#</th>
+                                                <th>Channel</th>
+                                                @* <th class="text-center w-100">Round</th> *@
+                                                <th class="text-center w-200">Date</th>
+                                                <th class="text-center w-300">Created By</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @{
+                                                var logIndex = 1;
+                                                foreach (var registrationLog in item.RegistrationLogs)
+                                                {
+                                                    <tr>
+                                                        <td rowspan="2">@logIndex</td>
+                                                        <td>@registrationLog.ChannelText</td>
+                                                        @* <td>@registrationLog.Round</td> *@
+                                                        <td>@registrationLog.CreatedAtText</td>
+                                                        <td>@registrationLog.CreatedByFullNameEn</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="font-size-95x" colspan="4">
+                                                            <b>New Course: </b>@registrationLog.NewCourse<br>
+                                                            <b>Retained Course: </b>@registrationLog.RetainedCourse<br>
+                                                            <b>Discarded Course: </b>@registrationLog.DiscardedCourse<br>
+                                                            <b>Summary Course: </b>@registrationLog.Summary
+                                                        </td>
+                                                    </tr>
+                                                    ++logIndex;
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        ++index;
+    }
+
+    @foreach (var item in Model.TransferCourseWithGrade)
+    {
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel-group" id="registration-course-accordion@(index)">
+                    <div class="block">
+                        <div class="block__title collapsed" data-toggle="collapse" data-parent="#registration-course-accordion@(index)" data-target="#registration-course-accordion@(index)-@(index)">
+                            <header>Transfer With Grade</header>
+                            <div class="tools">
+                                <div class="btn-group">
+                                    <a class="btn btn--white btn--circle">
+                                        <i class="la la-angle-down"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="registration-course-accordion@(index)-@(index)" class="collapse" aria-expanded="true">
+                            <div class="block__body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">Code</th>
+                                            <th>Course</th>
+                                            <th class="text-center">Credit</th>
+                                            <th class="text-center">Grade</th>
+                                            <th class="text-center">Grade Published</th>
+                                            <th class="text-center">Paid</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var registrationCourse in item.RegistrationCourses)
+                                        {
+                                            <tr>
+                                                <td>@registrationCourse.Course?.Code</td>
+                                                <td>@registrationCourse.Course?.NameEn</td>
+                                                <td>@registrationCourse.Course?.CreditText</td>
+                                                <td>@(string.IsNullOrEmpty(registrationCourse.GradeName) ? registrationCourse.GradeName : registrationCourse.GradeName.ToUpper() + (registrationCourse.IsStarCourse ? "*" : ""))</td>
+                                                <td>
+                                                    <partial name="_BooleanResult" model="@registrationCourse.IsGradePublished"></partial>
+                                                </td>
+                                                <td>
+                                                    <partial name="_BooleanResult" model="@registrationCourse.IsPaid"></partial>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td class="text-center"><b>Term Credit Completed</b></td>
+                                            <td class="text-center"><b>@item.TotalCreditText</b></td>
+                                            <td class="text-center"><b>Term Registration Credit</b></td>
+                                            <td class="text-center"><b>@item.TotalRegistrationCreditText</b></td>
+                                            <td class="text-center"><b>GPA</b></td>
+                                            <td class="text-center" colspan="1"><b>@item.TermGPAText</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-center"><b>Total Credit Completed</b></td>
+                                            <td class="text-center"><b>@item.TotalCreditText</b></td>
+                                            <td class="text-center"><b>Total Registration Credit</b></td>
+                                            <td class="text-center"><b>@item.TotalRegistrationCreditText</b></td>
+                                            <td class="text-center"><b>CGPA</b></td>
+                                            <td class="text-center" colspan="1"><b>@item.CumulativeGPAText</b></td>
+                                        </tr>
+                                    </tfoot> 
+                                </table>
+
+                                @if (item.RegistrationLogs != null && item.RegistrationLogs.Any())
+                                {
+                                    <div>
+                                        <header>Registration Logs</header>
+                                    </div>
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th rowspan="2" class="w-25">#</th>
+                                                <th>Channel</th>
+                                                @* <th class="text-center w-100">Round</th> *@
+                                                <th class="text-center w-200">Date</th>
+                                                <th class="text-center w-300">Created By</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @{
+                                                var logIndex = 1;
+                                                foreach (var registrationLog in item.RegistrationLogs)
+                                                {
+                                                    <tr>
+                                                        <td rowspan="2">@logIndex</td>
+                                                        <td>@registrationLog.ChannelText</td>
+                                                        @* <td>@registrationLog.Round</td> *@
+                                                        <td>@registrationLog.CreatedAtText</td>
+                                                        <td>@registrationLog.CreatedByFullNameEn</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="font-size-95x" colspan="4">
+                                                            <b>New Course: </b>@registrationLog.NewCourse<br>
+                                                            <b>Retained Course: </b>@registrationLog.RetainedCourse<br>
+                                                            <b>Discarded Course: </b>@registrationLog.DiscardedCourse<br>
+                                                            <b>Summary Course: </b>@registrationLog.Summary
+                                                        </td>
+                                                    </tr>
+                                                    ++logIndex;
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        ++index;
+    }
+
+    @foreach (var item in Model.TranscriptGrade)
+    {
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel-group" id="registration-course-accordion@(index)">
+                    <div class="block">
+                        <div class="block__title collapsed" data-toggle="collapse" data-parent="#registration-course-accordion@(index)" data-target="#registration-course-accordion@(index)-@(index)">
+                            <header>@item.Term</header>
+                            <div class="tools">
+                                <div class="btn-group">
+                                    <a class="btn btn--white btn--circle">
+                                        <i class="la la-angle-down"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="registration-course-accordion@(index)-@(index)" class="collapse" aria-expanded="true">
+                            <div class="block__body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">Code</th>
+                                            <th>Course</th>
+                                            <th class="text-center">Credit</th>
+                                            <th class="text-center">Section</th>
+                                            <th class="text-center">Grade</th>
+                                            <th class="text-center">Grade Published</th>
+                                            <th class="text-center">Paid</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var registrationCourse in item.RegistrationCourses)
+                                        {
+                                            <tr>
+                                                <td>@registrationCourse.Course?.Code</td>
+                                                <td>@registrationCourse.Course?.NameEn</td>
+                                                <td>@registrationCourse.Course?.CreditText</td>
+                                                <td>@registrationCourse.Section?.Number</td>
+                                                <td>@(string.IsNullOrEmpty(registrationCourse.GradeName) ? registrationCourse.GradeName : registrationCourse.GradeName.ToUpper() + (registrationCourse.IsStarCourse ? "*" : ""))</td>
+                                                <td>
+                                                    <partial name="_BooleanResult" model="@registrationCourse.IsGradePublished"></partial>
+                                                </td>
+                                                <td>
+                                                    <partial name="_BooleanResult" model="@registrationCourse.IsPaid"></partial>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td></td>
+                                            <td class="text-center"><b>Term Credit Completed</b></td>
+                                            <td class="text-center"><b>@item.TotalCreditText</b></td>
+                                            <td class="text-center"><b>Term Registration Credit</b></td>
+                                            <td class="text-center"><b>@item.TotalRegistrationCreditText</b></td>
+                                            <td class="text-center"><b>GPA</b></td>
+                                            <td class="text-center" colspan="1"><b>@item.TermGPAText</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td class="text-center"><b>Total Credit Completed</b></td>
+                                            <td class="text-center"><b>@item.CumulativeCreditCompText</b></td>
+                                            <td class="text-center"><b>Total Registration Credit</b></td>
+                                            <td class="text-center"><b>@item.CumulativeCreditRegisText</b></td>
+                                            <td class="text-center"><b>CGPA</b></td>
+                                            <td class="text-center" colspan="1"><b>@item.CumulativeGPAText</b></td>
+                                        </tr>
+                                    </tfoot> 
+                                </table>
+
+                                @if (item.RegistrationLogs != null && item.RegistrationLogs.Any())
+                                {
+                                    <div>
+                                        <header>Registration Logs</header>
+                                    </div>
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th rowspan="2" class="w-25">#</th>
+                                                <th>Channel</th>
+                                                @* <th class="text-center w-100">Round</th> *@
+                                                <th class="text-center w-200">Date</th>
+                                                <th class="text-center w-300">Created By</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @{
+                                                var logIndex = 1;
+                                                foreach (var registrationLog in item.RegistrationLogs)
+                                                {
+                                                    <tr>
+                                                        <td rowspan="2">@logIndex</td>
+                                                        <td>@registrationLog.ChannelText</td>
+                                                        @* <td>@registrationLog.Round</td> *@
+                                                        <td>@registrationLog.CreatedAtText</td>
+                                                        <td>@registrationLog.CreatedByFullNameEn</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="font-size-95x" colspan="4">
+                                                            <b>New Course: </b>@registrationLog.NewCourse<br>
+                                                            <b>Retained Course: </b>@registrationLog.RetainedCourse<br>
+                                                            <b>Discarded Course: </b>@registrationLog.DiscardedCourse<br>
+                                                            <b>Summary Course: </b>@registrationLog.Summary
+                                                        </td>
+                                                    </tr>
+                                                    ++logIndex;
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        ++index;
+    }
+}

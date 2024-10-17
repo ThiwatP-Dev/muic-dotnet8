@@ -1,0 +1,73 @@
+@model PredefinedCourse
+
+<div class="block__title">
+    <header>@ViewData["Title"]</header>
+</div>
+
+<div class="block__body">
+    <div class="row form-group">
+        <div class="col-12">
+            <select class="chosen-select form-control js-cascade-academic-level" asp-for="AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                <option selected disabled>Select</option>
+            </select>
+            <label>Academic Level<span class="text-danger">*</span></label>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-6">
+            <select class="chosen-select form-control js-cascade-curriculum" asp-for="CurriculumId" asp-items="ViewBag.Curriculums">
+                <option selected disabled>Select</option>
+            </select>
+            <label>Curriculum<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-6">
+            <select class="chosen-select form-control js-cascade-curriculum-version" asp-for="CurriculumVersionId" asp-items="ViewBag.CurriculumVersions">
+                <option selected disabled>Select</option>
+            </select>
+            <label>Curriculum Version<span class="text-danger">*</span></label>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-6">
+            <select class="chosen-select form-control js-cascade-course" asp-for="FirstCourseId" asp-items="ViewBag.Courses">
+                <option selected disabled>Select</option>
+            </select>
+            <label>First Course<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-6">
+            <select class="chosen-select form-control" asp-for="GradeId" asp-items="ViewBag.Grades">
+                <option selected value="">Select</option>
+            </select>
+            <label>Grade</label>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-6">
+            <select class="chosen-select form-control js-cascade-course" asp-for="SecondCourseId" asp-items="ViewBag.Courses">
+                <option selected disabled>Select</option>
+            </select>
+            <label>Second Course<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-6">
+            <select class="chosen-select form-control" asp-for="RequiredType" asp-items="ViewBag.RequiredTypes"></select>
+            <label>Reruired Type<span class="text-danger">*</span></label>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-6">
+            <input class="form-control js-single-date" asp-for="ExpiredAt" type="text" autocomplete="off">
+            <label>Expired Date</label>
+        </div>
+
+        <input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+
+        <div class="col-6 align-self-end text-right">
+            <button class="btn btn-mw-120 btn--primary" asp-route-returnUrl="@ViewBag.ReturnUrl" type="submit">Save</button>
+            <a class="btn btn-mw-120 btn--cancel" href="@ViewBag.ReturnUrl">Cancel</a>
+        </div>
+    </div>
+</div>

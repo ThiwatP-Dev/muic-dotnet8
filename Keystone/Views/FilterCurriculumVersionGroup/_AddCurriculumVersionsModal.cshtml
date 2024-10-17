@@ -1,0 +1,95 @@
+@model FilterCurriculumVersionGroupViewModel
+
+<div id="add-filter-curriculum-version-modal" class="modal fadeIn animated" tabindex="-1"
+     aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <section class="row">
+                <div class="col-12">
+                    <div class="block block--underline mb-0">
+                        <div class="block__title">
+                            <header>Add Curriculum Version</header>
+                        </div>
+
+                        <div class="block__body">
+                            <form id="filter-curriculum-version-group" class="ks-form container" asp-controller="FilterCurriculumVersionGroup" asp-action="Create" method="GET">
+                                @Html.AntiForgeryToken()
+                                <div class="row form-group m-b-30">
+                                    <div class="col-3">
+                                        <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                                            <option selected disabled>Select</option>
+                                        </select>
+                                        <label>Academic Level<span class="text-danger">*</span></label>
+                                    </div>
+                                    <div class="col-3">
+                                        <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="ViewBag.Faculties">
+                                            <option selected value="">Select</option>
+                                        </select>
+                                        <label>Division</label>
+                                    </div>
+                                    <div class="col-3">
+                                        <select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentId" asp-items="ViewBag.Departments">
+                                            <option selected value="">Select</option>
+                                        </select>
+                                        <label>Major</label>
+                                    </div>
+                                    <div class="col-3">
+                                        <select class="chosen-select form-control js-cascade-curriculum" asp-for="Criteria.CurriculumId" asp-items="ViewBag.Curriculums">
+                                            <option selected value="">Select</option>
+                                        </select>
+                                        <label>Curriculum</label>
+                                    </div>
+                                </div>
+
+                                <input name="filterCurriculumVersionGroupId" value="@Model.Id" type="hidden">
+
+                                <div class="form-group">
+                                    <div class="col-12 text-right align-self-end text-nowrap">
+                                        <button class="btn btn--primary btn-mw-120 mb-0 m-r-5 js-button-search" type="button">
+                                            <i class="la la-search mr-2"></i>Search
+                                        </button>
+                                        <a class="btn btn-mw-120 btn--cancel" data-dismiss="modal">Cancel</a>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <hr class="filter-curriculum-version-group-none" />
+
+                            <form class="ks-from container" asp-controller="FilterCurriculumVersionGroup" asp-action="AddCurriculumVersions" method="POST">
+                                @Html.AntiForgeryToken()
+                                <div class="filter-curriculum-version-group-none" class="form-group">
+                                    <div class="block__action-row m-b-30">
+                                        <input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+                                        <input asp-for="@Model.Criteria.AcademicLevelId" type="hidden">
+                                        <input asp-for="@Model.Criteria.FacultyId" type="hidden">
+                                        <input asp-for="@Model.Criteria.DepartmentId" type="hidden">
+                                        <input asp-for="@Model.Criteria.CurriculumId" type="hidden">
+                                        <input asp-for="@Model.Id" type="hidden">
+                                        <button class="btn btn-mw-120 btn--primary js-save-button" type="submit">Save</button>
+                                        <a class="btn btn-mw-120 btn--cancel" data-dismiss="modal">Cancel</a>
+                                    </div>
+                                </div>
+
+                                <div id="filter-curriculum-version-select">
+                                    <partial name="_FormCurriculumVersionSelect" model="new FilterCurriculumVersionGroupViewModel()">
+                                </div>
+
+                                <div class="filter-curriculum-version-group-none" class="form-group">
+                                    <div class="block__action-row m-b-30">
+                                        <input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+                                        <input asp-for="@Model.Criteria.AcademicLevelId" type="hidden">
+                                        <input asp-for="@Model.Criteria.FacultyId" type="hidden">
+                                        <input asp-for="@Model.Criteria.DepartmentId" type="hidden">
+                                        <input asp-for="@Model.Id" type="hidden">
+                                        <button class="btn btn-mw-120 btn--primary js-save-button" type="submit">Save</button>
+                                        <a class="btn btn-mw-120 btn--cancel" data-dismiss="modal">Cancel</a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,107 @@
+@model List<CurriculumCourse>
+@{
+    var curriculumId = Model.FirstOrDefault()?.CurriculumVersionId;
+    var minorId = Model.FirstOrDefault()?.SpecializationGroupType == "m" ? Model.FirstOrDefault()?.SpecializationGroupId : null;
+    var concentrationId = Model.FirstOrDefault()?.SpecializationGroupType == "c" ? Model.FirstOrDefault()?.SpecializationGroupId : null;
+}
+<div class="block__title">
+    <header>
+        @ViewData["Title"]
+    </header>
+</div>
+
+<div class="block__body">
+    <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+    
+    <div class="form-group">
+        <input class="js-curriculum-version-id" type="hidden" value="@curriculumId">
+        <table id="js-course-group" class="table table-bordered">
+            <thead>
+                <tr>
+                    <th class="text-center w-50">#</th>
+                    <th>Course</th>
+                    <th class="text-center w-200">Minimum Grade</th>
+                    <th class="text-center w-100">Required</th>
+                    <th class="text-center w-200">Grade Template</th>
+                    <th class="text-center w-85">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Any())
+                {
+                    @for (var i = 0; i < Model.Count(); i++)
+                    {
+                        <tr>
+                            <td class="text-center w-75">
+                                @(i + 1)
+                                <input asp-for="@Model[i].SpecializationGroupId" type="hidden">
+                                <input asp-for="@Model[i].SpecializationGroupType" type="hidden">
+                            </td>
+                            <td>
+                                <select class="chosen-select" asp-for="@Model[i].CourseId" asp-items="ViewBag.Courses" data-placeholder="Select">
+                                    <option selected disabled>Select</option>
+                                </select>
+                            </td>
+                            <td class="w-100">
+                                <select class="chosen-select js-required-grade" asp-for="@Model[i].RequiredGradeId" asp-items="ViewBag.Grades" data-placeholder="Select">
+                                    <option selected value="">Select</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="chosen-select js-is-required" asp-for="@Model[i].IsRequired" asp-items="ViewBag.YesNoAnswer" data-placeholder="Select"></select>
+                            </td>
+                            <td class="w-100">
+                                <select class="chosen-select" asp-for="@Model[i].GradeTemplateId" asp-items="ViewBag.GradeTemplates" data-placeholder="Select"></select>
+                            </td>
+                            <td class="text-nowrap td-actions">
+                                <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                    <i class="la la-trash delete"></i>
+                                </a>
+                            </td>
+                            <input asp-for="@Model[i].CourseGroupId" type="hidden">
+                            <input class="js-curriculum-version-id-course" asp-for="@Model[i].CurriculumVersionId" type="hidden">
+                            <input class="js-course-child" asp-for="@Model[i].Id" type="hidden">
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td class="text-center w-75">
+                            1
+                            <input asp-for="@Model[0].SpecializationGroupId" type="hidden">
+                            <input asp-for="@Model[0].SpecializationGroupType" type="hidden">
+                        </td>
+                        <td>
+                            <select class="chosen-select" asp-for="@Model[0].CourseId" asp-items="ViewBag.Courses" data-placeholder="Select"></select>
+                        </td>
+                        <td class="w-100">
+                            <select class="chosen-select js-required-grade" asp-for="@Model[0].RequiredGradeId" asp-items="ViewBag.Grades" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select class="chosen-select js-is-required" asp-for="@Model[0].IsRequired" data-placeholder="Select" asp-items="ViewBag.YesNoAnswer"></select>
+                        </td>
+                        <td class="text-nowrap td-actions">
+                            <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                <i class="la la-trash delete"></i>
+                            </a>
+                        </td>
+                        <input asp-for="@Model[0].CourseGroupId" type="hidden" value="@Model[0].CourseGroupId">
+                        <input asp-for="@Model[0].CurriculumVersionId" type="hidden">
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+
+<div class="block__action container">
+    <div class="block__action-row">
+        <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+        <a class="btn btn-mw-120 btn--cancel" href="@ViewBag.ReturnUrl">Cancel</a>
+    </div>
+</div>

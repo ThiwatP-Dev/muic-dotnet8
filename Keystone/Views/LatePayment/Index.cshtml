@@ -1,0 +1,123 @@
+@model LatePaymentViewModel
+@{
+	ViewData["Title"] = "Late Payment";
+}
+
+@if (!string.IsNullOrEmpty(ViewBag.ReturnUrl))
+{
+    <div class="row">
+        <div class="ks-page-header col-12">
+            <a class="btn-back" href="@ViewBag.ReturnUrl">
+                <i class="la la-angle-double-left mr-2"></i>Back
+            </a>
+        </div>
+    </div>
+}
+
+<section>
+    <div class="block block--underline">
+    	<div class="block__title">
+    		<header>@ViewData["Title"]</header>
+    	</div>
+
+        <div class="block__body">
+            <form asp-action="Index">
+                <div class="row form-group mb-0">
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-academic-level" asp-for="AcademicLevelId" asp-items="@ViewBag.AcademicLevels">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Academic Level<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-term" asp-for="TermId" asp-items="@ViewBag.Terms">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Term<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-6 align-self-end">
+                        <button class="btn btn-mw-120 btn--primary mb-0" type="submit">
+                            <i class="la la-search mr-2"></i>Search
+                        </button>
+                    </div> 
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<section>
+    @if (Model.TermId.HasValue)
+    {
+        <div id="late-payment-accordion1" class="panel-group">
+            <div class="block block--underline">
+                <div class="block__title collapsed" data-toggle="collapse" data-parent="#late-payment-accordion1" data-target="#late-payment-accordion1-1">
+                    <header id="js-toggle-header">Add Student</header>
+                    <div class="tools">
+                        <div class="btn-group">
+                            <a class="btn btn--white btn--circle">
+                                <i class="la la-angle-down"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+    
+                <div id="late-payment-accordion1-1" class="collapse show" aria-expanded="true">
+                    <div class="block__body">
+                        <form class="form-horizontal" asp-controller="LatePayment" asp-action="Index" method="GET">
+                            <div class="row form-group m-b-30">
+                                <div class="col-4">
+                                    <select class="chosen-select form-control" asp-for="StudentId" asp-items="@ViewBag.Students" data-placeholder="select">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Student<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-2">
+                                    <select class="chosen-select form-control" asp-for="Type" asp-items="@ViewBag.Types" data-placeholder="select">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Type<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-2">
+                                    <input class="form-control js-single-date" asp-for="ApprovedAt" type="text" autocomplete="off">
+                                    <label>Approved Date<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-4">
+                                    <select class="chosen-select form-control" asp-for="ApprovedBy" asp-items="@ViewBag.Signatories" data-placeholder="select" autocomplete="off">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Approved By<span class="text-danger">*</span></label>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-10">
+                                    <input class="form-control" asp-for="Remark">
+                                    <label>Remark</label>
+                                </div>
+                                <div class="col-2 align-self-end">
+                                    <a id="js-create-late-payment" class='btn btn-mw-120 btn--primary' href="#!">Save</a>
+                                </div>
+                            </div>
+                            <input asp-for="CreatedAt" type="hidden">
+                            <input asp-for="CreatedBy" type="hidden">
+                            <input asp-for="Id" type="hidden">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        <div id="flash-message"></div>
+        <div id="LatePaymentDetails">
+            <partial name="_LatePaymentDetails" model="@Model.LatePayments">
+        </div>
+    }
+</section>
+
+@section Modals {
+    <partial name="_DeleteConfirmModals">
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/late-payment.js"></script>
+}

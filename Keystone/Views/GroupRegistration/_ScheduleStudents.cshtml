@@ -1,0 +1,15 @@
+@model GroupRegistrationViewModel
+
+@if (Model != null && Model.RegistrableScheduleStudents != null)
+{
+    <div class="col-12 p-0 my-4">
+        <h4 class="d-flex justify-content-between"></h4>
+
+        <ul class="js-section-table">
+            @foreach (var item in Model.RegistrableScheduleStudents)
+            {
+                <li>@(item.CodeAndName)</li>      
+            }
+        </ul>
+    </div>
+}

@@ -1,0 +1,70 @@
+@{
+	ViewData["Title"] = "Ethic";
+}
+
+<div class="block block--underline">
+	<div class="block__title">
+		<header>Search Ethic</header>
+	</div>
+
+    <div class="block__body">
+        <form asp-action="Index">
+            <div class="row form-group mb-0">
+                <div class="col-3">
+                    <select class="chosen-select form-control">
+                        <option selected disabled>Select</option>
+                    </select>
+                    <label>Term</label>
+                </div>
+
+                <div class="col-3">
+                    <select class="chosen-select form-control">
+                        <option selected disabled>Select</option>
+                    </select>
+                    <label>Course</label>
+                </div>
+
+                <div class="col-6 align-self-end">
+                    <button class="btn btn--primary btn-mw-120 mb-0 m-r-5" type="submit">
+                        <i class="la la-search mr-2"></i>Search
+                    </button>
+                    <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="button">
+                        Reset
+                    </button>
+                </div> 
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="block block--underline">
+    <div class="block__title d-flex justify-content-between align-items-center">
+        <header class="mr-auto">Section List (0)</header>
+        <button class="btn btn-mw-120 btn--success mr-4 mb-0" type="button"><i class="la la-upload"></i> Upload Excel</button>
+    </div>
+
+	<div class="block__body table-responsive">
+        <form>
+            <table id="js-ethic-search" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th class="text-center">Section</th>
+                        <th>Before Midterm</th>
+                        <th>After Midterm</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>541</td>
+                        <td><input class="form-control__table js-single-date" /></td>
+                        <td><input class="form-control__table js-single-date" /></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="text-right">
+                <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+                <a class="btn btn-mw-120 btn--cancel" asp-action="Index">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

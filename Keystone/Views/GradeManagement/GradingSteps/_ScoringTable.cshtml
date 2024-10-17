@@ -1,0 +1,189 @@
+@model GradeManagementViewModel
+@{
+    var template_index = 0;
+    var studentIndex = 0;
+}
+
+@for(int i = 0; i < Model.Allocations?.Count; i++)
+{
+    <input name="Model.Allocations[@i].Abbreviation" value="@Model.Allocations[i].Abbreviation" type="hidden">
+    <input name="Model.Allocations[@i].FullScore" value="@Model.Allocations[i].FullScore" type="hidden">
+}
+
+<input name="TotalWithdraw" value="@Model.WithdrawCount" type="hidden">
+<input name="TotalStudentScores" value="@Model.StudentScoresCount" type="hidden">
+
+@for(int i = 0; i < Model.StudentScoresGroupByGradeTemplate?.Count; i++)
+{
+    <input name="Model.StudentScoresGroupByGradeTemplate[@i].StandardGradingGroupId" value="@Model.StudentScoresGroupByGradeTemplate[i].StandardGradingGroupId" type="hidden">
+    <input name="Model.StudentScoresGroupByGradeTemplate[@i].StandardGradingGroup.Name" value="@Model.StudentScoresGroupByGradeTemplate[i].StandardGradingGroup.Name" type="hidden">
+    @for(int j = 0; j < Model.StudentScoresGroupByGradeTemplate[i].StudentBySectionViewModels?.Count; j++)
+    {
+        <input name="Model.StudentScoresGroupByGradeTemplate[@i].StudentBySectionViewModels[@j].IsWithdrawal" value="@Model.StudentScoresGroupByGradeTemplate[i].StudentBySectionViewModels[j].IsWithdrawal" type="hidden">
+        <input name="Model.StudentScoresGroupByGradeTemplate[@i].StudentBySectionViewModels[@j].IsCheating" value="@Model.StudentScoresGroupByGradeTemplate[i].StudentBySectionViewModels[j].IsCheating" type="hidden">
+        <input name="Model.StudentScoresGroupByGradeTemplate[@i].StudentBySectionViewModels[@j].CourseCode" value="@Model.StudentScoresGroupByGradeTemplate[i].StudentBySectionViewModels[j].CourseCode" type="hidden">
+        <input name="Model.StudentScoresGroupByGradeTemplate[@i].StudentBySectionViewModels[@j].SectionNumber" value="@Model.StudentScoresGroupByGradeTemplate[i].StudentBySectionViewModels[j].SectionNumber" type="hidden">
+        <input name="Model.StudentScoresGroupByGradeTemplate[@i].StudentBySectionViewModels[@j].StudentCode" value="@Model.StudentScoresGroupByGradeTemplate[i].StudentBySectionViewModels[j].StudentCode" type="hidden">
+        <input name="Model.StudentScoresGroupByGradeTemplate[@i].StudentBySectionViewModels[@j].StudentName" value="@Model.StudentScoresGroupByGradeTemplate[i].StudentBySectionViewModels[j].StudentName" type="hidden">
+        <input name="Model.StudentScoresGroupByGradeTemplate[@i].StudentBySectionViewModels[@j].PercentageForGPACalculation" value="@Model.StudentScoresGroupByGradeTemplate[i].StudentBySectionViewModels[j].PercentageForGPACalculation" type="hidden">
+        <input name="Model.StudentScoresGroupByGradeTemplate[@i].StudentBySectionViewModels[@j].CourseId" value="@Model.StudentScoresGroupByGradeTemplate[i].StudentBySectionViewModels[j].CourseId" type="hidden">
+        <input name="Model.StudentScoresGroupByGradeTemplate[@i].StudentBySectionViewModels[@j].SectionId" value="@Model.StudentScoresGroupByGradeTemplate[i].StudentBySectionViewModels[j].SectionId" type="hidden">
+        <input name="Model.StudentScoresGroupByGradeTemplate[@i].StudentBySectionViewModels[@j].RegistrationCourseId" value="@Model.StudentScoresGroupByGradeTemplate[i].StudentBySectionViewModels[j].RegistrationCourseId" type="hidden">
+        <input name="Model.StudentScoresGroupByGradeTemplate[@i].StudentBySectionViewModels[@j].StudentScoreId" value="@Model.StudentScoresGroupByGradeTemplate[i].StudentBySectionViewModels[j].StudentScoreId" type="hidden">
+        <input name="Model.StudentScoresGroupByGradeTemplate[@i].StudentBySectionViewModels[@j].StudentId" value="@Model.StudentScoresGroupByGradeTemplate[i].StudentBySectionViewModels[j].StudentId" type="hidden">
+        <input name="Model.StudentScoresGroupByGradeTemplate[@i].StudentBySectionViewModels[@j].TotalScore" value="@Model.StudentScoresGroupByGradeTemplate[i].StudentBySectionViewModels[j].TotalScore" type="hidden">
+        @for(int k = 0; k < Model.StudentScoresGroupByGradeTemplate[i].StudentBySectionViewModels[j].Scores?.Count; k++)
+        {
+            <input name="Model.StudentScoresGroupByGradeTemplate[@i].StudentBySectionViewModels[@j].Scores[@k].FullScore" value="@Model.StudentScoresGroupByGradeTemplate[i].StudentBySectionViewModels[j].Scores[k].FullScore" type="hidden">
+            <input name="Model.StudentScoresGroupByGradeTemplate[@i].StudentBySectionViewModels[@j].Scores[@k].Type" value="@Model.StudentScoresGroupByGradeTemplate[@i].StudentBySectionViewModels[@j].Scores[@k].Type" type="hidden">
+            <input name="Model.StudentScoresGroupByGradeTemplate[@i].StudentBySectionViewModels[@j].Scores[@k].Abbreviation" value="@Model.StudentScoresGroupByGradeTemplate[@i].StudentBySectionViewModels[@j].Scores[@k].Abbreviation" type="hidden">
+        }
+    }
+}
+
+<table id="js-scoring-table" class="table table-bordered table-hover m-0">
+    <thead>
+        <tr>
+            <th class="text-center">#</th>
+            <th class="text-center">Skip</th>
+            <th class="text-center w-100">Course</th>
+            <th class="text-center w-50">Section</th>
+            <th class="text-center w-100">Code</th>
+            <th>Name</th>
+            <th>Paid</th>
+            <th>Withdraw</th>
+            <th>Grade Published</th>
+            @for(int i = 0; i < Model.Allocations?.Count; i++)
+            {
+                <th class="text-center w-100">
+                    @Model.Allocations[i].Abbreviation
+                    <span class="text-nowrap">(<span class="score-limit">@Model.Allocations[i].FullScore</span>)</span>
+                </th>
+            }
+            <th class="text-center w-75">
+                Total
+                <span class="text-nowrap">(<span id="js-max-limit" class="score-limit" data-total-students="@Model.StudentScoresCount">@Model.TotalAllocationScore</span>)</span>
+            </th>
+        </tr>
+    </thead>
+    <input id="js-withdraw-count" value="@Model.WithdrawCount" type="hidden">
+    <input id="js-selected-standard-grading-group-ids" value="@JsonConvert.SerializeObject(Model.StudentScoresGroupByGradeTemplate.Select(x => x.StandardGradingGroupId))" type="hidden">
+    <tbody class="js-items">
+    @if (Model.StudentScoresGroupByGradeTemplate != null && Model.StudentScoresGroupByGradeTemplate.Any())
+    {
+        @foreach (var studentScore in Model.StudentScoresGroupByGradeTemplate)
+        {
+            <tr><td colspan="15" style="background-color: #2c304d; color: white; text-align: left !important">@studentScore.StandardGradingGroup.Name</td></tr>
+            @if (Model != null && studentScore.StudentBySectionViewModels != null && studentScore.StudentBySectionViewModels.Count != 0)
+            {
+                for (int i = 0; i < studentScore.StudentBySectionViewModels.Count; i++)
+                {
+                    var status = string.Empty;
+                    if (studentScore.StudentBySectionViewModels[i].IsWithdrawal)
+                    {
+                        status = "bg-secondary-lighter";
+                    }
+                    else if (studentScore.StudentBySectionViewModels[i].IsCheating)
+                    {
+                        status = "bg-danger-pastel";
+                    }
+
+                    <tr class="@status">
+                        <td class="text-center">@(i + 1)</td>
+                        <td class="text-center">
+                            <input name="Model.StudentScores[@studentIndex].IsWithdrawal" value="@studentScore.StudentBySectionViewModels[i].IsWithdrawal" type="hidden">
+                            <input id="checkvalue@(studentIndex)" name="Model.StudentScores[@studentIndex].IsSkipGrading" type="hidden" value="@studentScore.StudentBySectionViewModels[i].IsSkipGrading">
+                            <input id="check@(studentIndex)" class="js-check-student" type="checkbox" onchange="toggleSkipScore(@studentIndex)" @studentScore.StudentBySectionViewModels[i].IsSkipGradingChecked @studentScore.StudentBySectionViewModels[i].IsEditScoreDisabled />
+                            <label class="form-check-input m-0" for="check@(studentIndex)"></label>
+                        </td>
+                        <td class="js-course-code"> @studentScore.StudentBySectionViewModels[i].CourseCode</td>
+                        <td class="js-section-number">@studentScore.StudentBySectionViewModels[i].SectionNumber</td>
+                        <td class="js-student-code">@studentScore.StudentBySectionViewModels[i].StudentCode</td>
+                        <td class="js-student-name">@studentScore.StudentBySectionViewModels[i].StudentName</td>
+                        <td class="text-center">@studentScore.StudentBySectionViewModels[i].IsPaidText</td>
+                        <td class="text-center">@studentScore.StudentBySectionViewModels[i].IsWithdrawalText</td>
+                        <td class="text-center">@studentScore.StudentBySectionViewModels[i].IsGradePublishedText</td>
+                        <input class="tr-index" value="@studentIndex" type="hidden">
+                        <input name="Model.StudentScores[@studentIndex].CourseCode" value="@studentScore.StudentBySectionViewModels[i].CourseCode" type="hidden">
+                        <input name="Model.StudentScores[@studentIndex].SectionNumber" value="@studentScore.StudentBySectionViewModels[i].SectionNumber" type="hidden">
+                        <input name="Model.StudentScores[@studentIndex].StudentCode" value="@studentScore.StudentBySectionViewModels[i].StudentCode" type="hidden">
+                        <input name="Model.StudentScores[@studentIndex].StudentName" value="@studentScore.StudentBySectionViewModels[i].StudentName" type="hidden">
+                        <input name="Model.StudentScores[@studentIndex].IsWithdrawal" value="@studentScore.StudentBySectionViewModels[i].IsWithdrawal" type="hidden">
+                        <input name="Model.StudentScores[@studentIndex].IsCheating" value="@studentScore.StudentBySectionViewModels[i].IsCheating" type="hidden">
+                        @if (studentScore.StudentBySectionViewModels[i].Scores.Any())
+                        {
+                            for (int j = 0; j < studentScore.StudentBySectionViewModels[i].Scores.Count; j++)
+                            {
+                                <td>
+                                    <input class="form-control__table js-student-score js-student-score-@studentIndex"
+                                            name="Model.StudentScores[@studentIndex].Scores[@j].FullScore" 
+                                            @* value='@studentScore.StudentBySectionViewModels[i].Scores[j].FullScore.ToString("0.00")' *@
+                                            data-limit="@Model.Allocations[j].FullScore" @studentScore.StudentBySectionViewModels[i].IsEditScoreDisabled>
+                                    <input name="Model.StudentScores[@studentIndex].Scores[@j].Type" type="hidden" value="@Model.Allocations[j].Type">
+                                    <input name="Model.StudentScores[@studentIndex].Scores[@j].Abbreviation" type="hidden" value="@Model.Allocations[j].Abbreviation">
+                                </td>
+                            }
+                        }
+                        else
+                        {
+                            for (int j = 0; j < Model.Allocations?.Count; j++)
+                            {
+                                <td>
+                                    <input class="form-control__table js-student-score js-student-score-@studentIndex"
+                                        name="Model.StudentScores[@studentIndex].Scores[@j].FullScore" 
+                                        data-limit="@Model.Allocations[j].FullScore" @studentScore.StudentBySectionViewModels[i].IsEditScoreDisabled>
+                                    <input name="Model.StudentScores[@studentIndex].Scores[@j].Type" value="@Model.Allocations[j].Type" type="hidden">
+                                    <input name="Model.StudentScores[@studentIndex].Scores[@j].Abbreviation" value="@Model.Allocations[j].Abbreviation" type="hidden">
+                                </td>
+                            }
+                        }
+                        
+                        @{
+                            var isInclude = studentScore.StudentBySectionViewModels[i].IsWithdrawal || studentScore.StudentBySectionViewModels[i].IsCheating ? string.Empty : "js-total-score js-total-score-" + template_index;
+                        }
+                        <td class="@isInclude">@studentScore.StudentBySectionViewModels[i].TotalScore.ToString("0.00")</td>
+                        <input class="js-score-percentage" name="Model.StudentScores[@studentIndex].PercentageForGPACalculation" value="@studentScore.StudentBySectionViewModels[i].PercentageForGPACalculation" type="hidden">
+                        <input class="js-grade-course-id" name="Model.StudentScores[@studentIndex].CourseId" value="@studentScore.StudentBySectionViewModels[i].CourseId" type="hidden">
+                        <input class="js-grade-section-id" name="Model.StudentScores[@studentIndex].SectionId" value="@studentScore.StudentBySectionViewModels[i].SectionId" type="hidden">
+                        <input class="js-grade-registration-id" name="Model.StudentScores[@studentIndex].RegistrationCourseId" value="@studentScore.StudentBySectionViewModels[i].RegistrationCourseId" type="hidden">
+                        <input class="js-grade-student-score-id" name="Model.StudentScores[@studentIndex].StudentScoreId" value="@studentScore.StudentBySectionViewModels[i].StudentScoreId" type="hidden">
+                        <input class="js-grade-student-id" name="Model.StudentScores[@studentIndex].StudentId" value="@studentScore.StudentBySectionViewModels[i].StudentId" type="hidden">
+                    </tr>
+                    ++studentIndex;
+                }
+            } 
+            else 
+            {
+                <tr>
+                    <td class="js-course-code"></td>
+                    <td class="js-section-number"></td>
+                    <td class="js-student-code"></td>
+                    <td class="js-student-name"></td>
+                    @for(int j = 0; j < @Model.Allocations?.Count; j++)
+                    {
+                        <td>
+                            <input class="form-control__table js-student-score"
+                                    name="studentScore.StudentBySectionViewModels[0].Scores[@j].FullScore">
+                        </td>
+                    }
+                    <td class="js-total-score js-total-score-@template_index"></td>
+                    <input class="js-grade-course-id" name="StudentScores[0].CourseId" type="hidden">
+                    <input class="js-grade-section-id" name="StudentScores[0].SectionId" type="hidden">
+                    <input class="js-grade-registration-id" name="StudentScores[0].RegistrationCourseId" type="hidden">
+                    <input class="js-student-score-id" name="StudentScores[0].StudentScoreId" type="hidden">
+                    <input class="js-grade-student-id" name="StudentScores[0].StudentId" type="hidden">
+                </tr>
+            }
+            ++template_index;
+        }
+    }
+    else 
+    {
+        <tr id="js-table-text-row">
+            <td colspan="15">
+                <i id="js-table-text">Please select section.</i>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

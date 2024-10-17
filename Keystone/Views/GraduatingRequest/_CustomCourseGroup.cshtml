@@ -1,0 +1,30 @@
+@model GraduatingRequestViewModel
+
+<section>
+    <div class="block__body">
+        @if (Model != null && Model.GroupingLogRegistrations != null && Model.GroupingLogRegistrations.Any())
+        {
+            foreach (var courseGroup in Model.GroupingLogRegistrations)
+            {
+                <div class="block block--underline">
+                    <div class="block__title">
+                        <header>@courseGroup.NameEn (@courseGroup.RequiredCreditCompleted @(courseGroup.RequiredCreditCompleted > 1 ? "Credits" : "Credit"))</header>
+                    </div>
+                    <div class="block__body">  
+                        @if(courseGroup.DescriptionEn != "" && courseGroup.DescriptionEn != null)
+                        {
+                            <span class="block__body btn--primary text-pre-warp">@courseGroup.DescriptionEn</span>
+                        }
+                        
+                        @{
+                            var htmlString = "";
+                            htmlString = UIHelper.GetCourseGroupRegistration(courseGroup, htmlString);
+                            @Html.Raw(htmlString)
+                        }
+                    </div>
+                </div>
+            }
+        }
+
+    </div>
+</section>

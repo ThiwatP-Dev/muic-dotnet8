@@ -1,0 +1,132 @@
+@model FinalGradeViewModel
+@{
+    ViewData["Title"] = "Final Grade Report";
+    var index = 1;
+}
+
+<section class="d-print-none">
+    <div class="block block--underline">
+        <div class="block__title">
+            <header>@ViewData["Title"]</header>
+        </div>
+        <form class="form-horizontal" asp-controller="FinalGradeReport" asp-action="Index" method="GET">
+            @Html.AntiForgeryToken()
+            <div class="block__body">
+                <div class="row form-group m-b-30">
+                    <div class="col-6">
+                        <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId"
+                                asp-items="ViewBag.AcademicLevels" data-placeholder="Select">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Academic Level<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-6">
+                        <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="ViewBag.Terms" data-placeholder="Select">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Term<span class="text-danger">*</span></label>
+                    </div>
+                </div>
+
+                <div class="row form-group m-b-30">
+                    <div class="col-2">
+                        <input class="form-control" asp-for="Criteria.Code" type="text">
+                        <label>CourseCode<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control" asp-for="Criteria.CourseNumberFrom" type="text">
+                        <label>Code Number From<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control" asp-for="Criteria.CourseNumberTo" type="text">
+                        <label>Code Number To<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-2">
+                        <input class="form-control" asp-for="Criteria.SectionFrom" type="text">
+                        <label>Section From</label>
+                    </div>
+                    <div class="col-2">
+                        <input class="form-control" asp-for="Criteria.SectionTo" type="text">
+                        <label>Section To</label>
+                    </div>
+                </div>
+
+                <div class="row form-group mb-0">
+                    <div class="col-12 align-self-end text-right text-nowrap">
+                        <button class="btn btn--primary btn-mw-120 m-r-5 mb-0" type="submit">
+                            <i class="la la-search mr-2"></i>Preview
+                        </button>
+                        <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                            Resets
+                        </button>
+                    </div>
+                </div> 
+            </div>
+        </form>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title d-print-none">
+                <header>Search Result (@(Model?.FinalGradeDetails?.Count() ?? 0))</header>
+                <div class="tools">
+                    <button class="btn btn-mw-120 btn--primary rounded print-btn js-print-btn" type="button">
+                        <i class="la la-print mr-2"></i>Print
+                    </button>
+                </div>
+            </div>
+            <div class="block__body">
+                @if (Model != null && Model.FinalGradeDetails.Any())
+                {
+                    foreach (var item in Model.FinalGradeDetails)
+                    {
+                        <div class="row">
+                            <div class="col-12 m-t-0">
+                                <header>
+                                    <h4 class="text-center"><b>MAHIDOL UNIVERSITY</b></h4>
+                                    <h4 class="text-center"><b>FINAL GRADE: @item.Term</b></h4>
+                                    <span class="m-r-10"><b>COURSE CODE: @item.CourseCode</b></span> <span><b>SEC: @item.SectionNumber</b></span>
+                                </header>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover w-100x m-0">
+                                        <thead>
+                                            <tr>
+                                                <th class="w-50 text-center">#</th>
+                                                <th class="w-200 text-center">Student ID</th>
+                                                <th class="text-center">Grade</th>
+                                                <th>Name</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var student in item.Students)
+                                            {
+                                                <tr>
+                                                    <td>@index</td>
+                                                    <td>@student.Code</td>
+                                                    <td>@student.Grade</td>
+                                                    <td>@student.FullName</td>
+                                                </tr>
+                                                ++index;
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        index = 1;
+                        <span class="page-break"></span>
+                        <hr class="my-3"/>
+                    }
+                }
+                else
+                {
+                    <div class="d-block text-center">
+                        <i class="text-danger">No Data</i>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>

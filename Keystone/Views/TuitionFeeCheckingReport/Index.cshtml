@@ -1,0 +1,184 @@
+@model TuitionFeeCheckingViewModel
+@{
+    ViewData["Title"] = "Tuition Fee Checking Report";
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>@ViewData["Title"]</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="TuitionFeeCheckingReport" asp-action="Index" method="GET">
+                    <div class="row form-group mb-0">
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.AcademicLevelId"
+                                    asp-items="ViewBag.AcademicLevels" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Academic Level<span class="text-danger">*</span></label>
+                        </div>
+                        @*                       <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId"
+                        asp-items="ViewBag.Faculties" data-placeholder="Select">
+                        <option selected value="">Select</option>
+                        </select>
+                        <label>Division</label>
+                        </div>*@
+                        <div class="col-3 align-self-end text-right text-nowrap">
+                            <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <a id="js-reset-btn" class="btn btn-mw-120 btn--reset mb-0" asp-action="Index">Reset</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="row">
+
+
+
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__body">
+                @if (Model != null && Model.Criteria != null && Model.Criteria.AcademicLevelId > 0)
+                {
+                    <div class="col-12 text-right">
+                        <form class="form-horizontal" asp-controller="TuitionFeeCheckingReport" asp-action="GenerateReport" method="POST">
+                            <input type="hidden" asp-for="Criteria.AcademicLevelId" />
+                            <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">
+                                Generate New Report
+                            </button>
+                        </form>
+                    </div>
+                }
+                <div class="col-12">
+                    <h2>List of Report</h2>
+                </div>
+                <div class="col-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered w-100x">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Requested At</th>
+                                    <th>Finish Generate At</th>
+                                    <th>Run Time</th>
+                                    <th class="text-center">Download Link</th>
+                                    <th>Remark</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.TuitionFeeCheckingReportJobs != null && Model.TuitionFeeCheckingReportJobs.Any())
+                                {
+                                    @for (int i = 0; i < Model.TuitionFeeCheckingReportJobs.Count; i++)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @(
+                                                    i + 1
+                                                    )
+                                            </td>
+                                            <td>@Model.TuitionFeeCheckingReportJobs[i].CreatedAtUTC.AddHours(7)</td>
+                                            <td>
+                                                @(
+                                                    Model.TuitionFeeCheckingReportJobs[i].EndTimeUTC.HasValue ? Model.TuitionFeeCheckingReportJobs[i].EndTimeUTC.Value.AddHours(7).ToString() : "Report is Generating"
+                                                    )
+                                            </td>
+                                            <td>
+                                                @if (Model.TuitionFeeCheckingReportJobs[i].EndTimeUTC.HasValue)
+                                                {
+                                                    <span>@Model.TuitionFeeCheckingReportJobs[i].ElapseTime.ToString()</span>
+                                                }
+                                                else
+                                                {
+                                                    <span><i class="las la-stopwatch"></i> @((DateTime.UtcNow - Model.TuitionFeeCheckingReportJobs[i].CreatedAtUTC).ToString())
+                                                    </span>
+                                                }
+                                            </td>
+                                            <td class="text-center">
+                                                @if (Model.TuitionFeeCheckingReportJobs[i].EndTimeUTC.HasValue && !string.IsNullOrEmpty(Model.TuitionFeeCheckingReportJobs[i].ResultFileUrl))
+                                                {
+                                                    <a class="btn btn-mw-120 btn--primary" href="@Model.TuitionFeeCheckingReportJobs[i].ResultFileUrl"><i class="la la-file-excel mr-2"></i>Download</a>
+                                                }
+                                            </td>
+                                            <td>@Model.TuitionFeeCheckingReportJobs[i].Remark</td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="6" class="text-center">
+                                            No Data
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
+
+@*<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table class="table table-bordered js-report-table w-100x">
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Name</th>
+                                <th>Credit</th>
+                                <th>Created At</th>
+                                @if (Model != null && Model.Headers != null && Model.Headers.Any())
+                                {
+                                    foreach (var item in Model.Headers)
+                                    {
+                                        <th class="text-center">
+                                            <p>@item.BatchText</p>
+                                            <p>@item.StudentFeeTypeNameEn</p>
+                                            <p>@item.CustomCourseGroupName</p>
+                                        </th>
+                                    }
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Results != null && Model.Results.Any())
+                            {
+                                @foreach (var item in Model.Results.GroupBy(x => x.CourseId))
+                                {
+                                    <tr>
+                                        <td>@item.FirstOrDefault().CourseCode</td>
+                                        <td>@item.FirstOrDefault().CourseName</td>
+                                        <td>@item.FirstOrDefault().CourseCredit</td>
+                                        <td>@item.FirstOrDefault().CreatedAtTHText</td>
+                                        @foreach (var header in Model.Headers)
+                                        {
+                                            <td>@item.FirstOrDefault(x => x.Sequence == header.Sequence).ValueText</td>
+                                        }
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>*@

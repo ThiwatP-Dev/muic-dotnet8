@@ -1,0 +1,33 @@
+@model List<CurriculumInstructor>
+@{
+    var index = 1;
+}
+
+<div class="block__body">
+    <table class="table table-bordered m-0">
+        <thead>
+            <tr>
+                <th class="text-center">#</th>
+    			<th class="text-center">Code</th>
+                <th>English Name</th>
+                <th>Thai Name</th>
+                <th>Academic Level</th>
+                <th>Type</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var item in Model) 
+            {
+                <tr>
+    				<td class="text-center">@index</td>
+    				<td class="text-center">@item.Instructor?.Code</td>
+                    <td>@item.Instructor?.FullNameEn</td>
+                    <td>@item.Instructor?.FullNameTh</td>
+    				<td>@item.Instructor?.InstructorWorkStatus?.AcademicLevel?.NameEn</td>
+                    <td>@item.TypeText</td>
+                </tr>
+                ++index;
+            }
+        </tbody>
+    </table>
+</div>

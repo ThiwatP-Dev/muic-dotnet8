@@ -1,0 +1,43 @@
+<div id="result-edit-grade-modal" class="modal fadeIn animated" tabindex="-1" role="dialog"
+     aria-hidden="true" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+		<div class="modal-content">
+			<div class="block block--underline mb-0">
+                <div class="block__title">
+                    <header>Edit Grade</header>
+                </div>
+                <div class="block__body">
+					<form class="ks-form container py-0" asp-controller="GradeManagement" asp-action="EditGrade" method="POST">
+                        <input type="hidden" id="student-score-id">
+						@Html.AntiForgeryToken()
+						<div id="modalWrapper-grade-edit">
+                            <div class="row form-group">
+                                <div class="col-6">
+                                    <input class="form-control" type="text" readonly id="current-grade" value="">
+                                    <label>Current Grade</label>
+                                </div>
+                                <div class="col-6">
+                                    <select class="chosen-select form-control" id="select-grade">
+                                    </select>
+                                    <label>New Grade<span class="text-danger">*</span></label>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-12">
+                                    <input class="form-control" type="text" id="remark">
+                                    <label>Remark</label>
+                                </div>
+                            </div>
+                            <div class="block__action pb-0">
+                                <div class="block__action-row">
+                                    <button class="btn btn-mw-120 btn--primary" id="js-save-edit-grade" type="button">Save</button>
+                                    <a class="btn btn-mw-120 btn--cancel rounded" href="javascript:void(0);" data-dismiss="modal">Cancel</a>
+                                </div>
+                            </div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

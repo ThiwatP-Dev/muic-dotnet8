@@ -1,0 +1,121 @@
+@model Questionnaire
+
+<input asp-for="@Model.Id" type="hidden">
+<input asp-for="@Model.NameEn" type="hidden">
+<input asp-for="@Model.NameTh" type="hidden">
+<input asp-for="@Model.DescriptionEn" type="hidden">
+<input asp-for="@Model.DescriptionTh" type="hidden">
+<input asp-for="@Model.FacultyId" type="hidden">
+<input asp-for="@Model.DepartmentId" type="hidden">
+<input asp-for="@Model.CourseId" type="hidden">
+<input asp-for="@Model.ResponseType" type="hidden">
+<input asp-for="@Model.IsActive" type="hidden">
+
+<div class="container">
+    <div class="panel-group" id="accordion1">
+        <div class="block block--underline">
+            <div class="block__title collapsed" data-toggle="collapse" data-parent="#accordion1" data-target="#accordion1-1" aria-expanded="false">
+                <header>@Model.NameEn</header>
+                <div class="tools">
+                    <div class="btn-group">
+                        <a class="btn btn--white btn--circle">
+                            <i class="la la-angle-down"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!--end .block-head -->
+            <div id="accordion1-1" class="collapse" aria-expanded="true" style="">
+                <div class="block__body">
+                    <div class="form-group mb-3">
+                        <div class="form-control-label d-flex align-items-center">Thai Name</div>
+                        <div class="form-control-plaintext">@Model.NameTh</div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <div class="form-control-label d-flex align-items-center">English Description</div>
+                        <div class="form-control-plaintext">@Model.DescriptionEn</div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <div class="form-control-label d-flex align-items-center">Thai Description</div>
+                        <div class="form-control-plaintext">@Model.DescriptionTh</div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group mb-3 col">
+                            <div class="form-control-label d-flex align-items-center">Division</div>
+                            <div class="form-control-plaintext">@Model.FacultyId</div>
+                        </div>
+                        <div class="form-group mb-3 col">
+                            <div class="form-control-label d-flex align-items-center">Major</div>
+                            <div class="form-control-plaintext">@Model.FacultyId</div>
+                        </div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <div class="form-control-label d-flex align-items-center">Course</div>
+                        <div class="form-control-plaintext">@Model.CourseId</div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <div class="form-control-label d-flex align-items-center">Response Type</div>
+                        <div class="form-control-plaintext">@Model.ResponseType</div>
+                    </div>
+                </div>
+                <!--end .block-body -->
+            </div>
+        </div>
+        <!--end .block -->
+    </div>
+</div>
+<div class="questionnaire-body">
+    <div class="container my-4">
+        <div class="justify-content-center mb-5">
+            <div id="group-a" class="block block--underline block-group editing">
+                <div class="block__title">
+                    <header>
+                        Group 1
+                    </header>
+                </div>
+                <div class="form-group row mx-2 my-3">
+                    <input asp-for="@Model.QuestionGroup.Id" type="hidden">
+                    <div class="col my-auto">
+                        <div class="form-control-label d-flex align-items-center">English Name</div>
+                        <div class="form-controler-input">
+                            <input class="form-control" asp-for="@Model.QuestionGroup.NameEn" name="QuestionGroup.NameEn" type="text">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-control-label d-flex align-items-center">Thai Name</div>
+                        <div class="form-controler-input">
+                            <input class="form-control" asp-for="@Model.QuestionGroup.NameTh" name="QuestionGroup.NameTh" type="text">
+                        </div>
+                    </div>
+                </div>
+                <div class="group-description">
+                    <div class="form-group mb-2">
+						<div class="form-control-label d-flex align-items-center">English Description</div>
+                        <div class="form-controler-input">
+                            <textarea class="form-control" asp-for="@Model.QuestionGroup.DescriptionEn" name="QuestionGroup.DescriptionEn" type="text" rows="3" cols="10"></textarea>
+                        </div>
+                	</div>
+                    <div class="form-group mb-0">
+						<div class="form-control-label d-flex align-items-center">Thai Description</div>
+                        <div class="form-controler-input">
+                            <textarea class="form-control" asp-for="@Model.QuestionGroup.DescriptionTh" name="QuestionGroup.DescriptionTh" type="text" rows="3" cols="10"></textarea>
+                        </div>
+                	</div>
+                </div>
+                <!--end .block-head -->
+                <div id="js-question-body" class="block__body">
+                    <!-- Question -->
+                    <partial name="_QuestionGroup" model="@Model?.QuestionGroup">
+                    <!-- End Question -->
+                </div>
+                <!--end .block-body -->
+            </div>
+            <!--end .block -->
+            <div class="text-right">
+                <button class="btn btn-mw-120 btn--primary" type="submit">+ Next Group</button>
+                <button class="btn btn-mw-120 btn--primary" type="submit">Finish</button>
+                <a class="btn btn-mw-120 btn--cancel" asp-action="Index">Cancel</a>
+            </div>
+        </div>
+    </div>
+</div>

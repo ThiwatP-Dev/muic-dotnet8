@@ -1,0 +1,105 @@
+@model ScholarshipStudent
+
+@Html.AntiForgeryToken()
+<div class="form-group w-50x">
+    <select id="js-scholarship-type" class="chosen-select form-control js-cascade-scholarship-type"
+            asp-items="@ViewBag.ScholarshipTypes" asp-for="ScholarshipTypeId"> 
+        <option selected disabled>Select</option>
+    </select>
+    <label>Scholarship Type<span class="text-danger">*</span></label>
+</div>
+
+<hr>
+
+<div class="row form-group">
+    <div class="col-12">
+        <select id="js-scholarship" class="chosen-select form-control js-cascade-scholarship" 
+                asp-items="ViewBag.Scholarships" asp-for="ScholarshipId"> 
+            <option selected disabled>Select</option>
+        </select>
+        <label>Scholarship<span class="text-danger">*</span></label>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-4">
+        <select class="chosen-select form-control js-effective-term" asp-for="EffectivedTermId" asp-items="ViewBag.Terms"> 
+            <option selected disabled>Select</option>
+        </select>
+        <label>Effective Term<span class="text-danger">*</span></label>
+    </div>
+    <div class="col-4">
+        <select class="chosen-select form-control js-expiry-term" asp-for="ExpiredTermId" asp-items="ViewBag.Terms"> 
+            <option selected >Select</option>
+        </select>
+        <label>Expire Term</label>
+    </div>
+    <div class="col-4">
+        <input class="form-control js-scholarship-limit-amount js-default-zero" asp-for="LimitedAmount">
+        <label>Limited Amount</label>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-12">
+        <input class="form-control" asp-for="Remark">
+        <label>Remark</label>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-6 align-self-center">
+        <input id="@($"send-contract{ Model.Id }")" name="SendContract" type="checkbox" value="true"
+               @(Model.Id == 0 ? "" : (Model.SendContract == true ? "checked" : "")) />
+        <label class="mb-0" for="@($"send-contract{ Model.Id }")">Send Contact</label>
+    </div>
+    <div class="col-6 align-self-center">
+        <input id="@($"allow-registration{ Model.Id }")" name="AllowRepeatedRegistration" type="checkbox" value="true"
+               @(Model.Id == 0 ? "checked" : (Model.AllowRepeatedRegistration == true ? "checked" : "")) />
+        <label class="mb-0" for="@($"allow-registration{ Model.Id }")">Allow Repeated Registration</label>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-6 align-self-center">
+        <input id="@($"is-approved{ Model.Id }")" class="js-approve" name="IsApproved" type="checkbox" value="true"
+               @(Model.Id == 0 ? "checked" : (Model.IsApproved == true ? "checked" : "")) />
+        <label class="mb-0" for="@($"is-approved{ Model.Id }")">Approve</label>
+    </div>
+</div>
+
+<div class="row form-group js-approve-details">
+    <div class="col-6">
+        <select class="chosen-select form-control" asp-for="ApprovedBy" asp-items="@ViewBag.Signatories">
+            <option selected disabled>Select</option>
+        </select>
+        <label>Approved By</label>
+    </div>
+    <div class="col-6">
+        <input class="form-control js-single-date" asp-for="ApprovedAt" type="text" autocomplete="off">
+        <label>Approve Date</label>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-6">
+        <input class="form-control js-single-date" type="text" value="@(DateTime.Now.ToString(StringFormat.ShortDate))" autocomplete="off" disabled>
+        <label>Reference Date</label>
+    </div>
+    <div class="col-6 align-self-center">
+        <input id="@($"schlarship-active{ Model.Id }")" name="Active" type="checkbox" value="true"
+               @(Model.Id == 0 ? "" : (Model.IsActive == true ? "checked" : "")) />
+        <label class="mb-0" for="@($"schlarship-active{ Model.Id }")">Active</label>
+    </div>
+</div>
+
+<div class="block__action">
+    <div class="block__action-row">
+        <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+        <a id="js-reset-data" class="btn btn-mw-120 btn--cancel rounded" href="javascript:void(0);" data-dismiss="modal">Close</a>
+    </div>
+</div>
+
+<input id="js-academic-level" value="@ViewBag.AcademicLevelId" type="hidden">
+<input id="js-student-id" asp-for="StudentId" type="hidden">
+<input asp-for="Id" type="hidden">

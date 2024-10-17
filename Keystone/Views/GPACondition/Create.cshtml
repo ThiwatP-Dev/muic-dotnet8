@@ -1,0 +1,15 @@
+@model GPACondition
+@{ 
+    ViewData["Title"] = "Add GPA Condition"; 
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <form class="ks-form container" asp-controller="GPACondition" asp-action="Create" method="POST">
+                @Html.AntiForgeryToken()
+                <partial name="_Form">
+            </form>
+        </div>
+    </div>
+</div>

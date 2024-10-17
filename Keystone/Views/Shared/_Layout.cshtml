@@ -1,0 +1,55 @@
+﻿@{
+    var controllerName = this.ViewContext.RouteData.Values["controller"].ToString();
+    var username = this.Context.User.Identity.Name;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title> @ViewData["Title"] | Keystone v. @Configuration["BuildNumber"]</title>
+
+    <partial name="_LayoutHeadingScriptsPartial" />
+    @RenderSection("HeadScripts", required: false)
+</head>
+<body class="@(controllerName == "Account" ? "" : "sidebar-expand")" data-uname-en="@Configuration["UniversityNameEn"]" data-uname-th="@Configuration["UniversityNameTh"]" data-logo-url="@Configuration["UniversityLogoUrl"]">
+    <div id="preloader">
+        <div class="canvas">
+            <img src="~/images/logo-muic-2.png" alt="logo" class="loader-logo">
+            <div class="spinner"></div>   
+        </div>
+    </div>
+
+    <partial name="_Heading" />
+    @if(controllerName != "Account")
+    {
+        <partial name="_Sidebar" />
+    }
+
+    <div class="ks-content p-b-20">
+        <div class="wrapper-content">
+            @*MIGRATE RECHECK*@
+            <flash dismissable="true" />
+            @* @Vereyon.Web.FlashMessageHtmlHelper.RenderFlashMessages(Html) *@
+            @RenderBody()
+
+            <nav class="navbar fixed-bottom navbar-expand-sm bg-white">
+                <small><b>@Configuration["Copyrights"]</b></small>
+                <small class="mx-3"><b>v.@Configuration["BuildNumber"]</b></small>
+                <small class="mx-3"><b>Username: @username</b></small>
+            </nav>
+        </div>
+        <a href="#" class="go-top" style="display: none;"><i class="la la-arrow-up"></i></a>
+    </div>
+    
+    <partial name="_LayoutFooterScriptsPartial" />
+
+    @RenderSection("Scripts", required: false)
+
+    @RenderSection("Modals", required: false)
+ 
+    <partial name="_ValidationScriptsPartial" />
+
+</body>
+</html>

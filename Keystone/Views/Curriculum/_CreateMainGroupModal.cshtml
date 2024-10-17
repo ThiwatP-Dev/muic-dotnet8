@@ -1,0 +1,36 @@
+@model Curriculum
+
+<div class="modal fadeIn animated js-modal-form" id="create-modal-main-group" tabindex="-1" role="dialog"
+     aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="block mb-0">
+                <div class="block__body">
+                    <div class="block__title text-left height-3">
+                        <header>Add Main Group</header>
+                    </div>
+                    <div class="block__body text-left height-3">
+                        <form class="ks-form container" method="post">
+                            @Html.AntiForgeryToken()
+                            <div class="row m-b-30">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <input class="form-control" type="text">
+                                        <label>Group Name<span class="text-danger">*</span></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="block__action container">
+                                <div class="block__action-row">
+                                    <button type="submit" class="btn btn-mw-120 btn--primary">Save</button>
+                                    <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-mw-120 btn--cancel rounded">Cancel</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

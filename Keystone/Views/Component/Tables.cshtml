@@ -1,0 +1,272 @@
+@{
+    ViewData["Title"] = "Tables";
+}
+
+<section class="row">
+    <div class="col-md-12">
+		<em class="text-caption">Basic Table with Actions</em>
+		<div class="block block--underline">
+			<div class="block__title">
+				<header>Basic Table with Actions</header>
+			</div>
+			<!--end .block-head -->
+			<div class="block__body table-responsive">
+				<table class="table table-bordered m-0">
+					<thead>
+						<tr>
+							<th class="text-nowrap text-center">#</th>
+							<th>First Name</th>
+							<th>Last Name</th>
+							<th>Username</th>
+                            <th>Status</th>
+                            <th class="text-nowrap text-center">Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="text-nowrap text-center">1</td>
+							<td>Mark</td>
+							<td>Otto</td>
+							<td>MarkO.</td>
+                            <td>
+                                <span class="ks-label bg-info">Info</span>
+                            </td>
+                            <td class="text-nowrap text-center">
+                                <a class="btn btn--link btn--circle" href="#" data-toggle="tooltip" data-placement="bottom" title="Edit">
+						            <i class="fas fa-edit"></i>
+					            </a>
+					            <a class="btn btn--link btn--circle" data-toggle="modal" data-target="#delete-confirm-modal"> 
+						            <i class="fas fa-trash"></i>
+					            </a>
+					            <a class="btn btn--link btn--circle" href="#" data-toggle="tooltip" data-placement="bottom" title="Info">
+						            <i class="fas fa-info"></i>
+					            </a>
+                            </td>
+						</tr>
+						<tr>
+							<td class="text-nowrap text-center">2</td>
+							<td>Jacob</td>
+							<td>Thornton</td>
+							<td>JacobT</td>
+                            <td>
+                                <span class="ks-label bg-success">Success</span>
+                            </td>
+                            <td class="text-nowrap text-center">
+                                <a class="btn btn--link btn--circle" href="#" data-toggle="tooltip" data-placement="bottom" title="Edit">
+						            <i class="fas fa-edit"></i>
+					            </a>
+					            <a class="btn btn--link btn--circle" data-toggle="modal" data-target="#delete-confirm-modal"> 
+						            <i class="fas fa-trash"></i>
+					            </a>
+					            <a class="btn btn--link btn--circle" href="#" data-toggle="tooltip" data-placement="bottom" title="Info">
+						            <i class="fas fa-info"></i>
+					            </a>
+                            </td>
+						</tr>
+						<tr>
+							<td class="text-nowrap text-center">3</td>
+							<td>Larry</td>
+							<td>the Bird</td>
+							<td>LarryTb</td>
+                            <td>
+                                <span class="ks-label bg-warning">Warning</span>
+                            </td>
+                            <td class="text-nowrap text-center">
+                                <a class="btn btn--link btn--circle" href="#" data-toggle="tooltip" data-placement="bottom" title="Edit">
+						            <i class="fas fa-edit"></i>
+					            </a>
+					            <a class="btn btn--link btn--circle" data-toggle="modal" data-target="#delete-confirm-modal"> 
+						            <i class="fas fa-trash"></i>
+					            </a>
+					            <a class="btn btn--link btn--circle" href="#" data-toggle="tooltip" data-placement="bottom" title="Info">
+						            <i class="fas fa-info"></i>
+					            </a>
+                            </td>
+						</tr>
+                        <tr>
+							<td class="text-nowrap text-center">4</td>
+							<td>John</td>
+							<td>Mayor</td>
+							<td>J.Mayor</td>
+                            <td>
+                                <span class="ks-label bg-danger">Danger</span>
+                            </td>
+                            <td class="text-nowrap text-center">
+                                <a class="btn btn--link btn--circle" href="#" data-toggle="tooltip" data-placement="bottom" title="Edit">
+						            <i class="fas fa-edit"></i>
+					            </a>
+					            <a class="btn btn--link btn--circle" data-toggle="modal" data-target="#delete-confirm-modal"> 
+						            <i class="fas fa-trash"></i>
+					            </a>
+					            <a class="btn btn--link btn--circle" href="#" data-toggle="tooltip" data-placement="bottom" title="Info">
+						            <i class="fas fa-info"></i>
+					            </a>
+                            </td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<!--end .block-body -->
+		</div>
+		<!--end .block -->
+	</div>
+
+    <div class="col-md-12">
+		<em class="text-caption">Basic Table Info with Actions</em>
+		<div class="block block--underline">
+			<div class="block__title">
+				<header>Basic Table Info with Actions</header>
+			</div>
+			<!--end .block-head -->
+			<div class="block__body table-responsive">
+				<table class="table table-bordered m-0">
+					<thead>
+						<tr>
+							<th class="text-nowrap text-center">Student</th>
+                            <th class="text-nowrap">Code</th>
+							<th>First Name</th>
+							<th>Last Name</th>
+							<th>Username</th>
+                            <th>Contact</th>
+                            <th class="text-nowrap text-center">Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="text-nowrap text-center">
+                                <img class="p-a-2 w-50 h-50 rounded-circle" src="~/images/img100x100.jpg"  alt="Image Description">
+                            </td>
+                            <td class="text-nowrap">
+                                5712345678
+                            </td>
+							<td class="text-nowrap">Mark</td>
+							<td class="text-nowrap">Otto</td>
+							<td class="text-nowrap">MarkO.</td>
+                            <td class="text-nowrap">
+                                <span class="d-block g-mb-5">
+                                    <i class="fas fa-mobile-alt m-r-5"></i>
+                                    +66 89 1234567
+                                </span>
+                                <span class="d-block">
+                                    <i class="fas fa-envelope m-r-5"></i>
+                                    student@email.com
+                                </span>
+                            </td>
+                            <td class="text-nowrap text-center">
+                                <a class="btn btn--link btn--circle" href="#" data-toggle="tooltip" data-placement="bottom" title="Edit">
+						            <i class="fas fa-edit"></i>
+					            </a>
+					            <a class="btn btn--link btn--circle" data-toggle="modal" data-target="#delete-confirm-modal"> 
+						            <i class="fas fa-trash"></i>
+					            </a>
+					            <a class="btn btn--link btn--circle" href="#" data-toggle="tooltip" data-placement="bottom" title="Info">
+						            <i class="fas fa-info"></i>
+					            </a>
+                            </td>
+						</tr>
+						<tr>
+							<td class="text-nowrap text-center">
+                                <img class="p-a-2 w-50 h-50 rounded-circle" src="~/images/img100x100.jpg"  alt="Image Description">
+                            </td>
+                            <td class="text-nowrap">
+                                5712345678
+                            </td>
+							<td>Jacob</td>
+							<td>Thornton</td>
+							<td>JacobT</td>
+                            <td class="text-nowrap">
+                                <span class="d-block g-mb-5">
+                                    <i class="fas fa-mobile-alt m-r-5"></i>
+                                    +66 89 1234567
+                                </span>
+                                <span class="d-block">
+                                    <i class="fas fa-envelope m-r-5"></i>
+                                    student@email.com
+                                </span>
+                            </td>
+                            <td class="text-nowrap text-center">
+                                <a class="btn btn--link btn--circle" href="#" data-toggle="tooltip" data-placement="bottom" title="Edit">
+						            <i class="fas fa-edit"></i>
+					            </a>
+					            <a class="btn btn--link btn--circle" data-toggle="modal" data-target="#delete-confirm-modal"> 
+						            <i class="fas fa-trash"></i>
+					            </a>
+					            <a class="btn btn--link btn--circle" href="#" data-toggle="tooltip" data-placement="bottom" title="Info">
+						            <i class="fas fa-info"></i>
+					            </a>
+                            </td>
+						</tr>
+						<tr>
+							<td class="text-nowrap text-center">
+                                <img class="p-a-2 w-50 h-50 rounded-circle" src="~/images/img100x100.jpg"  alt="Image Description">
+                            </td>
+                            <td class="text-nowrap">
+                                5712345678
+                            </td>
+							<td>Larry</td>
+							<td>the Bird</td>
+							<td>LarryTb</td>
+                            <td class="text-nowrap">
+                                <span class="d-block g-mb-5">
+                                    <i class="fas fa-mobile-alt m-r-5"></i>
+                                    +66 89 1234567
+                                </span>
+                                <span class="d-block">
+                                    <i class="fas fa-envelope m-r-5"></i>
+                                    student@email.com
+                                </span>
+                            </td>
+                            <td class="text-nowrap text-center">
+                                <a class="btn btn--link btn--circle" href="#" data-toggle="tooltip" data-placement="bottom" title="Edit">
+						            <i class="fas fa-edit"></i>
+					            </a>
+					            <a class="btn btn--link btn--circle" data-toggle="modal" data-target="#delete-confirm-modal"> 
+						            <i class="fas fa-trash"></i>
+					            </a>
+					            <a class="btn btn--link btn--circle" href="#" data-toggle="tooltip" data-placement="bottom" title="Info">
+						            <i class="fas fa-info"></i>
+					            </a>
+                            </td>
+						</tr>
+                        <tr>
+							<td class="text-nowrap text-center">
+                                <img class="p-a-2 w-50 h-50 rounded-circle" src="~/images/img100x100.jpg"  alt="Image Description">
+                            </td>
+                            <td class="text-nowrap">
+                                5712345678
+                            </td>
+							<td>John</td>
+							<td>Mayor</td>
+							<td>J.Mayor</td>
+                            <td class="text-nowrap">
+                                <span class="d-block g-mb-5">
+                                    <i class="fas fa-mobile-alt m-r-5"></i>
+                                    +66 89 1234567
+                                </span>
+                                <span class="d-block">
+                                    <i class="fas fa-envelope m-r-5"></i>
+                                    student@email.com
+                                </span>
+                            </td>
+                            <td class="text-nowrap text-center">
+                                <a class="btn btn--link btn--circle" href="#" data-toggle="tooltip" data-placement="bottom" title="Edit">
+						            <i class="fas fa-edit"></i>
+					            </a>
+					            <a class="btn btn--link btn--circle" data-toggle="modal" data-target="#delete-confirm-modal"> 
+						            <i class="fas fa-trash"></i>
+					            </a>
+					            <a class="btn btn--link btn--circle" href="#" data-toggle="tooltip" data-placement="bottom" title="Info">
+						            <i class="fas fa-info"></i>
+					            </a>
+                            </td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<!--end .block-body -->
+		</div>
+		<!--end .block -->
+	</div>
+</section>
+
+<partial name="_DeleteConfirmModals" />

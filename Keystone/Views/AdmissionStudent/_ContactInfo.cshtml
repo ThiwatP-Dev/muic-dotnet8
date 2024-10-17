@@ -1,0 +1,60 @@
+@model Student
+
+<section class="ks-general-info">
+    <form class="form-horizontal" asp-controller="AdmissionStudent" asp-action="SaveContactInformation" method="post">
+        <div class="block no-shadow h-100x m-b-30">
+            <div class="block__body">
+                <div class="section-title">
+                    <h4>Contact Information</h4>
+                </div>
+                <div class="row form-group">
+                    <div class="col-4">
+                        <input class="form-control" asp-for="Email" type="text">
+                        <label>Email</label>
+                    </div>
+
+                    <div class="col-4">
+                        <input class="form-control" asp-for="Email2" type="text">
+                        <label>Email 2</label>
+                    </div>
+
+                    <div class="col-4">
+                        <input class="form-control" asp-for="PersonalEmail" type="text">
+                        <label>Personal Email</label>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-6">
+                        <input class="form-control" asp-for="Facebook" type="text">
+                        <label>Facebook</label>
+                    </div>
+
+                    <div class="col-6">
+                        <input class="form-control" asp-for="Line" type="text">
+                        <label>Line</label>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-6">
+                        <input class="form-control" asp-for="TelephoneNumber1" type="text">
+                        <label>Telephone Number 1</label>
+                    </div>
+
+                    <div class="col-6">
+                        <input class="form-control" asp-for="TelephoneNumber2" type="text">
+                        <label>Telephone Number 2</label>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-12">
+                        <input class="form-control" asp-for="OtherContact" type="text">
+                        <label>Others</label>
+                    </div>
+                </div>
+                
+                <input asp-for="Code" type="hidden">
+                <input asp-for="Id" type="hidden">
+            </div>
+        </div>
+    </form>
+</section>

@@ -1,0 +1,55 @@
+@model FilterCourseGroupViewModel
+
+<div class="row form-group m-b-30 js-render-nicescroll">
+    <table id="js-select-course" class="table table-bordered m-0 scroll-header">
+        <thead class="scroll-header">
+            <tr>
+                <th class="w-50 text-center">
+                    <input id="checkAll" class="js-check-all" type="checkbox">
+                    <label for="checkAll"></label><br>
+                    <span class="js-item-count">(0)</span>
+                </th>
+                <th>Course</th>                    
+                <th>Division</th>
+                <th>Major</th>
+            </tr>
+        </thead>
+        <tbody class="js-items" id="js-items">
+            @if (Model != null && Model.Courses != null && Model.Courses.Any())
+            {
+                @for (int i = 0; i < Model.Courses.Count(); i++)
+                {
+                    <tr class="js-suggestion-parent">
+                        <td class="text-center">
+                                <input id="Courses[@i]" class="form-check-input" name="Courses[@i].IsChecked" type="checkbox" value="@Model.Courses[i].IsChecked">
+                                <label class="js-focus-item m-0" for="Courses[@i]"></label>
+                        </td>
+                        <td>@Model.Courses[i].CourseAndCredit</td>
+                        <td>@Model.Courses[i].Faculty</td>
+                        <td>@Model.Courses[i].Department
+                        </td>
+                        <input asp-for="@Model.Courses[@i].FilterCourseGroupId" type="hidden">
+                        <input asp-for="@Model.Courses[@i].FilterCourseGroupDetailId" type="hidden">
+                        <input asp-for="@Model.Courses[@i].CourseId" type="hidden">
+                        <input asp-for="@Model.Courses[@i].NameEn" type="hidden">
+                        <input asp-for="@Model.Courses[@i].Lecture" type="hidden">
+                        <input asp-for="@Model.Courses[@i].Lab" type="hidden">
+                        <input asp-for="@Model.Courses[@i].Other" type="hidden">
+                        <input asp-for="@Model.Courses[@i].Credit" type="hidden">
+                        <input asp-for="@Model.Courses[@i].CourseRateId" type="hidden">
+                        <input asp-for="@Model.Courses[@i].Faculty" type="hidden">
+                        <input asp-for="@Model.Courses[@i].Department" type="hidden">
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td class="text-center" colspan="6">
+                        <i class="text-danger text-center">No Data</i>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

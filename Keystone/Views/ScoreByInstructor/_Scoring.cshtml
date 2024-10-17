@@ -1,0 +1,48 @@
+@model EditScoringViewModel
+
+<section class="block__body mb-0">
+    <div class="d-flex justify-content-between row">
+        <div class="col-4">
+            <h4 class="font-weight-700 align-self-center">Student Score List</h4>
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="input-group col">
+            <a class="btn btn--primary mb-0 align-self-end mr-1" href="#!" data-toggle="modal" data-target="#sections-scoring-modal">
+                <i class="la la-search mr-1"></i>Select Sections
+            </a>
+        </div>
+        <div class="input-group text-right col-7">
+            <input id="file-name" class="form-control m-r-15" type="text">
+            <input id="upload-input" name="Model.UploadFile" type="file" />
+            <a id="browse-btn" class="btn btn--primary mb-0 align-self-end mr-1">
+                <i class="la la-file-upload"></i> Upload Raw Score
+            </a>
+
+            <a class="btn btn--primary mb-0 align-self-end" href="#!" id="js-export-score">
+                <i class="la la-file-download"></i> Download Template
+            </a>
+        </div>
+        <input id="score-term-id" name="Model.CourseId" value="@Model?.CourseId" hidden>
+        <input id="score-course-id" name="Model.TermId"  value="@Model?.TermId" hidden>
+        <input name="Model.TermText" value="@Model?.TermText" hidden>
+        <input name="Model.CourseAndCredit"  value="@Model?.CourseAndCredit" hidden>
+        <input name="Model.MainInstructorFullNameEn"  value="@Model?.MainInstructorFullNameEn" hidden>
+        <input id="score-is-next" name="Model.IsNext" type="checkbox" value="true" checked hidden>
+        <input name="Model.IsNext" type="checkbox" value="false" hidden>
+    </div>
+    <section class="row">
+        <div class="col-12">
+            <div id="js-get-students-score" class="form-group mb-3">
+                <partial name="~/Views/ScoreByInstructor/_ScoringTable.cshtml" model="Model">
+            </div>
+        </div>
+    </section>
+    <div class="block__action pb-0">
+        <div class="block__action-row">
+            <button class="btn btn-mw-120 btn--primary btn-save" type="button"><i class="la la-save mr-1"></i>Save</button>
+            <button class="btn btn-mw-120 btn--primary btn-next" type="button">Save and Proceed</button>
+            <a class="btn btn-mw-120 btn--cancel rounded" href="@ViewBag.ReturnUrl">Cancel</a>
+        </div>
+    </div>
+</section>

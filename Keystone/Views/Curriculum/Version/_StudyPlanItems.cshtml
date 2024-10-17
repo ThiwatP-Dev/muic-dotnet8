@@ -1,0 +1,69 @@
+@model CurriculumVersionViewModel
+
+<div class="col-12">
+    <div class="curriculum__content">
+        <div class="row">
+            <div class="col-12 tools text-right">
+                <a class='btn btn--primary' asp-controller="StudyPlan" asp-action="Create" asp-route-curriculumId="@Model.CurriculumVersion.Id" asp-route-returnUrl="@ViewBag.ReturnUrl">
+                    <i class="la la-plus mr-1 font-weight-800"></i> Add Study Plan
+                </a>
+            </div>
+        </div>
+        
+        @foreach (var group in Model.CurriculumVersion.PlanGroups)
+        {
+            <div>
+                <span class="color-primary font-size-18">@group.YearText (@group.TotalCredit)</span>
+                <label>@group.CurriculumVersion @group.AcademicProgram Minor and Concentration</label> 
+            </div>
+
+            <diV class="row mt-1">
+                @foreach (var plan in group.StudyPlans)
+                {
+                    <div class="col-md-12 col-lg-6 table-responsive">
+                        <label>Term @plan.Term : @plan.StudyCourses?.Sum(x => x.Credit) cr.</label>
+                        <a asp-controller="StudyPlan" asp-action="Edit" asp-controller="StudyPlan"
+                           asp-route-studyPlanId="@plan.Id" asp-route-versionId="@Model.CurriculumVersion.Id"
+                           asp-route-returnUrl="@ViewBag.ReturnUrl"
+                           class="popover-link color-primary">
+                            <i class="la la-edit mr-1 font-weight-800"></i>
+                        </a>
+                        <a data-toggle="modal" 
+                           data-target="#delete-confirm-modal" 
+                           data-controller="StudyPlan" 
+                           data-action="Delete" 
+                           data-value="@plan.Id"
+                           data-return-url="@ViewBag.ReturnUrl"
+						   class="popover-link">
+						    <i class="la la-trash delete"></i>
+			            </a>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Courses</th>
+                                    <th class="text-center w-100">Credits</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var course in plan.StudyCourses)
+                                {
+                                    <tr>
+                                        <td>@course.NameEn</td>
+                                        <td>@course.CreditText</td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td><b>Total</b></td>
+                                    <td>@plan.TotalCredit</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                }
+            </diV>
+            <hr>
+        }
+    </div>
+</div>

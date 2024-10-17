@@ -1,0 +1,35 @@
+@model CourseGroupingViewModel
+
+<div class="block block--underline mb-0">
+    <div class="block__title">
+		<header>Add Course</header>
+	</div>
+
+    <div class="block__body">
+        <div class="row form-group">
+            <div class="col-10">
+                <select class="chosen-select form-control js-add-course-id" asp-for="CourseId" asp-items="ViewBag.Courses">
+                    <option selected value="">Select</option>
+                </select>
+                <label>Course<span class="text-danger">*</span></label>
+            </div>
+            <div class="col-2">
+                <select class="chosen-select form-control js-add-grade-id" asp-for="RequiredGradeId" asp-items="ViewBag.Grades">
+                    <option selected value="">Select</option>
+                </select>
+                <label>Grade<span class="text-danger">*</span></label>
+            </div>
+        </div>
+
+        <input asp-for="CourseGroupId" hidden>
+        <input asp-for="GraduatingRequestId" hidden>
+        <input name="returnUrl" value="@ViewBag.ReturnUrl" hidden>
+
+        <div class="block__action">
+            <div class="block__action-row">
+                <button class="btn btn-mw-120 btn--primary js-submit-add-grouping-course">Save</button>
+                <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-mw-120 btn--cancel rounded">Close</a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,141 @@
+@model FinanceOtherFeeFormModel
+@{ 
+    ViewData["Title"] = "Add Finance Other Fee"; 
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <form class="ks-form container" asp-controller="FinanceOtherFee" asp-action="Create" method="POST">
+                @Html.AntiForgeryToken()
+                <div class="block__body">
+                    <div class="row form-group">
+                        <div class="col-12">
+                            <input class="form-control js-cascade-student-code" asp-for="StudentCode" type="text">
+                            <label>Student Code</label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-12">
+                            <select class="chosen-select form-control js-cascade-term" asp-for="TermId" asp-items="ViewBag.StudentTerms">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Term</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <table id="js-add-fee-method" class="table table-bordered m-0">
+                            <thead>
+                                <tr>
+                                    <th class="text-center w-50">#</th>
+                                    <th>Fee</th>
+                                    <th class="w-250">Unit Price</th>
+                                    <th class="w-250">Quantity</th>
+                                    <th class="text-center w-50">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>
+                                        <select class="chosen-select form-control js-cascade-fee" name="FeeItems[0].FeeItemId" asp-items="ViewBag.FeeItems">
+                                            <option selected disabled>Select</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <span class="js-cascade-default-price"></span>
+                                    </td>
+                                    <td>
+                                        <input class="form-control__table" name="FeeItems[0].Quantity" type="number">
+                                    </td>
+                                    <td class="text-nowrap td-actions">
+                                        <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                            <i class="la la-trash delete"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="form-group">
+                        <table id="js-add-payment-method" class="table table-bordered m-0">
+                            <thead>
+                                <tr>
+                                    <th class="text-center w-50">#</th>
+                                    <th>Payment Method</th>
+                                    <th class="w-250">Amount</th>
+                                    <th class="text-center w-50">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>
+                                        <select class="chosen-select form-control" name="PaymentMethods[0].PaymentMethodId" asp-items="ViewBag.PaymentMethods">
+                                            <option selected disabled>Select</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input class="form-control__table js-finance-paid" name="PaymentMethods[0].Amount">
+                                    </td>
+                                    <td class="text-nowrap td-actions">
+                                        <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                            <i class="la la-trash delete"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-4">
+                            <div>Total Paid Amount <span class="js-finance-paid-amount">0</span></div>
+                        </div>
+                    </div>
+
+                    <input asp-for="Amount" type="hidden">
+                    <input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+
+                    <div class="block__action container">
+                        <div class="block__action-row row">
+                            <div class="col-12">
+                                <button class="btn btn-mw-120 btn--primary" asp-route-returnUrl="@ViewBag.ReturnUrl" type="submit">Paid</button>
+                                <a class="btn btn-mw-120 btn--cancel" href="@ViewBag.ReturnUrl">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Modals {
+    <partial name="_DeleteRowConfirmModals">
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/finance-other-fee.js"></script>
+    <script>
+        $(document).ready( function() {
+            var table = new RowAddAble({
+                TargetTable: "#js-add-payment-method",
+                TableTitle: 'Payment Method',
+                ButtonTitle: 'Payment Method'
+            });
+            table.RenderButton();
+        });
+        $(document).ready( function() {
+            var table = new RowAddAble({
+                TargetTable: "#js-add-fee-method",
+                TableTitle: 'Fee Item',
+                ButtonTitle: 'Fee'
+            });
+            table.RenderButton();
+        });
+    </script>
+}

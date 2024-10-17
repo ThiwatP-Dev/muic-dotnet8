@@ -1,0 +1,20 @@
+@model CurriculumInformation
+
+<div id="create-modal-curriculum-information" class="modal fadeIn animated js-modal-form" tabindex="-1" role="dialog"
+     aria-hidden="true" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+		<div class="modal-content">
+			<div class="block block--underline mb-0">
+				<div class="block__title">
+					<header>Add Curriculum Version</header>
+				</div>
+				<div class="block__body">
+					<form class="ks-form container py-0" asp-controller="CurriculumInformation" asp-action="Create" method="POST">
+						@Html.AntiForgeryToken()
+						<partial name="_Form.cshtml">
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

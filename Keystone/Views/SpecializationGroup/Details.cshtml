@@ -1,0 +1,30 @@
+@model CurriculumVersionViewModel
+@{
+	ViewData["Title"] = @Model?.CurriculumVersion?.NameEn;
+}
+
+<section>
+	<div class="row">
+		<div class="ks-page-header col-12">
+			<h2 class="ks-page-header__title">
+                <a class="btn-back" href="@ViewBag.ReturnUrl">
+					<i class="la la-angle-double-left mr-1"></i>Back
+				</a>
+			</h2>
+		</div>
+	</div>
+</section>
+
+<section id="curriculum">
+	<div class="block pt-3 px-2">
+		<partial name="~/Views/Curriculum/Version/_CurriculumItems.cshtml">
+	</div>
+</section>
+
+@section Modals {
+	<partial name="_DeleteConfirmModals">
+}
+
+@section Scripts {
+	<script type="text/javascript" src="~/js/pages/curriculum-details.js"></script>
+}

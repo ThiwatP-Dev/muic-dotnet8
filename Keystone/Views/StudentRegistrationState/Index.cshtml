@@ -1,0 +1,93 @@
+@model StudentStateViewModel
+@{ 
+    ViewData["Title"] = "Student Registration State";
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>@ViewData["Title"]</header>
+            </div>
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="StudentRegistrationState" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group mb-0">
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Academic Level<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="ViewBag.Terms">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Term<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.Code" type="text">
+                            <label>Student Code<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3 align-self-end text-right text-nowrap">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <a id="js-reset-btn" class="btn btn-mw-120 btn--reset" asp-action="Index">Reset</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (Model != null && Model.StudentState != null)
+{
+    <section class="row">
+        <div class="col-12">
+            <div class="block block--underline">
+                <div class="block__title">
+                    <header>Current Registration State</header>
+                </div>
+                
+                <div class="block__body">
+                    <div class="row form-group">
+                        <div class="col-12">
+                            <div class="form-control-label d-flex align-items-center">@Model?.StudentState?.StateText</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="block block--underline">
+                <div class="block__title">
+                    <header>Update Registration State</header>
+                </div>
+                
+                <form class="form-horizontal" asp-controller="StudentRegistrationState" asp-action="Update" method="POST">
+                    @Html.AntiForgeryToken()
+                    <div class="block__body">
+                        <div class="form-group">
+                            <select class="chosen-select form-control" asp-for="State" asp-items="ViewBag.StudentStates">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>State<span class="text-danger">*</span></label>
+                        </div>
+                    </div>
+
+                    <input name="StudentId" value="@Model.StudentState.StudentId" type="hidden">
+                    <input name="TermId" value="@Model.StudentState.TermId" type="hidden">
+
+                    <div class="block__action container">
+                        <div class="block__action-row">
+                            <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+}

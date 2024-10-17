@@ -1,0 +1,13 @@
+@model string
+@if (Model == "a")
+{
+    <span class="ks-label bg-success">Accept</span>
+}
+else if (Model == "j")
+{
+    <span class="ks-label bg-danger">Reject</span>
+}
+else
+{
+    <span class="ks-label bg-warning">Request</span>
+}

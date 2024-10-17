@@ -1,0 +1,54 @@
+@model WithdrawalPeriod
+
+<div class="block__title text-left height-3">
+    <header>@ViewData["Title"]</header>
+</div>
+
+<div class="block__body text-left height-3">
+    <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+    <div class="form-group">
+        <select class="chosen-select form-control js-cascade-academic-level" asp-for="AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+            <option selected disabled>Select</option>
+        </select>
+        <label>Adacemic Level<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="AcademicLevelId"></span>
+    </div>
+
+    <div class="form-group">
+        <select class="chosen-select form-control js-cascade-term" asp-for="TermId" asp-items="ViewBag.Terms">
+            <option selected disabled>Select</option>
+        </select>
+        <label>Term<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="TermId"></span>
+    </div>
+    
+    <div class="form-group">
+        <input class="form-control js-date-time" asp-for="StartedAt" type="text">
+        <label>Start Date<span class="text-danger">*</span></label>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control js-date-time" asp-for="EndedAt" type="text">
+        <label>End Date<span class="text-danger">*</span></label>
+    </div>
+
+    <div class="form-group">
+        <select class="chosen-select form-control" asp-for="Type" asp-items="ViewBag.WithdrawalPeriodTypes">
+            <option selected disabled>Select</option>
+        </select>
+        <label>Type<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="Type"></span>
+    </div>
+</div>
+
+<div class="block__action container">
+    <div class="block__action-row">
+        <button type="submit" class="btn btn-mw-120 btn--primary">Save</button>
+        <a class="btn btn-mw-120 btn--cancel"
+           asp-action="Index" 
+           asp-route-academicLevelId="@Model.AcademicLevelId"
+           asp-route-termId="@Model.TermId">
+            Cancel
+        </a>
+    </div>
+</div>

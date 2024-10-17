@@ -1,0 +1,32 @@
+.login-wrapper {
+    position: absolute;
+    top:  calc(50vh - 250px);
+    left: calc(50vw - 225px);
+    width: 450px;
+    max-height: 500px;
+    overflow: hidden;
+    //-webkit-transform: translate(-55%, 25%);
+    //transform: translate(-55%, 25%);
+}
+
+.brd-top {
+    &--primary {
+       border-top: 4px solid $primary; 
+    }
+}
+
+.logo {
+    padding-top: 20px;
+    padding-bottom: 15px;
+
+    &__img {
+        height: 70px;
+        margin-right: 10px;
+        margin-bottom: 2px;
+    }
+
+    &__title {
+        color: $black_50;
+        line-height: 2;
+    }   
+}

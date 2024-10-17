@@ -1,0 +1,118 @@
+@model QuestionnaireMemberViewModel
+@{ 
+    ViewData["Title"] = "Add Questionnaire Member"; 
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Instructor</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="QuestionnaireMember" asp-action="Create" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group m-b-30">
+                        <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-academic-level" asp-for="AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Academic Level</label>
+                        </div>
+                        <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-faculty" asp-for="FacultyId" asp-items="ViewBag.Faculties">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Faculty</label>
+                        </div>
+                        <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-department" asp-for="DepartmentId" asp-items="ViewBag.Departments">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Department</label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-4">
+                            <select class="chosen-select form-control" asp-for="InstructorTypeId" asp-items="ViewBag.InstructorTypes">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Instructor Type</label>
+                        </div>
+                        <div class="col-4">
+                            <input class="form-control" asp-for="CodeAndName" type="text">
+                            <label>Name</label>
+                        </div>
+
+                        <input name="returnUrl" value="@ViewBag.ReturnUrl" type="hidden">
+                        
+                        <div class="col-4 align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Instructor List</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="QuestionnaireMember" asp-action="SaveCreate" method="POST">
+                    <input name="returnUrl" value="@ViewBag.ReturnUrl" type="hidden">
+                    <div class="box-scroll__content border js-render-nicescroll p-0">
+                        <table id="js-questionnaire-member-instructor" class="table table-bordered m-0">
+                            <thead class="scroll-header">
+                                <tr>
+                                    <th class="w-10 text-center">
+                                        <input id="checkAll" class="js-check-all" name="IsChecked" type="checkbox">
+                                        <label class="mt-2 mb-0 m-l-2" for="checkAll"></label>
+                                    </th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                </tr>
+                            </thead>
+                            <tbody class="js-items">
+                                @for (int i = 0; i < Model.Instructors.Count; i++)
+                                {
+                                    <tr class="js-suggestion-parent">
+                                        <td class="w-50">
+                                            <input id="Instructors[@i]" class="form-check-input" name="Instructors[@i].IsChecked" value="@Model.Instructors[i].IsChecked" checked="@Model.Instructors[i].IsChecked" type="checkbox">
+                                            <label class="js-focus-item m-0" for="Instructors[@i]"></label>
+                                        </td>
+                                        <td>@Model.Instructors[i].FullName</td>
+                                        <td>@Model.Instructors[i].Email</td>
+                                    </tr>
+                                    <input asp-for="Instructors[i].InstructorId" type="hidden">
+                                }
+                                <input asp-for="AcademicLevelId" type="hidden">
+                                <input asp-for="FacultyId" type="hidden">
+                                <input asp-for="DepartmentId" type="hidden">
+                                <input asp-for="InstructorTypeId" type="hidden">
+                                <input asp-for="CodeAndName" type="hidden">
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="block__action-row">
+                        <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+                        <a class="btn btn-mw-120 btn--cancel" href="@ViewBag.ReturnUrl">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts{
+    <script type="text/javascript" src="~/js/pages/questionnaire-member.js"></script>
+}

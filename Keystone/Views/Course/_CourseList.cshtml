@@ -1,0 +1,65 @@
+@model PagedResult<Course>
+@{
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+
+@if (Model != null && Model.Results.Any())
+{
+    var recordNumber = Model?.FirstRowOnPage;
+    foreach(var item in Model.Results) 
+    {
+        <tr>
+            <td>@recordNumber</td>
+            <td>@item.Code</td>
+            <td>@item.NameEn</td>
+            <td>@item.NameTh</td>
+            <td>@item.CreditText</td>
+            <td>@item.Faculty?.NameEn</td>
+            <td>@item.Department?.NameEn</td>
+            <td>
+                <partial name="_BooleanCheck" model="@item.IsAllowAddNewSection">
+            </td>
+            <td>
+                <partial name="_BooleanActive" model="@item.IsActive">
+            </td>
+            <td class="text-nowrap td-actions">
+                <a asp-action="TuitionFeeDetails" 
+                   asp-controller="Course" 
+                   asp-route-courseId="@item.Id" 
+                   asp-route-academicLevelId="@item.AcademicLevelId"
+                   asp-route-returnUrl="@contextPath">
+                    <i class="la la-money warning"></i>
+                </a>
+                <a asp-action="Details" 
+                   asp-controller="Course" 
+                   asp-route-id="@item.Id"
+                   asp-route-returnUrl="@contextPath">
+                    <i class="la la-info info"></i>
+                </a>
+                <a asp-controller="Course" 
+                   asp-action="Edit" 
+                   asp-route-Id="@item.Id"
+                   asp-route-returnUrl="@contextPath">
+                    <i class="la la-edit edit"></i>
+                </a>
+                <a data-toggle="modal" 
+                   data-target="#delete-confirm-modal" 
+                   data-controller="Course" 
+                   data-action="Delete" 
+                   data-value="@item.Id"
+                   data-return-url="@contextPath">
+                    <i class="la la-trash delete"></i>
+                </a>
+            </td>
+        </tr>
+        recordNumber++;
+    }
+}
+else 
+{
+    <tr>
+        <td colspan="9">
+            <i class="text-danger">No data</i>
+        </td>
+    </tr>
+}

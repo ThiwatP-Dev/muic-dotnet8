@@ -1,0 +1,93 @@
+@model WithdrawByStudentViewModel
+@Html.AntiForgeryToken()
+
+@if (Model != null)
+{
+    <div class="block">
+        <div class="block__body">
+            <form asp-controller="Withdrawal" asp-action="SaveWithdrawalByStudent" asp-route-returnUrl="@ViewBag.ReturnUrl" method="POST">
+                <div class="text-danger text-center" asp-validation-summary="ModelOnly"></div> 
+                <div class="row form-group mb-0">
+                    <div class="col-6">
+                        <select class="chosen-select form-control js-render-type" asp-for="Type" asp-items="ViewBag.WithdrawalTypes">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Type<span class="text-danger">*</span></label>
+                        <span class="text-danger" asp-validation-for="Type"></span>
+                    </div>
+           @*         <div class="col-3">
+                        <select class="chosen-select form-control js-render-approved-by" asp-for="ApprovedBy">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Approved by<span class="text-danger">*</span></label>
+                        <span class="text-danger" asp-validation-for="ApprovedBy"></span>
+                    </div>*@
+                    <div class="col-3">
+                        <input class="form-control js-single-date" asp-for="RequestedAt" type="text" autocomplete="off">
+                        <label>Requested At<span class="text-danger">*</span></label>
+                        <span class="text-danger" asp-validation-for="RequestedAt"></span>
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="color-primary font-weight-700 mb-3">
+                        Course List
+                    </div>
+
+                    <div class="block js-checklist-course">
+                        <div class="box-scroll__header pb-1">
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="">
+                                        <input id="check-all" class="form-check-input js-check-all unchecked" type="checkbox">
+                                        <label for="check-all">Select All <span class="js-item-count">(0)</span></label>
+                                    </div>
+                                </div>
+                                <div class="col-2"><b>Withdrawal Status</b></div>
+                                <div class="col-2"><b>Approved By</b></div>
+                                <div class="col-2"><b>Approved At</b></div>
+                                <div class="col-2"><b>Type</b></div>
+                            </div>
+                        </div>
+                        <div class="js-render-nicescroll box-scroll__content js-items">
+                            @for (int i = 0; i < Model.RegistrationCourses.Count; i++)
+                            {
+                                <div class="row">
+                                    <div class="col-4">
+                                        <input id="@Model.RegistrationCourses[i].Course.Code" class="form-check-input regis-course" name="CourseIds"
+                                               type="checkbox" value="@Model.RegistrationCourses[i].Id">
+                                        <label class="m-0" for="@Model.RegistrationCourses[i].Course.Code">
+                                            @($"{ Model.RegistrationCourses[i].Course?.Code } ({ Model.RegistrationCourses[i].Section?.Number }) { Model.RegistrationCourses[i].Course?.NameEn }")
+                                        </label>
+                                    </div>
+                                    @if (Model.RegistrationCourses[i].Withdrawals.Any())
+                                    {
+                                            @for (int j = 0; j < Model.RegistrationCourses[i].Withdrawals.Count; j++)
+                                            {
+                                                    <div class="col-2">@($"{ Model.RegistrationCourses[i].Withdrawals[j]?.StatusText}")</div>
+                                                    <div class="col-2">@($"{ Model.RegistrationCourses[i].Withdrawals[j]?.Instructor?.FullNameEn}")</div>
+                                                    <div class="col-2">@($"{ Model.RegistrationCourses[i].Withdrawals[j]?.RequestedAtText}")</div>
+                                                    <div class="col-2">@($"{ Model.RegistrationCourses[i].Withdrawals[j].TypeText}")</div>
+                                            }
+                                    }
+                                </div>
+                                <hr class="w-100x">
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <input id="student-code" asp-for="StudentCode" type="hidden">
+                <input id="term-id" asp-for="TermId" type="hidden">
+                <input asp-for="AcademicLevelId" type="hidden">
+
+                <div class="block__action container">
+                    <div class="block__action-row">
+                        <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+                        <a class="btn btn-mw-120 btn--link" href="@ViewBag.ReturnUrl">Cancel</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+}

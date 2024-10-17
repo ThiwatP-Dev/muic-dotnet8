@@ -1,0 +1,64 @@
+@model StudentTransferViewModel
+@{
+    var index = 0;
+}
+
+<div class="row form-group">
+    <input asp-for="TransferUniversityId" type="hidden">
+    <input asp-for="StudentId" type="hidden">
+    <input asp-for="StudentCode" type="hidden">
+    <input asp-for="StudentFirstName" type="hidden">
+    <input asp-for="StudentLastName" type="hidden">
+    <input asp-for="CurriculumName" type="hidden">
+    <input asp-for="CurriculumVersionName" type="hidden">
+    <input asp-for="CurriculumVersionId" type="hidden">
+    <input asp-for="CountChangedTime" type="hidden">
+    
+    @foreach (var item in Model.StudentCourses)
+    {
+        <input asp-for="@Model.StudentCourses[index].CourseGroupId" type="hidden">
+        <input asp-for="@Model.StudentCourses[index].CourseGroupName" type="hidden">
+        <input asp-for="@Model.StudentCourses[index].CourseId" type="hidden">
+        <input asp-for="@Model.StudentCourses[index].CourseCode" type="hidden">
+        <input asp-for="@Model.StudentCourses[index].CourseName" type="hidden">
+        <input asp-for="@Model.StudentCourses[index].GradeId" type="hidden"/>
+        <input asp-for="@Model.StudentCourses[index].GradeName" type="hidden"/>
+        index++;
+    }
+
+    @for (var groupIndex = 0; groupIndex < Model.StudentCourseCategorizations.Count; groupIndex++)
+    {
+        <div class="col-6 mb-2">
+            <input asp-for="@Model.StudentCourseCategorizations[groupIndex].CourseGroupId" type="hidden" />
+            <input asp-for="@Model.StudentCourseCategorizations[groupIndex].CourseGroupName" type="hidden" />
+            <h4 class="font-weight-700 mb-3">@Model.StudentCourseCategorizations[groupIndex].CourseGroupName</h4>
+            <ul id="js-course-group-@groupIndex" class="list-sortable" data-id="@Model.StudentCourseCategorizations[groupIndex].CourseGroupId">
+                @for (var courseIndex = 0; courseIndex < Model.StudentCourseCategorizations[groupIndex].courseList.Count; courseIndex++)
+                {
+                    <li>
+                        <span>@Model.StudentCourseCategorizations[groupIndex].courseList[courseIndex].CourseNameAndCredit</span>
+                        <input asp-for="@Model.StudentCourseCategorizations[groupIndex].courseList[@courseIndex].ExternalCourseId" type="hidden" />
+                        <input asp-for="@Model.StudentCourseCategorizations[groupIndex].courseList[@courseIndex].RegistrationCourseId" type="hidden" />
+                        <input class="js-course-id" asp-for="@Model.StudentCourseCategorizations[groupIndex].courseList[@courseIndex].CourseId" type="hidden" />
+                        <input asp-for="@Model.StudentCourseCategorizations[groupIndex].courseList[@courseIndex].CourseCode" type="hidden" />
+                        <input class="js-course-name-@Model.StudentCourseCategorizations[groupIndex].courseList[@courseIndex].CourseId" asp-for="@Model.StudentCourseCategorizations[groupIndex].courseList[@courseIndex].CourseName" type="hidden" />
+                        <input asp-for="@Model.StudentCourseCategorizations[groupIndex].courseList[@courseIndex].CourseNameAndCredit" type="hidden" />
+                        <input asp-for="@Model.StudentCourseCategorizations[groupIndex].courseList[@courseIndex].GradeId" type="hidden" />
+                        <input asp-for="@Model.StudentCourseCategorizations[groupIndex].courseList[@courseIndex].GradeName" type="hidden" />
+                        <input asp-for="@Model.StudentCourseCategorizations[groupIndex].courseList[@courseIndex].CourseGroupId" type="hidden" />
+                        <input asp-for="@Model.StudentCourseCategorizations[groupIndex].courseList[@courseIndex].TermId" type="hidden" />
+                        <input asp-for="@Model.StudentCourseCategorizations[groupIndex].courseList[@courseIndex].PreviousGrade" type="hidden" />
+                        <input asp-for="@Model.StudentCourseCategorizations[groupIndex].courseList[@courseIndex].IsStarCourse" type="hidden" />
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+</div>
+
+<input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+
+<div class="form-group text-right mb-0">
+    <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+    <a href="@ViewBag.ReturnUrl" class="btn btn-mw-120 btn--cancel">Cancel</a>
+</div>

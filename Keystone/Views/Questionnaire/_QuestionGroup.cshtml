@@ -1,0 +1,238 @@
+@model QuestionGroup
+
+@if(Model != null && Model.Questions.Any())
+{
+    var index = 0;
+    
+    @foreach(var item in Model.Questions)
+    {
+        var questionId = $"question-{ index }";
+
+        <div id="@(questionId)" class="question-wrapper @(index == Model.Questions.Count -1 ? "active" : "" )">
+            <h4 class="question-order">Question <span class="number">@(index + 1)</span></h4>
+            <div class="question-body">
+                <div class="title">
+                    <div class="form-group row mb-0">
+                        <div class="col">
+                            <div class="form-control-label d-flex align-items-center">English Question Name</div>
+                            <div class="form-controler-input">
+                                <input name="QuestionGroup.Questions[@index].QuestionEn" value="@(item.QuestionEn)" type="text" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <div class="form-control-label d-flex align-items-center">Thai Question Name</div>
+                                <div class="form-controler-input">
+                                    <input name="QuestionGroup.Questions[@index].QuestionTh" value="@(item.QuestionTh)" type="text" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row mb-0">
+                        <div class="col-6">
+                            <div class="form-control-label d-flex align-items-center">Question Type</div>
+                            <div class="form-control-plaintext">
+                                Multiple Choice
+                            </div>
+                            <div class="form-controler-input">
+                                <select name="QuestionGroup.Questions[@index].QuestionType" class="form-control js-select-question-type" data-value="@item.QuestionType" value="@item.QuestionType" data-target="#question-@(index + 1)-answer" data-question-number="@(index + 1)">
+                                    <option selected disabled value="">Select</option>
+                                    <option value="r">Ranking</option>
+                                    <option value="o">One Choice</option>
+                                    <option value="m">Multiple Choice</option>
+                                    <option value="s">Short Answer</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-6 d-flex">
+                            <div class="form-controler-input align-self-end">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="QuestionGroup.Questions[@index].IsActive" id="QuestionGroup_Questions_@(index)_IsActive">
+                                    <label for="QuestionGroup_Questions_@(index)_IsActive">Active</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <div id="question-@(index + 1)-answer" class="js-answer-playground">
+                    <div class="form-control-label d-flex align-items-center my-4">Answers</div>
+                    <div class="answer-wrapper">
+                        
+                        @{
+                            var answerIndex = 0;
+                        }
+
+                        @foreach(var answer in item.Answers)
+                        {
+                            if (item.QuestionType == QuestionType.RANKING.ToStringValue())
+                            {
+                                <div id="question-@(index + 1)-answer-@answerIndex" class="answer col-12 pl-0">
+                                    <div class="form-controler-input d-flex justify-conent-between">
+                                        <div class="form-check px-0 w-40x">
+                                            <h5>English Answer</h5>
+                                            <input data-type="@(QuestionType.RANKING.ToStringValue())" class="form-check-input" type="checkbox" id="checkbox1" disabled>
+                                            <label for="checkbox1"><input value="@(answer.AnswerEn)" name="QuestionGroup.Questions[@index].Answers[@answerIndex].AnswerEn" type="text" class="form-control" /></label>
+                                        </div>
+                                        <div class="form-check px-0 w-40x">
+                                            <h5>Thai Answer</h5>
+                                            <input data-type="@(QuestionType.RANKING.ToStringValue())" class="form-check-input" type="checkbox" id="checkbox1" disabled>
+                                            <label for="checkbox1"><input value="@(answer.AnswerTh)" name="QuestionGroup.Questions[@index].Answers[@answerIndex].AnswerTh" type="text" class="form-control" /></label>
+                                        </div>
+                                        <div class="form-check px-0 w-20x">
+                                            <h5>Value</h5>
+                                            <input data-type="@(QuestionType.RANKING.ToStringValue())" class="form-check-input" type="checkbox" id="checkbox1" disabled>
+                                            <label for="checkbox1"><input value="@(answer.Value)" name="QuestionGroup.Questions[@index].Answers[@answerIndex].Value" type="text" class="form-control" /></label>
+                                        </div>
+                                        <button type="button" class="btn btn--danger btn--circle js-delete-option" data-target="#question-@(index + 1)-answer-@answerIndex" data-parent="#question-@(index + 1)-answer"><i class="la la-times" data-target="#question-@(index + 1)-answer-@answerIndex" data-parent="#question-@(index + 1)-answer"></i></button>
+                                    </div>
+                                </div>
+                            }
+                            else if (item.QuestionType == QuestionType.ONE_CHOICE.ToStringValue())
+                            {
+                                <div id="question-@(index + 1)-answer-@answerIndex" class="answer col-12 pl-0">
+                                    <div class="form-controler-input d-flex justify-conent-between">
+                                        <div class="form-check px-0 w-40x">
+                                            <h5>English Answer</h5>
+                                            <input data-type="@(QuestionType.ONE_CHOICE.ToStringValue())" class="form-check-input" type="radio" id="radio-ans" disabled>
+                                            <label for="radio1"><input value="@(answer.AnswerEn)" name="QuestionGroup.Questions[@index].Answers[@answerIndex].AnswerEn" type="text" class="form-control" /></label>
+                                        </div>
+                                        <div class="form-check px-0 w-40x">
+                                            <h5>Thai Answer</h5>
+                                            <input data-type="@(QuestionType.ONE_CHOICE.ToStringValue())" class="form-check-input" type="radio" id="radio-ans" disabled>
+                                            <label for="radio1"><input value="@(answer.AnswerTh)" name="QuestionGroup.Questions[@index].Answers[@answerIndex].AnswerTh" type="text" class="form-control" /></label>
+                                        </div>
+                                        <div class="form-check px-0 w-20x">
+                                            <h5>Value</h5>
+                                            <input data-type="@(QuestionType.ONE_CHOICE.ToStringValue())" class="form-check-input" type="radio" id="radio-ans" disabled>
+                                            <label for="radio1"><input value="@(answer.Value)" name="QuestionGroup.Questions[@index].Answers[@answerIndex].Value" type="text" class="form-control" /></label>
+                                        </div>
+                                        <button type="button" class="btn btn--danger btn--circle js-delete-option" data-target="#question-@(index + 1)-answer-@answerIndex" data-parent="#question-@(index + 1)-answer"><i class="la la-times" data-target="#question-@(index + 1)-answer-@answerIndex" data-parent="#question-@(index + 1)-answer"></i></button>
+                                    </div>
+                                </div>
+                            }
+                            else if (item.QuestionType == QuestionType.MULTIPLE_CHOICE.ToStringValue())
+                            {
+                                <div id="question-@(index + 1)-answer-@answerIndex" class="answer col-12 pl-0">
+                                    <div class="form-controler-input d-flex justify-conent-between">
+                                        <div class="form-check px-0 w-40x">
+                                            <h5>English Answer</h5>
+                                            <input data-type="@(QuestionType.MULTIPLE_CHOICE.ToStringValue())" class="form-check-input" type="checkbox" id="checkbox1" disabled>
+                                            <label for="checkbox1"><input value="@(answer.AnswerEn)" name="QuestionGroup.Questions[@index].Answers[@answerIndex].AnswerEn" type="text" class="form-control" placeholder="English Answer" /></label>
+                                        </div>
+                                        <div class="form-check px-0 w-40x">
+                                            <h5>Thai Answer</h5>
+                                            <input data-type="@(QuestionType.MULTIPLE_CHOICE.ToStringValue())" class="form-check-input" type="checkbox" id="checkbox1" disabled>
+                                            <label for="checkbox1"><input value="@(answer.AnswerTh)" name="QuestionGroup.Questions[@index].Answers[@answerIndex].AnswerTh" type="text" class="form-control" placeholder="Thai Answer" /></label>
+                                        </div>
+                                        <div class="form-check px-0 w-20x">
+                                            <h5>Value</h5>
+                                            <input data-type="@(QuestionType.MULTIPLE_CHOICE.ToStringValue())" class="form-check-input" type="checkbox" id="checkbox1" disabled>
+                                            <label for="checkbox1"><input value="@(answer.Value)" name="QuestionGroup.Questions[@index].Answers[@answerIndex].Value" type="text" class="form-control" placeholder="Value" /></label>
+                                        </div>
+                                        <button type="button" class="btn btn--danger btn--circle js-delete-option" data-target="#question-@(index + 1)-answer-@answerIndex" data-parent="#question-@(index + 1)-answer"><i class="la la-times" data-target="#question-@(index + 1)-answer-@answerIndex" data-parent="#question-@(index + 1)-answer"></i></button>
+                                    </div>
+                                </div>
+                            }
+                            else if (item.QuestionType == QuestionType.SHORT_ANSWER.ToStringValue())
+                            {
+                                <div id="question-@(index + 1)-answer-@answerIndex" class="answer col-12 pl-0">
+                                    <div class="form-controler-input d-flex justify-conent-between">
+                                        <div class="form-group w-80x">
+                                            <div class="form-controler-input">
+                                                <input data-type="s" name="QuestionGroup.Questions[@index].Answers[@answerIndex].AnswerEn" type="text" class="form-control height-40 pt-0" readonly placeholder="short answer text" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                            answerIndex++;
+                        }
+                    </div>
+                    
+                    @if(item.QuestionType != QuestionType.SHORT_ANSWER.ToStringValue())
+                    {
+                        <a role="button" class="btn btn--primary btn-add-option js-add-option" data-type="@item.QuestionType" data-target="#question-@(index + 1)-answer" data-question-number="@(index + 1)">+ add option</a>
+                    }
+                    else 
+                    {
+                        <a role="button" class="btn btn--primary btn-add-option js-add-option d-none" data-type="@item.QuestionType" data-target="#question-@(index + 1)-answer" data-question-number="@(index + 1)">+ add option</a>
+                    }
+                </div>
+                <div class="question-footer">
+                    <div class="ml-auto" role="group">
+                        <button type="button" class="btn btn--primary next-question-btn js-next-question" data-parent="#question-@(index + 1)">+ Next Question</button>
+                        <button type="button" class="btn btn--danger js-delete-question" data-target="#question-@(index + 1)">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        index++;
+    }
+} 
+else 
+{
+    <div id="question-1" class="question-wrapper active">
+        <h4 class="question-order">Question <span class="number">1</span></h4>
+        <div class="question-body">
+            <div class="title">
+                <div class="form-group row mb-0">
+                    <div class="col">
+                        <div class="form-control-label d-flex align-items-center">English Question Name</div>
+                        <div class="form-controler-input">
+                            <input name="QuestionGroup.Questions[0].QuestionEn" type="text" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            <div class="form-control-label d-flex align-items-center">Thai Question Name</div>
+                            <div class="form-controler-input">
+                                <input name="QuestionGroup.Questions[0].QuestionTh" type="text" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row mb-0">
+                <div class="col-6">
+                    <div class="form-control-label d-flex align-items-center">Question Type</div>
+                    <div class="form-control-plaintext">
+                        Multiple Choice
+                    </div>
+                    <div class="form-controler-input">
+                        <select name="QuestionGroup.Questions[0].QuestionType" id="QuestionGroup_Questions_0_QuestionType" class="form-control js-select-question-type" data-target="#question-1-answer" data-question-number="1">
+                            <option selected disabled value="">Select</option>
+                            <option value="r">Ranking</option>
+                            <option value="o">One Choice</option>
+                            <option value="m">Multiple Choice</option>
+                            <option value="s">Short Answer</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-6 d-flex">
+                  <div class="form-controler-input align-self-end">
+                      <div class="form-check">
+                          <input class="form-check-input" type="checkbox" name="QuestionGroup.Questions[0].IsActive" id="QuestionGroup_Questions_0_IsActive">
+                          <label for="QuestionGroup_Questions_0_IsActive">Active</label>
+                      </div>
+                  </div>
+                </div>
+            </div>
+        
+            <div id="question-1-answer" class="js-answer-playground">
+                <div class="form-control-label d-flex align-items-center my-4">Answers</div>
+                <div class="answer-wrapper">
+                </div>
+                <a role="button" class="btn btn--primary btn-add-option js-add-option d-none" data-type="" data-target="#question-1-answer" data-question-number="1">+ add option</a>
+            </div>
+            <div class="question-footer">
+                <div class="ml-auto" role="group">
+                    <button type="button" class="btn btn--primary next-question-btn js-next-question" data-parent="#question-1">+ Next Question</button>
+                    <button type="button" class="btn btn--danger js-delete-question" data-target="#question-1">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}

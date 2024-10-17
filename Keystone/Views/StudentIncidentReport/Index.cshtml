@@ -1,0 +1,165 @@
+@model PagedResult<StudentIncidentReportViewModel>
+@{ 
+    ViewData["Title"] = "Student Incident Report"; 
+    var recordNumber = Model?.FirstRowOnPage;
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline" id="student-status-report-search">
+            <div class="block__title collapsed" data-toggle="collapse" data-parent="#student-status-report-search" data-target="#student-status-report-1"
+    	         aria-expanded="false">
+                 <header>Search Student Incident Report</header>
+    	    	<div class="tools">
+    	    		<div class="btn-group">
+    	    			<a class="btn btn--white btn--circle">
+    	    				<i class="la la-angle-down"></i>
+    	    			</a>
+    	    		</div>
+    	    	</div>
+    	    </div>
+
+            <div id="student-status-report-1" class="collapse show" aria-expanded="true">
+                <div class="block__body">
+                    <form class="form-horizontal" asp-controller="StudentIncidentReport" asp-action="Index" method="GET">
+                        @Html.AntiForgeryToken()
+                        <div class="row form-group m-b-30">
+                            <div class="col-3">
+                                <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                                    <option selected>Select</option>
+                                </select>
+                                <label>Academic Level<span class="text-danger">*</span></label>
+                            </div>
+                            <div class="col-3">
+                                <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="ViewBag.Terms">
+                                    <option selected>Select</option>
+                                </select>
+                                <label>Term</label>
+                            </div>
+                            <div class="col-3">
+                                <select class="chosen-select form-control " asp-for="Criteria.IncidentId" asp-items="ViewBag.Incidents">
+                                    <option selected>Select</option>
+                                </select>
+                                <label>Incident</label>
+                            </div>
+                            <div class="col-3">
+                                <input class="form-control" asp-for="Criteria.CodeAndName" type="text">
+                                <label>Code and Name</label>
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col align-self-end text-right">
+                                <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                    <i class="la la-search mr-2"></i>Search
+                                </button>
+                                <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                                    Reset
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (Model != null)
+{
+    <section class="row">
+        <div class="col-12">
+            <div class="block block--underline">
+                <div class="block__title">
+                    <header>Search Result (@(Model?.RowCount ?? 0))</header>
+                </div>
+                <div class="block__body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover js-report-table w-100x">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">#</th>
+                                    <th class="text-center">Term</th>
+                                    <th class="text-center">Code</th>
+                                    <th>Title</th>
+                                    <th>First Name</th>
+                                    <th>Middle Name</th>
+                                    <th>Last Name</th>
+                                    <th>Incident</th>
+                                    @*<th class="text-center">Locked Document</th>*@
+                                    <th class="text-center">Locked Registration</th>
+                                    <th class="text-center">Locked Payment</th>
+                             @*       <th class="text-center">Locked Visa</th>
+                                    <th class="text-center">Locked Graduation</th>
+                                    <th class="text-center">Locked Change Faculty</th>*@
+                                    <th class="text-center">Locked SignIn</th>
+                                    <th>Approved By</th>
+                                    <th>Approved At</th>
+                                    <th>Created By</th>
+                                    <th>Created At</th>                             
+                                    <th>Unlocked By</th>
+                                    <th>Unlocked At</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                                @if (Model != null && Model.Results.Any())
+                                {
+                                    foreach (var item in Model.Results) 
+                                    {
+                                        <tr>
+                                            <td>@recordNumber</td>
+                                            <td>@item.TermText</td>
+                                            <td>@item.StudentCode</td>
+                                            <td>@item.TitleEn</td>
+                                            <td>@item.FirstNameEn</td>
+                                            <td>@item.MidNameEn</td>
+                                            <td>@item.LastNameEn</td>
+                                            <td>@item.Incident</td>
+                           @*                 <td>
+                                                <partial name="_BooleanResult" model="@item.LockedDocument"></partial>
+                                            </td>*@
+                                            <td>
+                                                <partial name="_BooleanResult" model="@item.LockedRegistration"></partial>
+                                            </td>
+                                            <td>
+                                                <partial name="_BooleanResult" model="@item.LockedPayment"></partial>
+                                            </td>
+                               @*             <td>
+                                                <partial name="_BooleanResult" model="@item.LockedVisa"></partial>
+                                            </td>
+                                            <td>
+                                                <partial name="_BooleanResult" model="@item.LockedGraduation"></partial>
+                                            </td>
+                                            <td>
+                                                <partial name="_BooleanResult" model="@item.LockedChangeFaculty"></partial>
+                                            </td>*@
+                                            <td>
+                                                <partial name="_BooleanResult" model="@item.LockedSignIn"></partial>
+                                            </td>
+                                            <td>@item.ApprovedBy</td>
+                                            <td>@item.ApprovedAtText</td>
+                                            <td>@item.CreatedBy</td>
+                                            <td>@item.CreatedAtText</td>                                          
+                                            <td>@((item.IsActive) ? "" : item.UpdatedBy)</td>
+                                            <td>@((item.IsActive) ? "" : item.UpdatedAtText)</td>
+                                        </tr>
+                                        recordNumber++;
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="19">
+                                            <i class="text-danger">No Data</i>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}

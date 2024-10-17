@@ -1,0 +1,139 @@
+@model RegistrationStudentByCourseViewModel
+@{ 
+    ViewData["Title"] = "Registration Student By Course Report";
+}
+
+<section class="d-print-none">
+    <div class="block block--underline">
+        <div class="block__title">
+            <header>@ViewData["Title"]</header>
+        </div>
+        <form class="form-horizontal" asp-controller="RegistrationStudentByCourse" asp-action="Index" method="GET">
+            @Html.AntiForgeryToken()
+            <div class="block__body">
+                <div class="row form-group">
+                    <div class="col-4">
+                        <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Academic Level<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-4">
+                        <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="ViewBag.Faculties" data-placeholder="Select">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label for="Criteria.FacultyId">Division</label>
+                    </div>
+                    <div class="col-4">
+                        <select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentId" asp-items="ViewBag.Departments" data-placeholder="Select">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label for="Criteria.DepartmentId">Major</label>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-2">
+                        <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.StartTermId" asp-items="ViewBag.Terms">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>From Term</label>
+                    </div>
+                    <div class="col-2">
+                        <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.EndTermId" asp-items="ViewBag.Terms">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>To Term</label>
+                    </div>
+                    <div class="col-4">
+                        <h4 class="font-size-default m-y-4">Courses</h4>
+                        <select class="chosen-select form-control" asp-for="Criteria.CourseIds"
+                                asp-items="@ViewBag.Courses" data-placeholder="Select" multiple></select>
+                    </div>
+                    <div class="col-4">
+                        <input class="form-control" asp-for="Criteria.Code">
+                        <label for="Criteria.Code">Student Code</label>
+                    </div>
+                </div>
+
+                <div class="row form-group mb-0">
+                    <div class="col-9">
+                        <div class="form-check" style="position : absolute; bottom : 0">
+                            <input class="form-check-input" type="checkbox" asp-for="Criteria.IsIncludeUnConfirm">
+                            <label for="Criteria_IsIncludeUnConfirm" title="Include Un Confirm (Slow perfomance warning)">Include Un Confirm (Slow perfomance warning. Work only when filter courses has value)</label>
+                        </div>
+                    </div>
+                    <div class="col-3 align-self-end text-right text-nowrap">
+                        <button class="btn btn--primary btn-mw-120 m-r-5" type="submit">
+                            <i class="la la-search mr-2"></i>Search
+                        </button>
+                        <button class="btn btn-mw-120 btn--reset js-reset-btn" type="reset">
+                            Reset
+                        </button>
+                    </div>
+                </div>            
+            </div>
+        </form>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.Results?.Count() ?? 0))</header>
+            </div>
+
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover js-report-table w-100x">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th class="text-center">Major</th>
+                                <th class="text-center">Type</th>
+                                <th>Course</th>
+                                <th class="text-center">Section</th>
+                                <th class="text-right">Amount</th>
+                                <th class="text-center">Confirm Invoice</th>
+                                <th class="text-center">Paid</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Results.Any())
+                            {
+                                foreach (var item in Model.Results)
+                                {
+                                    <tr>
+                                        <td>@item.StudentCode</td>
+                                        <td>@item.StudentFullNameEn</td>
+                                        <td>@item.DepartmentAbbreviation</td>
+                                        <td>@item.ResidentTypeNameEn</td>
+                                        <td>@item.CourseAndCredit</td>
+                                        <td>@item.SectionNumber</td>
+                                        <td>@item.TotalAmountText</td>
+                                        <td>
+                                            <partial name="_BooleanResult" model="@item.IsConfirmInvoice">
+                                        </td>
+                                        <td>
+                                            <partial name="_BooleanResult" model="@item.IsPaid">
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="9" class="text-center">
+                                        <i class="text-danger">No Data</i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

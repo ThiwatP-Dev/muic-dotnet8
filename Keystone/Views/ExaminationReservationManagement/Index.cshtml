@@ -1,0 +1,351 @@
+@model PagedResult<ExaminationReservationManagementViewModel>
+@{ 
+    ViewData["Title"] = "Examination Reservation Management";
+    var recordNumber = Model?.FirstRowOnPage;
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Examination Reservation Management</header>
+            </div>
+
+            <div class="block__body">
+                <form asp-controller="ExaminationReservationManagement" asp-action="Index" class="form-horizontal" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group mb-30">
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-academic-level-exam" asp-for="Criteria.AcademicLevelId" asp-items="@ViewBag.AcademicLevels">
+                                <option selected disabled value="">Select</option>
+                            </select>
+                            <label>Academic Level<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-term-exam" asp-for="Criteria.TermId" asp-items="@ViewBag.Terms">
+                                <option selected value="" disabled>Select</option>
+                            </select>
+                            <label>Term<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-course-master-only" asp-for="Criteria.CourseId" asp-items="@ViewBag.Courses">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Course</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-section" asp-for="Criteria.SectionId" asp-items="@ViewBag.Sections">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Section</label>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.ExaminationTypeId" asp-items="ViewBag.ExaminationTypes">
+                                <option selected value="">All</option>
+                            </select>
+                            <label>Examination Type</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.Status" asp-items="ViewBag.ReservationStatuses"></select>
+                            <label>Status</label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control js-single-date" asp-for="Criteria.StartedAt" type="text" autocomplete="off">
+                            <label>Date From</label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control js-single-date" asp-for="Criteria.EndedAt" type="text" autocomplete="off">
+                            <label>Date To</label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-campus" asp-for="Criteria.CampusId" asp-items="ViewBag.Campuses">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Campus</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-building" asp-for="Criteria.BuildingId" asp-items="ViewBag.Buildings">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Building</label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.Floor" type="number">
+                            <label>Floor</label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.RoomName" type="text">
+                            <label>Room Name</label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.SenderType" asp-items="ViewBag.SenderTypes">
+                                <option selected disabled>All</option>
+                            </select>
+                            <label>Sender Type</label>
+                        </div>
+                        <div class="col-9 align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <form id="export-excel-form" class="form-horizontal" asp-controller="ExaminationReservationManagement" asp-action="ExportExcel" method="POST">
+            <div class="block__title">
+                <header>Search Result (@(Model?.RowCount ?? 0))</header>
+                <div class="tools pr-4">
+                    <button id="js-export-excel" class="btn btn--primary mb-0" type="submit">
+                        Export Excel
+                    </button>
+                </div>
+            </div>
+            
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover w-100x">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center">Term</th>
+                                <th>Course</th>
+                                <th>Course Name</th>
+                                <th class="text-center">Section</th>
+                                <th>Master/Joint</th>
+                                <th>Instructor</th>
+                                <th class="text-center">Examination Type</th>
+                                <th>Room</th>
+                                <th class="text-center">Date</th>
+                                <th class="text-center">Time</th>
+                                <th class="text-center">Total Student</th>
+                                <th class="text-center">Use Proctor</th>
+                                <th class="text-center">Proctor</th>
+                                <th class="text-center">Absent/Join other section Instructor</th>
+                                <th class="text-center">Booklet</th>
+                                <th class="text-center">Calculator</th>
+                                <th class="text-center">Appendix</th>
+                                <th class="text-center">Open Book</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Sender</th>
+                                <th>Approved Date</th>
+                                <th>Approved By</th>
+                                @* <th class="text-center">Update Status</th> *@
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Results.Any())
+                            {
+                                @for (int j = 0; j < Model.Results.Count; j++)
+                                {
+                                    <tr>
+                                        <td rowspan="2">@recordNumber</td>
+                                        <td>@Model.Results[j].TermText</td>
+                                        <td>@Model.Results[j].CourseCodeAndCredit</td>
+                                        <td>@Model.Results[j].CourseName</td>
+                                        <td>@Model.Results[j].SectionNumber</td>
+                                         <td>
+                                                @if(Model.Results[j].ParentSectionId == 0 || Model.Results[j].ParentSectionId == null)
+                                                {
+                                                    @* @for (var i = 0; i < item.JointSections.Count(); i++)
+                                                    {
+                                                        if (i != item.JointSections.Count() - 1)
+                                                        {
+                                                            <span>
+                                                            @item.JointSections[i].CourseCode (@item.JointSections[i].Number),
+                                                            </span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span>
+                                                            @item.JointSections[i].CourseCode (@item.JointSections[i].Number)
+                                                            </span>
+                                                        }
+                                                    } *@
+                                                    @Model.Results[j].JointSectionsString
+                                                }
+                                                else
+                                                {
+                                                     <span>
+                                                    @Model.Results[j].ParentSectionCourseCode (@Model.Results[j].ParentSectionNumber) [Master]
+                                                      </span>
+                                                }
+                                        </td>
+                                        <td>@Model.Results[j].InstructorFullNameEn</td>
+                                        <td>@Model.Results[j].ExaminationType</td>
+                                        <td>@Model.Results[j].Room</td>
+                                        <td>@Model.Results[j].DateText</td>
+                                        <td>@Model.Results[j].Time</td>
+                                        <td>@Model.Results[j].TotalStudent</td>
+                                        @if(Model.Results[j].Id != 0)
+                                        {
+                                        <td>
+                                            <partial name="_BooleanCheck" model="@Model.Results[j].UseProctor"></partial>
+                                        </td>
+                                        <td>@Model.Results[j].TotalProctor</td>
+                                        <td>
+                                            <partial name="_BooleanCheck" model="@Model.Results[j].AbsentInstructor"></partial>
+                                        </td>
+                                        <td>
+                                            <partial name="_BooleanCheck" model="@Model.Results[j].AllowBooklet"></partial>
+                                        </td>
+                                        <td>
+                                            <partial name="_BooleanCheck" model="@Model.Results[j].AllowCalculator"></partial>
+                                        </td>
+                                        <td>
+                                            <partial name="_BooleanCheck" model="@Model.Results[j].AllowAppendix"></partial>
+                                        </td>
+                                        <td>
+                                            <partial name="_BooleanCheck" model="@Model.Results[j].AllowOpenbook"></partial>
+                                        </td>
+                                        }
+                                        else
+                                        {
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        }
+                                        <td>
+                                            <partial name="_ApproveStatus" model="@Model.Results[j].Status">
+                                        </td>
+                                        <td>@Model.Results[j].SenderTypeText</td>
+                                        <td>@Model.Results[j].ApprovedAtText</td>
+                                        <td>@Model.Results[j].ApprovedByFullNameEn</td>
+                                        @* <td class="text-nowrap td-actions">
+                                            @if (item.Status != "w")
+                                            {
+                                                <a class="btn btn--warning btn-mw-120"
+                                                   asp-action="WaitingSlot" 
+                                                   asp-route-id="@item.Id">Waiting
+                                                </a>
+                                            }
+
+                                            @if (item.Status != "r")
+                                            {
+                                                <a class="btn btn--danger btn-mw-120"
+                                                   asp-action="RejectSlot" 
+                                                   asp-route-id="@item.Id">Reject
+                                                </a>
+                                            }
+                                        </td> *@
+                                        <td class="text-nowrap td-actions">
+                                            @if(Model.Results[j].Id != 0)
+                                            {
+                                                <a data-toggle="modal"
+                                                data-target="#edit-examination-reservation"
+                                                data-return-url="@contextPath"
+                                                data-room-id="@Model.Results[j].RoomId"
+                                                data-value="@Model.Results[j].Id">
+                                                <i class="la la-edit edit"></i>
+                                                </a>
+                                                <a data-toggle="modal" 
+                                                data-target="#delete-confirm-modal" 
+                                                data-controller="ExaminationReservationManagement" 
+                                                data-action="Delete" 
+                                                data-return-url="@contextPath"
+                                                data-value="@Model.Results[j].Id">
+                                                    <i class="la la-trash delete"></i>
+                                                </a>
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="22" class="text-left">
+                                            <p>Student Remark: @Model.Results[j].StudentRemark</p>
+                                        </td>
+                                    </tr>
+                                    recordNumber++;
+
+                                    <input asp-for="Results[j].TermText" hidden>
+                                    <input asp-for="Results[j].CourseCode" hidden>
+                                    <input asp-for="Results[j].CourseName" hidden>
+                                    <input asp-for="Results[j].CourseCredit" hidden>
+                                    <input asp-for="Results[j].CourseLecture" hidden>
+                                    <input asp-for="Results[j].CourseLab" hidden>
+                                    <input asp-for="Results[j].CourseOther" hidden>
+                                    <input asp-for="Results[j].InstructorFullNameEn" hidden>
+                                    <input asp-for="Results[j].SectionNumber" hidden>
+                                    <input asp-for="Results[j].Date" hidden>
+                                    <input asp-for="Results[j].DateText" hidden>
+                                    <input asp-for="Results[j].StartTime" hidden>
+                                    <input asp-for="Results[j].EndTime" hidden>
+                                    <input asp-for="Results[j].TotalStudent" hidden>
+                                    <input asp-for="Results[j].ParentSectionCourseCode" hidden>
+                                    <input asp-for="Results[j].ParentSectionNumber" hidden>
+                                    <input asp-for="Results[j].ParentSectionId" hidden>
+                                    <input asp-for="Results[j].ParentSeatUsed" hidden>
+                                    <input asp-for="Results[j].Status" hidden>
+                                    <input asp-for="Results[j].IsClosed" hidden>
+                                    <input asp-for="Results[j].IsSpecialCase" hidden>
+                                    <input asp-for="Results[j].IsOutbound" hidden>
+                                    <input asp-for="Results[j].Room" hidden>
+                                    <input asp-for="Results[j].ExaminationType" hidden>
+                                    <input asp-for="Results[j].StudentRemark" hidden>
+                                    <input asp-for="Results[j].UseProctor" hidden>
+                                    <input asp-for="Results[j].TotalProctor" hidden>
+                                    <input asp-for="Results[j].AbsentInstructor" hidden>
+                                    <input asp-for="Results[j].AllowBooklet" hidden>
+                                    <input asp-for="Results[j].AllowCalculator" hidden>
+                                    <input asp-for="Results[j].AllowAppendix" hidden>
+                                    <input asp-for="Results[j].AllowOpenbook" hidden>
+                                    <input asp-for="Results[j].SenderTypeText" hidden>
+                                    <input asp-for="Results[j].IsOutbound" hidden>
+                                    <input asp-for="Results[j].ApprovedAtText" hidden>
+                                    <input asp-for="Results[j].ApprovedByFullNameEn" hidden>
+                                    <input asp-for="Results[j].JointSectionsString" hidden>
+                                    <input asp-for="Results[j].Status" hidden>
+                                    <input asp-for="Results[j].ApprovedAt" hidden>
+                                    <input asp-for="Results[j].ApprovedBy" hidden>
+                                }
+                            }
+                            else 
+                            {
+                                <tr>
+                                    <td colspan="23">
+                                        <i class="text-danger">No Data</i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            </form>
+        </div>
+        @(await Component.InvokeAsync<PagerViewComponent>(Model))
+    </div>
+</section>
+
+@section Modals {
+    <partial name="_DeleteConfirmModals">
+    <partial name="_EditExaminationReservationModal" model="new ExaminationReservation()">
+}
+
+@section Scripts {
+    <script src="~/js/pages/ajax-cascading/building-cascade.js"></script>
+    <script type="text/javascript" src="~/js/pages/examination-reservation-modal.js"></script>
+    <script type="text/javascript" src="~/js/pages/exam-reservation.js"></script>
+}

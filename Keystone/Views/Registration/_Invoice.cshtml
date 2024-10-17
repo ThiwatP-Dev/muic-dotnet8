@@ -1,0 +1,123 @@
+@model List<Invoice>
+@{
+    var index = 1;
+    var studentCode = Model.Any() ? Model.First().Student?.Code : null;
+    var termId = Model.Any() ? Model.First().TermId : null;
+    var academicId = Model.Any() ? Model.First().Term?.AcademicLevelId : null;
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+    var isSaveAble = Model.Where(x => !x.IsCancel && x.TotalAmount > 0).All(x => x.IsPaid);
+}
+
+<section class="ks-general-info">
+    <div class="block block--underline">
+        <div class="block__body">
+            <div class="block__action">
+                  <div class="block__action-row pb-3">
+                      <a class="btn btn-mw-120 btn--primary mr-2 js-preview-receipt"
+                           data-toggle="modal" 
+                           data-target="#receipt-preview-modal" 
+                           data-controller="Receipt" 
+                           data-action="Preview">
+                            <i class="la la-file-text mr-1"></i>Preview Invoice
+                        </a>
+                         <button class="btn btn-mw-120 btn--primary"
+                                data-toggle="modal"
+                                data-target="#confirm-modal"
+                                data-form-id="#js-confirm-payment-submit"
+                                disabled="@(isSaveAble? null : "disabled")"
+                                type="button">Confirm Invoice
+                        </button>
+                  </div>
+            </div>
+            <div class="table-responsive mb-4">
+                <table class="table table-bordered m-0">
+                    <thead>
+                        <tr>
+                            <th class="text-center w-50">#</td>
+                            <th class="text-center">Term</th>
+                            <th>Invoice No.</th>
+                            <th class="text-center">Invoice Date</th>
+                            <th>Invoice By</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center w-200">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@index</td>
+                                <td>@item.Term?.TermText</td>
+                                <td>@item.Number</td>
+                                <td>@item.CreatedAtText</td>
+                                <td>@item.CreatedByFullNameEn</td>
+                                <td>
+                                    @if (item.IsCancel)
+                                    {
+                                        <span class="ks-label bg-danger">Cancel</span> <br/>
+                                        <span>Remark: @item.CancelRemark</span>
+                                    }
+                                    else if (item.IsPaid)
+                                    {
+                                        <span class="ks-label bg-success">Paid</span>
+                                    }
+                                    else 
+                                    {
+                                        <span class="ks-label bg-danger">UnPaid</span>
+                                    }
+                                </td>
+                                <td class="text-center td-actions">
+                                    <a class="js-invoice-detail"
+                                       data-toggle="modal"
+                                       data-target="#js-invoice-details-modal"
+                                       data-value="@item.Id">
+                                        <i class="la la-info info"></i>
+                                    </a>
+                                    @if (!item.IsPaid && !item.IsCancel)
+                                    {
+                                        <a asp-controller="Waive"
+                                       asp-action="Index"
+                                       asp-route-Id="@item.Id">
+                                            <i class="la la-edit edit"></i>
+                                        </a>
+                                        if (item.TotalAmount == 0)
+                                        {
+                                             <a 
+                                                data-toggle="modal" 
+                                                data-target="#js-confirm-invoice-details-modal" 
+                                                data-value="@item.Id"
+                                                data-return-url="@contextPath"
+                                                >
+                                                <i class="la la-money-bill-wave edit"></i>
+                                            </a>
+                                        }
+                                    }
+                                    <a asp-controller="Invoice"
+                                       asp-action="InvoicePreview"
+                                       asp-route-Id="@item.Id"
+                                       asp-route-returnUrl="@contextPath">
+                                        <i class="la la-print info"></i>
+                                    </a>
+                                    @if (!item.IsPaid && item.TotalAmount > 0 && !item.IsCancel)
+                                    {
+                                        <a data-toggle="modal" 
+                                            data-target="#delete-invoice-confirm-modal" 
+                                            data-controller="Invoice" 
+                                            data-action="DeleteFromRegistration" 
+                                            data-value="@item.Id"
+                                            data-number="@item.Number"
+                                            data-return-url="@contextPath"
+                                            >
+                                            <i class="la la-trash delete"></i>
+                                        </a>
+                                    }
+                                </td>
+                            </tr>
+                            ++index;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>

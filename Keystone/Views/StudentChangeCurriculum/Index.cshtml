@@ -1,0 +1,140 @@
+@model StudentChangeCurriculumViewModel
+@{
+    ViewData["Title"] = "Student Change Curriculum";
+}
+
+<section>
+    <div class="block block--underline">
+        <div class="block__title">
+            <header>Change All Students in Curriculum</header>
+        </div>
+
+        <div class="block__body">
+            <form class="form-horizontal" asp-controller="StudentChangeCurriculum" asp-action="Index" method="GET">
+                @Html.AntiForgeryToken()
+                <div class="row form-group m-b-30">
+                    <div class="col-4">
+                        <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels" data-placeholder="Select">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Academic Level<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-4">
+                        <select class="chosen-select form-control js-cascade-curriculum" asp-for="Criteria.CurriculumId" asp-items="ViewBag.Curriculums" data-placeholder="Select">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Curriculum<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-4">
+                        <select class="chosen-select form-control js-cascade-curriculum-version" asp-for="Criteria.CurriculumVersionId" asp-items="ViewBag.CurriculumVersions" data-placeholder="Select">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Curriculum Version<span class="text-danger">*</span></label>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-12 text-right align-self-end text-nowrap">
+                        <button class="btn btn--primary btn-mw-120 mb-0 m-r-5" type="submit">
+                            <i class="la la-search mr-2"></i>Search
+                        </button>
+                        <button class="btn btn-mw-120 btn--white mb-0 js-reset-btn" type="reset">
+                            Reset
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    @if (Model != null)
+    {
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Change to Curriculum</header>
+            </div>
+            <div class="block__body">
+                <form asp-action="Index" method="POST">
+                    <div class="row form-group m-b-30">
+                        <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-curriculum" name="curriculumId" asp-items="ViewBag.CurriculumsByOpenedTermAndClosedTerm" data-placeholder="Select">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Curriculum<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-curriculum-version" name="curriculumVersionId" asp-items="ViewBag.CurriculumVersions" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Curriculum Version<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-4 text-right align-self-end">
+                            <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+                        </div>
+                    </div>
+
+                    <div class="block js-students">
+                        <div class="box-scroll__header d-flex justify-content-between pb-1">
+                            <div class="col-2">
+                                <input id="checkAll" class="form-check-input js-check-all" type="checkbox">
+                                <label for="checkAll">Select All <span class="js-item-count">(@(Model?.CurriculumStudents?.Count() ?? 0))</span></label>
+                            </div>
+                            <div class="col-4"><b>Name</b></div>
+                            <div class="col-2"><b>GPA</b></div>
+                            <div class="col-2"><b>Credit Complete</b></div>
+                            <div class="col-2"><b>Email</b></div>
+                            <span class="form-group mb-0">
+                                <input id="js-search" class="form-control search-form--mini" type="text" placeholder="Student Code or Name">
+                                <i class="la la-search inline-icon"></i>
+                            </span>
+                        </div>
+                        <!-- nice scroll box -->
+                        <div class="js-render-nicescroll box-scroll__content js-items">
+                            @if (Model.CurriculumStudents != null && Model.CurriculumStudents.Any())
+                            {
+                                for (int i = 0; i < Model.CurriculumStudents.Count(); i++)
+                                {
+                                    <div class="js-suggestion-parent">
+                                        <div class="row">
+                                            <div class="col-2">
+                                                <input id="@Model.CurriculumStudents[i].Code" class="form-check-input" 
+                                                       name="StudentIds" type="checkbox" value="@Model.CurriculumStudents[i].StudentId">
+                                                <label class="js-focus-item m-0" for="@Model.CurriculumStudents[i].Code">@Model.CurriculumStudents[i].Code</label>
+                                            </div>
+                                            <div class="col-4">@Model.CurriculumStudents[i].FullNameEn</div>
+                                            <div class="col-2">@Model.CurriculumStudents[i].GPA</div>
+                                            <div class="col-2">@Model.CurriculumStudents[i].CreditComp</div>
+                                            <div class="col-2">@Model.CurriculumStudents[i].Email</div>
+                                            <input class="js-focus-item m-0" for="@Model.CurriculumStudents[i].Code" type="hidden">
+                                            <hr class="w-100x">
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            
+                        </div>
+                    </div>
+                    <input name="academicLevelId" type="hidden" value="@Model.Criteria.AcademicLevelId">
+                </form>
+            </div>
+        </div>
+    }
+</section>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            //Check list function
+            CheckList.renderCheckbox('.js-students');
+
+            //Search function (Element Suggestion)
+            $('#js-search').on('keyup', function() {
+                let keywords = $(this).val();
+                InputSuggestion.elementSuggest(keywords, '.js-suggestion-parent');
+            })
+
+            //Nice scroll function
+            $(".js-render-nicescroll").niceScroll();
+        })
+    </script>
+}

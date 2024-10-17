@@ -1,0 +1,124 @@
+@model StudentAdvisingCourseViewModel
+@{
+	ViewData["Title"] = "Student Advising Course";
+    var index = 1;
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>@ViewData["Title"]</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="StudentAdvisingCourse" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group m-b-30">
+                        <div class="col-3">
+    						<select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId"
+                                    asp-items="ViewBag.AcademicLevels" data-placeholder="Select">
+    							<option selected disabled>Select</option>
+    						</select>
+    						<label>Academic Level<span class="text-danger">*</span></label>
+    					</div>
+                        <div class="col-3">
+    						<select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId"
+                                    asp-items="ViewBag.Terms" data-placeholder="Select">
+    							<option selected disabled>Select</option>
+    						</select>
+                            <label>Term<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+    						<select class="chosen-select form-control" asp-for="Criteria.InstructorId"
+                                    asp-items="ViewBag.Advisors" data-placeholder="Select">
+    							<option selected value="">Select</option>
+    						</select>
+    						<label>Advisor</label>
+    					</div>
+                        <div class="col-3">
+    						<select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId"
+                                    asp-items="ViewBag.Faculties" data-placeholder="Select">
+    							<option selected value="">Select</option>
+    						</select>
+    						<label>Division</label>
+    					</div>
+                    </div>
+
+                    <div class="row form-group mb-0">
+                        <div class="col-3">
+    						<select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentId"
+                                    asp-items="ViewBag.Departments" data-placeholder="Select">
+    							<option selected value="">Select</option>
+    						</select>
+    						<label>Major</label>
+    					</div>
+                        <div class="col-3">
+    						<select class="chosen-select form-control" asp-for="Criteria.CourseId"
+                                    asp-items="ViewBag.Courses" data-placeholder="Select">
+    							<option selected value="">Select</option>
+    						</select>
+    						<label>Course</label>
+    					</div>
+                        <div class="col-6 align-self-end text-right text-nowrap">
+                           <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.RowCount ?? 0))</header>
+            </div>
+
+            <div class="block__body">
+                <div class="table-responsive unset-overflow">
+                    <table class="table table-bordered js-report-table w-100x">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th>course Code</th>
+                                <th>Course Name</th>
+                                <th class="text-center">Total Student</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Results.Any())
+                            {
+                                foreach (var item in Model.Results) 
+                                {
+                                    <tr>
+                                        <td>@index</td>
+                                        <td>@item.CourseCode</td>
+                                        <td>@item.CourseName</td>
+                                        <td>@item.CountText</td>
+                                    </tr>
+                                    ++index;
+                                }
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td class="text-right"><b>Total</b></td>
+                                <td class="text-center"><b>@Model?.Results?.Sum(x => (int?)x.Count)?.ToString(StringFormat.NumberString)</b></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

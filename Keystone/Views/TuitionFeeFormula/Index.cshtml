@@ -1,0 +1,66 @@
+@model PagedResult<TuitionFeeFormula>
+@{
+    ViewData["Title"] = "Tuition Fee Formula";
+}
+
+<section class="row">
+    <div class="ks-page-header col-lg-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</div>
+
+<section>
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.RowCount ?? 0))</header>
+                <div class="tools pr-4">
+                    <a class="btn btn--primary btn-mw-120 mb-0 m-r-5" asp-action="Create">
+                        <i class="la la-plus mr-1 font-weight-800"></i> Add Tuition Fee Formula
+                    </a>
+                </div>
+            </div>
+
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table id="js-role" class="table table-bordered table-hover w-100x">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>First Parameter</th>
+                                <th>Second Parameter</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Results) 
+                            {
+                                <tr>
+                                    <td>@item.Name</td>
+                                    <td>@item.Description</td>
+                                    <td>@item.FirstTuitionFeeTypeText</td>
+                                    <td>@item.SecondTuitionFeeTypeText</td>
+                                    <td class="text-nowrap td-actions">
+                                        <a asp-controller="TuitionFeeFormula" asp-action="Edit" asp-route-id="@item.Id">
+                                            <i class="la la-edit edit"></i>
+                                        </a>
+                                        <a data-toggle="modal" 
+                                           data-target="#delete-confirm-modal" 
+                                           data-controller="TuitionFeeFormula" 
+                                           data-action="Delete" 
+                                           data-value="@item.Id">
+						                    <i class="la la-trash delete"></i>
+					                    </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<partial name="_DeleteConfirmModals" />

@@ -1,0 +1,14 @@
+@model string
+
+@if (Model == "p")
+{
+    <span class="text-success">Passed</span>
+}
+else if (Model == "c")
+{
+   <span class="text-danger">Cancel</span>
+}
+else
+{
+   <span class="text-muted">Waiting</span>
+}

@@ -1,0 +1,130 @@
+@model PagedResult<AddDropFeeConfiguration>
+@{ 
+    ViewData["Title"] = "Add Drop Fee Configuration";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+    var index = 1;
+}
+
+<section class="row">
+    <div class="col-12">
+        <div id="class-lookup-accordion1" class="panel-group d-print-none">
+            <div class="block block--underline">
+                <div class="block__title collapsed" data-toggle="collapse" data-parent="#class-lookup-accordion1" data-target="#class-lookup-accordion1-1">
+                    <header>@ViewData["Title"]</header>
+                    <div class="tools">
+                        <div class="btn-group">
+                            <a class="btn btn--white btn--circle">
+                                <i class="la la-angle-down"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="class-lookup-accordion1-1" class="collapse show" aria-expanded="true">
+                    <div class="block__body">
+                        <form class="form-horizontal" asp-controller="AddDropFeeConfiguration" asp-action="Index" method="GET">
+                            @Html.AntiForgeryToken()
+                            <div class="row form-group m-b-30">
+                                <div class="col-3">
+                                    <select class="chosen-select form-control" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels" data-placeholder="Select">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Academic Level<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col align-self-end text-right">
+                                    <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">
+                                        <i class="la la-search mr-2"></i>Search
+                                    </button>
+                                    <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                        Reset
+                                    </button>
+                                </div>
+                            </div>            
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div id="flash-message"></div>
+                <div class="block block--underline">
+                    <div class="block__title d-print-none">
+                        <header>Search Result (@(Model?.Results?.Count() ?? 0))</header>
+                        <div class="tools">
+                            <a class='btn btn--primary' asp-action="Create" asp-route-returnUrl="@contextPath">
+                                <i class="la la-plus mr-1 font-weight-800"></i> Add Drop Fee Configuration
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="block__body">
+                        <div class="table-responsive unset-overflow">
+                            <table class="table table-bordered w-100x m-0">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">#</th>
+                                        <th>Academic Level</th>
+                                        <th class="text-center">From Term</th>
+                                        <th class="text-center">To Term</th>
+                                        <th class="text-center">Add/Drop Quota</th>
+                                        <th class="text-right">Amount</th>
+                                        <th class="text-center">Status</th>
+                                        <th class="text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if(Model != null && Model.Results != null && Model.Results.Any())
+                                    {
+                                        @foreach (var item in Model.Results)
+                                        {
+                                            <tr>
+                                                <td class="text-center">@index</td>
+                                                <td>@(item.FromTerm.AcademicLevel.NameEn)</td>
+                                                <td>@(item.FromTerm?.TermText)</td>
+                                                <td>@(item.ToTerm?.TermText)</td>
+                                                <td>@item.FreeAddDropCount</td>
+                                                <td>@item.Amount</td>
+                                                <td class="text-center">
+                                                    <partial name="_BooleanActive" model="@item.IsActive" />
+                                                </td>
+                                                <td class="text-nowrap td-actions">
+                                                    <a  asp-controller="AddDropFeeConfiguration" asp-action="Edit" asp-route-returnUrl="@contextPath" asp-route-Id="@item.Id">
+                                                        <i class="la la-edit edit"></i>
+                                                    </a>
+                                                    <a  data-toggle="modal" 
+                                                        data-target="#delete-confirm-modal" 
+                                                        data-controller="AddDropFeeConfiguration" 
+                                                        data-action="Delete" 
+                                                        data-value="@item.Id">
+                                                        <i class="la la-trash delete"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            index++;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td class="text-center" colspan="8">
+                                                <i class="text-danger">No data</i>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                @(await Component.InvokeAsync<PagerViewComponent>(Model))
+            </div>
+        </div>
+    </div> 
+</section>
+
+@section Modals {
+    <partial name="_DeleteConfirmModals">
+}

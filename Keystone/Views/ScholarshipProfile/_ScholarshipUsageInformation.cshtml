@@ -1,0 +1,60 @@
+@model ScholarshipProfileViewModel
+@{
+    var index = 1;
+}
+
+<div class="form-group table-responsive mb-3">
+    <table class="table table-bordered m-0">
+        <thead>
+            <tr>
+                <th class="w-25">#</th>
+                <th>Scholarship</th>
+                <th>Term</th>
+                <th>Receipt</th>
+                <th>Invoice</th>
+                <th class="text-center">Paid At</th>
+                <th class="text-right">Amount</th>
+                <th class="text-right">Personal Pay</th>
+                <th class="text-right">Balance</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.UsageTransactions != null && Model.UsageTransactions.Any()) 
+            {
+                foreach (var item in Model.UsageTransactions)
+                {
+                    <tr>
+                        <td>@index</td>
+                        <td>@item.ScholarshipStudent.Scholarship?.NameEn</td>
+                        <td>@item.Term.TermText</td>
+                        <td>@item.Receipt?.Number</td>
+                        <td>@item.Receipt?.Invoice?.Number</td>
+                        <td>@item.PaidAtText</td>
+                        <td>@item.UsedScholarshipText</td>
+                        <td>@item.PersonalPayText</td>
+                        <td>@item.BalanceText</td>
+                    </tr>
+                    index++;
+                }
+            }
+            else
+            {
+                <tr>
+                    <td class="text-center" colspan="9">NO DATA</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="6" class="text-right"><b>Total</b></td>
+                <td class="text-right">
+                    <b>@Model?.UsageTransactions?.Sum(x => (decimal?)x.UsedScholarship)?.ToString(StringFormat.Money)</b>
+                </td>
+                <td class="text-right">
+                    <b>@Model?.UsageTransactions?.Sum(x => (decimal?)x.PersonalPay)?.ToString(StringFormat.Money)</b>
+                </td>
+                <td></td>
+            </tr>
+        </tfoot>
+    </table>
+</div>

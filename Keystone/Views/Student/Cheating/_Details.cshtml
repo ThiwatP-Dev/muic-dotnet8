@@ -1,0 +1,58 @@
+@model CheatingStatus
+
+<div class="row form-group">
+    <div class="col-6">
+        <div class="form-control-label d-flex align-items-center">Course</div>
+        <div class="form-control-plaintext">@Model?.RegistrationCourse?.Section?.Course?.NameEn</div>
+    </div>
+    <div class="col-3">
+        <div class="form-control-label d-flex align-items-center">Course Code</div>
+        <div class="form-control-plaintext">@Model?.RegistrationCourse?.Section?.Course?.Code</div>
+    </div>
+    <div class="col-3">
+        <div class="form-control-label d-flex align-items-center">Section</div>
+        <div class="form-control-plaintext">@Model?.RegistrationCourse?.Section?.Number</div>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-6">
+        <div class="form-control-label d-flex align-items-center">Term</div>
+        <div class="form-control-plaintext">@Model?.Term?.TermText</div>
+    </div>
+    <div class="col-6">
+        <div class="form-control-label d-flex align-items-center">Exam Type</div>
+        <div class="form-control-plaintext">@Model?.ExaminationType?.NameEn</div>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-12">
+        <div class="form-control-label d-flex align-items-center">Punish Type</div>
+        <div class="form-control-plaintext">@Model?.Incident?.NameEn</div>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-12">
+        <div class="form-control-label d-flex align-items-center">Detail</div>
+        <div class="form-control-plaintext">@Model?.Detail</div>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-6">
+        <div class="form-control-label d-flex align-items-center">Suspend From</div>
+        <div class="form-control-plaintext">@Model?.FromTerm?.TermText</div>
+    </div>
+    <div class="col-6">
+        <div class="form-control-label d-flex align-items-center">Suspend To</div>
+        <div class="form-control-plaintext">@Model?.ToTerm?.TermText</div>
+    </div>
+</div>
+
+<div class="block__action pb-0">
+    <div class="block__action-row">
+        <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-mw-120 btn--cancel rounded">Close</a>
+    </div>
+</div>

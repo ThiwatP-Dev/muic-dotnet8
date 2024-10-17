@@ -1,0 +1,208 @@
+@model RegistrationViewModel
+@{
+    var isSaveAble = Model.Invoices.Where(x => !x.IsCancel && x.TotalAmount > 0).All(x => x.IsPaid);
+
+    var index = 1;
+    var openCourse = ViewBag.OpenCourses as List<Course>;
+}
+
+<section class="ks-general-info">
+    <form id="js-adding-submit" asp-controller="Registration" asp-action="Add" method="post">
+        <div class="block block--underline">
+            <div class="block__body pb-0">
+                <div class="row form-group mb-4 mx-0">
+                    <table id="js-adding" class="col-12 table table-bordered m-0">
+                        <thead>
+                            <tr>
+                                <th class="text-center w-50">#</td>
+                                <th>Course</th>
+                                <th class="text-center w-150">Section</th>
+                                <th class="w-410">Main Instructor</th>
+                                <th class="text-center w-100">Credit</th>
+                                <th class="text-center w-100">Reg. Credit</th>
+                                <th class="text-center w-100">Paid</th>
+                                <th class="text-center w-75">Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="js-course-tbody">
+                        @if (Model?.AddingResults == null || Model?.AddingResults.Count == 0)
+                        {
+                            <tr>
+                                <td class="text-center">1</td>
+                                <td>
+                                    <select class="chosen-select form-control__table js-cascade-registration-course" name="AddingResults[0].CourseId" 
+                                            asp-items="ViewBag.Courses" data-placeholder="Select">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="chosen-select form-control__table js-cascade-registration-section" name="AddingResults[0].SectionId"
+                                            data-placeholder="Select"></select>
+                                </td>
+                                <td class="js-main-instructor"></td>
+                                <td class="js-credit">0</td>
+                                <td class="js-regist-credit">0</td>
+                                <td class="js-paid-status">
+                                    <i class="color-danger la la-close"></i>
+                                </td>
+                                <td class="text-center td-actions">
+                                    <a class="js-refresh-row d-none" href="#!" data-id="#js-adding|1">
+                                        <i class="la la-refresh check"></i>
+                                    </a>
+                                    <a class="js-disable-row js-unregister" href="#!">
+                                        <i class="la la-trash delete"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <input name="IsRegistered" value="false" type="hidden">
+                        }
+                        else 
+                        {
+                            for (int i = 0; i < Model.AddingResults.Count; ++i)
+                            {
+                                <tr>
+                                    <td class="text-center">
+                                        @index
+                                        <input class="js-registration-course-id" asp-for="@Model.AddingResults[@i].RegistrationCourseId" type="hidden">
+                                    </td>
+                                    <td>
+                                        <select class="chosen-select form-control__table js-cascade-registration-course" asp-for="@Model.AddingResults[@i].CourseId"
+                                                asp-items="ViewBag.Courses" data-placeholder="Select">
+                                            <option selected disabled>Select</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="chosen-select form-control__table js-cascade-registration-section" asp-for="@Model.AddingResults[@i].SectionId"
+                                                asp-items="@Model.AddingResults[@i].SectionSelectList" data-placeholder="Select"></select>
+                                    </td>
+                                    <td class="js-main-instructor">@Model.AddingResults[i].MainInstructor</td>
+                                    <td class="js-credit">@Model.AddingResults[i].CreditText</td>
+                                    <td class="js-regist-credit">@Model.AddingResults[i].RegistrationCredit</td>
+                                    <td class="js-paid-status">
+                                        @if (Model.AddingResults[i].IsPaid)
+                                        {
+                                            <i class="color-success la la-check"></i>
+                                        } 
+                                        else
+                                        {
+                                            <i class="color-danger la la-close"></i>
+                                        }
+
+                                        <input class="js-input-paid-status" asp-for="@Model.AddingResults[@i].IsPaid" type="hidden">
+                                    </td>
+                                    <td class="text-center td-actions">
+                                        @* @if (Model.AddingResults[i].IsPaid)
+                                        {
+                                            <select class="form-control js-refund-percent" asp-items="ViewBag.RefundPercentages" data-placeholder="Select" hidden></select>
+                                            <a class="js-refund-item d-none" href="#!" 
+                                               data-toggle="modal"
+                                               data-target="#refund-modal"
+                                               data-course-id="@Model.AddingResults[i].CourseId"
+                                               data-regist-course-id="@Model.AddingResults[i].RegistrationCourseId">
+                                                <i class="la la-money edit"></i>
+                                            </a>
+                                            <a class="js-refresh-row d-none" href="#!" data-id="#js-adding|@index">
+                                                <i class="la la-refresh check"></i>
+                                            </a>
+                                            <a class="js-disable-row" href="#!" data-toggle="modal" data-target="#disable-confirm-modal">
+                                                <i class="la la-trash delete"></i>
+                                            </a>
+                                        } 
+                                        else
+                                        { *@
+                                            <a class="js-del-row" href="#!" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                                <i class="la la-trash delete"></i></a>
+                                        @* } *@
+                                    </td>
+                                </tr>
+                                index++;
+                            }
+                            <input name="IsRegistered" type="hidden" value="true">
+                        }
+                        </tbody>
+
+                        <tfoot>
+                            <tr>
+                                <td class="d-none"></td>
+                                <td class="text-right border-right-0" colspan="4">Total : </td>
+                                <td class="text-center border-right-0 border-left-0 js-total-credit"></td>
+                                <td class="text-center border-right-0 border-left-0 js-total-regist-credit"></td>
+                                <td class="border-left-0" colspan="3"></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div class="block__action">
+                    <div class="block__action-row">
+                        <button class="btn btn-mw-120 btn--primary mr-2 js-render-schedule" type="button" disabled="@(isSaveAble? null : "disabled")">
+                            <i class="la la-calendar-o mr-1"></i>Show Schedule
+                        </button>
+                        <a class="btn btn-mw-120 btn--reset" asp-action="Index" asp-route-code="@Model.Code" asp-route-AcademicLevelId="@Model.AcademicLevelId" asp-route-TermId="@Model.TermId" asp-route-tabIndex="1">Reset</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="block__body js-preview-schedule d-none pt-0">
+                <hr>
+                <header class="font-size-16 color-primary mb-3">Schedule</header>
+                <div class="mx-auto">
+                    <div id="js-schedule" class="table-responsive js-modification-schedule">
+                        <partial name="_Schedule"></partial>
+                    </div>
+                </div>
+
+                <div id="js-exam-conflict-header">
+                    <br/>
+                    <h2  class="color-danger">Exam Time Conflict</h2>
+                    <p id="js-exam-conflict"></p>
+                </div>
+
+                <div id="js-class-conflict-header">
+                    <br/>
+                    <h2  class="color-danger">Class Time Conflict</h2>
+                    <p id="js-class-conflict"></p>
+                </div>
+
+                <div id="js-prerequisite-conflict-header">
+                    <br/>
+                    <h2  class="color-danger">Prerequisite</h2>
+                    <p id="js-prerequisite-conflict"></p>
+                </div>
+
+                <div id="js-corequisitete-conflict-header">
+                    <br/>
+                    <h2  class="color-danger">Course Corequisitete</h2>
+                    <p id="js-corequisitete-conflict"></p>
+                </div>
+
+                <div id="js-credit-invalid-header">
+                    <br/>
+                    <h2  class="color-danger">Credit Load</h2>
+                    <p id="js-credit-invalid"></p>
+                </div>
+                
+                <div class="block__action">
+                    <div class="block__action-row mr-3">
+                        <button class="btn btn-mw-120 btn--primary"
+                                data-toggle="modal"
+                                data-target="#confirm-modal"
+                                data-form-id="#js-adding-submit"
+                                type="button">Save</button>
+                        <a class="btn btn-mw-120 btn--cancel" asp-action="Index">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <span id="js-student-code" hidden>@Model.Code</span>
+        <input id="js-student-id" name="StudentId" type="hidden" value="@Model.StudentId">
+        <input id="js-term-id" name="RegistrationTermId" type="hidden" value="@Model.RegistrationTermId">
+        <input name="RegistrationRound" type="hidden" value="@Model.RegistrationRound">
+    </form>
+     <form id="js-confirm-payment-submit" asp-controller="Registration" asp-action="ConfirmPayment" method="post">
+         <input type="hidden" asp-for="Code" />
+         <input type="hidden" asp-for="AcademicLevelId" />
+         <input type="hidden" asp-for="TermId" />
+     </form>
+</section>

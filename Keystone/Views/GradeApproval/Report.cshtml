@@ -1,0 +1,35 @@
+@model ReportViewModel
+@{ 
+    ViewData["Title"] = "Grade Approval Preview";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+    var body = Model.Body as List<GradingReportViewModel>;
+    var canvasIndex = 0;
+}
+
+<section class="row">
+    <div class="ks-page-header">
+        <a href="@ViewBag.ReturnUrl">
+            <i class="la la-angle-double-left"></i>
+        </a>
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</section>
+
+<section id="report-preview" data-model="@JsonConvert.SerializeObject(Model)">
+    <div class="block block__body">
+        <iframe id="js-print-preview" class="w-100x h-85vh"></iframe>
+    </div>
+</section>
+
+@foreach (var item in body)
+{
+    <section id="js-temporary">
+        <canvas id="js-temporary-canvas-@canvasIndex" class="bg-danger-pastel" type="hidden" width="2090" height="825" hidden></canvas>
+        <canvas id="js-histogram-canvas-@canvasIndex" class="bg-danger-pastel" type="hidden" width="2090" height="825" hidden></canvas>
+    </section>
+    canvasIndex++;
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/pdf-render/grade-approval-preview.js"></script>
+}

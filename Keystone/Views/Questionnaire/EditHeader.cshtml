@@ -1,0 +1,26 @@
+@{
+    ViewData["Title"] = "Edit Questionnaire Header";
+}
+
+<section class="row">
+    <div class="col-lg-12">
+        <div class="block block--underline">
+            <form class="ks-form container" asp-controller="Questionnaire" asp-action="EditHeader" method="post">
+                @Html.AntiForgeryToken()
+
+                <partial name="_QuestionnaireHeader"/>
+                             
+                <div class="block__action container">
+                    <div class="block__action-row">
+                        <button type="submit" class="btn btn-mw-120 btn--primary">Next</button>
+                        <a asp-action="Index" class="btn btn-mw-120 btn--cancel">Cancel</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/Questionnaire/alter-questionnaire.js"></script>
+}

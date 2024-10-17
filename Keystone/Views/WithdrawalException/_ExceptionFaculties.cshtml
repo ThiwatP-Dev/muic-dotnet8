@@ -1,0 +1,112 @@
+@model WithdrawalExceptionViewModel
+
+<section>
+    <div id="withdrawal-exception-accordion3" class="panel-group">
+        <div class="block block--underline">
+            <div class="block__title collapsed" data-toggle="collapse" data-parent="#withdrawal-exception-accordion3" data-target="#withdrawal-exception-accordion3-1">
+                <header>Search @ViewData["Title"]</header>
+                <div class="tools">
+                    <div class="btn-group">
+                        <a class="btn btn--white btn--circle">
+                            <i class="la la-angle-down"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="withdrawal-exception-accordion3-1" class="collapse show" aria-expanded="true">
+                <div class="block__body">
+                    <form asp-controller="WithdrawalException" asp-action="Index" method="GET">
+                        <div class="row form-group mb-0">
+                            <div class="col-3">
+                                <select class="chosen-select form-control js-cascade-academic-level" asp-items="ViewBag.AcademicLevels">
+                                    <option selected disabled>Select</option>
+                                </select>
+                                <label>Academic Level</label>
+                            </div>
+                            <div class="col-3">
+                                <select class="chosen-select form-control js-cascade-faculty" asp-for="FacultyId" asp-items="ViewBag.Faculties">
+                                    <option selected value="">Select</option>
+                                </select>
+                                <label>Division</label>
+                            </div>
+                            <div class="col-3">
+                                <select class="chosen-select form-control js-cascade-department" asp-for="DepartmentId" asp-items="ViewBag.Departments" data-placeholder="Select">
+                                    <option selected value="">Select</option>
+                                </select>
+                                <label>Major</label>
+                            </div>
+                            <div class="col-3 align-self-end">
+                                <button class="btn btn-mw-120 btn--primary mb-0 mr-2" type="submit">
+                                    <i class="la la-search mr-2"></i>Search
+                                </button>
+                                <a id="js-reset-btn" class="btn btn-mw-120 btn--reset mb-0" asp-action="Index" asp-route-tabIndex="1">Reset</a>
+                            </div>
+                        </div>
+                        <input id="js-tab-index-faculty" name="tabIndex" value="1" type="hidden">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div id="withdrawal-exception-accordion4" class="panel-group">
+        <div class="block block--underline">
+            <div class="block__title collapsed" data-toggle="collapse" data-parent="#withdrawal-exception-accordion4" data-target="#withdrawal-exception-accordion4-1">
+                <header>Add Exception Major</header>
+                <div class="tools">
+                    <div class="btn-group">
+                        <a class="btn btn--white btn--circle">
+                            <i class="la la-angle-down"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="withdrawal-exception-accordion4-1" class="collapse show" aria-expanded="true">
+                <div class="block__body">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group mb-0">
+                        <div class="col-3">
+                            <select id="js-exception-academic-level-select" class="chosen-select form-control" asp-items="ViewBag.AcademicLevels">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Academic Level</label>
+                        </div>
+                        <div class="col-3">
+                            <select id="js-exception-faculty-select" class="chosen-select form-control" asp-items="ViewBag.Faculties">
+                                <option selected>Select</option>
+                            </select>
+                            <label>Division</label>
+                        </div>
+                        <div class="col-3">
+                            <select id="js-exception-department-select" class="chosen-select form-control" asp-items="ViewBag.ExceptionalDepartments" data-placeholder="Select">
+                                <option selected>Select</option>
+                            </select>
+                            <label>Major</label>
+                        </div>
+                        <div class="col-3 text-end align-self-center">
+                            <div class="d-flex from-group">
+                                <input id="js-selected-faculty" type="hidden">
+                                <button class="btn btn-mw-120 btn--primary js-add-exception mr-2 mb-0" type="button" data-tab-index="1">
+                                    <i class="la la-plus mr-2"></i>Add
+                                </button>
+                                <button id="js-add-all-departments" class="btn btn-mw-120 btn--primary mb-0" type="button" data-tab-index="1">
+                                    <i class="la la-plus mr-2"></i>Add All Major
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <input id="js-faculty-exception-id" asp-for="FacultyId" type="hidden">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div id="flash-message-1"></div>
+<section id="js-exception-faculty-content">
+    <partial name="_ExceptionFacultiesContent">
+</section>

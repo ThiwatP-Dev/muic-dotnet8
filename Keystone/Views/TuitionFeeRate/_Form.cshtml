@@ -1,0 +1,78 @@
+@model TuitionFeeRate
+
+<div class="block__title">
+    <header>@ViewData["Title"]</header>
+</div>
+
+<div class="block__body">
+    <div class="row form-group">
+        <div class="col-12">
+            <input class="form-control" asp-for="Name" type="text">
+            <label>Name</label>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-6">
+            <select class="chosen-select form-control" asp-for="StartedBatch" asp-items="@ViewBag.Batches">
+                <option selected value="">Select</option>
+            </select>
+            <label>Batch Start</label>
+        </div>
+        <div class="col-6">
+            <select class="chosen-select form-control" asp-for="EndedBatch" asp-items="@ViewBag.Batches">
+                <option selected value="">Select</option>
+            </select>
+            <label>Batch End</label>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-6">
+            <select class="chosen-select form-control" asp-for="TuitionFeeTypeId" asp-items="@ViewBag.TuitionFeeTypes">
+                <option selected disabled>Select</option>
+            </select>
+            <label>Tuition Fee Type<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-6">
+            <input class="form-control" asp-for="Amount" type="number">
+            <label>Amount Fee</label>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-6">
+            <select class="chosen-select form-control" asp-for="StudentFeeTypeId" asp-items="@ViewBag.StudentFeeTypes">
+                <option selected value="">Select</option>
+            </select>
+            <label>Student Fee Type</label>
+        </div>
+        <div class="col-6">
+            <select class="chosen-select form-control" asp-for="CustomCourseGroupId" asp-items="@ViewBag.CustomCourseGroups">
+                <option selected value="">Select</option>
+            </select>
+            <label>Custom Course Group</label>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-12">
+            <h4>White List Major</h4>
+            <select class="chosen-select form-control" asp-for="WhitelistMajors" asp-items="ViewBag.Departments" data-placeholder="Select" multiple></select>
+        </div>
+    </div>
+
+    <div class="form-check">
+        <input class="form-check-input" asp-for="IsActive" type="checkbox">
+        <label for="IsActive">Active</label>
+    </div>
+
+    <input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+
+    <div class="block__action container">
+        <div class="block__action-row">
+            <button type="submit" class="btn btn-mw-120 btn--primary">Save</button>
+            <a asp-action="Index" class="btn btn-mw-120 btn--link">Cancel</a>
+        </div>
+    </div>
+</div>

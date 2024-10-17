@@ -1,0 +1,190 @@
+@model ExemptedExaminationScoreViewModel
+@{ 
+    ViewData["Title"] = "Exempted Examination Score";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+
+<div class="row">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+        <ul class="d-flex flex-md-row align-items-md-center float-right">
+            <li class="list-inline-item mx-3 mb-0">
+                <a class='btn btn--primary' asp-action="Create" asp-route-returnUrl="@contextPath">
+                    <i class="la la-plus mr-1 font-weight-800"></i> Add Exempted Examination Score
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Exempted Examination Score</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="ExemptedExaminationScore" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group m-b-30">
+                        <div class="col-4">
+                            <select class="chosen-select form-control" asp-for="Criteria.ExemptedAdmissionExaminationId"
+                                    asp-items="ViewBag.ExemptedAdmissionExaminations" data-placeholder="Select">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Exempted Examination<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-2">
+                            <input class="form-control js-single-date" asp-for="Criteria.StartedAt" 
+                                   type="text" autocomplete="off">
+                            <label>Issued Date</label>
+                        </div>
+                        <div class="col-2">
+                            <select class="chosen-select form-control" asp-for="Criteria.AdmissionTypeId" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Admission Type</label>
+                        </div>
+                        <div class="col-4">
+                            <select class="chosen-select form-control" asp-for="Criteria.CourseId" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Course</label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group m-b-0">
+                        <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId"
+                                    asp-items="ViewBag.Faculties" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Division</label>
+                        </div>
+                        <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentId"
+                                    asp-items="ViewBag.Departments" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Major</label>
+                        </div>
+                        <div class="col-4 align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@Model?.ExemptedExaminationScoreDetails?.Count())</header>
+            </div>
+
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table id="js-row-toggle" class="table table-bordered table-hover w-100x">
+                        <thead>
+                            <tr>
+                                <th class="w-25"></th>
+                                <th>Exempted Examination</th>
+                                <th>Admission Type</th>
+                                <th class="text-center">Issued Date</th>
+                                <th class="text-center">Expired Date</th>
+                                <th>Division</th>
+                                <th>Major</th>
+                                <th class="text-center w-50">Status</th>
+                                <th class="text-center w-100">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.ExemptedExaminationScoreDetails.Any())
+                            {
+                                foreach (var item in Model.ExemptedExaminationScoreDetails)
+                                {
+                                    <tr>
+                                        <td class="hidden-row-toggle span-column"><i class="fas fa-plus-circle"></i></td>
+                                        <td>@item.ExemptedExaminationName</td>
+                                        <td>@item.AdmissionTypeName</td>
+                                        <td>@item.IssuedDateString</td>
+                                        <td>@item.ExpiredDateString</td>
+                                        <td>@item.FacultyName</td>
+                                        <td>@item.DepartmentName</td>
+                                        <td class="span-column">
+                                            <partial name="_BooleanActive" model="@item.IsActive">
+                                        </td>
+                                        <td class="td-actions text-nowrap span-column">
+                                            <a asp-controller="ExemptedExaminationScore" 
+                                               asp-action="Edit"
+                                               asp-route-exemptedExaminationId="@item.ExemptedExaminationId"
+                                               asp-route-admissionTypeId="@item.AdmissionTypeId"
+                                               asp-route-issuedDate="@item.IssuedDate"
+                                               asp-route-expiredDate="@item.ExpiredDate"
+                                               asp-route-returnUrl="@contextPath">
+                                                <i class="la la-edit edit"></i>
+                                            </a>
+                                            <a data-toggle="modal" 
+                                               data-target="#delete-confirm-modal" 
+                                               asp-controller="ExemptedExaminationScore" 
+                                               asp-action="Delete" 
+                                               asp-route-exemptedExaminationId="@item.ExemptedExaminationId"
+                                               asp-route-admissionTypeId="@item.AdmissionTypeId"
+                                               asp-route-issuedDate="@item.IssuedDate"
+                                               asp-route-expiredDate="@item.ExpiredDate">
+                                                <i class="la la-trash delete"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr class="hidden-row d-none">
+                                        <td>
+                                            @for(var i = 0; i < item.PreferredCourses.Count(); ++i)
+                                            {
+                                                <span>Score: @(item.PreferredCourses[i].MinScore)-@(item.PreferredCourses[i].MaxScore)</span>
+                                                @if (i < item.PreferredCourses.Count() - 1)
+                                                {
+                                                    <hr class="my-2">
+                                                }
+                                            }
+                                        </td>
+                                        <td colspan="5">
+                                            @for(var i = 0; i < item.PreferredCourses.Count(); ++i)
+                                            {
+                                                <span>@(item.PreferredCourses[i].CourseName)</span>
+                                                @if (i < item.PreferredCourses.Count() - 1)
+                                                {
+                                                    <hr class="my-2">
+                                                }
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td class="text-center" colspan="9">
+                                        <i class="text-danger">No Data</i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Modals {
+    <partial name="_DeleteConfirmModals">
+}

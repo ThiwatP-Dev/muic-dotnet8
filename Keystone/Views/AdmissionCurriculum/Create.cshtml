@@ -1,0 +1,28 @@
+@model AdmissionCurriculum
+@{ 
+    ViewData["Title"] = "Add Admission Curriculum"; 
+}
+
+<section class="row">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <form asp-controller="AdmissionCurriculum" asp-action="Create" method="POST">
+                <partial name="_Form">
+                <div class="block__action-row">
+                    <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+                    <a class="btn btn-mw-120 btn--cancel" href="@ViewBag.ReturnUrl">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/admission-curriculum.js"></script>
+}

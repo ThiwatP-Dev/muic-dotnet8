@@ -1,0 +1,16 @@
+<div id="grade-log-modal" class="modal fadeIn animated" tabindex="-1" role="dialog"
+     aria-hidden="true" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+		<div class="modal-content">
+			<div class="block block--underline mb-0">
+                <div class="block__title">
+                    <header>Grade Change Log</header>
+                </div>
+                <div class="block__body">
+					@Html.AntiForgeryToken()
+					<div id="grade-log-content"> </div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

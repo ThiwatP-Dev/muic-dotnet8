@@ -1,0 +1,106 @@
+@model TuitionFee
+
+<div class="block__title text-left height-3">
+    <header>@ViewData["Title"]</header>
+</div>
+
+<div class="block__body text-left height-3">
+    <div class="form-group">
+        <input class="form-control" asp-for="Code" type="text">
+        <label>Code<span class="text-danger">*</span></label>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-6">
+            <select class="chosen-select form-control" asp-for="FeeItemId" asp-items="@ViewBag.FeeItems">
+                <option selected disabled>Select</option>
+            </select>
+            <label>Fee Item<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-6">
+            <input class="form-control" asp-for="Amount" type="text">
+            <label>Amount<span class="text-danger">*</span></label>
+        </div>
+    </div>
+
+    <hr>
+
+    <h4 class="font-weight-700 mb-3">Tuition Fee Details</h4>
+
+    <div class="row form-group">
+        <div class="col-6">
+            <select class="chosen-select form-control" asp-for="CourseId" asp-items="@ViewBag.Courses">
+                <option selected disabled>Select</option>
+            </select>
+            <label>Course</label>
+        </div>
+        <div class="col-6">
+            <select class="chosen-select form-control" asp-for="CourseRateId" asp-items="@ViewBag.CourseRates">
+                <option selected disabled>Select</option>
+            </select>
+            <label>Course Rate</label>
+        </div>
+    </div>
+    
+
+    <div class="row form-group">
+        <div class="col-6">
+            <input class="form-control" asp-for="SectionNumber" type="text">
+            <label>Section</label>
+        </div>
+        <div class="col-6">
+            @* <select class="chosen-select form-control" asp-for="Multiply">
+                <option selected disabled>Select</option>
+                <option value="m">Multiply</option>
+                <option value="f">Fixed</option>
+            </select> *@
+            <label>Multiple</label>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-6">
+            <select class="chosen-select form-control js-cascade-academic-level" asp-for="AcademicLevelId" asp-items="@ViewBag.AcademicLevels">
+                <option selected disabled>Select</option>
+            </select>
+            <label>Academic Level</label>
+        </div>
+        <div class="col-3">
+            <select class="chosen-select form-control js-cascade-term" asp-for="StartedTermId" asp-items="@ViewBag.Terms">
+                <option selected value="">Select</option>
+            </select>
+            <label>Start Term</label>
+        </div>
+        <div class="col-3">
+            <select class="chosen-select form-control js-cascade-term" asp-for="EndedTermId" asp-items="@ViewBag.Terms">
+                <option selected value="">Select</option>
+            </select>
+            <label>End Term</label>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-6">
+            <input class="form-control" asp-for="StartedBatch" type="text">
+            <label>Batch Start</label>
+        </div>
+        <div class="col-6">
+            <input class="form-control" asp-for="EndedBatch" type="text">
+            <label>Batch End</label>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="form-check">
+            <input class="form-check-input" asp-for="IsActive" type="checkbox">
+            <label for="IsActive">Active</label>
+        </div>
+    </div>
+</div>
+
+<div class="block__action container">
+    <div class="block__action-row">
+        <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+        <a class="btn btn-mw-120 btn--cancel" asp-action="Index">Cancel</a>
+    </div>
+</div>

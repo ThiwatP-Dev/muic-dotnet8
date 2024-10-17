@@ -1,0 +1,210 @@
+@model ApplicantsByAdmissionRoundViewModel;
+@{
+    ViewData["Title"] = "Applicants By Admission Round";
+    var columnCount = 1;
+    var totalList = new List<int>();
+}
+
+<section class="row">
+    <div class="col-12">
+        <div id="applcants-report-accordion1" class="panel-group">
+            <div class="block block--underline">
+                <div class="block__title collapsed" data-toggle="collapse" data-parent="#applcants-report-accordion1" data-target="#applicants-report-accordion1-1">
+                    <header>@ViewData["Title"]</header>
+                    <div class="tools">
+                        <a class="btn btn--white btn--circle">
+                            <i class="la la-angle-down"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="applicants-report-accordion1-1" class="collapse show" aria-expanded="true">
+                    <div class="block__body">
+                        <form class="form-horizontal" asp-controller="ApplicantsByAdmissionRound" asp-action="Index" method="GET">
+                            @Html.AntiForgeryToken()
+                            <div class="row form-group m-b-30">
+                                <div class="col-4">
+                                    <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="@ViewBag.AcademicLevels" data-placeholder="Select">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Academic Level<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-4">
+                                    <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.StartTermId" asp-items="@ViewBag.Terms" data-placeholder="Select">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Term From<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-4">
+                                    <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.EndTermId" asp-items="@ViewBag.Terms" data-placeholder="Select">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Term To<span class="text-danger">*</span></label>
+                                </div>
+                            </div>
+
+                            <div class="row form-group m-b-30">
+                                <div class="col-4">
+                                    <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="@ViewBag.Faculties" data-placeholder="Select">
+                                        <option selected value="">Select</option>
+                                    </select>
+                                    <label>Division</label>
+                                </div>
+                                <div class="col-4">
+                                    <select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentId" asp-items="@ViewBag.Departments" data-placeholder="Select">
+                                        <option selected value="">Select</option>
+                                    </select>
+                                    <label>Major</label>
+                                </div>
+                                <div class="col-4 align-self-end text-right">
+                                    <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                        <i class="la la-search mr-2"></i>Search
+                                    </button>
+                                    <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                        Reset
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="block block--underline">
+                    <div class="block__title">
+                        <header>Search Result (@(Model?.ApplicantsByAdmissionRoundDetails?.Count ?? 0))</header>
+                    </div>
+
+                    @if (@Model != null) 
+                    {
+                        <div class="block__body">
+                            <div class="table-responsive unset-overflow">
+                                <table class="table table-bordered m-0 js-report-table">
+                                    <thead>
+                                        <tr><th rowspan="3">Division / Major</th>
+                                        @foreach (var term in Model.TermDetails)
+                                        {
+                                            <th class="text-center" colspan="@term.RoundColspan">@term.TermName</th>
+                                        }
+                                        <th rowspan="3" class="font-weight-bold">TOTAL</th>
+                                        </tr>
+                                        <tr>
+                                        @foreach (var term in Model.TermDetails)
+                                        {
+                                            foreach (var round in term.Rounds)
+                                            {
+                                                <th class="text-center" colspan="3">@round.Round</th>
+                                            }
+                                            // AllRoundColName
+                                            <th class="text-center bg-pink" colspan="3">@term.RoundTotalColName</th>
+                                            // Re-Enter
+                                            <th class="text-center bg-white" colspan="2">@term.ReEnterColName</th>
+                                            // AllRoundColName + Re-Enter
+                                            <th class="text-center bg-darkgrey">@term.RoundTotalAndReEnterColName</th>
+                                        }
+                                        </tr>
+                                        <tr>
+                                            @foreach (var term in Model.TermDetails)
+                                            {
+                                                foreach (var Rounds in term.Rounds)
+                                                {
+                                                    <th class="text-center">APPLY</th>
+                                                    <th class="text-center">INT.</th>
+                                                    <th class="text-center">REGIS</th>
+                                                    columnCount += 3;
+                                                }
+                                                // for AllRoundColName
+                                                <th class="text-center">APPLY</th>
+                                                <th class="text-center">INT.</th>
+                                                <th class="text-center">REGIS</th>
+
+                                                // for Re-Enter
+                                                <th class="text-center">APPLY</th>
+                                                <th class="text-center">REGIS</th>
+
+                                                // for AllRoundColName + Re-Enter
+                                                <th class="text-center">REGIS</th>
+                                                columnCount += 6;
+                                            }
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (Model != null && Model.ApplicantsByAdmissionRoundDetails.Any())
+                                        {
+                                            totalList = new List<int>();
+                                            for (var j = 0; j < columnCount; j++) 
+                                            {
+                                                totalList.Add(0);
+                                            }
+                                            var i = 0;
+                                            var grandTotal = 0;
+                                            foreach (var item in Model.ApplicantsByAdmissionRoundDetails)
+                                            {
+                                                var rowTotal = 0;
+                                                i = 0;
+                                                <tr class="@(item.IsFaculty ? "table-dark" : "")">
+                                                    <td>@(item.IsFaculty ? item.FacultyName : item.DepartmentName)</td>
+                                                    @foreach (var roundDetail in item.StudentInRounds)
+                                                    {
+                                                        <td>@roundDetail.ApplyStudent</td>
+                                                        <td>@roundDetail.IntensiveStudent</td> 
+                                                        <td>@roundDetail.Registration</td>
+                                                        if (item.IsFaculty) {
+                                                            totalList[i] = totalList[i++] + roundDetail.ApplyStudent;
+                                                            totalList[i] = totalList[i++] + roundDetail.IntensiveStudent;
+                                                            totalList[i] = totalList[i++] + roundDetail.Registration;
+                                                        }
+                                                        @if (roundDetail.IsSummary) 
+                                                        {
+                                                            <td>@roundDetail.ReEnterApplyStudent</td> 
+                                                            <td>@roundDetail.ReEnterRegistration</td> 
+                                                            <td>@roundDetail.TotalRegistration</td> 
+                                                            if (item.IsFaculty) {
+                                                                totalList[i] = totalList[i++] + roundDetail.ReEnterApplyStudent;
+                                                                totalList[i] = totalList[i++] + roundDetail.ReEnterRegistration;
+                                                                totalList[i] = totalList[i++] + roundDetail.TotalRegistration;
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            rowTotal += roundDetail.ApplyStudent + roundDetail.IntensiveStudent + roundDetail.Registration;
+                                                        }
+                                                    }
+                                                    <td class="font-weight-bold">@rowTotal</td>
+                                                </tr>
+                                                @if (item.IsFaculty) 
+                                                {
+                                                    grandTotal += rowTotal;
+                                                    totalList[i] = grandTotal;
+                                                }
+                                            }
+
+                                            //Summary
+                                            <tr>
+                                                <td class="font-weight-bold">Total</td>
+                                                @for (var index = 0; index < columnCount; index++) {
+                                                    <td class="font-weight-bold">@totalList[index]</td>
+                                                }
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <i class="text-danger">No Data</i>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

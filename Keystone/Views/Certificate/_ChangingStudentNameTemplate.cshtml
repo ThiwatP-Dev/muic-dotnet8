@@ -1,0 +1,69 @@
+@model CertificationViewModel
+
+<partial name="_FormDetailsHeader" model="@Model">
+
+<div class="row form-group">
+    <div class="col-4">
+        <input class="form-control" asp-for="ChangedName">
+        <label>Change Name To<span class="text-danger">*</span></label>
+    </div>
+    <div class="col-4">
+        <input class="form-control" asp-for="ChangedSurname">
+        <label>Change Surname To<span class="text-danger">*</span></label>
+    </div>
+    <div class="col-4">
+        <select class="chosen-select form-control" asp-for="ChangeNameType" asp-items="ViewBag.ChangeNameTypes"></select>
+        <label>Change Name Type<span class="text-danger">*</span></label>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-6">
+        <select class="chosen-select form-control js-cascade-academic-level" asp-for="AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+            <option selected disabled>Select</option>
+        </select>
+        <label>Academic Level<span class="text-danger">*</span></label>
+    </div>
+    <div class="col-6">
+        <input class="form-control" asp-for="DegreeName" type="text" autocomplete="off">
+        <label>Degree Name<span class="text-danger">*</span></label>
+    </div>
+</div>
+<div class="row form-group">
+    <div class="col-6">
+        <select class="chosen-select form-control js-cascade-faculty" asp-for="FacultyId" asp-items="ViewBag.Faculties">
+            <option selected disabled>Select</option>
+        </select>
+        <label>Division<span class="text-danger">*</span></label>
+    </div>
+    <div class="col-6">
+        <select class="chosen-select form-control js-cascade-department" asp-for="DepartmentId" asp-items="ViewBag.Departments">
+            <option selected disabled>Select</option>
+        </select>
+        <label>Major<span class="text-danger">*</span></label>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-3">
+        <input class="form-control" asp-for="CreditComp" min=0>
+        <label>Credit Completed<span class="text-danger">*</span></label>       
+    </div>
+    <div class="col-3">
+        <input class="form-control" asp-for="GPA" type="number" min=0 max=4>
+        <label>GPA<span class="text-danger">*</span></label>
+    </div>
+    <div class="col-3">
+        <input class="form-control" asp-for="GraduatedYear">
+        <label>Graduated Year<span class="text-danger">*</span></label>
+    </div>
+    <div class="col-3">
+        <input class="form-control js-single-date" asp-for="GraduatedAt" type="text" autocomplete="off">
+        <label>Graduated Date<span class="text-danger">*</span></label>
+    </div>
+</div>
+
+<input asp-for="Language" type="hidden">
+<input asp-for="Pronoun" type="hidden">
+<input asp-for="Possessive" type="hidden">
+<input asp-for="ErrorMessage" type="hidden">

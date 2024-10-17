@@ -1,0 +1,34 @@
+@model GradeManagementViewModel
+
+@foreach (var gradingGroup in Model.StandardGradingGroups)
+{
+    <header class="font-weight-700">@gradingGroup.Name (@gradingGroup.GradeTemplate.Name)</header>
+    <table class="table table-bordered m-a-0">
+        <thead>
+            <tr>
+                <th class="w-100 text-center">Min</th>
+                <th class="w-100 text-center">Max</th>
+                <th class="w-100 text-center">Grade</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (gradingGroup.StandardGradingScores != null && gradingGroup.StandardGradingScores.Any())
+            {
+                for (int i = 0; i < gradingGroup.StandardGradingScores.Count; ++i)
+                {
+                    <tr>
+                        <td>
+                            <span>@gradingGroup.StandardGradingScores[i].Minimum</span>
+                        </td>
+                        <td>
+                            <span>@gradingGroup.StandardGradingScores[i].Maximum</span>
+                        </td>
+                        <td>
+                            <span class="font-weight-700">@gradingGroup.StandardGradingScores[i].Grade?.Name</span>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+}

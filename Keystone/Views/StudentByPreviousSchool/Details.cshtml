@@ -1,0 +1,63 @@
+@model StudentByPreviousSchoolViewModel;
+@{
+    ViewData["Title"] = "Student List"; 
+    var index = 1;
+}
+
+<section class="row">
+	<div class="ks-page-header d-flex justify-content-between">
+        <h2 class="ks-page-header__title">
+            <a class="btn-back" asp-action="Index" asp-route-countryId="@Model.CountryId"
+               asp-route-provinceId="@Model.ProvinceId" asp-route-stateId="@Model.StateId">
+                <i class="la la-angle-double-left mr-1"></i>Back
+            </a>
+        </h2>
+        <button class="btn btn-mw-120 btn--primary rounded print-btn js-print-btn" type="button">
+            <i class="la la-print mr-2"></i>Print
+        </button>
+	</div>
+
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__body">
+                <header class="align-self-center color-primary p-0">
+                    <h3 class="my-2">@Model.NameEn/@Model.NameTh</h3>
+                    <h4 class="my-2">@Model.Country, @Model.SchoolTerritory, @Model.ProvinceOrState</h4>
+                    <h4 class="my-2">School Type : @Model.SchoolType</h4>
+                </header>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered mb-4">
+                        <thead>
+                            <tr>
+                                <th class="w-25 text-center">#</th>
+                                <th class="text-center">Code</th>
+                                <th>Name</th>
+                                <th class="text-center w-200">GPA</th>
+                                <th class="text-center w-200">Year</th>
+                                <th>Admission Type</th>
+                                <th class="text-center w-200">Admission Term</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach(var item in Model.AdmissionInformations)
+                            {
+                                <tr>
+                                    <td>@index</td>
+                                    <td>@item.Student?.Code</td>
+                                    <td>@item.Student?.FullNameEn</td>
+                                    <td>@item.PreviousSchoolGPA</td>
+                                    <td>@item.PreviousGraduatedYear</td>
+                                    <td>@item.AdmissionType?.NameEn</td>
+                                    <td>@item.AdmissionTerm?.TermText</td>
+                                </tr>
+                                ++index;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <h5>Total @Model.AdmissionInformations.Count students</h4>
+            </div>
+        </div>
+    </div>
+</section>

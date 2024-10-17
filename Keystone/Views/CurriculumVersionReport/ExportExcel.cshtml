@@ -1,0 +1,137 @@
+@model CurriculumVersionReportViewModel
+@{
+    var index = 2;
+}
+
+<div class="block__body">
+    <div class="row">
+        <div class="col ks-page-header">
+            <a class="btn-back"
+                asp-controller="CurriculumVersionReport"
+                asp-action="Index"
+                asp-route-academicLevelId="@Model.AcademicLevelId"
+                asp-route-curriculumId="@Model.CurriculumId"
+                asp-route-curriculumVersionId="@Model.CurriculumVersionId">
+                <i class="la la-angle-double-left mr-1"></i>Back
+            </a>
+        </div>
+        <div class="col text-nowrap text-right">
+            <a id="curriculum-version-file-name" hidden></a>
+            <input class="report-table-count" value="@(Model.CourseGroups.Count + 1)" hidden>
+            <input class="report-worksheet-name" value="@Model.CurriculumVersionNameEn" hidden>
+            <button class="btn btn-mw-120 btn--primary mb-0 js-export-excel">Export Excel</button>
+        </div>
+    </div>
+    @if (Model != null && Model.CourseGroups != null && Model.CourseGroups.Any())
+    {
+        <table id="curriculum-version-export-1" class="table table-bordered table-hover w-100x">
+            <thead>
+                <tr>
+                    <th colspan="3" class="text-center">Curriculum Version : @Model.CurriculumVersionNameEn<th>
+                </tr>
+            </thead>
+        </table>
+        @foreach (var courseGroup in Model.CourseGroups)
+        {
+            <div class="table-responsive">
+                <table id="curriculum-version-export-@index" class="table table-bordered table-hover w-100x">
+                    <thead>
+                        <tr>
+                            <th colspan="3">@courseGroup.NameEn (@courseGroup.Credit @(courseGroup.Credit > 1 ? "Credits" : "Credit"))</th>
+                        </tr>
+                    </thead>
+                    @if(courseGroup.DescriptionEn != "" && courseGroup.DescriptionEn != null)
+                    {
+                        <tr>
+                            <th colspan="3">@courseGroup.DescriptionEn</th>
+                        </tr>
+                    }
+
+                    @if (courseGroup.CurriculumCourses != null)
+                    {
+                        <thead>
+                            <tr>
+                                <th>Course Code</th>
+                                <th>Course Name</th>
+                                <th>Course Credit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var course in courseGroup.CurriculumCourses) 
+                            {
+                                <tr>
+                                    <td>@course.Course.Code</td>
+                                    <td>@course.Course.NameEn</td>
+                                    <td>@course.Course.CreditText</td>
+                                </tr>
+                            }
+                        </tbody>
+                    }
+
+                    @if (courseGroup.ChildCourseGroups != null)
+                    {
+                        foreach (var child in courseGroup.ChildCourseGroups) 
+                        {
+                            <thead>
+                                <tr>
+                                    <th colspan="3">@child.NameEn (@child.Credit @(child.Credit > 1 ? "Credits" : "Credit"))</th>
+                                </tr>
+                            </thead>
+                            @if(child.DescriptionEn != "" && child.DescriptionEn != null)
+                            {
+                                <tr>
+                                    <th colspan="3">@child.DescriptionEn</th>
+                                </tr>
+                            }
+
+                            @if (child.CurriculumCourses != null)
+                            {
+                                <thead>
+                                    <tr>
+                                        <th>Course Code</th>
+                                        <th>Course Name</th>
+                                        <th>Course Credit</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var course in child.CurriculumCourses) 
+                                    {
+                                        <tr>
+                                            <td>@course.Course.Code</td>
+                                            <td>@course.Course.NameEn</td>
+                                            <td>@course.Course.CreditText</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            }
+                        }
+                    }
+                </table>
+            </div>
+            index++;
+        }
+
+        <div class="row">
+            <div class="col ks-page-header">
+                <a class="btn-back"
+                   asp-controller="CurriculumVersionReport"
+                   asp-action="Index"
+                   asp-route-academicLevelId="@Model.AcademicLevelId"
+                   asp-route-curriculumId="@Model.CurriculumId"
+                   asp-route-curriculumVersionId="@Model.CurriculumVersionId">
+                <i class="la la-angle-double-left mr-1"></i>Back
+            </a>
+            </div>
+            <div class="col text-nowrap text-right">
+                <a id="curriculum-version-file-name" hidden></a>
+                <input class="report-table-count" value="@index" hidden>
+                <input class="report-worksheet-name" value="@Model.CurriculumVersionNameEn" hidden>
+                <button class="btn btn-mw-120 btn--primary mb-0 js-export-excel">Export Excel</button>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/curriculum-version-report.js"></script>
+}

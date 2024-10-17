@@ -1,0 +1,149 @@
+@model RegistrationReceiptDairySummaryViewModel
+@{ 
+    ViewData["Title"] = "Registration Receipt Dairy Summary";
+    var index = 1;
+}
+
+<section class="row ">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="RegistrationReceiptDairySummary" asp-action="Index" method="GET">
+                    <div class="row form-group m-b-30">
+                        <div class="col-4">
+                            <select class="chosen-select form-control" asp-for="Criteria.AcademicLevelId" asp-items="@ViewBag.AcademicLevels" data-placeholder="Select">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Academic Level<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-4">
+                            <input class="form-control js-single-date" asp-for="Criteria.StartedAt" type="text" autocomplete="off">
+                            <label>Date From<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-4">
+                            <input class="form-control js-single-date" asp-for="Criteria.EndedAt" type="text" autocomplete="off">
+                            <label>Date To<span class="text-danger">*</span></label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-4">
+                            <input class="form-control" asp-for="Criteria.StartStudentBatch" type="number">
+                            <label>Batch From</label>
+                        </div>
+                        <div class="col-4">
+                            <input class="form-control" asp-for="Criteria.EndStudentBatch" type="number">
+                            <label>Batch To</label>
+                        </div>
+                        <div class="col-4 align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (Model != null && Model.Terms.Any())
+{
+    var firstTerms = Model.Terms[0];
+    <section class="row">
+        <div class="col-12">
+            <div class="block block--underline">
+                <div class="block__title">
+                    <div class="row">
+                        <header class="block__title-info">
+                            <h3 class="text-center">SUMMARY REPORT BY DATE (STUDENTS)</h3>
+                        </header>
+                        <header class="block__title-info">
+                            <h4 class="text-center">DATE BETWEEN @(Model.Criteria.StartedAt + " AND " + Model.Criteria.EndedAt)</h4>
+                        </header>
+                    </div>
+                </div>
+
+                <div class="block__body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered m-0">
+                            <thead>
+                                <tr>
+                                    <th class="w-25">#</th>
+                                    <th class="text-center">Student Code</th>
+                                    <th>Student Name</th>
+                                    @foreach (var item in firstTerms.TermHeader)
+                                    {
+                                        <th class="text-right">@item.TermText</th>
+                                    }
+                                    <th class="text-right">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.Terms != null && Model.Terms.Any())
+                                {
+                                    foreach (var term in Model.Terms)
+                                    {
+                                        foreach (var item in term.Students)
+                                        {
+                                            <tr>
+                                                <td>@index</td>
+                                                <td>@item.StudentCode</td>
+                                                <td>@item.StudentName</td>
+                                                @for (int i = 0; i < firstTerms.TermHeader.Count; i++)
+                                                {
+                                                    var isEqual = false;
+                                                    for (int j = 0; j < item.Amounts?.Count; j++)
+                                                    {
+                                                        if (item.Amounts[j].Term == firstTerms.TermHeader[i].TermText)
+                                                        {
+                                                            <td>@item.Amounts[j].AmountText</td>
+                                                            isEqual = true;
+                                                        }
+                                                    }
+
+                                                    if (!isEqual)
+                                                    {
+                                                        <td></td>
+                                                    }
+                                                }
+                                                <td>@item.TotalAmountText</td>
+                                            </tr>
+                                            index ++;
+                                        }
+                                        <tr>
+                                            <td colspan="@(firstTerms.TermHeader.Count + 4)">Total By Date @term.TotalByDate</td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="9">
+                                            <i class="text-danger">No Data</i>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="@(firstTerms.TermHeader.Count + 3)"><b>Grand Total</b></td>
+                                    <td class="text-right"><b>@Model.GrandTotal</b></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}

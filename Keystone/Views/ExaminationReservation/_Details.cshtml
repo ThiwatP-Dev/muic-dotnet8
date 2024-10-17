@@ -1,0 +1,95 @@
+@model ExaminationReservation
+
+<div class="row form-group">
+    <div class="col-8">
+        <div class="form-control-plaintext">@Model?.Section?.Course?.Code @Model?.Section?.Course?.NameEn @Model?.Section?.Course?.CreditText</div>
+    </div>
+    <div class="col-4">
+        <div class="form-control-plaintext">Section : @Model?.Section?.Number</div>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-4">
+        <div class="form-control-label d-flex align-items-center">Academic level</div>
+        <div class="form-control-plaintext">@Model?.Term?.AcademicLevel?.NameEn</div>
+    </div>
+    <div class="col-4">
+        <div class="form-control-label d-flex align-items-center">Term</div>
+        <div class="form-control-plaintext">@Model?.Term?.TermText</div>
+    </div>
+    <div class="col-4">
+        <div class="form-control-label d-flex align-items-center">Instructor</div>
+        <div class="form-control-plaintext">@Model?.Instructor?.FullNameEn</div>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-4">
+        <div class="form-control-label d-flex align-items-center">Exam Type</div>
+        <div class="form-control-plaintext">@Model?.ExaminationType?.NameEn</div>
+    </div>
+    <div class="col-4">
+        <div class="form-control-label d-flex align-items-center">Date</div>
+        <div class="form-control-plaintext">@Model?.DateText</div>
+    </div>
+    <div class="col-4">
+        <div class="form-control-label d-flex align-items-center">Time</div>
+        <div class="form-control-plaintext">@Model.StartTime.ToString(StringFormat.TimeSpan) - @Model.EndTime.ToString(StringFormat.TimeSpan)</div>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-12">
+        <div class="form-control-label d-flex align-items-center">Room</div>
+        <div class="form-control-plaintext">@Model?.Room?.NameEn</div>
+    </div>
+</div>
+
+
+<div class="row form-group">
+    <div class="col-4">
+        <div class="form-control-label d-flex align-items-center">Absent/Join other section</div>
+        <div class="form-control-plaintext"><partial name="_BooleanResult" model="@Model?.AbsentInstructor" /></div>
+    </div>
+    <div class="col-4">
+        <div class="form-control-label d-flex align-items-center">Use proctor</div>
+        <div class="form-control-plaintext"><partial name="_BooleanResult" model="@Model?.UseProctor" /></div>
+    </div>
+    <div class="col-4">
+        <div class="form-control-label d-flex align-items-center">Allow booklet</div>
+        <div class="form-control-plaintext"><partial name="_BooleanResult" model="@Model?.AllowBooklet" /></div>
+    </div>
+    <div class="col-4">
+        <div class="form-control-label d-flex align-items-center">Allow calculator</div>
+        <div class="form-control-plaintext"><partial name="_BooleanResult" model="@Model?.AllowCalculator" /></div>
+    </div>
+    <div class="col-4">
+        <div class="form-control-label d-flex align-items-center">Allow appendix</div>
+        <div class="form-control-plaintext"><partial name="_BooleanResult" model="@Model?.AllowAppendix" /></div>
+    </div>
+    <div class="col-4">
+        <div class="form-control-label d-flex align-items-center">Allow open book</div>
+        <div class="form-control-plaintext"><partial name="_BooleanResult" model="@Model?.AllowOpenbook" /></div>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-12">
+        <div class="form-control-label d-flex align-items-center">Student remark</div>
+        <div class="form-control-plaintext">@Model?.StudentRemark</div>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-12">
+        <div class="form-control-label d-flex align-items-center">Proctor remark</div>
+        <div class="form-control-plaintext">@Model?.ProctorRemark</div>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-12 text-right">
+        <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-mw-120 btn--cancel rounded">Close</a>
+    </div>
+</div>

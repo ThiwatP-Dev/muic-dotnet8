@@ -1,0 +1,117 @@
+@model TermFeeSimulateViewModel
+@{ 
+    ViewData["Title"] = "Term Fee Simulate";
+    var index = 1;
+}
+
+<div class="row">
+    <div class="ks-page-header col-lg-12">
+        <h2 class="ks-page-header__title">
+            <a class="btn-back" href="/Student/Details?Code=@Model.StudentCode">
+                <i class="la la-angle-double-left mr-1"></i>Back
+            </a>
+        </h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+        </ul>
+    </div>
+</div>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>@Model.StudentFeeGroupName</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="TermFeeSimulate" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group m-b-30">
+                        <div class="col-3">
+                            <div class="form-control-label d-flex align-items-center">Student Name</div>
+                            <div class="form-control-plaintext">@Model.StudentFullName</div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-control-label d-flex align-items-center">Admission Term</div>
+                            <div class="form-control-plaintext">@Model.TermText</div>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control js-default-zero js-click-highlight" asp-for="Criteria.NumberOfTerms" type="text">
+                            <label>Term<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-2">
+                            <select class="chosen-select form-control" asp-for="Criteria.TermTypeId" asp-items="ViewBag.TermTypes"
+                                    data-placeholder="Select">
+                                <option selected value="">All</option>
+                            </select>
+                            <label>Term Type<span class="text-danger">*</span></label>
+                        </div>
+
+                        <input asp-for="Criteria.StudentId" type="hidden">
+
+                        <div class="col-1 align-self-end text-right text-nowrap">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    @if (Model != null && Model.Results.Any())
+    {
+        foreach (var term in Model.Results.GroupBy(x => x.TermText))
+        {
+            <div class="col-6">
+                <div class="block block--underline">
+                    <div class="block__body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover w-100x">
+                                <thead>
+                                    <tr>
+                                        <th colspan="2">@index : @term.Key</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in term)
+                                    {
+                                        <tr>
+                                            <td>@item.FeeItemName</td>
+                                            <td class="text-right">@item.AmountText</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td><b>Total</b></td>
+                                        <td class="text-right"><b>@term.Sum(x => x.Amount).ToString(KeystoneLibrary.Models.StringFormat.Money)</b></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            index++;
+        }
+    }
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__body text-right">
+                <b>Grand Total</b> @((Model?.Results?.Sum(x => (decimal?)x.Amount) ?? 0).ToString((KeystoneLibrary.Models.StringFormat.Money)))
+            </div>
+        </div>
+    </div>
+</section>

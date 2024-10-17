@@ -1,0 +1,39 @@
+@model StudentFeeType
+
+<div class="block__title">
+    <header>@ViewData["Title"]</header>
+</div>
+
+<div class="block__body">
+    <div class="row form-group">
+        <div class="col-12">
+            <input class="form-control" asp-for="NameEn" type="text">
+            <label>English Name<span class="text-danger">*</span></label>
+            <span class="text-danger help-block" asp-validation-for="NameEn"></span>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-12">
+            <input class="form-control" asp-for="NameTh" type="text">
+            <label>Thai Name<span class="text-danger">*</span></label>
+            <span class="text-danger help-block" asp-validation-for="NameTh"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-check">
+            <input class="form-check-input" asp-for="IsActive" type="checkbox">
+            <label for="IsActive">Active</label>
+        </div>
+    </div>
+
+    <div class="block__action container">
+        <div class="block__action-row">
+            <button class="btn btn-mw-120 btn--primary" asp-route-returnUrl="@ViewBag.ReturnUrl" type="submit">Save</button>
+            <a class="btn btn-mw-120 btn--cancel" href="@ViewBag.ReturnUrl">Cancel</a>
+        </div>
+    </div>
+
+    <input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+</div>

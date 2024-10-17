@@ -1,0 +1,120 @@
+@model TuitionFee
+
+<input asp-for="Id" type="hidden">
+<input class="js-cascade-academic-level" asp-for="AcademicLevelId" type="hidden">
+<input asp-for="CourseId" type="hidden">
+
+<div class="row form-group">
+    <div class="col-8">
+        <select class="chosen-select form-control" asp-for="FeeItemId" asp-items="ViewBag.FeeItems">
+            <option selected>Select</option>
+        </select>
+        <label>Fee Item<span class="text-danger">*</span></label>
+    </div>
+    <div class="col-4">
+        <input class="form-control" asp-for="SectionNumber">
+        <label>Section</label>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-3">
+        <select class="chosen-select form-control" asp-for="StartedBatch" asp-items="ViewBag.Batches">
+            <option selected value="">Select</option>
+        </select>
+        <label>Batch Start</label>
+    </div>
+    <div class="col-3">
+        <select class="chosen-select form-control" asp-for="EndedBatch" asp-items="ViewBag.Batches">
+            <option selected value="">Select</option>
+        </select>
+        <label>Batch End</label>
+    </div>
+    <div class="col-3">
+        <select class="chosen-select form-control" asp-items="ViewBag.Terms" asp-for="StartedTermId" data-placeholder="Select">
+            <option selected value="">Select</option>
+        </select>
+        <label>Start Term</label>
+    </div>
+    <div class="col-3">
+        <select class="chosen-select form-control" asp-items="ViewBag.Terms" asp-for="EndedTermId" data-placeholder="Select">
+            <option selected value="">Select</option>
+        </select>
+        <label>End Term</label>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-12">
+        <select class="chosen-select form-control js-cascade-faculty" asp-items="ViewBag.Faculties" asp-for="FacultyId" data-placeholder="Select">
+            <option selected value="">Select</option>
+        </select>
+        <label>Division</label>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-12">
+        <select class="chosen-select form-control js-cascade-department" asp-items="ViewBag.Departments" asp-for="DepartmentId" data-placeholder="Select">
+            <option selected value="">Select</option>
+        </select>
+        <label>Major</label>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-12">
+        <select class="chosen-select form-control js-cascade-curriculum" asp-items="ViewBag.Curriculums" asp-for="CurriculumId" data-placeholder="Select">
+            <option selected value="">Select</option>
+        </select>
+        <label>Curriculum</label>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-12">
+        <select class="chosen-select form-control js-cascade-curriculum-version" asp-items="ViewBag.CurriculumVersions" asp-for="CurriculumVersionId"
+                data-placeholder="Select">
+            <option selected value="">Select</option>
+        </select>
+        <label>Curriculum Version</label>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-4">
+        <select class="chosen-select form-control tuition-fee-formula" asp-items="ViewBag.StudentFeeTypes"
+                asp-for="StudentFeeTypeId" data-placeholder="Select">
+            <option selected value="">Select</option>
+        </select>
+        <label>Student Fee Type</label>
+    </div>
+    <div class="col-4">
+        <select class="chosen-select form-control tuition-fee-formula" asp-items="ViewBag.TuitionFeeFormulas"
+                asp-for="TuitionFeeFormulaId" data-placeholder="Select">
+            <option selected value="">Select</option>
+        </select>
+        <label>Formula</label>
+    </div>
+    <div class="col-4">
+        <input class="form-control js-default-zero js-click-highlight" asp-for="Amount" type="number">
+        <label>Amount</label>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-4 align-self-end">
+            <div class="form-check">
+                <input id="@($"CheckboxActive{ Model.Id }")" name="Active" type="checkbox" @(Model == null ? "" : (Model.Active == true ? "checked" : "")) value="true">
+                <label for="@($"CheckboxActive{ Model.Id }")">Active</label>
+            </div>
+        </div> 
+    </div>
+</div>
+
+<div class="block__action pb-0">
+    <div class="block__action-row">
+        <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+        <a class="btn btn-mw-120 btn--cancel rounded" href="javascript:void(0);" data-dismiss="modal">Cancel</a>
+    </div>
+</div>

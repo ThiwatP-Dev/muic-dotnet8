@@ -1,0 +1,117 @@
+@model Term
+
+<div class="block__title">
+    <header>@ViewData["Title"]</header>
+</div>
+
+<div class="block__body">
+    <div class="row form-group">
+        <div class="col-3">
+            <select class="chosen-select form-control" asp-for="AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                <option selected disabled>Select</option>
+            </select>
+            <label for="AcademicLevelId">Academic Level<span class="text-danger">*</span></label>
+            <span class="text-danger help-block" asp-validation-for="AcademicLevelId"></span>
+        </div>
+        <div class="col-3">
+            <input class="form-control" asp-for="AcademicYear" type="text" autocomplete="off">
+            <label>Academic Year<span class="text-danger">*</span></label>
+            <span class="text-danger help-block" asp-validation-for="AcademicYear"></span>
+        </div>
+        <div class="col-3">
+            <input class="form-control" asp-for="AcademicTerm" type="text">
+            <label>Academic Term<span class="text-danger">*</span></label>
+            <span class="text-danger help-block" asp-validation-for="AcademicTerm"></span>
+        </div>
+        <div class="col-3">
+            <select class="chosen-select form-control" asp-for="TermTypeId" asp-items="ViewBag.TermTypes">
+                <option selected disabled>Select</option>
+            </select>
+            <label for="TermTypeId">Term Type</label>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-4">
+            <input class="form-control js-date-time" asp-for="StartedAt" type="text" autocomplete="off">
+            <label>Started Date</label>
+        </div>
+        <div class="col-4">
+             <input class="form-control js-date-time" asp-for="EndedAt" type="text" autocomplete="off">
+            <label>Ended Date</label>
+        </div>
+        <div class="col-4">
+             <input class="form-control" asp-for="TotalWeeksCount" type="number" min=0>
+            <label>Total Weeks</label>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-6">
+            <input class="form-control js-date-time" asp-for="FirstRegistrationEndedAtLocal" type="text" autocomplete="off">
+            <label>First Registration End Date</label>
+        </div>
+        <div class="col-6">
+            <input class="form-control js-date-time" asp-for="FirstRegistrationPaymentEndedAtLocal" type="text" autocomplete="off">
+            <label>First Registration Payment End Date</label>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-6">
+            <input class="form-control js-date-time" asp-for="AddDropPaymentEndedAtLocal" type="text" autocomplete="off">
+            <label>Add Drop Payment End Date</label>
+        </div>
+        <div class="col-6">
+            <input class="form-control js-date-time" asp-for="LastPaymentEndedAtLocal" type="text" autocomplete="off">
+            <label>Last Payment End Date</label>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-6">
+            <input class="form-control" asp-for="MinimumCredit" type="number">
+            <label>Minimum Credit<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-6">
+            <input class="form-control" asp-for="MaximumCredit" type="number">
+            <label>Maximum Credit<span class="text-danger">*</span></label>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col form-check">
+            <input class="form-check-input" asp-for="IsCurrent" type="checkbox">
+            <label for="IsCurrent">Current Term</label>
+        </div>
+        <div class="col form-check">
+            <input class="form-check-input" asp-for="IsAdvising" type="checkbox">
+            <label for="IsAdvising">Advising Term</label>
+        </div>
+        <div class="col form-check">
+            <input class="form-check-input" asp-for="IsRegistration" type="checkbox">
+            <label for="IsRegistration">Registration Term</label>
+        </div>
+        <div class="col form-check">
+            <input class="form-check-input" asp-for="IsAdmission" type="checkbox">
+            <label for="IsAdmission">Admission Term</label>
+        </div>
+        <div class="col form-check">
+            <input class="form-check-input" asp-for="IsQuestionnaire" type="checkbox">
+            <label for="IsQuestionnaire">Questionnaire Term</label>
+        </div>
+        <div class="col form-check">
+            <input class="form-check-input" asp-for="IsActive" type="checkbox">
+            <label for="IsActive">Active</label>
+        </div>
+    </div>
+</div>
+
+<input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+
+<div class="block__action container">
+    <div class="block__action-row">
+        <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+        <a class="btn btn-mw-120 btn--cancel" href="@ViewBag.ReturnUrl">Cancel</a>
+    </div>
+</div>

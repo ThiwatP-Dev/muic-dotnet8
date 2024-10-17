@@ -1,0 +1,13 @@
+@model string
+@if (Model == "Paid")
+{
+    <span class="text-success">Paid</span>
+}
+else if(Model == "Unpaid")
+{
+    <span class="text-danger">Unpaid</span>
+}
+else if(Model == "Withdrawn")
+{
+    <span class="text-warning">Withdrawn</span>
+}

@@ -1,0 +1,71 @@
+@model AdmissionRound
+
+<div class="block__title">
+    <header>@ViewData["Title"]</header>
+</div>
+
+<div class="block__body">
+    <div class="form-group">
+        <select class="chosen-select form-control js-cascade-academic-level" asp-for="AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+            <option selected disabled>Select</option>
+        </select>
+        <label>Academic Level<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="AcademicLevelId"></span>
+    </div>
+
+    <div class="form-group">
+        <select class="chosen-select form-control js-cascade-admission-term" asp-for="AdmissionTermId" asp-items="ViewBag.AdmissionTerms">
+            <option selected disabled>Select</option>
+        </select>
+        <label>Admission Term<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="AdmissionTermId"></span>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" asp-for="Round" type="number" min=1>
+        <label>Round<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="Round"></span>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control js-single-date" asp-for="StartedAt" type="text" autocomplete="off">
+        <label>Started Date</label>
+        <span class="text-danger help-block" asp-validation-for="StartedAt"></span>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control js-single-date" asp-for="EndedAt" type="text" autocomplete="off">
+        <label>Ended Date<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="EndedAt"></span>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control js-single-date" asp-for="FirstClassAt" type="text" autocomplete="off">
+        <label>Admission Date<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="FirstClassAt"></span>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control js-single-date" asp-for="TemporaryCardExpiredAt" type="text" autocomplete="off">
+        <label>Temporary Card Expired Date</label>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" asp-for="Remark">
+        <label>Remark</label>
+    </div>
+
+    <div class="row">
+        <div class="form-check">
+            <input class="form-check-input" asp-for="IsActive" type="checkbox">
+            <label for="IsActive">Active</label>
+        </div>
+    </div>
+</div>
+
+<div class="block__action container">
+    <div class="block__action-row">
+        <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+        <a class="btn btn-mw-120 btn--cancel" asp-action="Index">Cancel</a>
+    </div>
+</div>

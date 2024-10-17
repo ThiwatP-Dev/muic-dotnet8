@@ -1,0 +1,40 @@
+@model StudentIncident
+
+<div class="row form-group">
+	<div class="col-12">
+		<select class="chosen-select form-control" asp-for="IncidentId" asp-items="@ViewBag.Incidents" autofocus>
+			<option selected disabled>Select</option>
+		</select>
+		<label>Incident<span class="text-danger">*</span></label>
+	</div>
+</div>
+
+<div class="row form-group">
+	<div class="col-4">
+		<select class="chosen-select form-control" asp-for="TermId" asp-items="@ViewBag.Terms">
+			<option selected disabled>Select</option>
+		</select>
+		<label>Term<span class="text-danger">*</span></label>
+	</div>
+	<div class="col-4">
+		<select class="chosen-select form-control" asp-for="SignatoryId" asp-items="@ViewBag.Signatories">
+			<option selected disabled>Select</option>
+		</select>
+		<label>Approved By<span class="text-danger">*</span></label>
+	</div>
+	<div class="col-4">
+		<input class="form-control js-single-date" asp-for="ApprovedAt" type="text">
+		<label>Approved Date<span class="text-danger">*</span></label>
+	</div>
+
+</div>
+
+<input asp-for="StudentId" type="hidden">
+<input asp-for="Id" type="hidden">
+
+<div class="block__action pb-0">
+    <div class="block__action-row">
+        <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+		<a class="btn btn-mw-120 btn--cancel rounded" href="javascript:void(0);" data-dismiss="modal">Cancel</a>
+    </div>
+</div>

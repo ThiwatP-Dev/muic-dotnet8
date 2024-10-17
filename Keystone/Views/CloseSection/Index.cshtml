@@ -1,0 +1,150 @@
+@model PagedResult<Section>
+@{ 
+    ViewData["Title"] = "Closed Section";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+    var recordNumber = Model?.FirstRowOnPage;
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Close Section</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="CloseSection" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group">  
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Academic Level</label>
+                        </div> 
+
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="ViewBag.Terms">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Term</label>
+                        </div>
+
+                        <div class="col-6">
+                            <select class="chosen-select form-control js-cascade-course" asp-for="Criteria.CourseId" asp-items="@ViewBag.Courses" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Course</label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-3">
+                            <input class="form-control js-default-zero js-click-highlight" asp-for="Criteria.Amount" type="number">
+                            <label>Student Less Than</label>
+                        </div> 
+
+                        <div class="col-9 align-self-end text-right">
+                           <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.RowCount ?? 0))</header>
+            </div>
+
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table id="js-closed-section" class="table table-bordered table-hover js-report-table m-0 w-100x">
+                        <thead>
+                            <tr>
+                                <th class="text-center w-50">#</th>
+                                <th class="text-center">Section</th>
+                                <th class="text-center">Code</th>
+                                <th>Course</th>
+                                <th class="text-center">Opened Section Date</th>
+                                <th class="text-center">Closed Section Date</th>
+                                <th class="text-center">Seat Used</th>
+                                <th class="text-center">Seat Available</th>
+                                <th class="text-center">Seat Limit</th>
+                                <th class="text-center">Master</th>
+                                <th class="text-center">Registration Student</th>
+                                <th class="text-center w-100">Status</th>
+                                <th class="text-center w-100">Detail</th>
+                                <th class="text-center w-150">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Results) 
+                            {
+                                <tr>
+                                    <td>@recordNumber</td>
+                                    <td class="js-section">@item.Number</td>
+                                    <td>@item.Course?.Code</td>
+                                    <td>@item.Course?.NameEnAndCredit</td>
+                                    <td>@item.OpenedSectionAtText</td>
+                                    <td>@item.ClosedSectionAtText</td>
+                                    <td>@item.SeatUsed</td>
+                                    <td>@item.SeatAvailable</td>
+                                    <td>@item.SeatLimit</td>
+                                    <td>
+                                        <partial name="_BooleanCheck" model="@item.IsMasterSection"></partial>
+                                    </td>
+                                    <td>@item.TotalStudent</td>
+                                    <td>@item.StatusText</td>
+                                    <td class="text-nowrap td-actions">
+                                        <a asp-controller="CloseSection" 
+                                           asp-action="StudentList" 
+                                           asp-route-sectionId="@item.Id"
+                                           asp-route-returnUrl="@contextPath">
+                                            <i class="la la-user info"></i>
+                                        </a>
+                                    </td>
+                                    <td class="text-nowrap td-actions">
+                                        <a asp-controller="CloseSection" 
+                                           asp-action="ResetSeatAvailable" 
+                                           asp-route-sectionId="@item.Id" 
+                                           asp-route-page="@Model.CurrentPage"
+                                           asp-route-amount="@Model.Criteria.Amount">
+                                            <i class="la la-user-minus info"></i>
+                                        </a>
+                                        @if (item.SeatUsed == 0)
+                                        {
+                                            <a data-toggle="modal" 
+                                               data-target="#delete-confirm-modal" 
+                                               asp-controller="CloseSection" 
+                                               asp-action="Close" 
+                                               asp-route-sectionId="@item.Id"
+                                               asp-route-page="@Model.CurrentPage"
+                                               asp-route-amount="@Model.Criteria.Amount">
+                                                <i class="la la-close delete"></i>
+                                            </a>
+                                        }
+                                    </td>
+                                </tr>
+                                recordNumber++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Modals {
+    <partial name="_CloseSectionConfirm" />
+}

@@ -1,0 +1,72 @@
+<div id="search-courses-modal" class="modal fadeIn animated" tabindex="-1" role="dialog"
+     aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div id="modalWrapper">
+                <div class="block block--underline mb-0">
+                    <div class="block__title">
+                        <header>Search Available Courses</header>
+                    </div>
+                    
+                    <div class="block__body">
+                        <div class="row">
+                            <div class="col-3">
+                                <div class="form-group suggestion-parent">
+                                    <input id="js-course-code" class="form-control">
+                                    <label>Course Code</label>
+                                </div>
+                            </div>
+                            <div class="col-5">
+                                <div class="form-group suggestion-parent">
+                                    <input id="js-course-name" class="form-control">
+                                    <label>Course Name</label>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group suggestion-parent">
+                                    <input id="js-section" class="form-control">
+                                    <label>Section</label>
+                                </div>
+                            </div>
+                            <div class="col-1 pl-1 align-self-center">
+                                <button id="js-search-input" class="btn btn--primary btn--circle" type="button">
+                                    <i class="la la-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <hr>
+                        <form>
+                            @Html.AntiForgeryToken()
+                            <ul id="js-selected-course"></ul>
+
+                            <div class="js-render-nicescroll box-scroll__content">
+                                <div class="table-responsive mb-4">
+                                    <table class="table table-bordered m-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Course</th>
+                                                <th class="text-center w-75">Section</th>
+                                                <th class="text-center w-75">Section Type</th>
+                                                <th class="text-center w-150">Period</th>
+                                                <th class="text-center w-50">Seat Limit</th>
+                                                <th class="text-center w-50">Seat Used</th>
+                                                <th class="text-center w-50">Seat Available</th>
+                                                <th class="text-center w-50"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="js-items-list"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <div class="block__action-row">
+                                <button id="js-confirm-add" class="btn btn-mw-120 btn--primary" type="button">Add</button>
+                                <a id="js-reset-data" class="btn btn-mw-120 btn--cancel rounded" href="javascript:void(0);" data-dismiss="modal">Close</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div> 
+        </div>
+    </div>
+</div>

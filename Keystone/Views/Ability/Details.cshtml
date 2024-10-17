@@ -1,0 +1,102 @@
+@model AbilityViewModel
+@{
+	ViewData["Title"] = "Ability";
+	var searchReturnUrl = ViewBag.ReturnUrl;
+}
+
+<section>
+	<div class="row">
+		<div class="ks-page-header col-12">
+			<h2 class="ks-page-header__title">
+				<a class="btn-back" asp-controller="Ability" asp-action="Index" asp-route-returnUrl="@ViewBag.ReturnUrl">
+					<i class="la la-angle-double-left mr-1"></i>Back
+				</a>
+			</h2>
+		</div>
+	</div>
+
+	<div class="block block--underline">
+		<div class="block__title">
+                <header>@ViewData["Title"]</header>
+        </div>
+		<div class="block__body">
+			<div class="row form-group">
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Code</div>
+					<div class="form-control-plaintext">@Model.Code</div>
+				</div>
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">English Name</div>
+					<div class="form-control-plaintext">@Model.NameEn</div>
+				</div>
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Thai Name</div>
+					<div class="form-control-plaintext">@Model.NameTh</div>
+				</div>
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Force Track</div>
+					<div class="form-control-plaintext">
+						<partial name="_BooleanResult" model="@Model.IsForceTrack">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<!--end main info -->
+
+<div id="role-details" class="row">
+	<div class="col-12">
+		<div class="tabs-scroller float-left"><i class="la la-angle-double-left"></i></div>
+		<div class="tabs-scroller float-right"><i class="la la-angle-double-right"></i></div>
+		<div class="nav-tabs-wrapper">
+			<ul class="nav nav-tabs ks-tabs" role="tablist">
+				<li class="nav-item">
+					<a id="nav-link-0" class="nav-link active" href="#nav-tab-0" data-toggle="tab" data-savable="true">
+						Course List
+					</a>
+				</li>
+				<li class="nav-item">
+					<a id="nav-link-1" class="nav-link" href="#nav-tab-1" data-toggle="tab" data-savable="true">
+						Blacklist Major
+					</a>
+				</li>
+			</ul>
+		</div>
+
+		<form method="POST">
+			<div class="tab-content" id="ability-tab-content">
+				<div id="nav-tab-0" class="tab-pane show active" role="tabpanel">
+					<partial name="_CourseList" model="@Model.CurriculumCourses"/>
+				</div>
+				<div id="nav-tab-1" class="tab-pane show" role="tabpanel">
+					<partial name="_BlacklistDepartmentList" model="@Model.SpecializationGroupBlackLists"/>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+
+<!--end tab info -->
+
+@section Modals {
+	<partial name="_CreateCourseModal">
+	<partial name="_EditCourseModal">
+	<partial name="_CreateBlacklistDepartmentModal">
+	<partial name="_EditBlacklistDepartmentModal">
+	<partial name="_DeleteConfirmModals">
+}
+
+@section Scripts {
+	<script>
+        $(document).ready(function() 
+        {
+            var tab = '#nav-link-' + getUrlParameter('tabIndex');
+            $(tab).tab('show');
+        });
+    </script>
+	<script type="text/javascript" src="~/js/pages/tabs.js"></script>
+	<script type="text/javascript" src="~/js/pages/ability-course.js"></script>
+	<script type="text/javascript" src="~/js/pages/ability-blacklist-department.js"></script>
+}

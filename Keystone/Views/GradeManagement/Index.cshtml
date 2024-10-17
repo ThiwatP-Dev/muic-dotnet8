@@ -1,0 +1,49 @@
+@model GradeManagementViewModel
+@{
+    ViewData["Title"] = "Grade Management";
+}
+
+<div class="row">
+    <div class="ks-page-header col-lg-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</div>
+
+<section class="block">
+    <form asp-controller="GradeManagement" asp-action="Index">
+        <div class="block__body">
+            <div class="row form-group mb-0">
+                @Html.AntiForgeryToken()
+                <div class="col-4">
+                    <select class="chosen-select form-control js-cascade-academic-level" asp-items="ViewBag.AcademicLevels" asp-for="AcademicLevelId">
+                        <option selected disabled>Select</option>
+                    </select>
+                    <label>Academic Level<span class="text-danger">*</span></label>
+                </div>
+                <div class="col-4">
+                    <select class="chosen-select form-control js-cascade-term" asp-items="ViewBag.Terms" asp-for="TermId">
+                        <option selected disabled>Select</option>
+                    </select>
+                    <label>Term<span class="text-danger">*</span></label>
+                </div>
+                <div class="col-4 align-self-end">
+                    <button class="btn btn-mw-120 btn--primary mb-0" type="submit">
+                        <i class="la la-search mr-2"></i> Search
+                    </button>
+                </div>
+            </div>            
+        </div>
+        <input asp-for="InstructorGuid" type="hidden" value="4288e69d-7e9f-4224-8a0d-e5a18d3e44b4">
+    </form>
+</section>
+
+@if(Model.AcademicLevelId > 0 && Model.TermId > 0)
+{
+    <section>
+        <partial name="_Records" model="@Model.GradingStatuses">
+    </section>
+}
+
+@section Modals {
+    <partial name="_DeleteConfirmModals">
+}

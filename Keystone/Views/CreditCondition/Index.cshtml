@@ -1,0 +1,156 @@
+@model PagedResult<CreditCondition>
+@{ 
+    ViewData["Title"] = "Credit Condition";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+    var recordNumber = Model?.FirstRowOnPage;
+}
+
+<section class="row">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+        <ul class="d-flex flex-md-row align-items-md-center float-right">
+            <li class="list-inline-item mx-3 mb-0">
+                <a class="btn btn--primary" asp-action="Create" asp-route-returnUrl="@contextPath">
+                   <i class="la la-plus mr-1 font-weight-800"></i> Add Credit Condition
+                </a>
+            </li>
+        </ul>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Credit Condition</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="CreditCondition" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+
+                    <div class="row form-group m-b-30">
+                        <div class="col-4">
+                            <input class="form-control" asp-for="Criteria.Credit" type="text">
+                            <label for="Credit">Credit</label>
+                        </div>
+                        <div class="col-4">
+                            <select class="chosen-select form-control" asp-for="Criteria.TeachingTypeId" asp-items="ViewBag.TeachingTypes">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Teaching Type</label>
+                        </div>
+                        <div class="col-4">
+                           <select class="chosen-select form-control" asp-for="Criteria.CreditType" asp-items="ViewBag.CreditTypes"></select>
+                            <label>Credit Type</label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group m-b-30">
+                        <div class="col-8">
+                            <select class="chosen-select form-control" asp-for="Criteria.CurriculumVersionId" asp-items="ViewBag.CurriculumVersions">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Curriculum Version</label>
+                        </div>
+                        <div class="col align-self-end text-right text-nowrap">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" asp-action="Index" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.RowCount ?? 0))</header>
+            </div>
+            
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover js-datatable-export-excel w-100x">
+                        <thead>
+                            <tr>
+                                <th class="text-center w-50">#</th>
+                                <th class="text-center w-50">Id</th>
+                                <th class="text-right">Credit</th>
+                                <th>Teaching Type</th>
+                                <th>Curriculum Version</th>
+                                <th>Course Group</th>
+                                <th>Credit Type</th>
+                                <th class="text-center w-150">Expired Date</th>
+                                <th class="text-center w-100">Status</th>
+                                <th class="text-center w-100 no-print">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @if (Model != null && Model.Results.Any())
+                        {
+                            foreach (var item in Model.Results) 
+                            {
+                                <tr>
+                                    <td>@recordNumber</td>
+                                    <td>@item.Id</td>
+                                    <td>@item.Credit</td>
+                                    <td>@item.TeachingType?.NameEn</td>
+                                    <td>@item.CurriculumVersion?.CodeAndName</td>
+                                    <td>@item.CourseGroup?.NameEn</td>
+                                    <td>@item.CreditTypeText</td>
+                                    <td>@item.ExpiredAtText</td>
+                                    <td>
+                                        <partial name="_BooleanActive" model="@item.IsActive" />
+                                    </td>
+                                    <td class="text-nowrap td-actions">
+                                        <a asp-controller="CreditCondition"
+                                           asp-action="Edit"
+                                           asp-route-Id="@item.Id"
+                                           asp-route-returnUrl="@contextPath"
+                                           title="Edit">
+                                            <i class="la la-edit edit"></i>
+                                        </a>
+                                        <a data-toggle="modal" 
+                                           data-target="#delete-confirm-modal" 
+                                           asp-controller="CreditCondition"
+                                           asp-action="Delete"
+                                           asp-route-Id="@item.Id"
+                                           asp-route-returnUrl="@contextPath"
+                                           title="Delete">
+                                            <i class="la la-trash delete"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                recordNumber++;
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="10">
+                                    <i class="text-danger">No Data</i>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Modals {
+    <partial name="_DeleteConfirmModals">
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/datatable-export-excel.js"></script>
+}

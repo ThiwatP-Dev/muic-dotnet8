@@ -1,0 +1,105 @@
+@model TransferViewModel
+@{ 
+    ViewData["Title"] = "Transfer Student";
+}
+
+<section class="row">
+    <div class="col-lg-12">
+        <div class="block block--underline">
+            <form class="ks-form container" asp-controller="CloseSection" asp-action="Transfer" method="POST">
+                <div class="block__title">
+                    <header class="row m-t-25 pb-0 pr-0">
+                        <div class="row mb-3 color-primary">@ViewData["Title"] from</div>
+                        <div class="row mb-3">
+                            <span class="class-lookup-head p-a-8 mb-0 mr-2">@($"Section { Model.SectionNumber }")</span>
+                            <span class="align-self-center font-weight-700"> @($"{ Model.CourseCode } - { Model.CourseNameEn }")</span>
+                        </div>
+                        <div class="row mb-3">
+                            <span class="font-weight-400">(@Model.PreviousSectionTime)</span>
+                        </div>
+                    </header>
+                </div>
+                
+                <div class="row m-b-15">
+                    <div class="col-4">
+                        <div class="color-primary font-weight-700 mb-3">
+                            Students in this section
+                        </div>
+
+                        <div class="block">
+                            <div class="box-scroll__header pb-1">
+                                <input id="select-all" class="form-check-input js-check-all" type="checkbox" value="">
+                                <label for="select-all">Select All <span id="js-student-count">(0)</span></label>
+                            </div>
+                            <div class="js-render-nicescroll box-scroll__content">
+                                @for (int i = 0; i < Model.Students.Count(); i++)
+                                {
+                                    <input id="@Model.Students[i].Student?.Code" class="form-check-input js-student-check" asp-for="@Model.Students[i].IsTransfered" type="checkbox">
+                                    <label class="mb-3" for="@Model.Students[i].Student?.Code">@Model.Students[i].Student?.Code</label>
+                                    <input asp-for="@Model.Students[i].StudentId" type="hidden">
+                                    <input asp-for="@Model.Students[i].Student.Code" type="hidden">
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column col-1 align-items-center justify-content-center">
+                        <div class="d-flex flex-column text-center">
+                            <i class="la la-random font-size-42 color-primary"></i>
+                        </div>
+                    </div>
+                    <div class="col-7">
+                        <div class="color-primary font-weight-700 mb-3">Avilable section</div>
+                        <div class="block js-render-nicescroll box-scroll__contentplus">
+                            @foreach (var item in ViewBag.Sections)
+                            {
+                                <div class="block p-3 mb-3">
+                                <div class="media">
+                                    <div class="align-self-center pt-2">
+                                        <input asp-for="NewSectionId" id="@item.Number" class="form-check-input" type="radio" value="@item.Id" data-seat-left="@item.SeatAvailable">
+                                        <label class="color-primary m-0" for="@item.Number"></label>
+                                    </div>
+                                    <div class="align-self-center mx-w-70x ml-2 mr-auto">
+                                        <div class="color-primary">@($"Section { item.Number }")</div>
+                                        <div class="font-size-12">
+                                            @for (int i = 0; i < item.SectionDetails.Count; ++i)
+                                            {
+                                                var DayAndTime = string.Join(",", item.SectionDetails[i].DayofweekAndTime);
+                                                <span>@DayAndTime</span>
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="color-primary">
+                                        <img class="align-top w-20" src="~/images/seat.svg"> @item.SeatAvailable
+                                    </div>
+                                </div>
+                            </div>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="block__action container">
+                    <div class="block__action-row">
+                        <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+                        <a class="btn btn-mw-120 btn--link" 
+                           asp-action="Index"
+                           asp-route-AcademicLevelId="@Model.AcademicLevelId"
+                           asp-route-TermId="@Model.TermId">
+                            Cancel
+                        </a>
+                    </div>
+                </div>
+
+                <input asp-for="CourseId" type="hidden">
+                <input asp-for="PreviousSectionId" type="hidden">
+                <input asp-for="AcademicLevelId" type="hidden">
+                <input asp-for="TermId" type="hidden">
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/transfer-student.js"></script>
+}

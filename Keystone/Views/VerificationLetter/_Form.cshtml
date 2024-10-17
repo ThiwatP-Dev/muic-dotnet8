@@ -1,0 +1,155 @@
+@model VerificationLetter
+@Html.AntiForgeryToken()
+
+<div class="block__body">
+    <div class="row form-group">
+        <div class="col-3">
+            <input class="form-control" value="@Model.RunningNumberString" disabled>
+            <input asp-for="RunningNumber" type="hidden">
+            <input asp-for="Id" type="hidden">
+            <label class="text-nowrap">Reference Number<span class="text-danger">*</span></label>
+            <span class="text-danger help-block"></span>
+        </div>
+        <div class="col-1">
+            <input class="form-control" asp-for="Year">
+            <label class="text-nowrap">Year<span class="text-danger">*</span></label>
+            <span class="text-danger help-block"></span>
+        </div>
+        <div class="col-3">
+            <select class="chosen-select form-control js-cascade-academic-level" asp-for="AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                <option selected disabled>Select</option>
+            </select>
+            <label>Academic Level<span class="text-danger">*</span></label>
+            <span class="text-danger help-block"></span>
+        </div>
+        <div class="col-2">
+            <select class="chosen-select form-control js-cascade-admission-term" asp-for="AdmissionTermId" asp-items="ViewBag.AdmissionTerms">
+                <option selected value="">Select</option>
+            </select>
+            <label>Admission Term</label>
+        </div>
+        <div class="col-3">
+            <select class="chosen-select form-control js-cascade-admission-round" asp-for="AdmissionRoundId" asp-items="ViewBag.AdmissionRounds">
+                <option selected value="">Select</option>
+            </select>
+            <label>Admission Round</label>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-3">
+            <input class="form-control js-batch-from" asp-for="BatchFrom">
+            <label>Batch From</label>
+        </div>
+        <div class="col-3">
+            <input class="form-control js-batch-to" asp-for="BatchTo">
+            <label>To</label>
+        </div>
+        <div class="col-3">
+            <input class="form-control js-value-code-from" asp-for="StudentCodeFrom">
+            <label>Code From</label>
+            <span class="text-danger help-block"></span>
+        </div>
+        <div class="col-3">
+            <input class="form-control js-value-code-to" asp-for="StudentCodeTo">
+            <label>To</label>
+            <span class="text-danger help-block"></span>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-6">
+            <select class="chosen-select form-control js-cascade-school-group" asp-for="SchoolGroupId" asp-items="ViewBag.SchoolGroups">
+                <option selected value="">Select</option>
+            </select>
+            <label>School Group</label>
+        </div>
+        <div class="col-6">
+            <select class="chosen-select form-control js-cascade-previous-school" asp-for="PreviousSchoolId" asp-items="ViewBag.PreviousSchools">
+                <option selected value="">Select</option>
+            </select>
+            <label>Previous School</label>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-4">
+            <input class="form-control" asp-for="SchoolName">
+            <label class="text-nowrap">School Name<span class="text-danger">*</span></label>
+            <span class="text-danger help-block"></span>
+        </div>
+        <div class="col-3">
+            <input class="form-control" asp-for="SchoolType">
+            <label class="text-nowrap">School Type<span class="text-danger">*</span></label>
+            <span class="text-danger help-block"></span>
+        </div>
+        <div class="col-5">
+            <input class="form-control" asp-for="Recipient">
+            <label>Recipient<span class="text-danger">*</span></label>
+            <span class="text-danger help-block"></span>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-4">
+            <select class="chosen-select form-control" asp-for="SignatoryId" asp-items="ViewBag.Signatories">
+                <option selected disabled>Select</option>
+            </select>
+            <label>Approved By<span class="text-danger">*</span></label>
+            <span class="text-danger help-block"></span>
+        </div>
+        <div class="col-3">
+            <input class="form-control" asp-for="OfficerName">
+            <label>Officer Name<span class="text-danger">*</span></label>
+            <span class="text-danger help-block"></span>
+        </div>
+        <div class="col-3">
+            <input class="form-control" asp-for="OfficerPosition">
+            <label>Officer Position<span class="text-danger">*</span></label>
+            <span class="text-danger help-block"></span>
+        </div>
+        <div class="col-2">
+            <input class="form-control" asp-for="OfficerDivision">
+            <label>Officer Division<span class="text-danger">*</span></label>
+            <span class="text-danger help-block"></span>
+        </div>
+    </div>
+
+    <div class="row form-group m-b-30">
+        <div class="col-4">
+            <input class="form-control" asp-for="OfficerEmail">
+            <label>Officer E-mail<span class="text-danger">*</span></label>
+            <span class="text-danger help-block"></span>
+        </div>
+        <div class="col-3">
+            <input class="form-control" asp-for="OfficerPhone">
+            <label>Officer Phone<span class="text-danger">*</span></label>
+            <span class="text-danger help-block"></span>
+        </div>
+        <div class="col-3">
+            <input class="form-control js-single-date" asp-for="SentAt" type="text" autocomplete="off">
+            <label>Sent Date<span class="text-danger">*</span></label>
+            <span class="text-danger help-block"></span>
+        </div>
+        <div class="col-2 text-nowrap text-right align-self-end">
+            <a id="js-get-student" class="btn btn-mw-120 btn--primary mb-0">
+                <i class="la la-users mr-2"></i>Get Student
+            </a>
+        </div>
+    </div>
+
+    <hr class="mb-0">
+
+    <div id="js-student-list">
+        <partial name="_StudentList" model="Model.VerificationStudents">
+    </div>
+    
+    <input asp-for="@Model.AcademicLevelId" type="hidden">
+    <input class="js-value-verification-letter-id" asp-for="@Model.Id" type="hidden">
+    
+    <div class="block__action-row">
+        <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+        @* must change to return url *@
+        <a class="btn btn-mw-120 btn--cancel" asp-action="Index">Cancel</a>
+    </div>
+</div>

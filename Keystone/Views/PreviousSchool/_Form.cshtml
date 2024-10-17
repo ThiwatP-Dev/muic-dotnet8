@@ -1,0 +1,113 @@
+@model PreviousSchool
+
+<div class="block__title">
+    <header>@ViewData["Title"]</header>
+</div>
+
+<div class="block__body">
+    <div class="row form-group">
+        <div class="col-6">
+            <input class="form-control" asp-for="Code" type="text">
+            <label>Code<span class="text-danger">*</span></label>
+            <span class="text-danger help-block" asp-validation-for="Code"></span>
+        </div>
+        <div class="col-6">
+            <input class="form-control" asp-for="OHECCode" type="text">
+            <label>Higher Education Commission Code<span class="text-danger">*</span></label>
+            <span class="text-danger help-block" asp-validation-for="Code"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" asp-for="NameEn" type="text">
+        <label>English Name<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="NameEn"></span>
+    </div>
+    
+    <div class="form-group">
+        <input class="form-control" asp-for="NameTh" type="text">
+        <label>Thai Name<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="NameTh"></span>
+    </div>
+    
+    <div class="row form-group">
+        <div class="col">
+            <select class="chosen-select form-control" asp-for="SchoolTerritoryId" asp-items="ViewBag.SchoolTerritory">
+                <option selected value="">Select</option>
+            </select>
+            <label>School Region</label>
+        </div>
+        <div class="col">
+            <select class="chosen-select form-control" asp-for="SchoolTypeId" asp-items="ViewBag.SchoolTypes">
+                <option selected value="">Select</option>
+            </select>
+            <label>School Type</label>
+        </div>
+        <div class="col">
+            <select class="chosen-select form-control" asp-for="SchoolGroupId" asp-items="ViewBag.SchoolGroups">
+                <option selected value="">Select</option>
+            </select>
+            <label>School Group</label>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col">
+            <select class="chosen-select form-control js-address-cascade" asp-for="CountryId" 
+                    asp-items="ViewBag.Countries" data-group="previous-school" data-type="country">
+                <option selected disabled>Select</option>
+            </select>
+            <label>Country<span class="text-danger">*</span></label>
+        </div>
+        <div class="col">
+            <select class="chosen-select form-control js-address-cascade" asp-for="ProvinceId"
+                    asp-items="ViewBag.Provinces" data-group="previous-school" data-type="province">
+                <option selected value="">Select</option>
+            </select>
+            <label>Province</label>
+        </div>
+        <div class="col">
+            <select class="chosen-select form-control js-address-cascade" asp-for="StateId"
+                    asp-items="ViewBag.States" data-group="previous-school" data-type="state">
+                <option selected value="">Select</option>
+            </select>
+            <label>State</label>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col">
+            <input class="form-control" asp-for="Address1" type="text">
+            <label>Address 1</label>
+        </div>
+        <div class="col">
+            <input class="form-control" asp-for="Address2" type="text">
+            <label>Address 2</label>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col">
+            <input class="form-control" asp-for="Address3" type="text">
+            <label>Address 3</label>
+        </div>
+        <div class="col">
+            <input class="form-control" asp-for="PhoneNumber" type="text">
+            <label>Telephone</label>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-check">
+            <input class="form-check-input" asp-for="IsActive" type="checkbox">
+            <label for="IsActive">Active</label>
+        </div>
+    </div>
+</div>
+
+<div class="block__action container">
+    <div class="block__action-row">
+        <button class="btn btn-mw-120 btn--primary" asp-route-returnUrl="@ViewBag.ReturnUrl" type="submit">Save</button>
+        <a class="btn btn-mw-120 btn--cancel" href="@ViewBag.ReturnUrl">Cancel</a>
+    </div>
+</div>

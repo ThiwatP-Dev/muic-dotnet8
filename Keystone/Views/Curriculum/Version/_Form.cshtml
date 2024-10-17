@@ -1,0 +1,167 @@
+@model CurriculumVersion
+
+<div class="block__title">
+    <header>Curriculum Version</header>
+</div>
+
+<div class="block__body">
+    <div class="row form-group">
+        <div class="col-6">
+            <input class="form-control" asp-for="Code">
+            <label>ID</label>
+        </div>
+        
+        <div class="col-3">
+            <select class="chosen-select form-control" asp-for="AcademicProgramId" asp-items="ViewBag.AcademicPrograms">
+                <option selected disabled>Select</option>
+            </select>
+            <label for="AcademicProgramId">Academic Program</label>
+        </div>
+        <div class="col-3">
+            <input class="form-control js-single-date" asp-for="ApprovedDate" type="text" autocomplete="off">
+            <label for="ApprovedDate">Approved Date</label>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-6">
+            <input class="form-control" asp-for="NameEn">
+            <label>English Name<span class="text-danger">*</span></label>
+            <span class="text-danger help-block" asp-validation-for="NameEn"></span>
+        </div>
+        <div class="col-6">
+            <input class="form-control" asp-for="NameTh">
+            <label>Thai Name<span class="text-danger">*</span></label>
+            <span class="text-danger help-block" asp-validation-for="NameTh"></span>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-6">
+            <input class="form-control" asp-for="DegreeNameEn">
+            <label>English Degree Name<span class="text-danger">*</span></label>
+            <span class="text-danger help-block" asp-validation-for="DegreeNameEn"></span>
+        </div>
+        <div class="col-6">
+            <input class="form-control" asp-for="DegreeNameTh">
+            <label>Thai Degree Name<span class="text-danger">*</span></label>
+            <span class="text-danger help-block" asp-validation-for="DegreeNameTh"></span>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-6">
+            <input class="form-control" asp-for="DegreeAbbreviationEn">
+            <label>English Degree Abbreviation</label>
+        </div>
+        <div class="col-6">
+            <input class="form-control" asp-for="DegreeAbbreviationTh">
+            <label>Thai Degree Abbreviation</label>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-3">
+            <select class="chosen-select form-control js-cascade-term" asp-for="ImplementedTermId" asp-items="ViewBag.Terms">
+                <option selected disabled>Select</option>
+            </select>
+            <label for="ImplementedTermId">Implemented Term<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-3">
+            <select class="chosen-select form-control js-cascade-term" asp-for="OpenedTermId" asp-items="ViewBag.Terms">
+                <option selected disabled>Select</option>
+            </select>
+            <label for="OpenedTermId">Open Term</label>
+        </div>
+        <div class="col-3">
+            <select class="chosen-select form-control js-cascade-term" asp-for="ClosedTermId" asp-items="ViewBag.Terms">
+                <option selected disabled>Select</option>
+            </select>
+            <label for="ClosedTermId">Close Term</label>
+        </div>
+        <div class="col-3 form-check">
+            <input class="form-check-input" asp-for="IsLumpsumPayment" type="checkbox">
+            <label for="IsLumpsumPayment">Lumpsum Payment</label>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-3">
+            <input class="form-control" type="number" asp-for="MinimumTerm" min=0>
+            <label>Minimum Term<span class="text-danger">*</span></label>
+            <span class="text-danger help-block" asp-validation-for="MinimumTerm"></span>
+        </div>
+        <div class="col-3">
+            <input class="form-control" type="number" asp-for="MaximumTerm" min=0>
+            <label>Maximum Term<span class="text-danger">*</span></label>
+            <span class="text-danger help-block" asp-validation-for="MaximumTerm"></span>
+        </div>
+        <div class="col-3">
+            <input class="form-control" type="number" asp-for="TotalCredit" min=0>
+            <label>Total Credit<span class="text-danger">*</span></label>
+            <span class="text-danger help-block" asp-validation-for="TotalCredit"></span>
+        </div>
+        <div class="col-3">
+            <input class="form-control" type="number" asp-for="ExpectCredit" min=0>
+            <label>Expect Credit</label>
+            <span class="text-danger help-block" asp-validation-for="ExpectCredit"></span>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-3">
+            <input class="form-control" type="number" asp-for="StartBatch" min=0>
+            <label>Batch From</label>
+        </div>
+        <div class="col-3">
+            <input class="form-control" type="number" asp-for="EndBatch" min=0>
+            <label>Batch To</label>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-12">
+            <h4>Instructors of Curriculum</h4>
+            <select class="chosen-select form-control js-cascade-instructor" asp-for="CurriculumInstructorIds"
+                    asp-items="ViewBag.Instructors" multiple data-placeholder="Select"></select>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-12">
+            <h4>Thesis Instructors</h4>
+            <select class="chosen-select form-control js-cascade-instructor" asp-for="ThesisInstructorIds"
+                    asp-items="ViewBag.Instructors" multiple data-placeholder="Select"></select>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-12">
+            <h4>Instructors</h4>
+            <select class="chosen-select form-control js-cascade-instructor" asp-for="InstructorIds"
+                    asp-items="ViewBag.Instructors" multiple data-placeholder="Select"></select>
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-12">
+            <input class="form-control" asp-for="Remark" type="text">
+            <label for="Remark">Remark</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-check">
+            <input class="form-check-input" asp-for="IsActive" type="checkbox">
+            <label for="IsActive">Active</label>
+        </div>
+    </div>
+    <input asp-for="CurriculumId" type="hidden">
+</div>
+
+<input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+
+<div class="block__action container">
+    <div class="block__action-row">
+        <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+        <a class="btn btn-mw-120 btn--cancel" asp-controller="Curriculum" asp-action="Details" asp-route-id="@Model.CurriculumId" asp-route-returnUrl="@ViewBag.ReturnUrl">Cancel</a>
+    </div>
+</div>

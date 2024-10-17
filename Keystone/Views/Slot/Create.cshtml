@@ -1,0 +1,33 @@
+@model SlotViewModel
+@{ 
+    ViewData["Title"] = "Add Slot"; 
+}
+
+<section id="data-table-form-v1" class="row">
+    <div class="col-lg-12">
+        <div class="block block--underline">
+            <form class="ks-form container" asp-controller="Slot" asp-action="Create" method="post">
+                @Html.AntiForgeryToken()
+                <partial name="_Form"/>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/registration-slot.js"></script>
+    <script>
+        $(document).ready( function() {
+            var table = new RowAddAble({
+                TargetTable: "#js-add-registration-slot-condition",
+                TableTitle: 'Registration Condition',
+                ButtonTitle: 'Registration Condition'
+            });
+            table.RenderButton();
+        });
+    </script>
+}
+
+@section Modals {
+    <partial name="_DeleteRowConfirmModals">
+}

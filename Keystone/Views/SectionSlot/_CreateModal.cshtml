@@ -1,0 +1,18 @@
+@model SectionSlot
+
+<div id="add-section-slot" class="modal fadeIn animated" tabindex="-1" role="dialog"
+     aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="block__title">
+				<header>Add Section Slot</header>
+			</div>
+			<div class="block__body">
+				<form class="js-section-slot-modal-create-content ks-form container" asp-controller="SectionSlot" asp-action="CreateSectionDetail" method="POST">
+                    @Html.AntiForgeryToken()
+                    <partial name="_FormModal" />
+                </form>
+			</div>
+        </div>
+    </div>
+</div>

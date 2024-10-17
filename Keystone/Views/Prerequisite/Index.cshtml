@@ -1,0 +1,148 @@
+@model PagedResult<PrerequisiteFormViewModel>
+@{ 
+    ViewData["Title"] = "Prerequisite"; 
+}
+
+<div class="row">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+        <ul class="d-flex flex-md-row align-items-md-center float-right">
+            <li class="list-inline-item mx-3 mb-0">
+                <a class='btn btn--primary' asp-action="Create">
+                    <i class="la la-plus mr-1 font-weight-800"></i> Add Prerequisite
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Prerequisite</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="Prerequisite" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group">
+                        <div class="col-6">
+                            <select class="chosen-select form-control js-cascade-curriculum-course" asp-for="Criteria.CourseId" asp-items="ViewBag.Courses">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Course<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-6">
+                            <select class="chosen-select form-control js-cascade-curriculum-version" asp-for="Criteria.CurriculumVersionId" asp-items="ViewBag.CurrirulumVersions">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Curriculum Version</label>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-6">
+                            <select class="chosen-select form-control js-first-condition-type" asp-for="Criteria.Type" asp-items="ViewBag.Types">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Condition Type</label>
+                        </div>
+                        <div class="col-6">
+                            <select class="chosen-select form-control js-first-condition" asp-for="Criteria.ConditionId" asp-items="ViewBag.Conditions">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Condition</label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-12 align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.RowCount ?? 0))</header>
+            </div>
+
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover w-100x">
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Course</th>
+                                <th>Curriculum Version</th>
+                                <th>Condition</th>
+                                <th>Status</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Results.Any())
+                            {
+                                foreach (var item in Model.Results) 
+                                {
+                                    <tr>
+                                        <td>@item.CourseCode</td>
+                                        <td>@item.CourseName</td>
+                                        <td>@item.CurriculumVersionName</td>
+                                        <td>@item.Condition</td>
+                                        <td>
+                                            <partial name="_BooleanActive" model="@item.IsActive" />
+                                        </td>
+                                        <td class="text-nowrap td-actions">
+                                            <a asp-controller="Prerequisite" 
+                                               asp-action="Edit" 
+                                               asp-route-Id="@item.CourseId"
+                                               asp-route-curriculumVersionId="@item.CurriculumVersionId">
+                                                <i class="la la-edit edit"></i>
+                                            </a>
+                                            <a data-toggle="modal" 
+                                               data-target="#delete-confirm-modal" 
+                                               data-controller="Prerequisite" 
+                                               data-action="Delete" 
+                                               data-value="@item.Id">
+                                                <i class="la la-trash delete"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="6" class="text-center">
+                                        <i class="text-danger">No Data</i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @(await Component.InvokeAsync<PagerViewComponent>(Model))
+    </div>
+</section>
+
+@section Modals {
+    <partial name="_DeleteConfirmModals">
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/condition-type-id.js"></script>
+}

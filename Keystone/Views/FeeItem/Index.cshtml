@@ -1,0 +1,152 @@
+@model PagedResult<FeeItem>
+@{ 
+    ViewData["Title"] = "Fee Item";
+    var recordNumber = Model?.FirstRowOnPage;
+}
+
+<section class="row">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+        <ul class="d-flex flex-md-row align-items-md-center float-right">
+            <li class="list-inline-item mx-3 mb-0">
+                <a class="btn btn--primary" asp-action="Create">
+                    <i class="la la-plus mr-1 font-weight-800"></i> Add Fee Item
+                </a>
+            </li>
+        </ul>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Fee Item</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="FeeItem" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group m-b-30">
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.FeeGroupId" asp-items="ViewBag.FeeGroups">
+                                <option selected>Select</option>
+                            </select>
+                            <label>Fee Group</label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.Code" type="text">
+                            <label>Code</label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.CodeAndName" type="text">
+                            <label>Name</label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.AccountCode" type="text">
+                            <label>Account Code</label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-12 align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-md-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.RowCount ?? 0))</header>
+            </div>
+            
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover w-100x js-datatable-export-excel">
+                        <thead>
+                            <tr>
+                                <th class="w-25 text-center no-print">#</th>
+                                <th class="text-center w-50">Code</th>
+                                <th>English Name</th>
+                                <th>Thai Name</th>
+                                <th>Formal English Name</th>
+                                <th>Formal Thai Name</th>
+                                <th>Account Code</th>
+                                <th class="text-center w-180">Fee Group</th>
+                                <th class="text-right w-200">Default Amount</th>
+                                <th class="text-center w-150">Editable</th>
+                                <th class="text-center w-150">Status</th>
+                                <th >Remark</th>
+                                <th class="text-center w-180 no-print">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Results.Any())
+                            {
+                                foreach (var item in Model.Results)
+                                {
+                                    <tr>
+                                        <td>@recordNumber</td>
+                                        <td>@item.Code</td>
+                                        <td>@item.NameEn</td>
+                                        <td>@item.NameTh</td>
+                                        <td>@item.FormalNameEn</td>
+                                        <td>@item.FormalNameTh</td>
+                                        <td>@item.AccountCode</td>
+                                        <td>@item.FeeGroup?.NameEn</td>
+                                        <td>@item.DefaultPriceText</td>
+                                        <td class="text-nowrap">
+                                            <partial name="_BooleanResult" model="@item.IsEditable" />
+                                        </td>
+                                        <td>
+                                            <partial name="_BooleanActive" model="@item.IsActive" />
+                                        </td>
+                                        <td>@item.Remark</td>
+                                        <td class="text-nowrap td-actions">
+                                            <a asp-controller="FeeItem" asp-action="Edit" asp-route-id="@item.Id">
+                                                <i class="la la-edit edit"></i>
+                                            </a>
+                                            <a data-toggle="modal" 
+                                               data-target="#delete-confirm-modal" 
+                                               data-controller="FeeItem" 
+                                               data-value="@item.Id"
+                                               data-action="Delete">
+                                                <i class="la la-trash delete"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    recordNumber++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="13" class="text-center">
+                                        <i class="text-danger">No Data</i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<partial name="_DeleteConfirmModals" />
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/datatable-export-excel.js"></script>
+}

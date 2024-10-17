@@ -1,0 +1,163 @@
+@model PagedResult<CheatingReportViewModel>
+@{
+    ViewData["Title"] = "Cheating Report";
+    var recordNumber = Model?.FirstRowOnPage;
+}
+
+<section class="row">
+    <div class="col-12">
+        <div id="cheating-report-accordion1" class="panel-group d-print-none">
+            <div class="block block--underline">
+                <div class="block__title collapsed" data-toggle="collapse" data-parent="#cheating-report-accordion1" data-target="#cheating-report-accordion1-1">
+                    <header>@ViewData["Title"]</header>
+                    <div class="tools">
+                        <a class="btn btn--white btn--circle">
+                            <i class="la la-angle-down"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="cheating-report-accordion1-1" class="collapse show" aria-expanded="true">
+                    <div class="block__body">
+                        <form class="form-horizontal" asp-controller="CheatingReport" asp-action="Index" method="GET">
+                            @Html.AntiForgeryToken()
+                            <div class="row form-group m-b-30">
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="@ViewBag.AcademicLevels" data-placeholder="Select">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Academic Level<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="@ViewBag.Terms" data-placeholder="Select">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Term<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="@ViewBag.Faculties" data-placeholder="Select">
+                                        <option selected value="">Select</option>
+                                    </select>
+                                    <label>Division</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentId" asp-items="@ViewBag.Departments" data-placeholder="Select">
+                                        <option selected value="">Select</option>
+                                    </select>
+                                    <label>Major</label>
+                                </div>
+                            </div>
+
+                            <div class="row form-group">
+                                <div class="col-3">
+                                    <select class="chosen-select form-control" asp-for="Criteria.ExaminationTypeId" asp-items="@ViewBag.ExaminationTypes" data-placeholder="Select">
+                                        <option selected value="">Select</option>
+                                    </select>
+                                    <label>Examination Type</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control" asp-for="Criteria.IncidentId" asp-items="@ViewBag.Incidents" data-placeholder="Select">
+                                        <option selected value="">Select</option>
+                                    </select>
+                                    <label>Punish Type</label>
+                                </div>
+                                <div class="col-6 align-self-end text-right">
+                                    <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                        <i class="la la-search mr-2"></i>Search
+                                    </button>
+                                    <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                        Reset
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.RowCount ?? 0))</header>
+                <div class="tools d-print-none">
+                    <button class="btn btn--primary btn-mw-120" onclick="window.print()">
+                        <i class="la la-print mr-1 font-weight-800"></i> Print
+                    </button>
+                </div>
+            </div>
+
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table class="table table-bordered m-0">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th>Name</th>
+                                <th>Term</th>
+                                <th>Code</th>
+                                <th>Course</th>
+                                <th class="text-center">Section</th>
+                                <th>Exam Type</th>
+                                <th>Punish Type</th>
+                                <th class="text-center">Suspend</th>
+                                <th class="text-center">Paid</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Results.Any())
+                            {
+                                foreach (var item in Model.Results)
+                                {
+                                    var rowspan = (item?.CheatingStatusDetails.Count+1) ?? 0;
+                                    <tr>
+                                        <td rowspan="@rowspan">@recordNumber</td>
+                                        <td rowspan="@rowspan">@item.StudentCode @item.StudentName</td>
+                                        @foreach (var cheatingStatus in item.CheatingStatusDetails)
+                                        {
+                                            <tr>
+                                                <td>@cheatingStatus?.Term</td>
+                                                <td>@cheatingStatus?.CourseCode</td>
+                                                <td>@cheatingStatus?.CourseName</td>
+                                                <td>@cheatingStatus?.SectionNumber</td>
+                                                <td>@cheatingStatus?.ExaminationType</td>
+                                                <td>@cheatingStatus?.Incident</td>
+                                                <td>@cheatingStatus?.TermRange</td>
+                                                <td>
+                                                    <partial name="_BooleanResult" model="@cheatingStatus.PaidStatus">
+                                                </td>
+                                                <td class="td-actions">
+                                                    <a asp-controller="Student"
+                                                    asp-action="Details"
+                                                    asp-route-code="@item.StudentCode">
+                                                        <i class="la la-info info"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tr>
+                                    
+                                    
+                                    recordNumber ++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="9">
+                                        <i class="text-danger">No Data</i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @(await Component.InvokeAsync<PagerViewComponent>(Model))
+    </div>
+</section>

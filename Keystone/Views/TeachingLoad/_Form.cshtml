@@ -1,0 +1,98 @@
+@model List<TeachingLoadViewModel>
+
+<div class="block__title">
+    <header>
+        @ViewData["Title"]
+    </header>
+</div>
+
+<div class="block__body">
+    <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+
+    <div class="row form-group">
+        <div class="col-md-12 col-lg-4">
+            <select id="create-load-faculty" class="chosen-select form-control" asp-items="@ViewBag.Faculties" data-placeholder="Select">
+                <option selected disabled>Select</option>
+            </select>
+            <label>Division</label>
+        </div>
+        <div class="col-md-12 col-lg-4">
+            <select id="create-load-instructor" class="chosen-select form-control" asp-items="@ViewBag.Instructors" data-placeholder="Select">
+                <option selected disabled>Select</option>
+            </select>
+            <label>Instructor</label>
+        </div>
+        <div class="col-md-12 col-lg-4 font-size-18 align-self-end pb-1">
+            Total load : <span id="js-load-count"></span>
+        </div>
+    </div>
+                        
+    <div class="course-ancestor">
+        <div id="tl-course-accordion1" class="panel-group course-parent">
+            <div class="block block--underline">
+                <div class="block__title d-flex justify-content-between">
+                    <header class="w-100x p-t-20">
+                        <div class="row form-group m-0">
+                            <div class="col-8 p-0" asp-items="@ViewBag.Courses">
+                                Course : <span id="course-1"></span>
+                            </div>
+                            <div class="col-4 p-0">
+                                Total section : <span class="section-count"></span>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="tools course-toggle" data-toggle="collapse" data-parent="#tl-course-accordion1" data-target="#tl-course-accordion1-1">
+                        <div class="btn-group">
+                            <a class="btn btn--white btn--circle">
+                                <i class="la la-angle-down"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tl-course-accordion1-1" class="collapse show" aria-expanded="true">
+                    <div class="block__body">
+                        <div class="row form-group">
+                            <table id="js-loads-1-1" class="table table-bordered mx-3 mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Teaching Type</th>
+                                        <th class="text-center w-200">Load</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="load-row">
+                                        <td>
+                                            <select class="chosen-select" asp-for="@Model[0].TeachingTypeId" asp-items="@ViewBag.TeachingTypes" data-placeholder="Select">
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input class="form-control__table js-get-load" asp-for="@Model[0].Load">
+                                        </td>
+                                        <td class="d-none"><input class="faculty-reference" asp-for="@Model[0].TermId" type="hidden"></td>
+                                        <td class="d-none"><input class="instructor-reference" asp-for="@Model[0].InstructorId" type="hidden"></td>
+                                        <td class="d-none"><input class="course-reference" asp-for="@Model[0].CourseId" type="hidden"></td>
+                                        <td class="d-none"><input class="count-reference" asp-for="@Model[0].TotalSectionsCount" type="hidden"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row form-group mb-1">
+                            <div class="col-12">
+                                <input class="form-control">
+                                <label>Remark</label>
+                            </div>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="block__action container">
+    <div class="block__action-row">
+        <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+        <a class="btn btn-mw-120 btn--cancel" asp-action="Index">Cancel</a>
+    </div>
+</div>

@@ -1,0 +1,89 @@
+@model PagedResult<Questionnaire>
+@{
+    ViewData["Title"] = "Questionnaires";
+    var recordNumber = Model?.FirstRowOnPage;
+}
+
+<section class="row">
+    <div class="ks-page-header col-lg-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+        <ul class="d-flex flex-md-row align-items-md-center float-right">
+            <li class="list-inline-item mx-3 mb-0">
+                <a class="btn btn--primary cursor-pointer" asp-action="CreateHeader">
+                    <i class="la la-plus mr-1 font-weight-800"></i> Add Questionnaire
+                </a>
+            </li>
+        </ul>
+    </div>
+</section>
+
+<section>
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.RowCount ?? 0))</header>
+            </div>
+            
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table id="js-city" class="table table-bordered table-hover w-100x">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center">Code</th>
+                                <th>English Name</th>
+                                <th>Thai Name</th>
+                                <th>Division</th>
+                                <th>Major</th>
+                                <th>Course</th>
+                                <th>Description En</th>
+                                <th>Description Th</th>
+                                <th>Respondant</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Results.Any())
+                            {
+                                foreach (var item in Model.Results) 
+                                {
+                                    <tr>
+                                        <td>@recordNumber</td>
+                                        <td>@item.Id</td>
+                                        <td>@item.NameEn</td>
+                                        <td>@item.NameTh</td>
+                                        <td>@item.Faculty?.NameEn</td>
+                                        <td>@item.Department?.NameEn</td>
+                                        <td>@item.Course?.NameEn</td>
+                                        <td>@item.DescriptionEn</td>
+                                        <td>@item.DescriptionTh</td>
+                                        <td>@item.ResponseType</td>
+                                        <td>
+                                            <partial name="_BooleanActive" model="@item.IsActive" />
+                                        </td>
+                                        <td class="text-nowrap td-actions">
+                                            <a asp-controller="Questionnaire" asp-action="EditHeader" asp-route-Id="@item.Id">
+                                                <i class="la la-edit edit"></i>
+                                            </a>
+                                            <a data-toggle="modal" 
+                                               data-target="#delete-confirm-modal" 
+                                               data-controller="Questionnaire" 
+                                               data-action="Delete" 
+                                               data-value="@item.Id">
+						                        <i class="la la-trash delete"></i>
+					                        </a>
+                                        </td>
+                                    </tr>
+                                    recordNumber++;
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<partial name="_DeleteConfirmModals" />

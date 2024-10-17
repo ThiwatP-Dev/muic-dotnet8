@@ -1,0 +1,22 @@
+<div id="approve-confirm-modal" class="modal fadeIn animated" tabindex="-1" role="dialog"
+     aria-labelledby="approveConfirmModalLabel" arial-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form id="cancel-confirm-form" class="block mb-0" asp-action="Approve" method="POST">
+                <div class="block__body">
+                    <input name="id" type="hidden">
+                    <h3 class="color-primary m-b-15">
+                        Approve Withdrawal Request
+                    </h3>
+                    <p>Are you sure to approve this withdrawal request?</p>
+                </div>
+                <div class="block__action">
+                    <div class="block__action-row">
+                        <a class="btn btn-mw-120 btn--primary rounded js-approve-confirm-btn" href="#!">Yes</a>
+                        <a class="btn btn-mw-120 btn--cancel rounded" href="javascript:void(0);" data-dismiss="modal">No</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

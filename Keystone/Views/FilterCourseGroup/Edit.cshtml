@@ -1,0 +1,40 @@
+@model FilterCourseGroupViewModel
+@{ 
+    ViewData["Title"] = "Edit Filter Course Group"; 
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="ks-page-header">
+            <h2 class="ks-page-header__title">
+                <a class="btn-back" href="@ViewBag.ReturnUrl">
+                    <i class="la la-angle-double-left mr-1"></i>Back
+                </a>
+            </h2>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>@ViewData["Title"]</header>
+            </div>
+            <form class="ks-form container" asp-controller="FilterCourseGroup" asp-action="Edit" method="POST">
+                @Html.AntiForgeryToken()
+                <partial name="_EditForm"/>
+            </form>
+        </div>
+    </div>
+</section>
+
+<partial name="_EditCourseList" model=@Model/>
+
+@section Modals {
+    <partial name="_DeleteConfirmModals">
+    <partial name="_DeleteRowConfirmModals">
+    <partial name="_AddCoursesModal" model=@Model>
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/filter-course-group.js"></script>
+}

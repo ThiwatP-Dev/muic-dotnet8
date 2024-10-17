@@ -1,0 +1,22 @@
+@{
+    var controllerName = this.ViewContext.RouteData.Values["controller"].ToString();
+}
+
+<div class="ks-sidebar ks-sidebar--primary has-bg d-print-none">
+    <div class="ks-sidebar__toggler">
+        <div class="ks-logo">
+            <img src="/images/logo-muic-2.png" />
+            <h4 class="ml-3 mt-2">Sky+ Keystone</h4>
+        </div>
+        <button id="sidebar-toggler" class="navbar-toggler" type="button">
+            <i class="fas fa-stream"></i>
+        </button>
+    </div>
+    <div id="toggle-sidebar" class="ks-sidebar__section expanded">
+        <nav class="navbar">
+            <ul id="sidebar-menu-list" class="ks-nav-menu navbar-nav d-flex flex-column justify-content-start w-100x">
+                @{@* get menu from database *@}
+            </ul>
+        </nav>
+    </div>
+</div>

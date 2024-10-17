@@ -1,0 +1,301 @@
+@model FinanceRegistrationFeeViewModel
+@{ 
+    ViewData["Title"] = "Payment"; 
+}
+
+<div class="row">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</div>
+
+<section class="row ks-general-info">
+    <div class="col-12">
+        <div class="block">
+            <form asp-controller="FinanceRegistrationFee" asp-action="Index" method="GET">
+                <div class="block__body">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group">
+                        <div class="col-4">
+                            <input class="form-control js-cascade-student-code" asp-for="Code" type="text">
+                            <label>Student Id<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-term" asp-for="TermId" asp-items="ViewBag.Terms">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Term<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-4 align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@if (Model != null)
+{
+    <section class="row ks-general-info">
+        <div class="col-12">
+            <div class="block">
+                <form asp-controller="FinanceRegistrationFee" asp-action="Index" method="GET">
+                    <div class="block__body">
+                        <div class="row form-group">
+                            <div class="col-4">
+                                <select class="chosen-select form-control js-cascade-invoice-date" asp-for="InvoiceId" asp-items="ViewBag.InvoiceDates">
+                                    <option selected disabled>Select</option>
+                                </select>
+                                <label>Invoice Date<span class="text-danger">*</span></label>
+                            </div>
+
+                            <input class="js-cascade-term" asp-for="TermId" hidden>
+                            <input class="js-cascade-student-code" asp-for="Code" hidden>
+
+                            <div class="col-8 align-self-end text-right text-nowrap">
+                                <button class="btn btn--primary btn-mw-120 m-l-5" type="submit">
+                                    <i class="la la-search mr-2"></i>Search
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                @if (Model.Invoice != null && Model.Invoice.InvoiceItems != null && Model.Invoice.InvoiceItems.Any())
+                {
+                    <div class="block__body">
+                        <form class="form-horizontal" asp-controller="FinanceRegistrationFee" asp-action="Create" method="POST">
+                            @Html.AntiForgeryToken()
+                            <div class="row form-group m-b-30">
+                                <div class="col-4">
+				                	<div class="form-control-label d-flex align-items-center">Invoice Number</div>
+				                	<div class="form-control-plaintext">@Model?.Invoice?.Number</div>
+				                </div>
+                                <div class="col-4">
+				                	<div class="form-control-label d-flex align-items-center">Type</div>
+				                	<div class="form-control-plaintext">@Model?.Invoice?.InvoiceType</div>
+				                </div>
+                                <div class="col-4">
+				                	<div class="form-control-label d-flex align-items-center">Student Name</div>
+				                	<div class="form-control-plaintext">@Model?.Invoice?.StudentFullName</div>
+				                </div>
+                            </div>
+
+                            <div class="section-title">
+                                <h4>Detail</h4>
+                            </div>
+                            
+                            <div class="form-group p-0 m-b-30">
+                                <table id="js-finance-registration-fee" class="table table-bordered m-0">
+                                    <thead class="scroll-header">
+                                        <tr>
+                                          @*  <th class="w-25">
+                                                <input id="checkAll" class="js-check-all" type="checkbox">
+                                                <label class="mt-2 mb-0 m-l-2" for="checkAll"></label>
+                                            </th>*@
+                                            <th >Fee</th>
+                                            <th >Course</th>
+                                            <th class="text-center">Section</th>
+                                            @* <th class="text-center">Type</th> *@
+                                            <th class="text-center">Paid</th>
+                                            <th class="w-110 text-right">Amount</th>
+                                            <th class="w-110 text-right">Scholarship</th>
+                                            <th class="w-110 text-right">Waive</th>
+                                            <th class="w-110 text-right">Total Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="js-items">
+                                        @for (int i = 0; i < Model.Invoice.InvoiceItems.Count; i++)
+                                        {
+                                            <tr class="js-suggestion-parent">
+                                               @* <td class="w-50">
+                                                    <input id="InvoiceItems[@i]" class="js-finance-check" type="checkbox" asp-for="@Model.Invoice.InvoiceItems[@i].IsChecked">
+                                                    <label class="form-check-input" for="InvoiceItems[@i]"></label>
+                                                </td>*@
+                                                <td >
+                                                    <input class="js-finance-amount" value="@Model.Invoice.InvoiceItems[i].TotalAmount" hidden>
+                                                    <input class="js-finance-type" value="@Model.Invoice.InvoiceItems[i].Type" hidden>
+                                                    @Model.Invoice.InvoiceItems[i].Fee</td>
+                                                <td >@Model.Invoice.InvoiceItems[i].Course</td>
+                                                <td >@Model.Invoice.InvoiceItems[i].Section</td>
+                                                @* <td >@Model.Invoice.InvoiceItems[i].Type</td> *@
+                                                <td class="text-center">
+                                                    @if (Model.Invoice.InvoiceItems[i].IsPaid)
+                                                    {
+                                                        <input class="js-finance-paid-status" value="true" hidden>
+                                                    }
+                                                    else
+                                                    {
+                                                        <input class="js-finance-paid-status" value="false" hidden>
+                                                    }
+                                                    <partial name="_BooleanCheck" model="@(Model.Invoice.InvoiceItems[i].IsPaid)">
+                                                </td>
+                                                <td class="w-110">@Model.Invoice.InvoiceItems[i].AmountText</td>
+                                                <td class="w-110">@Model.Invoice.InvoiceItems[i].ScholarshipAmountText</td>
+                                                <td class="w-110">@Model.Invoice.InvoiceItems[i].DiscountAmountText</td>
+                                                <td class="w-110">@Model.Invoice.InvoiceItems[i].TotalAmountText</td>
+
+                                                <input asp-for="@Model.Invoice.InvoiceItems[@i].Id" type="hidden">
+                                                <input asp-for="@Model.Invoice.InvoiceItems[@i].Fee" type="hidden">
+                                                <input asp-for="@Model.Invoice.InvoiceItems[@i].FeeCode" type="hidden">
+                                                <input asp-for="@Model.Invoice.InvoiceItems[@i].FeeItem" type="hidden">
+                                                <input asp-for="@Model.Invoice.InvoiceItems[@i].Course" type="hidden">
+                                                <input asp-for="@Model.Invoice.InvoiceItems[@i].CourseCode" type="hidden">
+                                                <input asp-for="@Model.Invoice.InvoiceItems[@i].CourseName" type="hidden">
+                                                <input asp-for="@Model.Invoice.InvoiceItems[@i].Section" type="hidden">
+                                                <input asp-for="@Model.Invoice.InvoiceItems[@i].Type" type="hidden">
+                                                <input asp-for="@Model.Invoice.InvoiceItems[@i].IsPaid" type="hidden">
+                                                <input asp-for="@Model.Invoice.InvoiceItems[@i].Amount" type="hidden">
+                                                <input asp-for="@Model.Invoice.InvoiceItems[@i].ScholarshipAmount" type="hidden">
+                                                <input asp-for="@Model.Invoice.InvoiceItems[@i].TotalAmount" type="hidden">
+                                            </tr>
+                                             @if (!string.IsNullOrEmpty(Model.Invoice.InvoiceItems[i].DiscountRemark))
+                                            {
+                                                <tr>
+                                                    <td colspan="8" class="text-left">Waive Remark : @Model.Invoice.InvoiceItems[i].DiscountRemark</td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                    <tfoot>
+                                         <tr>
+                                            <td class="" colspan="5">
+                                                @if (!string.IsNullOrEmpty(Model.Invoice?.DiscountRemark))
+                                                {
+                                                    <span>Discount Remark: @Model.Invoice?.DiscountRemark</span>
+                                                }
+                                            </td>
+                                            <td class="text-right border-right-0" colspan="2"><b>Discount Amount :</b></td>
+                                            <td class="text-right border-right-0 border-left-0"><b>@Model.TotalDiscountAmountText</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="d-none"></td>
+                                            <td class="text-right border-right-0" colspan="7"><b>Total Amount :</b></td>
+                                            <td class="text-right border-right-0 border-left-0"><b>@Model.TotalAmountText</b></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+
+                            <div class="form-group">
+                                <table id="js-add-payment-method" class="table table-bordered m-0">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center w-50">#</th>
+                                            <th>Payment Method</th>
+                                            <th class="w-250">Amount</th>
+                                            <th class="text-center w-50">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>
+                                                <select class="chosen-select form-control" name="PaymentMethods[0].PaymentMethodId" asp-items="ViewBag.PaymentMethods">
+                                                    <option selected disabled>Select</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <input class="form-control__table js-finance-paid js-default-zero js-click-highlight" name="PaymentMethods[0].Amount">
+                                            </td>
+                                            <td class="text-nowrap td-actions">
+                                                <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                                    <i class="la la-trash delete"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="form-group">
+                                <table id="js-add-financial-transaction" class="table table-bordered m-0">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center w-50">#</th>
+                                            <th>Scholarship</th>
+                                            <th class="w-250">Amount</th>
+                                            <th class="text-center w-50">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>
+                                                <select class="chosen-select form-control" name="FinancialTransactions[0].StudentScholarshipId" asp-items="ViewBag.ScholarshipStudents">
+                                                    <option selected value="0">Select</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <input class="form-control__table js-finance-scholarship js-default-zero js-click-highlight" name="FinancialTransactions[0].UsedScholarship">
+                                            </td>
+                                            <td class="text-nowrap td-actions">
+                                                <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                                    <i class="la la-trash delete"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="row form-group">
+                                <div class="col-4">
+                                    <div>Total Paid Amount <span class="js-finance-paid-amount">0</span></div>
+                                </div>
+                            </div>
+
+                            <div class="row form-group">
+                                <div class="col-4">
+                                    <div>Total Settle Amount <span class="js-finance-sum-amount">@Model.TotalAmountText</span></div>
+                                </div>
+                            </div>
+
+                            <input asp-for="InvoiceId" type="hidden">
+                            <input asp-for="TermId" type="hidden">
+                            <input asp-for="TotalAmountText" type="hidden">
+                            <input asp-for="Code" type="hidden">
+
+                            <div class="block__action-row">
+                                <button id="js-summit-paid" class="btn btn-mw-120 btn--primary" type="submit">Paid</button>
+                                @* <a class="btn btn-mw-120 btn--cancel" href="@ViewBag.ReturnUrl">Cancel</a> *@
+                            </div>
+                        </form>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+}
+
+@section Modals {
+    <partial name="_DeleteRowConfirmModals">
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/finance-registration-fee.js"></script>
+    <script>
+        $(document).ready( function() {
+            var table = new RowAddAble({
+                TargetTable: "#js-add-payment-method",
+                TableTitle: 'Payment Method',
+                ButtonTitle: 'Payment Method'
+            });
+            table.RenderButton();
+
+            var scholarship = new RowAddAble({
+                TargetTable: "#js-add-financial-transaction",
+                TableTitle: 'Scholarship',
+                ButtonTitle: 'Scholarship'
+            });
+            scholarship.RenderButton();
+        });
+    </script>
+}

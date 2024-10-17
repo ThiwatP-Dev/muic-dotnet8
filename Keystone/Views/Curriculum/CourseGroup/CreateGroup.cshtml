@@ -1,0 +1,35 @@
+@model CourseGroup
+@{ 
+    ViewData["Title"] = "Add Group"; 
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <form class="ks-form container" asp-controller="CourseGroup" asp-action="CreateGroup" method="POST">
+                @Html.AntiForgeryToken()
+                <partial name="~/Views/Curriculum/CourseGroup/_GroupForm.cshtml">
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Modals {
+    <partial name="_DeleteRowConfirmModals">
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('.js-sp-minor').on('change', function(){
+                $('.js-sp-concentration').val('');
+                $('.js-sp-concentration').trigger("chosen:updated");
+            });
+
+            $('.js-sp-concentration').on('change', function(){
+                $('.js-sp-minor').val('');
+                $('.js-sp-minor').trigger("chosen:updated");
+            });
+        });
+    </script>
+}

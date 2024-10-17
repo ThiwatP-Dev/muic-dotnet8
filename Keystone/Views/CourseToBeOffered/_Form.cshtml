@@ -1,0 +1,640 @@
+@model Section
+
+<div class="block__title">
+    <header>
+        @ViewData["Title"] : 
+        <span class="color-primary font-weight-700">@Model.Term?.AcademicLevel?.NameEn - @Model.Term?.TermText</span>
+    </header>
+</div>
+
+<div class="block__body">
+    <input asp-for="IsSeatOver" type="hidden">
+    <input class="form-control js-single-date" asp-for="OpenedSectionAt" type="text" autocomplete="off" type="hidden">
+    <input class="form-control js-single-date" asp-for="ClosedSectionAt" type="text" autocomplete="off" type="hidden">
+    
+    <div class="section-title mt-3">
+        <h4>General Information</h4>
+    </div>
+
+    <div class="row form-group">
+        <input class="js-offer-term" asp-for="TermId" type="hidden">
+        <div class="col-6">
+            <select class="chosen-select form-control js-offer-course" asp-for="CourseId" asp-items="@ViewBag.Courses" data-placeholder="Select">
+                <option selected disabled>Select</option>
+            </select>
+            <label>Course<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-3">
+            <input class="form-control js-offer-number" asp-for="Number">
+            <label>Section Number<span class="text-danger">*</span></label>
+            <div class="help-block text-danger" asp-validation-for="Number"></div>
+        </div>
+        @if (Model.ParentSectionId == null)
+        {
+            <div class="col-3">
+                <select class="chosen-select form-control js-main-instructor" asp-for="MainInstructorId" asp-items="@ViewBag.Instructors">
+                    <option selected value="">Select</option>
+                </select>
+                <label>Main Instructor</label>
+            </div>
+        }
+
+        @if (Model?.Course?.IsSectionGroup == true)
+        {
+            <div class="col-6">
+                <select class="chosen-select form-control" asp-for="ParentSectionId" asp-items="@ViewBag.ParentSections">
+                    <option selected value="">Select</option>
+                </select>
+                <label>Parent Section</label>
+            </div>
+        }
+    </div>
+
+    <div class="row form-group">
+        <div class="col-3">
+            <input class="form-control js-default-zero js-cascade-section-seat-limit" asp-for="SeatLimit" onKeyPress="if(this.value.length==3) return false;">
+            <label>Seat Limit<span class="text-danger">*</span></label>
+            <span class="text-danger help-block" asp-validation-for="SeatLimit"></span>
+        </div>
+        <div class="col-3">
+            <input class="form-control js-default-zero" asp-for="PlanningSeat" onKeyPress="if(this.value.length==3) return false;">
+            <label>Planning Seat</label>
+            <span class="text-danger help-block" asp-validation-for="PlanningSeat"></span>
+        </div>
+        <div class="col-3">
+            <input class="form-control js-default-zero" asp-for="SeatUsed" disabled>
+            <label>Seat Used</label>
+        </div>
+        <div class="col-3">
+            <input class="form-control js-default-zero" asp-for="MinimumSeat" onKeyPress="if(this.value.length==3) return false;">
+            <label>Minimum Seat</label>
+            <span class="text-danger help-block" asp-validation-for="MinimumSeat"></span>
+        </div>  
+    </div>
+
+    <div class="section-title mt-3">
+        <h4>Condition</h4>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-6">
+            <h4 class="font-size-default m-y-4">Batch</h4>
+            <select class="chosen-select form-control" asp-for="BatchesInt" asp-items="ViewBag.Batches" data-placeholder="Select" multiple></select>
+        </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-12">
+            <h4 class="font-size-default m-y-4">Student</h4>
+            <textarea class="form-control" asp-for="StudentCodes" type="text" rows="4"></textarea>
+        </div>
+    </div>
+
+    <input class="js-cascade-academic-level" asp-for="AcademicLevelId" hidden>
+
+    <div class="row form-group">
+        <div class="col-6">
+            <h4 class="font-size-default m-y-4">Division</h4>
+            <select class="chosen-select form-control js-cascade-multiple-faculty" asp-for="Faculties" asp-items="ViewBag.Faculties" data-placeholder="Select" multiple></select>
+        </div>
+        <div class="col-6">
+            <h4 class="font-size-default m-y-4">Major</h4>
+            <select class="chosen-select form-control js-cascade-multiple-department" asp-for="Departments" asp-items="ViewBag.Departments" data-placeholder="Select" multiple></select>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-6">
+            <h4 class="font-size-default m-y-4">Curriculum</h4>
+            <select class="chosen-select form-control js-cascade-multiple-curriculum" asp-for="Curriculums" asp-items="ViewBag.Curriculums" data-placeholder="Select" multiple></select>
+        </div>
+        <div class="col-6">
+            <h4 class="font-size-default m-y-4">Curriculum Version</h4>
+            <select class="chosen-select form-control js-cascade-multiple-curriculum-version" asp-for="CurriculumVersions" asp-items="ViewBag.CurriculumVersions" data-placeholder="Select" multiple></select>
+        </div>
+    </div>
+
+    @if (Model.ParentSectionId == null)
+    {
+        <div class="row form-group">
+            <div class="col">
+                <h4 class="font-size-default m-y-4">Minor</h4>
+                <select class="chosen-select form-control" asp-for="Minors" asp-items="ViewBag.Minors" data-placeholder="Select" multiple></select>
+            </div>
+        </div>
+        <input class="js-section-status" asp-for="IsStatusApproval" type="hidden"/>
+    }
+    else
+    {
+        <div class="row form-group">
+            <div class="col-6">
+                <h4 class="font-size-default m-y-4">Minor</h4>
+                <select class="chosen-select form-control" asp-for="Minors" asp-items="ViewBag.Minors" data-placeholder="Select" multiple></select>
+            </div>
+        </div>
+    }
+
+    <div class="row form-group">
+        <div class="col-12">
+            <input class="form-control" asp-for="Remark">
+            <label>Remark</label>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-4">
+			<div class="form-control-label d-flex align-items-center">Section Type</div>
+			<div class="form-control-plaintext">
+                @(Model.ParentSectionId == null ? "Master" : "Joint")
+            </div>
+		</div>
+        <div class="col-4">
+			<div class="form-control-label d-flex align-items-center">Status</div>
+			<div class="form-control-plaintext">
+                <partial name="_SectionStatus" model="@Model.Status" />
+                <input asp-for="Status" hidden/>
+            </div>
+		</div>
+        <div class="col-4">
+			<div class="form-control-label d-flex align-items-center">Open/Close</div>
+			<div class="form-control-plaintext">
+                <partial name="_BooleanClose" model="@Model.IsClosed" />
+                <input asp-for="IsClosed" hidden/>
+            </div>
+		</div>
+	</div>
+    @if (Model.ParentSectionId == null)
+    {
+        <div class="section-title mt-3">
+            <h4>Section Option</h4>
+        </div>
+        <div class="js-group-joint-section">
+        <div class="row form-group">
+            @if (Model?.Course?.IsSectionGroup == true)
+            {
+                <div class="col">
+                    <input class="form-check-input" asp-for="IsParent" type="checkbox">
+                    <label for="IsParent">Parent Section</label>
+                </div>
+            }
+            <div class="col-3">
+                <input class="form-check-input" asp-for="IsWithdrawable" type="checkbox">
+                <label for="IsWithdrawable">Withdrawable</label>
+            </div>
+            <div class="col-3">
+                <input class="form-check-input" asp-for="IsSpecialCase" type="checkbox">
+                <label for="IsSpecialCase">Ghost Section</label>
+            </div>
+            <div class="col-3">
+                <input class="form-check-input" asp-for="IsOutbound" type="checkbox">
+                <label for="IsOutbound">Outbound Section</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+         @*   @if(!Model.HaveSectionSlotRoom || true)
+            {*@
+                <table id="js-joint-section" class="table table-bordered m-0">
+                    <thead>
+                        <tr>
+                            <th class="text-center w-50">#</th>
+                            <th>Course</th>
+                            <th class="text-center w-100">Seat Limit</th>
+                            <th class="text-center w-100">Seat Used</th>
+                            <th>Remark</th>
+                            <th class="text-nowrap text-center no-sort w-75">Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                             int jointIndex = 0;
+                        }
+                        @if (Model.JointSections != null && Model.JointSections.Any())
+                        {
+                            @for (jointIndex = 0; jointIndex < Model.JointSections.Count(); jointIndex++)
+                            {
+                                <tr>
+                                    <td>@(jointIndex+1)</td>
+                                    <td>
+                                        <select class="chosen-select form-control chosen-single" asp-for="@Model.JointSections[jointIndex].CourseId" asp-items="@ViewBag.Courses" data-placeholder="Select" disabled>
+                                            <option selected value="0">Select</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input class="form-control__table text-center js-default-zero js-set-default-zero js-cascade-joint-seat-limit" asp-for="@Model.JointSections[jointIndex].SeatLimit" type="number">
+                                    </td>
+                                    <td>
+                                        <input class="form-control__table text-center js-default-zero js-set-default-zero js-joint-extra-seat" asp-for="@Model.JointSections[jointIndex].SeatUsed" type="number" disabled>
+                                        <input asp-for="@Model.JointSections[jointIndex].Id" value="@Model.JointSections[jointIndex].Id" type="hidden">
+                                        <input asp-for="@Model.JointSections[jointIndex].CourseId" value="@Model.JointSections[jointIndex].CourseId" type="hidden">
+                                        <input asp-for="@Model.JointSections[jointIndex].IsOldJointSection"type="hidden">
+                                    </td>
+                                    <td>
+                                        <input class="form-control__table" asp-for="@Model.JointSections[jointIndex].Remark" type="text">
+                                    </td>
+                                    <td class="text-nowrap td-actions">
+                                        @if(@Model.JointSections[jointIndex].SeatUsed == 0)
+                                        { 
+                                            <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                                <i class="la la-trash delete"></i>
+                                            </a>
+                                        } 
+                                        else 
+                                        {
+                                            <span class="ks-label bg-success">Used</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else if ( !Model?.IsStatusApproval ?? true)
+                        {
+                            <tr>
+                                <td>@(jointIndex+1)</td>
+                                <td>
+                                    <select class="chosen-select form-control chosen-single" name="JointSections[0].CourseId" asp-items="@ViewBag.Courses" data-placeholder="Select">
+                                        <option selected value="0">Select</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input class="form-control__table text-center js-default-zero js-set-default-zero js-cascade-joint-seat-limit" name="JointSections[0].SeatLimit" value="0" type="number" max="@Model.SeatLimit">
+                                </td>
+                                <td>
+                                    <input class="form-control__table text-center js-default-zero js-set-default-zero js-joint-extra-seat" name="JointSections[0].ExtraSeat" value="0" type="number" disabled>
+                                </td>
+                                <td>
+                                    <input class="form-control__table" name="JointSections[0].Remark" type="text">
+                                </td>
+                                <td class="text-nowrap td-actions">
+                                    <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                        <i class="la la-trash delete"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            @*}
+            else
+            {
+                <div class="mt-4 mb-4">
+                    <div class="section-title mb-4">
+                        <h4>Joint Sections</h4>
+                    </div>
+                </div>
+                <table class="table table-bordered m-0">
+                    <thead>
+                        <tr>
+                            <th class="text-center w-50">#</th>
+                            <th>Course</th>
+                            <th class="text-center w-100">Seat Limit</th>
+                            <th class="text-center w-100">Seat Used</th>
+                            <th>Remark</th>
+                            <th class="text-nowrap text-center no-sort w-75">Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.JointSections != null && Model.JointSections.Any())
+                        {
+                            @for (int i = 0; i < Model.JointSections.Count(); i++)
+                            {
+                                <tr>
+                                    <td>@(i+1)</td>
+                                    <td>
+                                        <select class="chosen-select form-control chosen-single" asp-for="@Model.JointSections[i].CourseId" asp-items="@ViewBag.Courses" data-placeholder="Select" disabled>
+                                            <option selected value="0">Select</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input class="form-control__table text-center js-default-zero js-set-default-zero js-cascade-joint-seat-limit" asp-for="@Model.JointSections[i].SeatLimit" type="number" max="@Model.SeatLimit">
+                                    </td>
+                                    <td>
+                                        <input class="form-control__table text-center js-default-zero js-set-default-zero js-joint-extra-seat" asp-for="@Model.JointSections[i].SeatUsed" type="number" disabled>
+                                        <input asp-for="@Model.JointSections[i].Id" value="@Model.JointSections[i].Id" type="hidden">
+                                        <input asp-for="@Model.JointSections[i].CourseId" value="@Model.JointSections[i].CourseId" type="hidden">
+                                        <input asp-for="@Model.JointSections[i].IsOldJointSection"type="hidden">
+                                    </td>
+                                    <td>
+                                        <input class="form-control__table" asp-for="@Model.JointSections[i].Remark" type="text">
+                                    </td>
+                                    <td class="text-nowrap td-actions">
+                                        <span class="ks-label bg-success">Room Exist</span>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td class="text-center" colspan="5">
+                                    <i class="text-danger">No data</i>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }*@
+        </div>
+        </div>
+        <div class="mt-4 mb-4">
+            <div class="section-title mb-4">
+                <h4>Study Period</h4>
+            </div>
+            <div class="row form-group">
+                @if (!Model.HaveSectionSlotRoom && Model.Status != "a")
+                {
+                    <div class="col-6">
+                        <input class="form-control js-single-date" asp-for="OpenedAt" type="text" autocomplete="off">
+                        <label>Start Date<span class="text-danger">*</span></label>
+                        <span class="text-danger help-block" asp-validation-for="OpenedAt"></span>
+                    </div>
+                    <div class="col-6">
+                        <input class="form-control js-default-zero js-click-highlight" asp-for="TotalWeeks" onKeyPress="if(this.value.length==3) return false;">
+                        <label>Total Weeks</label>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-6">
+                        <input class="form-control js-single-date" asp-for="OpenedAt" type="text" autocomplete="off" disabled>
+                        <label>Start Date<span class="text-danger">*</span></label>
+                        <span class="text-danger help-block" asp-validation-for="OpenedAt"></span>
+                        <input asp-for="@Model.OpenedAt" value="@Model.OpenedAt" type="hidden">
+                    </div>
+                    <div class="col-6">
+                        <input class="form-control js-default-zero js-click-highlight" asp-for="TotalWeeks" onKeyPress="if(this.value.length==3) return false;" disabled>
+                        <input asp-for="@Model.TotalWeeks" value="@Model.TotalWeeks" type="hidden">
+                        <label>Total Weeks</label>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="form-group">
+            @if(!Model.HaveSectionSlotRoom && Model.Status != "a")
+            {
+                <table id="js-table-period" class="table table-bordered m-0">
+                    <thead>
+                        <tr>
+                            <th class="text-center w-50">#</th>
+                            <th class="text-center w-125">Day</th>
+                            <th class="text-center w-125">Start Time</th>
+                            <th class="text-center w-125">End Time</th>
+                            <th>Instructor</th>
+                            <th class="text-center w-75">Type</th>
+                            <th>Remark</th>
+                            <th class="text-nowrap text-center no-sort w-75">Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody id="js-period">
+                    @if (Model.SectionDetails != null && Model.SectionDetails.Any())
+                    {
+                        @for (int i = 0; i < Model.SectionDetails.Count(); i++)
+                        {
+                            <tr class="period-table">
+                                <td>@(i + 1)</td>
+                                <td>
+                                    <select class="chosen-select form-control chosen-single js-default-select js-period-day"
+                                            asp-for="@Model.SectionDetails[i].Day" asp-items="@ViewBag.Dayofweeks">
+                                        <option selected value="-1">Select</option>
+                                    </select>
+                                </td>
+
+                                <td class="w-125 form-group">
+                                    <input class="form-control__table text-center js-time-mask js-offer-start"
+                                        asp-for="@Model.SectionDetails[i].StartTimeNullAble">
+                                </td>
+                                <td class="w-125 form-group">
+                                    <input class="form-control__table text-center js-time-mask js-offer-end"
+                                        asp-for="@Model.SectionDetails[i].EndTimeNullAble">
+                                </td>
+                                <td>
+                                    <select class="chosen-select form-control chosen-single js-period-instructor" asp-for="@Model.SectionDetails[i].InstructorId"
+                                            asp-items="@ViewBag.Instructors" data-placeholder="Select">
+                                        <option selected value="">Select</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="chosen-select form-control chosen-single js-default-select"
+                                            asp-for="@Model.SectionDetails[i].TeachingTypeId" asp-items="@ViewBag.TeachingTypes">
+                                    </select>
+                                </td>
+                                <td>
+                                    <input class="form-control__table" asp-for="@Model.SectionDetails[i].Remark" type="text">
+                                    <input class="js-section-detail-child" asp-for="@Model.SectionDetails[i].Id" type="hidden">
+                                    <input asp-for="@Model.SectionDetails[i].SectionId" value="@Model.Id" type="hidden">
+                                    <input asp-for="@Model.SectionDetails[i].RoomId" value="@Model.SectionDetails[i].RoomId" type="hidden">
+                                </td>
+                                <td class="text-nowrap td-actions">
+                                    <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                        <i class="la la-trash delete"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr class="period-table">
+                            <input name="SectionDetails[0].SectionId" value="@Model.Id" type="hidden">
+                            <td>1</td>
+                            <td>
+                                <select class="chosen-select form-control chosen-single js-default-select"
+                                        asp-items="@ViewBag.Dayofweeks" name="SectionDetails[0].Day">
+                                    <option selected value="-1">Select</option>
+                                </select>
+                            </td>
+
+                            <td class="w-125 form-group">
+                                <input class="form-control__table text-center js-time-mask js-offer-start"
+                                       name="SectionDetails[0].StartTimeNullAble" value="08:00">
+                            </td>
+                            <td class="w-125 form-group">
+                                <input class="form-control__table text-center js-time-mask js-offer-end"
+                                       name="SectionDetails[0].EndTimeNullAble" value="09:50">
+                            </td>
+                            <td>
+                                <select class="chosen-select form-control chosen-single js-period-instructor" asp-items="@ViewBag.Instructors"
+                                        name="SectionDetails[0].InstructorId" data-placeholder="Select">
+                                    <option selected value="">Select</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="chosen-select form-control chosen-single js-default-select js-cascade-teaching-type"
+                                        name="SectionDetails[0].TeachingTypeId" asp-items="@ViewBag.TeachingTypes">
+                                </select>
+                            </td>
+                            <td>
+                                <input class="form-control__table" name="SectionDetails[0].Remark" type="text">
+                            </td>
+                            <td class="text-nowrap td-actions">
+                                <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                    <i class="la la-trash delete"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <table class="table table-bordered m-0">
+                    <thead>
+                        <tr>
+                            <th class="text-center w-50">#</th>
+                            <th class="text-center w-125">Day</th>
+                            <th class="text-center w-125">Start Time</th>
+                            <th class="text-center w-125">End Time</th>
+                            <th>Instructor</th>
+                            <th class="text-center w-75">Type</th>
+                            <th>Remark</th>
+                            <th class="text-nowrap text-center no-sort w-75">Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.SectionDetails != null && Model.SectionDetails.Any())
+                        {
+                            @for (int i = 0; i < Model.SectionDetails.Count(); i++)
+                            {
+                                <tr>
+                                    <td>@(i + 1)</td>
+                                    <td>
+                                        <select class="chosen-select form-control chosen-single js-default-select"
+                                                asp-for="@Model.SectionDetails[i].Day" asp-items="@ViewBag.Dayofweeks" disabled>
+                                            <option selected value="-1">Select</option>
+                                        </select>
+                                        <input asp-for="@Model.SectionDetails[i].Day" value="@Model.SectionDetails[i].Day" type="hidden">
+                                    </td>
+
+                                    <td class="w-125 form-group">
+                                        <input class="form-control__table text-center js-time-mask"
+                                            asp-for="@Model.SectionDetails[i].StartTimeNullAble" disabled>
+                                        <input asp-for="@Model.SectionDetails[i].StartTimeNullAble" value="@Model.SectionDetails[i].StartTimeNullAble" type="hidden">
+                                    </td>
+
+                                    <td class="w-125 form-group">
+                                        <input class="form-control__table text-center js-time-mask"
+                                            asp-for="@Model.SectionDetails[i].EndTimeNullAble" disabled>
+                                        <input asp-for="@Model.SectionDetails[i].EndTimeNullAble" value="@Model.SectionDetails[i].EndTimeNullAble" type="hidden">
+                                    </td>
+                                    <td>
+                                        <select class="chosen-select form-control chosen-single js-period-instructor" asp-for="@Model.SectionDetails[i].InstructorId"
+                                                asp-items="@ViewBag.Instructors" data-placeholder="Select" disabled>
+                                            <option selected value="">Select</option>
+                                        </select>
+                                        <input asp-for="@Model.SectionDetails[i].InstructorId" value="@Model.SectionDetails[i].InstructorId" type="hidden">
+                                    </td>
+                                    <td>
+                                        <select class="chosen-select form-control chosen-single js-default-select"
+                                                asp-for="@Model.SectionDetails[i].TeachingTypeId" asp-items="@ViewBag.TeachingTypes" disabled>
+                                        </select>
+                                        <input asp-for="@Model.SectionDetails[i].TeachingTypeId" value="@Model.SectionDetails[i].TeachingTypeId" type="hidden">
+                                    </td>
+                                    <td>
+                                        <input class="form-control__table" asp-for="@Model.SectionDetails[i].Remark" type="text">
+                                        <input asp-for="@Model.SectionDetails[i].Id" value="@Model.SectionDetails[i].Id" type="hidden">
+                                    </td>
+                                    <td class="text-nowrap td-actions">
+                                        @if (Model.HaveSectionSlotRoom)
+                                        {
+                                            <span class="ks-label bg-success">Room Exist</span>
+                                        } 
+                                        else
+                                        {
+                                            <span class="ks-label bg-success">Status Approved</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td class="text-center" colspan="5">
+                                    <i class="text-danger">No data</i>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+
+        <div class="mt-4">
+            <div class="section-title align-self-end row mb-4">
+                <div class="col-2 text-left">
+                    <h4 class="md-2">Midterm Examination</h4>
+                </div>
+                <div class='col align-self-end @(Model.IsMidtermApproval ? "d-none" : "")'>
+                    <input type="checkbox" asp-for="IsDisabledMidterm" disabled="@Model.IsMidtermApproval">
+                    <label for="IsDisabledMidterm"><span class="text-danger">Disabled Midterm</span></label>
+                </div>
+            </div>
+            <div class='row form-group mb-0 js-midterm-examination @(Model.IsDisabledMidterm ? "d-none" : "")'>
+                <div class="col-3">
+                    <input class="form-control js-single-date" asp-for="MidtermDate" type="text" autocomplete="off" disabled="@Model.IsMidtermApproval">
+                    <label>Date</label>
+                </div>
+                <div class="col-3">
+                    <input class="form-control js-time-mask" asp-for="MidtermStart" disabled="@Model.IsMidtermApproval">
+                    <label>Start Time</label>
+                </div>
+                <div class="col-3">
+                    <input class="form-control js-time-mask" asp-for="MidtermEnd" disabled="@Model.IsMidtermApproval">
+                    <label>End Time</label>
+                </div>
+                <div class="col-3">
+                    <select class="chosen-select form-control" asp-for="MidtermRoomId" asp-items="@ViewBag.Rooms" disabled="@Model.IsMidtermApproval">
+                        <option selected value="">Select</option>
+                    </select>
+                    <label>Room</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <div class="section-title row mb-4">
+                <div class="col-2 text-left">
+                    <h4 class="md-2">Final Examination</h4>
+                </div>
+                <div class='col align-self-end @(Model.IsFinalApproval ? "d-none" : "")'>
+                    <input type="checkbox" asp-for="IsDisabledFinal">
+                    <label for="IsDisabledFinal"><span class="text-danger">Disabled Final</span></label>
+                </div>
+            </div>
+            <div class='row form-group js-final-examination @(Model.IsDisabledFinal ? "d-none" : "")'>
+                <div class="col-3">
+                    <input class="form-control js-single-date" asp-for="FinalDate" type="text" autocomplete="off" disabled="@Model.IsFinalApproval">
+                    <label>Date</label>
+                </div>
+                <div class="col-3">
+                    <input class="form-control js-time-mask" asp-for="FinalStart" disabled="@Model.IsFinalApproval">
+                    <label>Start Time</label>
+                </div>
+                <div class="col-3">
+                    <input class="form-control js-time-mask" asp-for="FinalEnd" disabled="@Model.IsFinalApproval">
+                    <label>End Time</label>
+                </div>
+                <div class="col-3">
+                    <select class="chosen-select form-control" asp-for="FinalRoomId" asp-items="@ViewBag.Rooms" disabled="@Model.IsFinalApproval">
+                        <option selected="true" value="">Select</option>
+                    </select>
+                    <label>Room</label>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+<input asp-for="ParentSectionId" type="hidden">
+<input asp-for="IsFinalApproval" type="hidden">
+<input asp-for="IsMidtermApproval" type="hidden">
+<input asp-for="@Model.HaveSectionSlotRoom" value="@Model.HaveSectionSlotRoom" type="hidden">
+
+<div class="block__action container">
+    <div class="block__action-row">
+        <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+        <a class="btn btn-mw-120 btn--cancel" href="@ViewBag.ReturnUrl">Cancel</a>
+    </div>
+</div>

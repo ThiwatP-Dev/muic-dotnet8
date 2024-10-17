@@ -1,0 +1,40 @@
+@model ApplicationUser
+
+<div class="block__title text-left height-3">
+    <header>@ViewData["Title"]</header>
+</div>
+
+<div class="block__body text-left height-3">
+    <div class="form-group">
+        <input asp-for="FirstnameTH" type="text" class="form-control">
+        <label>Firstname TH<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="FirstnameTH"></span>
+    </div>
+    <div class="form-group">
+        <input asp-for="LastnameTH" type="text" class="form-control">
+        <label>Lastname TH<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="LastnameTH"></span>
+    </div>
+    <div class="form-group">
+        <input asp-for="FirstnameEN" type="text" class="form-control">
+        <label>Firstname EN<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="FirstnameEN"></span>
+    </div>
+    <div class="form-group">
+        <input asp-for="LastnameEN" type="text" class="form-control">
+        <label>Lastname EN<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="LastnameEN"></span>
+    </div>
+    <div class="form-group">
+        <input asp-for="UserName" type="text" class="form-control">
+        <label>UserName<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="UserName"></span>
+    </div>
+</div>
+
+<div class="block__action container">
+    <div class="block__action-row">
+        <button type="submit" class="btn btn-mw-120 btn--primary">Save</button>
+        <a asp-action="Index" class="btn btn-mw-120 btn--link">Cancel</a>
+    </div>
+</div>

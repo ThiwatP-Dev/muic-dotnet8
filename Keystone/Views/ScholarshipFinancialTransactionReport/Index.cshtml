@@ -1,0 +1,121 @@
+@model ScholarshipFinancialTransactionReportViewModel
+@{ 
+    ViewData["Title"] = "Scholarship Financial Transaction Report";
+    var index = 1;
+}
+
+<section class="row ">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="ScholarshipFinancialTransactionReport" asp-action="Index" method="GET">
+                    <div class="row form-group m-b-30">
+                        <div class="col-3">
+                            <input class="form-control" asp-for="StudentCode" type="text">
+                            <label>Student ID<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="ScholarshipId" asp-items="@ViewBag.Scholarships" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Scholarship</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="SignatoryId1" asp-items="@ViewBag.Signatories" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Signatory 1</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="SignatoryId2" asp-items="@ViewBag.Signatories" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Signatory 2</label>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-12 align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (Model != null)
+{
+    <section class="row">
+        <div class="col-12">
+            <div class="block block--underline">
+                <div class="block__title">
+                    <header>Search Result (@(Model?.Details?.Count() ?? 0))</header>
+                </div>
+
+                <div class="block__body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover w-100x">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">#</th>
+                                    <th>Student Code</th>
+                                    <th>Student Name</th>
+                                    <th>Division</th>
+                                    <th>Major</th>
+                                    <th>Scholarship</th>
+                                    <th class="text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.Details != null && Model.Details.Any())
+                                {
+                                    foreach (var item in Model.Details) 
+                                    {
+                                        <tr>
+                                            <td>@index</td>
+                                            <td>@item.StudentCode</td>
+                                            <td>@item.StudentName</td>
+                                            <td>@item.Division</td>
+                                            <td>@item.Major</td>
+                                            <td>@item.Scholarship</td>
+                                            <td class="text-nowrap td-actions">
+                                                <a asp-action="Preview"
+                                                   asp-route-Id="@item.Id"
+                                                   asp-route-signatoryId1="@Model.SignatoryId1"
+                                                   asp-route-signatoryId2="@Model.SignatoryId2">
+                                                    <i class="la la-print info"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        ++index;
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="7">
+                                            <i class="text-danger">No Data</i>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            @(await Component.InvokeAsync<PagerViewComponent>(Model))
+        </div>
+    </section>
+}

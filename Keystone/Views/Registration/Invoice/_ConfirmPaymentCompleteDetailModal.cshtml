@@ -1,0 +1,20 @@
+@model Invoice
+@{
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+
+<div id="modalWrapper">
+    <partial name="~/Views/Registration/Invoice/_InvoicePartModal.cshtml" model="Model" />
+    <div class="block__action">
+        <div class="block__action-row">
+            <a asp-controller="Invoice"
+               asp-action="MarkInvoicePaidFromRegistration"
+               asp-route-Id="@Model.Id"
+               asp-route-returnUrl="@contextPath"
+               class="btn btn-mw-120 btn--primary rounded">
+                Confirm Payment Complete
+            </a>
+            <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-mw-120 btn--cancel rounded">Close</a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,160 @@
+@model MarkAllocationViewModel
+
+<div class="block__body">
+    <form asp-controller="MarkAllocation" asp-action="EditScoreCurve" method="POST">
+        <div class="row form-group mb-3">
+            <div class="col-12">
+                <table class="table table-bordered m-0 js-curve-table">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Grade</th>
+                            <th class="text-center w-150">Min Score</th>
+                            <th class="text-center w-150">Max Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.LetterCurves != null && Model.LetterCurves.Any()) 
+                        {
+                            for (int i = 0 ; i < Model.LetterCurves.Count; ++i)
+                            {
+                                <input asp-for="LetterCurves[i].GradingCurveId" hidden>
+                                <input asp-for="LetterCurves[i].GradeId" hidden>
+                                <input asp-for="LetterCurves[i].GradeTemplateId" hidden>
+                                if (i == 0)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Model.LetterCurves[i].Grade
+                                            <input class="js-curve-total-score curve-max-score-val" name="LetterCurves[@i].MaxScore" value="@Model.TotalScore" hidden>
+                                        </td>
+                                        <td>
+                                            <input class="form-control__table text-center curve-min-score" asp-for="LetterCurves[i].MinScore" autocomplete="off">
+                                        </td>
+                                        <td>@Model.TotalScore</td>
+                                    </tr>
+                                }
+                                else if (i == (Model.LetterCurves.Count - 1))
+                                {
+                                    <tr>
+                                        <td>
+                                            @Model.LetterCurves[i].Grade
+                                            <input name="LetterCurves[@i].MinScore" value="0" hidden>
+                                            <input class="curve-max-score-val" asp-for="LetterCurves[i].MaxScore" hidden>
+                                        </td>
+                                        <td>0</td>
+                                        <td class="curve-max-score">@Model.LetterCurves[i].MaxScore</td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td>
+                                            @Model.LetterCurves[i].Grade
+                                            <input class="curve-max-score-val" asp-for="LetterCurves[i].MaxScore" hidden>
+                                        </td>
+                                        @if (Model.LetterCurves[i].MaxScore != null)
+                                        {
+                                            <td>
+                                                <input class="form-control__table text-center curve-min-score" asp-for="LetterCurves[i].MinScore" autocomplete="off">
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td>
+                                                <input class="form-control__table text-center curve-min-score" asp-for="LetterCurves[i].MinScore" autocomplete="off" disabled>
+                                            </td>
+                                        }
+                                        <td class="curve-max-score">@Model.LetterCurves[i].MaxScore</td>
+                                    </tr>
+                                }
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row form-group mb-3">
+            <div class="col-12">
+                <table class="table table-bordered m-0 js-curve-table">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Pass/Fail</th>
+                            <th class="text-center w-150">Min Score</th>
+                            <th class="text-center w-150">Max Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.PassFailCurves != null && Model.PassFailCurves.Any()) 
+                        {
+                            for (int i = 0 ; i < Model.PassFailCurves.Count; ++i)
+                            {
+                                <input asp-for="PassFailCurves[i].GradingCurveId" hidden>
+                                <input asp-for="PassFailCurves[i].GradeId" hidden>
+                                <input asp-for="PassFailCurves[i].GradeTemplateId" hidden>
+                                if (i == 0)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Model.PassFailCurves[i].Grade
+                                            <input class="js-curve-total-score curve-max-score-val" name="PassFailCurves[@i].MaxScore" value="@Model.TotalScore" hidden>
+                                        </td>
+                                        <td>
+                                            <input class="form-control__table text-center curve-min-score" asp-for="PassFailCurves[i].MinScore" autocomplete="off">
+                                        </td>
+                                        <td>@Model.TotalScore</td>
+                                    </tr>
+                                }
+                                else if (i == (Model.PassFailCurves.Count - 1))
+                                {
+                                    <tr>
+                                        <td>
+                                            @Model.PassFailCurves[i].Grade
+                                            <input name="PassFailCurves[@i].MinScore" value="0" hidden>
+                                            <input class="curve-max-score-val" asp-for="PassFailCurves[i].MaxScore" hidden>
+                                        </td>
+                                        <td>0</td>
+                                        <td class="curve-max-score">@Model.PassFailCurves[i].MaxScore</td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td>
+                                            @Model.PassFailCurves[i].Grade
+                                            <input class="curve-max-score-val" asp-for="PassFailCurves[i].MaxScore" hidden>
+                                        </td>
+                                        @if (Model.PassFailCurves[i].MaxScore != null)
+                                        {
+                                            <td>
+                                                <input class="form-control__table text-center curve-min-score" asp-for="PassFailCurves[i].MinScore" autocomplete="off">
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td>
+                                                <input class="form-control__table text-center curve-min-score" asp-for="PassFailCurves[i].MinScore" autocomplete="off" disabled>
+                                            </td>
+                                        }
+                                        <td class="curve-max-score">@Model.PassFailCurves[i].MaxScore</td>
+                                    </tr>
+                                }
+                            }
+                        }
+                    </tbody>
+                </table>
+
+                <input asp-for="CourseId" hidden>
+                <input asp-for="TermId" hidden>
+                <input name="returnUrl" value="@ViewBag.ReturnUrl" hidden>
+            </div>
+        </div>
+
+        <div class="block__action">
+            <div class="block__action-row">
+                <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+                <a href="@ViewBag.ReturnUrl" class="btn btn-mw-120 btn--cancel rounded">Close</a>
+            </div>
+        </div>
+    </form>
+</div>

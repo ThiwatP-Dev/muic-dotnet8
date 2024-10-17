@@ -1,0 +1,297 @@
+@model CurriculumVersionReportViewModel
+@{ 
+    ViewData["Title"] = "Curriculum Version Report";
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>@ViewData["Title"]</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="CurriculumVersionReport" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group">
+                        <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-academic-level" asp-for="AcademicLevelId" asp-items="@ViewBag.AcademicLevels" data-placeholder="Select">
+                                <option value="" selected disabled>Select</option>
+                            </select>
+                            <label>Academic Level<span class="text-danger">*</span></label>
+                            <span class="text-danger" asp-validation-for="AcademicLevelId"></span>
+                        </div>
+                        <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-curriculum" asp-for="CurriculumId" asp-items="@ViewBag.Curriculums" data-placeholder="Select">
+                                <option value="" selected disabled>Select</option>
+                            </select>
+                            <label>Curriculum<span class="text-danger">*</span></label>
+                            <span class="text-danger" asp-validation-for="CurriculumId"></span>
+                        </div>
+                        <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-curriculum-version" asp-for="CurriculumVersionId" asp-items="@ViewBag.CurriculumVersions" data-placeholder="Select">
+                                <option value="" selected disabled>Select</option>
+                            </select>
+                            <label>Curriculum Version<span class="text-danger">*</span></label>
+                            <span class="text-danger" asp-validation-for="CurriculumVersionId"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="row form-group">
+                        <div class="col-12 align-self-end text-right text-nowrap">
+                            <button class="btn btn--primary btn-mw-120 m-r-5" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset js-reset-btn" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                @if (Model != null)
+                {
+                    <form asp-controller="CurriculumVersionReport" asp-action="ExportExcel">
+                        <div class="block block--underline">
+                            <div class="block__title">
+                                <header>
+                                    <h3 class="ks-page-header__title">@Model.CurriculumName</h3>
+                                </header>
+                            </div>
+                            <div class="block__body">
+                                <div class="row form-group m-b-30">
+                                    <div class="col-3">
+                                        <div class="form-control-label d-flex align-items-center">Reference Code</div>
+                                        <div class="form-control-plaintext">@Model.ReferenceCode</div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="form-control-label d-flex align-items-center">Academic Level</div>
+                                        <div class="form-control-plaintext">@Model.AcademicLevel</div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="form-control-label d-flex align-items-center">English Abbreviation</div>
+                                        <div class="form-control-plaintext">@Model.AbbreviationEn</div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="form-control-label d-flex align-items-center">Thai Abbreviation</div>
+                                        <div class="form-control-plaintext">@Model.AbbreviationTh</div>
+                                    </div>
+                                </div>
+
+                                <div class="row form-group m-b-30">
+                                    <div class="col-3">
+                                        <div class="form-control-label d-flex align-items-center">Division</div>
+                                        <div class="form-control-plaintext">@Model.FacultyName</div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="form-control-label d-flex align-items-center">Major</div>
+                                        <div class="form-control-plaintext">@Model.DepartmentName</div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="form-control-label d-flex align-items-center">Type</div>
+                                        <div class="form-control-plaintext">@Model.TermTypeText</div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="form-control-label d-flex align-items-center">Minimun GPA</div>
+                                        <div class="form-control-plaintext">@Model.MinimumGPAText</div>
+                                    </div>
+                                </div>
+
+                                <div class="row form-group mb-0">
+                                    <div class="col-12 m-b-30">
+                                        <div class="form-control-label d-flex align-items-center">English Description</div>
+                                        <div class="form-control-plaintext">@Model.DescriptionEn</div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-control-label d-flex align-items-center">Thai Description</div>
+                                        <div class="form-control-plaintext">@Model.DescriptionTh</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col text-nowrap text-right">
+                                <button class="btn btn-mw-120 btn--primary mb-0" type="submit">Preview</button>
+                            </div>
+                        </div>
+                        
+                        <div class="block block--underline">
+                            <div class="block__title">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <header>
+                                            <div class="d-block">
+                                                <span class="color-white font-size-14 badge bg-primary my-2 p-a-10">Curriculum Version Code : @Model.CurriculumVersionCode</span>
+                                            </div>
+                                        </header>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <header>
+                                            <h3 class="ks-page-header__title my-2">@Model.CurriculumVersionNameEn</h3>
+                                        </header>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-8">
+                                        <header>
+                                            <h4 class="ks-page-header__title my-2">@Model.CurriculumVersionNameTh</h4>
+                                        </header>
+                                    </div>
+                                    <div class="col-4 d-flex justify-content-end align-items-end">
+                                        <div class="tools pa-1">
+                                            <span class="color-primary font-size-16">@Model.TotalCredit Credits</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="block__body">
+                                <div class="row form-group">
+                                    <div class="col-6">
+                                        <div class="form-control-label d-flex align-items-center">English Degree Name</div>
+                                        <div class="form-control-plaintext">@Model.DegreeNameEn</div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-control-label d-flex align-items-center">Thai Degree Name</div>
+                                        <div class="form-control-plaintext">@Model.DegreeNameTh</div>
+                                    </div>
+                                </div>
+
+                                <div class="row form-group">
+                                    <div class="col-6">
+                                        <div class="form-control-label d-flex align-items-center">English Abbreviation Degree</div>
+                                        <div class="form-control-plaintext">@Model.DegreeAbbreviationEn</div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-control-label d-flex align-items-center">Thai Abbreviation Degree</div>
+                                        <div class="form-control-plaintext">@Model.DegreeAbbreviationTh</div>
+                                    </div>
+                                </div>
+
+                                <div class="row form-group">
+                                    <div class="col-3">
+                                        <div class="form-control-label d-flex align-items-center">Academic Level</div>
+                                        <div class="form-control-plaintext">@Model.AcademicLevel</div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="form-control-label d-flex align-items-center">Implemented Term</div>
+                                        <div class="form-control-plaintext">@Model.ImplementedTerm</div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="form-control-label d-flex align-items-center">Opened Term</div>
+                                        <div class="form-control-plaintext">@Model.OpenedTerm</div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="form-control-label d-flex align-items-center">Closed Term</div>
+                                        <div class="form-control-plaintext">@Model.ClosedTerm</div>
+                                    </div>
+                                </div>
+
+                                <div class="row form-group">
+                                    <div class="col-3">
+                                        <div class="form-control-label d-flex align-items-center">Minimun Term</div>
+                                        <div class="form-control-plaintext">@Model.MinimumTerm</div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="form-control-label d-flex align-items-center">Maximum Term</div>
+                                        <div class="form-control-plaintext">@Model.MaximumTerm</div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="form-control-label d-flex align-items-center">Program</div>
+                                        <div class="form-control-plaintext">@Model.AcademicProgramName</div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="form-control-label d-flex align-items-center">Approved Date</div>
+                                        <div class="form-control-plaintext">@Model.ApprovedDateText</div>
+                                    </div>
+                                </div>
+
+                                <div class="row form-group">
+                                    <div class="col-6">
+                                        <div class="form-control-label d-flex align-items-center">Office of the Higher Education Commission Approved Date</div>
+                                        <div class="form-control-plaintext">@Model.ApprovedDateText</div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-control-label d-flex align-items-center">Remark</div>
+                                        <div class="form-control-plaintext">@Model.Remark</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mb-2">
+                            <h3 class="font-weight-700 mb-3">Courses</h3>
+                            @if (Model.CourseGroups != null)
+                            {
+                                foreach (var courseGroup in Model.CourseGroups)
+                                {
+                                    <div class="block block--underline">
+                                        <div class="block__title">
+                                            <header>@courseGroup.NameEn (@courseGroup.Credit Credits)</header>
+                                        </div>
+                                        <div class="block__body">
+                                            @if(courseGroup.DescriptionEn != "" && courseGroup.DescriptionEn != null)
+                                            {
+                                                <span class="block__body btn--primary text-pre-warp">@courseGroup.DescriptionEn</span>
+                                            }
+                                            @if (courseGroup.ChildCourseGroups != null)
+                                            {
+                                                foreach (var child in courseGroup.ChildCourseGroups)
+                                                {
+                                                    <div class="block block--underline">
+                                                        <div class="block__title">
+                                                            <header>@child.NameEn (@child.Credit Credits)</header>
+                                                        </div>
+                                                        <div class="block__body">
+                                                            @if(child.DescriptionEn != "" && child.DescriptionEn != null)
+                                                            {
+                                                                <span class="block__body btn--primary text-pre-warp">@child.DescriptionEn</span>
+                                                            }
+                                                            @if (child.CurriculumCourses != null)
+                                                            {
+                                                                <div class="mb-2">
+                                                                    <table class="table table-bordered">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th class="text-center w-300">Code</th>
+                                                                                <th>Name</th>
+                                                                                <th class="text-center w-300">Credit</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            @foreach (var course in child.CurriculumCourses)
+                                                                            {
+                                                                                <tr>
+                                                                                    <td>@course.Course?.Code</td>
+                                                                                    <td>@course.Course?.NameEn</td>
+                                                                                    <td>@course.Course?.CreditText</td>
+                                                                                </tr>
+                                                                            }
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    
+                        <input name="curriculumVersionId" value="@Model.CurriculumVersionId" hidden>
+                        <div class="row form-group">
+                            <div class="col text-nowrap text-right">
+                                <button class="btn btn-mw-120 btn--primary mb-0" type="submit">Preview</button>
+                            </div>
+                        </div>
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+</section>

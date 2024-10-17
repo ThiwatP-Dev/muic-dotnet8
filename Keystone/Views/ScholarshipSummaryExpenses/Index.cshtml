@@ -1,0 +1,119 @@
+@model ScholarshipSummaryExpensesViewModel
+    
+@{
+    ViewData["Title"] = "Scholarship Summary Expenses Report";
+}
+
+<section class="row d-print-none">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</section>
+
+<section class="row d-print-none">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="ScholarshipSummaryExpenses" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group mb-0">
+                        <div class="col-4">
+                            <select class="chosen-select form-control" asp-for="Criteria.StudentId" asp-items="ViewBag.Students">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Student<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-4">
+                            <input class="form-control" asp-for="Criteria.AcademicYear" type="number">
+                            <label>Year<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-4 align-self-end text-right">
+                            <button class="btn btn--primary btn-mw-120 mb-0 m-r-5" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">                
+            <div class="block__body">
+                @if (Model != null)
+                {
+                    <div class="row form-group m-b-30">
+                        <div class="col-12">
+                            <div class="form-control-plaintext text-wrap">@Model?.Student?.FullNameEn, ID @Model?.Student?.Code, @Model?.Student?.AcademicInformation?.Department?.Abbreviation</div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-control-plaintext text-wrap">Scholarship : @Model?.Student?.ScholarshipStudents?.FirstOrDefault()?.Scholarship?.NameEn</div>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-control-plaintext text-wrap">Academic Year : @Model?.Criteria?.AcademicYear</div>
+                        </div>
+                    </div>
+                }
+                
+                <div class="table-responsive unset-overflow">
+                    <table class="table table-bordered js-report-table w-100x">
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th class="text-right">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Results.Any())
+                            {
+                                foreach (var feeGroup in Model.Results.GroupBy(x => x.FeeGroupName))
+                                {
+                                    <tr>
+                                        <td><b>Fee Group : @feeGroup.Key</b></td>
+                                        <td></td>
+                                    </tr>
+                                    foreach (var term in feeGroup.GroupBy(x => x.TermText))
+                                    {
+                                        <tr>
+                                            <td>Term : @term.Key</td>
+                                            <td></td>
+                                        </tr>
+                                        foreach (var feeItem in term.GroupBy(x => x.FeeItemName))
+                                        {
+                                            <tr>
+                                                <td>@feeItem.Key</td>
+                                                <td>@feeItem.Sum(x => x.Amount).ToString(StringFormat.Money)</td>
+                                            </tr>
+                                        }
+                                    }
+                                }
+                            }
+                            else 
+                            {
+                                <tr>
+                                    <td class="text-center" colspan="2"><i class="text-danger">No Data</i></td>
+                                </tr>
+                            }
+                        </tbody>
+                        @if (Model != null && Model.Results.Any())
+                        {
+                            <tfoot>
+                                <tr>
+                                    <td><b>Grand Total</b></td>
+                                    <td class="text-right"><b>@Model?.Results?.Sum(x => (decimal?)x.Amount)?.ToString(StringFormat.Money)</b></td>
+                                </tr>
+                            </tfoot>
+                        }
+                        
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,58 @@
+@model Room
+@{
+    var index = 1;
+}
+
+<div class="block block--underline mb-0">
+    <div class="block__title">
+		<header>Room Information</header>
+	</div>
+    
+    <div class="block__body">
+        <div class="table-responsive">
+            <h4 class="font-weight-700">Facility</h4>
+
+            <table class="table table-bordered table-hover w-100x">
+                <thead>
+                    <tr>
+                        <th class="text-center w-50">#</th>
+                        <th>Facility</th>
+                        <th class="text-center w-100">Amount</th>
+                        <th class="text-center w-100">Active</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.RoomFacilities != null && Model.RoomFacilities.Any())
+                    {
+                        foreach (var item in Model.RoomFacilities) 
+                        {
+                            <tr>
+                                <td>@index</td>
+                                <td>@item.Facility.NameEn</td>
+                                <td>@item.Amount</td>
+                                <td>
+                                    <partial name="_BooleanActive" model="@item.IsActive" />
+                                </td>
+                            </tr>
+                            ++index;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td class="text-center" colspan="4">
+                                <i class="text-danger">No Data</i>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="block__action">
+        <div class="block__action-row">
+            <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-mw-120 btn--cancel rounded">Close</a>
+        </div>
+    </div>
+</div>

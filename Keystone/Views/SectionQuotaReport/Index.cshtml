@@ -1,0 +1,126 @@
+@model SectionQuotaReportViewModel
+@{
+    ViewData["Title"] = "Section Quota Report";
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="panel-group">
+            <div class="block block--underline d-print-none">
+                <div class="block__title">
+                    <header>@ViewData["Title"]</header>
+                </div>
+
+                <div class="collapse show" aria-expanded="true">
+                    <div class="block__body">
+                        <form class="form-horizontal" asp-controller="SectionQuotaReport" asp-action="Index" method="GET">
+                            @Html.AntiForgeryToken()
+
+                            <div class="row form-group m-b-30">
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels" data-placeholder="Select">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label for="Criteria.AcademicLevelId">Academic Level<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="ViewBag.Terms" data-placeholder="Select">
+                                        <option selected disabled>Select</option>
+                                    </select>   
+                                    <label for="Criteria.TermId">Term<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="ViewBag.Faculties" data-placeholder="Select">
+                                        <option selected value="">Select</option>
+                                    </select>
+                                    <label for="Criteria.FacultyId">Division</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control" asp-for="Criteria.TimeSlot" data-placeholder="Select">
+                                        <option value="60">60 Mins</option>
+                                        <option value="30">30 Mins</option>
+                                    </select>
+                                    <label>Slot<span class="text-danger">*</span></label>
+                                </div>
+                            </div>
+
+                            <div class="row form-group mb-0">
+                               <div class="col-3">
+                                    <input class="form-control js-time-mask" asp-for="Criteria.StartTime" autocomplete="off">
+                                    <label>Start Time<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-3">
+                                    <input class="form-control js-time-mask" asp-for="Criteria.EndTime" autocomplete="off">
+                                    <label>End Time<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control" asp-for="Criteria.Status" asp-items="@ViewBag.AllYesNoAnswer" data-placeholder="All"></select>   
+                                    <label for="Criteria.Status">Including Room<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-3 align-self-end text-right text-nowrap">
+                                    <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                        <i class="la la-search mr-2"></i>Search
+                                    </button>
+                                    <a id="js-reset-btn" class="btn btn-mw-120 btn--reset" asp-action="Index">Reset</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="block block--underline">
+                    <div class="block__title">
+                        <header>Search Result (@(Model?.SectionQuotaCounts?.Sum(x => x.Count) ?? 0))</header>
+                    </div>
+                    <div class="block__body">
+                        <div class="p-b-30">
+                            <table class="table table-bordered table-hover js-report-table w-100x">
+                                <thead>
+                                    <tr>
+                                        <th>Time</th>
+                                        <th>Mon</th>
+                                        <th>Tue</th>
+                                        <th>Wed</th>
+                                        <th>Thu</th>
+                                        <th>Fri</th>
+                                        <th>Sat</th>
+                                        <th>Sun</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if(Model != null && Model.GrouppedSectionQuotaReports != null && Model.GrouppedSectionQuotaReports.Any())
+                                    {
+                                        @foreach(var grouppedSectionQuotaReport in Model.GrouppedSectionQuotaReports)
+                                        {
+                                            <tr>
+                                                <td>@grouppedSectionQuotaReport.Key</td>
+                                                @foreach(var sectionQuotaReport in grouppedSectionQuotaReport)
+                                                {
+                                                    <td>
+                                                        @foreach(var facultyName in sectionQuotaReport.FacultyNames)
+                                                        {
+                                                            if (!string.IsNullOrEmpty(facultyName))
+                                                            {
+                                                                var totalQuota = Model.FacultySectionQuotaCounts.SingleOrDefault(x => x.Key == facultyName)?.Count ?? 0;
+                                                                var facultySectionSlots = Model.SectionQuotaCounts.SingleOrDefault(x => x.Key == facultyName).Count;
+                                                                <p class="@(facultySectionSlots > totalQuota ? "text-danger" : "")">@facultyName (@facultySectionSlots/@totalQuota)</p>
+                                                            }
+                                                        }
+                                                    </td>
+                                                }
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>  
+        </div>
+    </div>
+</section>

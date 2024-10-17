@@ -1,0 +1,65 @@
+@model RoomCalendarViewModel
+@{
+    ViewData["Title"] = "Room Calendar";
+    var roomCalendarsJson = Json.Serialize(Model?.Details).ToString();
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Room Calendar</header>
+            </div>
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="RoomCalendar" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group m-b-30">
+                        <div class="col-9">
+                            <select class="chosen-select form-control" asp-for="Criteria.RoomId" asp-items="ViewBag.Rooms">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Room<span class="text-danger">*</span></label>
+                        </div>
+                        @* <div class="col-3">
+                            <input class="form-control js-single-date" asp-for="Criteria.DateCheck" type="text" autocomplete="off">
+                            <label>Date<span class="text-danger">*</span></label>
+                        </div> *@
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.Type" asp-items="ViewBag.UsingTypes">
+                                <option selected value="">All</option>
+                            </select>
+                            <label>Using Type</label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group m-b-30">
+                        <div class="col-12 align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="row no-margin">
+    <div class="col-12 p-a-0">
+        <div class="block">
+            <div class="block__body">
+                <div id="calendar" data-events="@roomCalendarsJson"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/room-calendar.js"></script>
+}
+
+<partial name="_DeleteConfirmModals" />

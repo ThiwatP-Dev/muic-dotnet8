@@ -1,0 +1,124 @@
+@model QuestionnaireStudentViewModel
+@{ 
+    ViewData["Title"] = "Questionnaire Student";
+    var index = 1;
+}
+
+<section class="row ">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="QuestionnaireStudent" asp-action="Index" method="GET">
+                    <div class="row form-group">
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.Code" type="text">
+                            <label>Student ID<span class="text-danger">*</span></label>
+                        </div>
+
+                        <div class="col-9 align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (Model != null)
+{
+    <section class="row">
+        <div class="col-12">
+            <div class="block block--underline">
+                @foreach (var item in Model.Courses)
+                {
+                    <div class="block__body">
+                        <div class="block__title">
+                            <div class="row">
+                                <header class="block__title-info">
+                                    <h3>Term @(item.Term)</h3>
+                                </header>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center w-50">#</th>
+                                        <th class="text-center w-150">Course Code</th>
+                                        <th>Course</th>
+                                        <th>Instructor</th>
+                                        <th class="text-center w-100">Section</th>
+                                        <th class="text-center w-100">Response</th>
+                                        <th class="text-center w-100">Questionnaire</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (item.Details != null && item.Details.Any())
+                                    {
+                                        foreach (var course in item.Details) 
+                                        {
+                                            foreach (var instructor in course.Instructors)
+                                            {
+                                                if (instructor.InstructorId != null)
+                                                {
+                                                    <tr>
+                                                        <td>@index</td>
+                                                        <td>@course.CourseCode</td>
+                                                        <td>@course.CourseName</td>
+                                                        <td>@instructor.InstructorName</td>
+                                                        <td>@course.SectionNumber</td>
+                                                        <td>
+                                                            <partial name="_BooleanCheck" model="@instructor.Response"></partial>
+                                                        </td>
+                                                        @if (instructor.Response || !item.InPeriod)
+                                                        {
+                                                            <td></td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td class="text-nowrap td-actions">
+                                                                <a asp-action="Create"
+                                                                asp-route-id="@course.RegistrationCourseId"
+                                                                asp-route-instructorId="@instructor.InstructorId">
+                                                                    <i class="la la-edit edit"></i>
+                                                                </a>
+                                                            </td>
+                                                        }
+                                                    </tr>
+                                                    ++index;
+                                                }
+                                                
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="6">
+                                                <i class="text-danger">No Data</i>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                }
+                
+            </div>
+            @(await Component.InvokeAsync<PagerViewComponent>(Model))
+        </div>
+    </section>
+}

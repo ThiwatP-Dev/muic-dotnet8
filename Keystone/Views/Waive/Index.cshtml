@@ -1,0 +1,145 @@
+@model Invoice
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <form class="ks-form container" asp-controller="Waive" asp-action="Edit" method="POST">
+                @Html.AntiForgeryToken()
+                <div class="block__title">
+                    <header class="block__title-info">
+                        <div class="row">
+                            <div class="col-4 info-group">
+                                <h4 class="mb-3"><b>Invoice Number : @Model?.Number</b></h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4 info-group">
+                                <h5 class="mb-3">@Model?.Student?.Code @Model?.Student?.FullNameEn</h5>
+                            </div>
+                            <div class="col-4 text-nowrap">
+                                <h5 class="mb-3">Term: @Model?.Term.TermText</h5>
+                            </div>
+                            <div class="col-4 info-group">
+                                <h5 class="mb-3">Admission Type : @Model?.Student?.AdmissionInformation?.AdmissionType?.NameEn</h5>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4 info-group">
+                                <h5 class="mb-3">Student Fee Type : @Model?.Student?.StudentFeeType?.NameEn</h5>
+                            </div>
+                            <div class="col-4 info-group">
+                                <h5 class="mb-3">Student Fee Group : @Model?.Student?.StudentFeeGroup?.Name</h5>
+                            </div>
+                        </div>
+                    </header>
+                </div>
+                <div class="block__body">
+                    <div class="row form-group m-b-30">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover w-100x m-0">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">#</th>
+                                        <th>Fee Item</th>
+                                        <th>Course</th>
+                                        <th class="text-center">Section</th>
+                                        <th class="text-right">Amount</th>
+                                        <th class="text-right">Waive</th>
+                                        <th>Waive Remark</th>
+                                        <th class="text-right">Scholarship</th>
+                                        <th class="text-right">Total Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model != null && Model.InvoiceItems.Any())
+                                    {
+                                        for (int i = 0; i < Model.InvoiceItems.Count(); i++)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @(i + 1)
+                                                    <input asp-for="@Model.InvoiceItems[@i].Id" type="hidden">
+                                                    <input class="js-waive-ori-total-amount" value="@Model.InvoiceItems[@i].Amount" type="hidden">
+                                                    <input class="js-waive-temp-total-amount" value="@Model.InvoiceItems[@i].TotalAmount" type="hidden">
+                                                </td>
+                                                <td>@Model.InvoiceItems[i].FeeItem?.NameEn</td>
+                                                <td>@Model.InvoiceItems[i].Course?.CourseAndCredit</td>
+                                                <td>@Model.InvoiceItems[i].Section?.Number</td>
+                                                <td>@Model.InvoiceItems[i].AmountText</td>
+                                                <td>
+                                                    @{
+                                                        var css = Html.Raw(Model.InvoiceItems[i].Amount >=0 
+                                                            ? $"min='0' man='{Model.InvoiceItems[i].Amount}'" 
+                                                            : $"min='{Model.InvoiceItems[i].Amount}' max='0'"
+                                                        );
+                                                    }
+                                                    <input class="form-control__table js-waive-discount-amount"
+                                                   asp-for="@Model.InvoiceItems[@i].DiscountAmount" type="number" 
+                                                   min="@(Model.InvoiceItems[i].Amount >=0 ? "0" : Model.InvoiceItems[i].Amount + "")" 
+                                                   max="@(Model.InvoiceItems[i].Amount <=0 ? "0" : Model.InvoiceItems[i].Amount + "")">
+                                                </td>
+                                                <td>
+                                                    <input class="form-control__table" asp-for="@Model.InvoiceItems[@i].DiscountRemark">
+                                                </td>
+                                                <td>@Model.InvoiceItems[i].ScholarshipAmountText</td>
+                                                <td><span class="js-waive-total-amount">@Model.InvoiceItems[i].TotalAmountText</span></td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="4" class="text-right"><b>Discount</b></td>
+                                        <td></td>
+                                        <td class="text-right">
+                                            <input class="form-control__table text-right js-waive-discount-amount js-waive-invoice-discount-amount"
+                                                   asp-for="@Model.TotalDiscount" type="number"
+                                                   min="@(Model?.Amount >=0 ? "0" : Model?.Amount + "")" 
+                                                   max="@(Model?.Amount <=0 ? "0" : Model?.Amount + "")">
+                                        </td>
+                                        <td>
+                                            <input class="form-control__table" asp-for="DiscountRemark">
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4" class="text-right"><b>Total</b></td>
+                                        <td class="text-right"><b>@Model?.AmountText</b></td>
+                                        <td class="text-right"><b><span class="js-waive-sum-discount-amount">@Model?.AllDiscountAmountText</span></b></td>
+                                        <td></td>
+                                        <td class="text-right">@Model?.ScholarshipAmountText</td>
+                                        <td class="text-right"><b><span class="js-waive-sum-total-amount">@Model?.TotalAmountText</span></b></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+
+                    <input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+                    <input asp-for="Id" type="hidden">
+                    <div class="block__action container">
+                        <div class="block__action-row">
+                            @if (Model != null && !Model.IsPaid)
+                            {
+                                <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+                            }
+                            <a class="btn btn-mw-120 btn--cancel"
+                               asp-controller="Registration"
+                               asp-action="Index"
+                               asp-route-code="@Model?.Student?.Code"
+                               asp-route-academicLevelId="@Model?.Term?.AcademicLevelId"
+                               asp-route-termId="@Model?.TermId">
+                                Close
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+<script type="text/javascript" src="~/js/pages/waive.js"></script>
+}

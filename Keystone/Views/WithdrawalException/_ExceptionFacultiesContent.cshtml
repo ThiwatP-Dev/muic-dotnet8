@@ -1,0 +1,62 @@
+@model WithdrawalExceptionViewModel
+@{
+    var index = 1;
+}
+
+@if (Model != null && Model.ExceptionalFaculty != null)
+{
+    <div class="block block--underline">
+        <span id="js-status-faculty" hidden>@Model.RespondStatus</span>
+        <div class="block__title">
+            <header>Withdrawal Exception Result (@Model.ExceptionalFaculty?.Count())</header>
+        </div>
+
+        <div class="block__body">
+            <div class="row form-group">
+                <div class="col-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered m-0">
+                            <thead>
+                                <tr>
+                                    <th class="text-center w-50">#</th>
+                                    <th>Division</th>
+                                    <th>Major</th>
+                                    <th class="text-center w-75">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.ExceptionalFaculty.Any())
+                                {
+                                    foreach (var item in Model.ExceptionalFaculty)
+                                    {
+                                        <tr>
+                                            <td class="text-center">@index</td>
+                                            <td>@item.Faculty?.CodeAndShortName</td>
+                                            <td>@item.Department?.CodeAndName</td>
+                                            <td class="text-nowrap text-center td-actions">
+                                                <a data-toggle="modal" 
+                                                   data-target="#delete-confirm-modal-tab" 
+                                                   data-onclick="Delete"
+                                                   data-value="@item.Id"
+                                                   data-tab-index="1">
+                                                    <i class="la la-trash delete"></i>
+                                                </a> 
+                                            </td>
+                                        </tr>
+                                        index++;
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td class="text-center" colspan="4">No Data</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,132 @@
+@model RegistrationStatisticReportViewModel
+@{ 
+    ViewData["Title"] = "Registration Statistic Report";
+    var index = 1;
+}
+
+<section class="d-print-none">
+    <div class="block block--underline">
+        <div class="block__title">
+            <header>@ViewData["Title"]</header>
+        </div>
+        <form class="form-horizontal" asp-controller="RegistrationStatisticReport" asp-action="Index" method="GET">
+            @Html.AntiForgeryToken()
+            <div class="block__body">
+                <div class="row form-group">
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Academic Level<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="ViewBag.Terms">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Term<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control" asp-for="Criteria.Type" asp-items="ViewBag.Types" data-placeholder="Select">
+                        </select>
+                        <label>Report Type<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3 align-self-end text-right text-nowrap">
+                        <button class="btn btn--primary btn-mw-120 m-r-5" type="submit">
+                            <i class="la la-search mr-2"></i>Search
+                        </button>
+                        <button class="btn btn-mw-120 btn--reset js-reset-btn" type="reset">
+                            Reset
+                        </button>
+                    </div>
+                </div>         
+            </div>
+        </form>
+    </div>
+</section>
+
+@if (Model != null)
+{
+    <section class="row">
+        <div class="col-12">
+            <div class="block block--underline">
+                <div class="block__title">
+                    <header>Search Result (@(Model?.RegistrationStatisticReportDetails?.Count() ?? 0))</header>
+                </div>
+
+                <div class="block__body">
+                    <div class="p-4">
+                        @if (Model != null && Model.RegistrationStatisticReportDetails.Any())
+                        {
+                            <table class="table table-bordered table-hover js-report-table w-100x">
+                                <thead>
+                                    @if (Model.Criteria.Type == "s")
+                                    {
+                                        <tr>
+                                            <th class="text-center">#</th>
+                                            <th class="text-center">Code</th>
+                                            <th>Name</th>
+                                            <th class="text-center">Master</th>
+                                            <th class="text-center">Joint</th>
+                                            <th class="text-center">Other</th>
+                                            <th class="text-center">Registration Credit</th>
+                                            <th class="text-center">Academic Credit</th>
+                                        </tr>
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <th class="text-center">#</th>
+                                            <th>Course</th>
+                                            <th class="text-center">Section</th>
+                                            <th class="text-center">Master</th>
+                                            <th class="text-center">Joint</th>
+                                            <th class="text-center">Other</th>
+                                            <th class="text-center">Total Registration</th>
+                                        </tr>
+                                    }
+
+                                </thead>
+                                <tbody>
+                                    @if (Model.Criteria.Type == "s")
+                                    {
+                                        foreach (var item in Model.RegistrationStatisticReportDetails) 
+                                        {
+                                            <tr>
+                                                <td>@index</td>
+                                                <td>@item.StudentCode</td>
+                                                <td>@item.StudentFullNameEn</td>
+                                                <td>@item.Master</td>
+                                                <td>@item.Joint</td>
+                                                <td>@item.Other</td>
+                                                <td>@item.RegistrationCredit</td>
+                                                <td>@item.AcademicCredit</td>
+                                            </tr>
+                                            ++index;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        foreach (var item in Model.RegistrationStatisticReportDetails) 
+                                        {
+                                            <tr>
+                                                <td>@index</td>
+                                                <td>@item.Course</td>
+                                                <td>@item.Section</td>
+                                                <td>@item.Master</td>
+                                                <td>@item.Joint</td>
+                                                <td>@item.Other</td>
+                                                <td>@item.TotalRegistration</td>
+                                                </tr>
+                                            ++index;
+                                        }
+                                    }
+
+                                </tbody>
+                            </table>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}

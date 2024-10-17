@@ -1,0 +1,150 @@
+@model ReceiveDairySummaryViewModel
+@{ 
+    ViewData["Title"] = "Summary Report by Date (Payment Method)";
+    var index = 1;
+}
+
+<section class="row ">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="ReceiveDairySummary" asp-action="Index" method="GET">
+                    <div class="row form-group m-b-30">
+                        <div class="col-4">
+                            <input class="form-control js-single-date" asp-for="Criteria.StartedAt" type="text" autocomplete="off">
+                            <label>Date From<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-4">
+                            <input class="form-control js-single-date" asp-for="Criteria.EndedAt" type="text" autocomplete="off">
+                            <label>Date To<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-4">
+                            <h4 class="font-size-default m-y-4">Fee Item</h4>
+                            <select class="chosen-select form-control" asp-for="Criteria.FeeItemIds" asp-items="ViewBag.FeeItems" data-placeholder="Select" multiple></select>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-4">
+                            <h4 class="font-size-default m-y-4">Payment Method</h4>
+                            <select class="chosen-select form-control" asp-for="Criteria.PaymentMethodIds" asp-items="ViewBag.PaymentMethods" data-placeholder="Select" multiple></select>
+                        </div>
+                        <div class="col-4">
+                            <select class="chosen-select form-control" asp-for="Criteria.FeeType" asp-items="@ViewBag.FeeTypes" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Fee Type</label>
+                        </div>
+                        <div class="col-4 align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (Model != null)
+{
+    <section class="row">
+        <div class="col-12">
+            <div class="block block--underline">
+                <div class="block__body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered js-report-table">
+                        @if (Model.ReceiptItems != null && Model.ReceiptItems.Any())
+                        {
+                            var receiptItems = Model.ReceiptItems[0];
+                            <thead>
+                                <tr>
+                                    <th rowspan="2" class="text-center">#</th>
+                                    <th rowspan="2">Receipt Item</th>
+                                    <th rowspan="2" class="text-center">Student</th>
+                                    <th rowspan="2" class="text-right">Price Per Student</th>
+                                    <th rowspan="2" class="text-right">Total</th>
+                                    @if (receiptItems.PaymentMethods.Any())
+                                    {
+                                        <th colspan="@receiptItems.PaymentMethods.Count" class="text-center">Payment Method</th>
+                                        <th rowspan="2" class="text-right">Total</th>
+                                        <tr>
+                                            @foreach (var paymentMethods in receiptItems.PaymentMethods)
+                                            {
+                                                <th class="text-right">@paymentMethods.NameEn</th>
+                                            }
+                                        </tr>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.ReceiptItems != null && Model.ReceiptItems.Any())
+                                {
+                                    foreach (var item in Model.ReceiptItems)
+                                    {
+                                        <tr>
+                                            <td>@index</td>
+                                            <td>@item.Name</td>
+                                            <td>@item.TotalStudent</td>
+                                            <td>@item.StudentPrice</td>
+                                            <td>@item.TotalPriceText</td>
+                                            @if (receiptItems.PaymentMethods.Any())
+                                            {
+                                                @for (int i = 0; i < receiptItems.PaymentMethods.Count; i++)
+                                                {
+                                                    var isEqual = false;
+                                                    for (int j = 0; j < item.PaymentAmounts?.Count; j++)
+                                                    {
+                                                        if (item.PaymentAmounts[j].PaymentName == receiptItems.PaymentMethods[i].NameEn)
+                                                        {
+                                                            <td>@item.PaymentAmounts[j].PaymentAmountText</td>
+                                                            isEqual = true;
+                                                        }
+                                                    }
+
+                                                    if (!isEqual)
+                                                    {
+                                                        <td></td>
+                                                    }
+                                                }
+                                                <td>@item.TotalPaymentMethod</td>
+                                            }
+                                        </tr>
+                                        index ++;
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="9">
+                                            <i class="text-danger">No Data</i>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="9">
+                                    <i class="text-danger">No Data</i>
+                                </td>
+                            </tr>
+                        }
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}

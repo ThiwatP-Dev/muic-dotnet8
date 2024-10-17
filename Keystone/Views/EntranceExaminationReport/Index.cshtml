@@ -1,0 +1,177 @@
+@model EntranceExaminationReportViewModel
+@{
+    ViewData["Title"] = "Entrance Examination Report";
+    var index = 1;
+}
+
+<section class="row">
+    <div class="col-12">
+        <div id="entrance-examination-accordion1">
+            <div class="block block--underline d-print-none">
+                <div class="block__title collapsed" data-toggle="collapse" data-parent="#entrance-examination-accordion1" data-target="#entrance-examination-accordion1-1">
+                    <header>Entrance Examination Report</header>
+                    <div class="tools">
+                        <div class="btn-group">
+                            <a class="btn btn--white btn--circle">
+                                <i class="la la-angle-down"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="entrance-examination-accordion1-1" class="collapse show" aria-expanded="true">
+                    <div class="block__body">
+                        <form class="form-horizontal" asp-controller="EntranceExaminationReport" asp-action="Index" method="GET">
+                            @Html.AntiForgeryToken()
+                            <div class="row form-group m-b-30">
+                                <div class="col-4">
+                                    <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels" data-placeholder="Select">
+                                            <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Academic Level<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-4">
+                                    <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="ViewBag.Faculties" data-placeholder="Select">
+                                            <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Division<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-4">
+                                    <select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentId" asp-items="ViewBag.Departments" data-placeholder="Select">
+                                            <option selected value="">Select</option>
+                                    </select>
+                                    <label>Major</label>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-4">
+                                    <select class="chosen-select form-control js-cascade-admission-round" asp-for="Criteria.AdmissionRoundId" asp-items="ViewBag.AdmissionRounds" data-placeholder="Select">
+                                            <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Admission Round<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-8 align-self-end text-right">
+                                    <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                        <i class="la la-search mr-2"></i>Search
+                                    </button>
+                                    <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                                        Reset
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (Model != null)
+{
+    <div class="row mb-3">
+        <div class="col-12">
+            <div class="text-right d-print-none">
+                <button class="btn btn--primary btn-mw-120" onclick="window.print()">
+                    <i class="la la-print mr-1 font-weight-800"></i> Print
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <section class="row">
+        <div class="col-12">
+            <div class="block block--underline">
+                <div class="block__title mb-3">
+                    <header class="w-100x">
+                        <div class="d-flex align-items-center mb-3">
+                            <img id="js-default-logo" src="~/images/logo-muic-2.png">
+                            <span class="mx-auto text-center">
+                                <h3 class="mb-1">MAHIDOL UNIVERSITY</h3>
+                                <h4>ENTRANCE EXAMINATION SEMESTER @Model.Term</h4>
+                            </span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-1 text-nowrap">
+                                <h5 class="my-2 text-line-height-default">Division :</h5>
+                            </div>
+                            <div class="col-4">
+                                <h5 class="my-2 text-line-height-default">@Model.Faculty</h5>
+                            </div>
+                            <div class="col-2 text-nowrap">
+                                <h5 class="my-2 text-line-height-default">Major :</h5>
+                            </div>
+                            <div class="col-5">
+                                <h5 class="my-2 text-line-height-default">@Model.Department</h5>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-1">
+                                <h5 class="my-2 text-line-height-default">Date :</h5>
+                            </div>
+                            <div class="col-4">
+                                <h5 class="my-2 text-line-height-default">@Model.TestDates</h5>
+                            </div>
+                            <div class="col-1">
+                                <h5 class="my-2 text-line-height-default">Time :</h5>
+                            </div>
+                            <div class="col-3">
+                                <h5 class="my-2 text-line-height-default">@Model.TestTimes</h5>
+                            </div>
+                            <div class="col-1 text-nowrap">
+                                <h5 class="my-2 text-line-height-default">Room :</h5>
+                            </div>
+                            <div class="col-2">
+                                <h5 class="my-2 text-line-height-default">@Model.Rooms</h5>
+                            </div>
+                        </div>
+                    </header>
+                </div>
+
+                <div class="block__body">
+                    <table class="table table-bordered m-0 w-100x">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center">Adm.No</th>
+                                <th>Name / Surname</th>
+                                @foreach (var item in Model.EntranceExaminationSchedules)
+                                {
+                                    <th class="text-center">@item.AdmissionExaminationType</th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Students != null && Model.Students.Any())
+                            {
+                                @foreach (var students in Model.Students)
+                                {
+                                    <tr>
+                                        <td>@index</td>
+                                        <td>@students.Code</td>
+                                        <td>@students.FullNameEn</td>
+                                        @for (int i = 0 ; i < Model.EntranceExaminationSchedules.Count ; ++i)
+                                        {
+                                            <td></td>
+                                        }
+                                    </tr>
+                                    ++index;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="@(3 + Model.EntranceExaminationSchedules.Count)">
+                                        <i class="text-danger">No Data</i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+}

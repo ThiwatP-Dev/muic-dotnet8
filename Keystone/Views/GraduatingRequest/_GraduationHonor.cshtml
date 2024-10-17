@@ -1,0 +1,35 @@
+@model List<GraduationHonor>
+
+<table id="js-select-honor" class="table table-bordered table-hover w-100x">
+    <thead>
+        <tr>
+            <th class="w-25 text-center">
+                <input id="checkAll" class="js-check-all" name="Honors" type="checkbox">
+                <label class="mt-2 mb-0 m-l-2" for="checkAll"></label>
+            </th>
+            <th class="text-center">Code</th>
+            <th>Remark</th>
+            <th class="text-center">Status</th>
+        </tr>
+    </thead>
+    <tbody class="js-items">
+        @if (Model != null && Model.Any())
+        {
+            for (int i = 0; i < Model.Count(); i++)
+            {
+                <tr class="js-suggestion-parent">
+                    <td>
+                        <input id="Results[@i]" class="form-check-input" name="Honors[@i].IsChecked" type="checkbox" value="@Model[i].IsChecked">
+                        <label class="js-focus-item m-0" for="Results[@i]"></label>
+                        <input name="Honors[@i].Code" value="@Model[i].Code" type="hidden">
+                    </td>
+                    <td>@Model[i].Code</td>
+                    <td>@Model[i].Remark</td>
+                    <td>
+                        <partial name="_BooleanResult" model="@Model[i].IsPassed"></partial>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

@@ -1,0 +1,129 @@
+@model GradingInformation;
+@{
+    var index = 1;
+}
+
+<div class="block block--underline mb-0">
+    <div class="block__title">
+        <header class="d-flex">
+            <div class="class-lookup-head text-nowrap p-a-8 mb-0">Section @Model.SectionNumber</div>
+            <span class="class-lookup-title align-self-center ml-3">@Model.Course?.CodeAndName</span>
+        </header>
+    </div>
+
+    <div id="grade-table" class="js-render-nicescroll box-scroll__content">
+        <div class="table-responsive">
+            <table class="table table-bordered js-grade-editor-table">
+                <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th class="text-center">Grade</th>
+                        <th class="w-400">Remark</th>
+                        <th class="text-center">Edited Date</th>
+                        <th class="text-center">Edited By</th>
+                        <th class="text-center">Type</th>
+                        <th class="text-center w-75">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model?.GradingLogs != null && Model.GradingLogs.Any())
+                    {
+                        foreach (var item in Model.GradingLogs)
+                        {
+                            <tr>
+                                <td class="text-center">@(index++)</td>
+                                <td class="text-center">@item.CurrentGrade</td>
+                                <td>
+                                    <span class="js-edit-value">@item.Remark</span>
+                                    <input class="form-control__table d-none js-edit-input" type="text" value="@item.Remark" 
+                                           data-default-value="@item.Remark" data-original="@item.Remark" data-id="@item.Id">
+                                </td>
+                                <td id="EditedAt">@item.UpdatedAtLocalText</td>
+                                <td id="EditedBy">@item.UpdatedByFullName</td>
+                                <td class="text-center" id="Type">@item.TypeText</td>
+                                <td class="td-actions text-nowrap text-center">
+                                    @if (!String.IsNullOrEmpty(item.DocumentUrl))
+                                    {
+                                        <a href="@item.DocumentUrl" download>
+                                            <i class="la la-download info"></i>
+                                        </a>
+                                    }
+                                    <a href="#!" class="js-start-edit" data-type="edit">
+                                        <i class="la la-edit edit"></i>
+                                    </a>
+                                    <span class="js-quit-edit d-none">
+                                        <a href="#!" class="js-save-edit" data-type="save">
+                                            <i class="la la-save check"></i>
+                                        </a>
+                                        <a href="#!" class="js-cancel-edit" data-type="cancel">
+                                            <i class="la la-close delete"></i>
+                                        </a>
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else 
+                    {
+                        <tr>
+                            <td class="text-danger text-center" colspan="7">No Data</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <hr>
+    </div>
+
+    <form id="edit-gradinglog" class="ks-form container" asp-controller="GradeMaintenance" asp-action="EditGrade" method="POST" enctype="multipart/form-data" >
+        <div class="row form-group">
+            <div class="col-6">
+                <input class="form-control text-uppercase" asp-for="PreviousGrade" type="text" readonly="readonly">
+                <label>Current Grade</label>
+            </div>
+            <div class="col-6">
+                <select class="chosen-select form-control js-grade-id" asp-items="ViewBag.Grades" asp-for="CurrentGradeId">
+                    <option selected value="">N/A</option>
+                </select>
+                <label>Updated Grade<span class="text-danger">*</span></label>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-12">
+                <input class="form-control" asp-for="Remark" type="text" data-val="true" data-val-max="1000"
+                       data-val-length="The field Remark must be string with a maximum length of 1000.">
+                <label>Remark<span class="text-danger">*</span></label>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-12">
+                <label>Upload File</label>
+            </div>
+            <div class="col-12">
+                <span>
+                    <button class="btn btn-mw-120 btn--primary mr-2 mb-0" type="button" onclick="document.getElementById('UploadFile').click();">Browse</button>
+                    <span id="filename"></span>
+                    <input type="file" class="form-control-file" asp-for="UploadFile" onchange="onSelectFile(this);" />
+                </span>
+            </div>
+        </div>
+        <div class="block__action">
+            <div class="block__action-row">
+                <button id="edit-grade" class="btn btn-mw-120 btn--primary" disabled>Save</button>
+                <a class="btn btn-mw-120 btn--cancel rounded" href="javascript:void(0);" data-dismiss="modal">Close</a>
+            </div>
+        </div>
+        <input asp-for="StudentRawScoreId" type="hidden">
+        <input asp-for="RegistrationCourseId" type="hidden">
+        <input asp-for="StudentCode" type="hidden">
+        <input asp-for="TermId" type="hidden">
+        <input asp-for="AcademicLevelId" type="hidden">
+    </form>
+</div>
+
+<script>
+    function onSelectFile(control) 
+    {
+        $("#filename").empty().html(control.files[0].name);
+    }
+</script>

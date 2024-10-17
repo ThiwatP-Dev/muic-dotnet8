@@ -1,0 +1,2 @@
+dotnet: dotnet watch run
+electron: node ./ElectronKeystone/electron-wait-dotnet

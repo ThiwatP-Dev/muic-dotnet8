@@ -1,0 +1,22 @@
+@model StudentCodeRange
+@{ 
+    ViewData["Title"] = "Add Student Code Range"; 
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <form id="js-is-existed" class="ks-form container" asp-controller="StudentCodeRange" asp-action="Create" method="POST">
+                <partial name="_Form">
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Modals {
+    <partial name="_IsExistedModal">
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/student-code-range.js"></script>
+}

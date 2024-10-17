@@ -1,0 +1,19 @@
+@model RoomReservation
+@{ 
+    ViewData["Title"] = "Add Room Reservation"; 
+}
+
+<section id="data-table-form-v1" class="row">
+    <div class="col-lg-12">
+        <div class="block block--underline">
+            <form class="ks-form container" asp-controller="RoomReservation" asp-action="Create" method="POST">
+                @Html.AntiForgeryToken()
+                <partial name="_Form"/>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script src="~/js/pages/room-reservation.js"></script>
+}

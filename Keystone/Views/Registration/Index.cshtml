@@ -1,0 +1,282 @@
+@model RegistrationViewModel
+@{
+    ViewData["Title"] = "Registration";
+}
+
+<section class="ks-registration">
+    @if (!string.IsNullOrEmpty(ViewBag.ReturnUrl))
+    {
+        <div class="row">
+	    	<div class="ks-page-header col-12">
+	    		<a class="btn-back" href="@ViewBag.ReturnUrl">
+	    			<i class="la la-angle-double-left mr-2"></i>Back
+	    		</a>
+	    	</div>
+	    </div>
+    }
+
+    <section class="row">
+        <div class="col-12">
+            <div class="block block--underline">
+                <div class="block__title">
+                    <header>Registration Result</header>
+                </div>
+
+                <div class="block__body">
+                    <form class="form-horizontal" asp-controller="Registration" asp-action="Index" method="GET">
+                        @Html.AntiForgeryToken()
+                        <div class="row form-group mb-0">
+                            <div class="col-3">
+                                <select class="chosen-select form-control js-cascade-academic-level" 
+                                        asp-items="ViewBag.AcademicLevels" asp-for="AcademicLevelId" data-placeholder="Select">
+                                    <option selected disabled>Select</option>
+                                </select>
+                                <label>Academic Level<span class="text-danger">*</span></label>
+                            </div>
+
+                            <div class="col-3">
+                                <select class="chosen-select form-control js-cascade-term" 
+                                        asp-items="ViewBag.Terms" asp-for="TermId" data-placeholder="Select">
+                                    <option selected disabled>Select</option>
+                                </select>
+                                <label>Term<span class="text-danger">*</span></label>
+                            </div>
+
+                            <div class="col-3">
+                                <input class="form-control" asp-for="Code">
+                                <label>Code<span class="text-danger">*</span></label>
+                            </div>
+
+                            <div class="col-3 align-self-end text-right text-nowrap">
+                                <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">
+                                    <i class="la la-search mr-2"></i>Search
+                                </button>
+                                <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                    Reset
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="registration-accordion1" class="panel-group">
+        <div class="block block--underline">
+            <div class="block__title d-flex collapsed">
+                <header class="align-self-center color-primary">
+                    <h3 class="my-2">@Model?.Code @Model?.Title @Model?.FirstName @Model?.LastName</h3>
+                    <h4 class="my-2">@Model?.Faculty, @Model?.Department (@Model?.CurriculumVersion)</h4>
+                    <h4 class="my-2">Advisor : @Model.Advisor</h4>
+                </header>
+                
+                <div class="ml-auto tools">
+                    <div class="btn-group pt-3">
+                        <a class="btn btn--white btn--circle" data-toggle="collapse" data-parent="#registration-accordion1" data-target="#registration-accordion1-1">
+                            <i class="la la-angle-down"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="registration-accordion1-1" class="collapse show" aria-expanded="true">
+                <form asp-controller="Registration" asp-action="Index" class="form-horizontal">
+                    <div class="block__body hidden">
+                        <div class="row">
+                            <div class="col-4 form-group">
+                                <div class="form-control-label d-flex align-items-center">Student Fee Type</div>
+                                <div class="form-control-plaintext">@Model?.StudentFeeType</div>
+                            </div>
+                            <div class="col-4 form-group">
+                                <div class="form-control-label d-flex align-items-center">Student Fee Group</div>
+                                <div class="form-control-plaintext">@Model?.StudentFeeGroup</div>
+                            </div>
+                            <div class="col-2 form-group">
+                                <div class="form-control-label d-flex align-items-center">Nationality</div>
+                                <div class="form-control-plaintext">@Model?.Nationality</div>
+                            </div>
+                            <div class="col-2 form-group">
+                                <div class="form-control-label d-flex align-items-center">Admission Type</div>
+                                <div class="form-control-plaintext">@Model?.AdmissionType</div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4 form-group">
+                                <div class="form-control-label d-flex align-items-center">Scholarship</div>
+                                <div class="form-control-plaintext">@Model?.ScholarshipProfile</div>
+                            </div>
+                            <div class="col-4 form-group">
+                                <div class="form-control-label d-flex align-items-center p-t-2">Registration Slot</div>
+                                <div class="form-control-plaintext">@Model?.RegistrationSlot</div>
+                            </div>
+                            <div class="col-2 form-group">
+                                <div class="form-control-label d-flex align-items-center">Current GPA</div>
+                                <div class="form-control-plaintext">@Model?.GPA</div>
+                            </div>
+                            <div class="col-2 form-group">
+                                <div class="form-control-label d-flex align-items-center p-t-2">Student Status</div>
+                                <div class="js-student-status form-control-plaintext @(Model.StudentStatus == "Deleted" ? "text-danger" : "")">@Model.StudentStatus</div>
+                            </div>
+                        </div>
+                        <hr class="mt-1">
+                        <div class="row">
+                            <div class="col-2 form-group mb-0">
+                                <div class="form-control-plaintext">Advising : 
+                                    <partial name="_BooleanResult" model="@Model.IsAdvised">
+                                </div>
+                            </div>
+                            <div class="col-2 form-group">
+                                <div class="form-control-plaintext">Allow Registration : 
+                                    <partial name="_BooleanResult" model="@Model.IsAllowRegistration">
+                                </div>
+                            </div>
+                            <div class="col-2 form-group mb-0">
+                                <div class="form-control-plaintext">Allow Payment : 
+                                    <partial name="_BooleanResult" model="@Model.IsAllowPayment">
+                                </div>
+                            </div>
+                            <div class="col-2 form-group">
+                                <div class="form-control-plaintext">Allow SignIn : 
+                                    <partial name="_BooleanResult" model="@Model.IsAllowSignIn">
+                                </div>
+                            </div>
+                            <div class="col-2 form-group">
+                                <div class="form-control-plaintext">Maintain Status : 
+                                    <partial name="_BooleanResult" model="@Model.IsMaintainedStatus">
+                                </div>
+                            </div>
+                            <div class="col-2 form-group">
+                                <div class="form-control-plaintext">Re-Entered : 
+                                    <partial name="_BooleanResult" model="@Model.IsReEntered">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (!string.IsNullOrEmpty(Model.Code))
+{
+    <section id="student-registration" class="row">
+        <div class="col-md-12">
+            <div class="tabs-scroller float-left"><i class="la la-angle-double-left"></i></div>
+            <div class="tabs-scroller float-right"><i class="la la-angle-double-right"></i></div>
+            <div class="nav-tabs-wrapper">
+                <ul class="nav nav-tabs ks-tabs" role="tablist">
+                    <li class="nav-item">
+                        <a id="nav-link-0" class="nav-link active" href="#nav-tab-0" data-toggle="tab">
+                            Registration Result
+                        </a>
+                    </li>
+                    @if (Model.StudentStatus != "Delete")
+                    {
+                        <li class="nav-item">
+                            <a id="nav-link-1" class="nav-link" href="#nav-tab-1" data-toggle="tab">
+                                Modification
+                            </a>
+                        </li>
+                    }
+                    <li class="nav-item">
+                        <a id="nav-link-2" class="nav-link" href="#nav-tab-2" data-toggle="tab">
+                            Invoice
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a id="nav-link-3" class="nav-link" href="#nav-tab-3" data-toggle="tab">
+                            Receipt
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a id="nav-link-4" class="nav-link" href="#nav-tab-4" data-toggle="tab" data-savable="false">
+                            Grade
+                        </a>
+                    </li>
+                </ul>
+            </div>
+    
+            <div id="student-registration-tab-content" class="tab-content">
+                <div id="nav-tab-0" class="tab-pane show active" role="tabpanel">
+                    <partial name="_Registration">
+                </div>
+                <div id="nav-tab-1" class="tab-pane" role="tabpanel">
+                    <partial name="_Modify">
+                    <span id="js-summary-credit" hidden>@Model?.AccumulativeRegistrationCredit</span>
+                </div>
+                <div id="nav-tab-2" class="tab-pane" role="tabpanel">
+                    <partial name="_Invoice" model="Model.Invoices ?? new List<Invoice>()">
+                </div>
+                <div id="nav-tab-3" class="tab-pane" role="tabpanel">
+                    <partial name="_Receipt" model="Model.Receipts ?? new List<Receipt>()">
+                </div>
+                <div id="nav-tab-4" class="tab-pane" role="tabpanel">
+                    <partial name="~/Views/Student/_Registration.cshtml" model="Model.StudentRegistrationCoursesViewModels">
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+@section Modals {
+    <partial name="_ConfirmModals"/>
+    <partial name="_DeleteConfirmModals" model="new Section()"/>
+    <partial name="_DeleteInvoiceConfirmModals"/>
+    <partial name="_DeleteRowConfirmModals"/>
+    <partial name="_ReturnSeatModal"/>
+    <partial name="_SearchCourses" model="new Section()"/>
+    <partial name="_RefundModals"/>
+    <partial name="_UpdateCreditModal" model="@Model.CreditLoadInformation"/>
+    <partial name="Receipt/_PreviewModal" model="new ReceiptModalViewModel()"/>
+    <partial name="Receipt/_CancelModal"/>
+    <partial name="Receipt/_DetailsModal"/>
+    <partial name="Invoice/_DetailsModal" model="new Invoice()"/>
+    <partial name="Invoice/_ConfirmPaymentCompleteModal" model="new Invoice()"/>
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/tabs.js"></script>
+    <script src="~/js/pages/class-schedule.js"></script>
+    <script src="~/js/pages/delete-invoice-modal.js"></script>
+    <script src="~/js/pages/registration.js"></script>
+    <script src="~/js/pages/modification-course.js"></script>
+    <script src="~/js/pages/receipt-preview-modal.js"></script>
+    <script>
+        $( function() {
+            var tab = '#nav-link-' + getUrlParameter('tabIndex');
+            $(tab).tab('show');
+            
+            var inputTable = new RowAddAble({
+                TargetTable: '#js-adding',
+                ButtonTitle: 'Course',
+                TableTitle: `<div class="align-self-end pl-3">
+                                <div class="js-show-credits mr-auto">
+                                    <span class="form-control-label mr-4">
+                                        Min. Credit : <span>@Model?.MinimumCredit</span>
+                                    </span>
+                                    <span class="form-control-label mr-4">
+                                        Max. Credit : <span>@Model?.MaximumCredit</span>
+                                    </span>
+                                    <span class="form-control-label">
+                                        Credit : <span id="js-summary-credit">@Model?.AccumulativeRegistrationCredit</span>
+                                    </span>
+                                </div>
+                            </div>`
+            })
+            inputTable.RenderButton();
+            InputMask.renderTimeMask();
+
+            $(".js-add-row").before(`
+                <button class="btn btn-mw-120 btn--primary mb-0 mr-2" type="button"
+                        data-toggle="modal" 
+                        data-target="#search-courses-modal">
+                        <i class="la la-search mr-1"></i> Search Courses
+                </button>
+            `);
+
+            calculateCredit(@Model?.AccumulativeCredit);
+        });
+    </script>
+}

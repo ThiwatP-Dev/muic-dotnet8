@@ -1,0 +1,144 @@
+@model Course
+
+<div class="block__title">
+    <header>@ViewData["Title"]</header>
+</div>
+
+<div class="block__body">
+    <div class="form-group">
+        <select class="chosen-select form-control" asp-for="AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+            <option selected disabled>Select</option>
+        </select>
+        <label for="AcademicLevelId">Academic Level<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="AcademicLevelId"></span>
+    </div>
+
+    <div class="form-group">
+        <select class="chosen-select form-control" asp-for="TransferUniversityId" asp-items="ViewBag.TransferUniversities">
+            <option selected disabled>Select</option>
+        </select>
+        <label for="TransferUniversityId">Transfer University<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="TransferUniversityId"></span>
+    </div>
+    <div class="form-group">
+        <input class="form-control" asp-for="Code" type="text" autocomplete="off">
+        <label>Code<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="Code"></span>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" asp-for="NameEn" type="text">
+        <label>English Name<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="NameEn"></span>
+    </div>
+    
+    <div class="form-group">
+        <input class="form-control" asp-for="NameTh" type="text">
+        <label>Thai Name<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="NameTh"></span>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" asp-for="ShortNameEn" type="text">
+        <label>English Short Name</label>
+        <span class="text-danger help-block" asp-validation-for="ShortNameEn"></span>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" asp-for="ShortNameTh" type="text">
+        <label>Thai Short Name</label>
+        <span class="text-danger help-block" asp-validation-for="ShortNameTh"></span>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" asp-for="TranscriptNameEn1" type="text">
+        <label>English Transcript Name 1<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="TranscriptNameEn1"></span>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" asp-for="TranscriptNameTh1" type="text">
+        <label>Thai Transcript Name 1<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="TranscriptNameTh1"></span>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" asp-for="TranscriptNameEn2" type="text">
+        <label>English Transcript Name 2</label>
+        <span class="text-danger help-block" asp-validation-for="TranscriptNameEn2"></span>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" asp-for="TranscriptNameTh2" type="text">
+        <label>Thai Transcript Name 2</label>
+        <span class="text-danger help-block" asp-validation-for="TranscriptNameTh2"></span>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" asp-for="TranscriptNameEn3" type="text">
+        <label>English Transcript Name 3</label>
+        <span class="text-danger help-block" asp-validation-for="TranscriptNameEn3"></span>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" asp-for="TranscriptNameTh3" type="text">
+        <label>Thai Transcript Name 3</label>
+        <span class="text-danger help-block" asp-validation-for="TranscriptNameTh3"></span>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" asp-for="DescriptionEn" type="text">
+        <label>English Description</label>
+        <span class="text-danger help-block" asp-validation-for="DescriptionEn"></span>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control" asp-for="DescriptionTh" type="text">
+        <label>Thai Description</label>
+        <span class="text-danger help-block" asp-validation-for="DescriptionTh"></span>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control js-default-zero js-click-highlight" asp-for="Credit" type="number">
+        <label>Credit<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="Credit"></span>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control js-default-zero js-click-highlight" asp-for="Lecture" type="number">
+        <label>Lecture<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="Lecture"></span>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control js-default-zero js-click-highlight" asp-for="Lab" type="number">
+        <label>Lab<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="Lab"></span>
+    </div>
+
+    <div class="form-group">
+        <input class="form-control js-default-zero js-click-highlight" asp-for="Other" type="number">
+        <label>Other<span class="text-danger">*</span></label>
+        <span class="text-danger help-block" asp-validation-for="Other"></span>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-3 form-check">
+            <input class="form-check-input" asp-for="IsCalculateCredit" type="checkbox">
+            <label for="IsCalculateCredit">Calculate Credit</label>
+        </div>
+        <div class="col-2 form-check">
+            <input class="form-check-input" asp-for="IsActive" type="checkbox">
+            <label for="IsActive">Active</label>
+        </div>
+    </div>
+</div>
+
+<input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+
+<div class="block__action container">
+    <div class="block__action-row">
+        <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+        <a class="btn btn-mw-120 btn--cancel" href="@ViewBag.ReturnUrl">Cancel</a>
+    </div>
+</div>

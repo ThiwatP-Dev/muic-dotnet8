@@ -1,0 +1,177 @@
+@model RefundCoursesViewModel
+
+<div class="block block--underline">
+    <div class="block__title">
+        <header>Registration Result</header>
+        
+    </div>
+
+    <div class="block__body">
+        <div class="row mb-3">
+            <div class="col-6">
+                <h3>@Model.StudentCode @Model.StudentName</h3>
+                <h4 class="mb-0">Scholarship: @Model.ScholarshipName</h4>
+            </div>
+            <div class="col-6 text-right align-self-end">
+                <button id="js-refund-all" class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="button">
+                    <i class="la la-money mr-2"></i>Refund All
+                </button>
+            </div>
+        </div>
+        <div class="form-group table-responsive p-b-50">
+            <table id="js-courses-list" class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th class="w-50" rowspan="2">
+                            <input id="check0" class="js-check-all" name="select-item" type="checkbox">
+                            <label class="mt-2 mb-0 m-l-1" for="check0"></label>
+                        </th>
+                        <th class="text-center w-150" rowspan="2">Receipt Number</th>
+                        <th class="text-center w-125" rowspan="2">Date</th>
+                        <th class="text-center w-100" rowspan="2">Course</th>
+                        <th class="text-center w-75" rowspan="2">Section</th>
+                        <th rowspan="2">Fee Item</th>
+                        <th class="text-right w-100" rowspan="2">Amount</th>
+                        <th class="text-right w-100" rowspan="2">Personal Pay</th>
+                        <th class="text-right w-100" rowspan="2">Scholarship</th>
+                        <th class="text-right w-100" rowspan="2">Remaining</th>
+                        <th class="text-center" colspan="6">Refund Detial</th>
+                    </tr>
+                    <tr>
+                        <th class="text-right w-75">Percent</th>
+                        <th class="text-right w-100">Amount</th>
+                        <th class="text-right w-100">Personal Pay</th>
+                        <th class="text-right w-100">Scholarship</th>
+                        <th class="text-center">Return Budget</th>
+                        <th class="text-center w-125">Date</th>
+                    </tr>
+                </thead>
+                <tbody class="js-items">
+                    @if (Model.ReceiptItems.Any())
+                    {
+                        for (int i = 0; i < Model.ReceiptItems.Count(); i++)
+                        {
+                            <tr>
+                                <td>
+                                    <input asp-for="@Model.ReceiptItems[i].Id" type="hidden">
+                                    <input asp-for="@Model.ReceiptItems[i].ReceiptId" type="hidden">
+                                    <input asp-for="@Model.ReceiptItems[i].InvoiceId" type="hidden">
+                                    <input asp-for="@Model.ReceiptItems[i].InvoiceItemId" type="hidden">
+                                    <input class="js-refund-scholarship-student-id" asp-for="@Model.ReceiptItems[i].InvoiceItem.ScholarshipStudentId" type="hidden">
+                                    <input id="check@(i+1)"
+                                            asp-for="@Model.ReceiptItems[i].IsRefund" type="checkbox">
+                                    <label class="form-check-input m-0" for="check@(i+1)"></label>
+                                </td>
+                                <td>
+                                    <span>@Model.ReceiptItems[i].Receipt.Number</span>
+                                    <input asp-for="@Model.ReceiptItems[i].Receipt.Number" type="hidden">
+                                </td>
+                                <td>
+                                    <span>@Model.ReceiptItems[i].Receipt.CreatedAtText</span>
+                                    <input asp-for="@Model.ReceiptItems[i].Receipt.CreatedAtText" type="hidden">
+                                </td>
+                                <td>
+                                    <span>@Model.ReceiptItems[i].InvoiceItem.Course?.Code</span>
+                                    <input asp-for="@Model.ReceiptItems[i].InvoiceItem.CourseId" type="hidden">
+                                </td>
+                                <td>
+                                    <span>@Model.ReceiptItems[i].InvoiceItem.Section?.Number</span>
+                                    <input asp-for="@Model.ReceiptItems[i].InvoiceItem.SectionId" type="hidden">
+                                </td>
+                                <td>
+                                    <span>@Model.ReceiptItems[i].FeeItem?.NameEn</span>
+                                    <input asp-for="@Model.ReceiptItems[i].FeeItemId" type="hidden">
+                                </td>
+                                <td>
+                                    <span>@Model.ReceiptItems[i].TotalAmountText</span>
+                                    <input asp-for="@Model.ReceiptItems[i].TotalAmount" type="hidden">
+                                </td>
+                                <td>
+                                    @* <span>@Model.ReceiptItems[i].PersonalPayAmountText</span>
+                                    <input class="js-receipt-personal-pay" asp-for="@Model.ReceiptItems[i].RemainingPersonalPayAmount" type="hidden"> *@
+                                </td>
+                                <td>
+                                    <span>@Model.ReceiptItems[i].ScholarshipAmountText</span>
+                                    <input class="js-receipt-scholarship" asp-for="@Model.ReceiptItems[i].RemainingScholarshipAmount" type="hidden">
+                                </td>
+                                <td>
+                                    <span>@Model.ReceiptItems[i].RemainingAmountText</span>
+                                    <input class="js-receipt-remaining" asp-for="@Model.ReceiptItems[i].RemainingAmount" type="hidden">
+                                </td>
+                                <td>
+                                    <select class="chosen-select form-control js-refund-percentage"
+                                            asp-items="@ViewBag.Percentages" 
+                                            asp-for="@Model.ReceiptItems[i].RefundPercentage">
+                                    </select>
+                                </td>
+                                <td>
+                                    <input class="form-control__table js-refund-amount" asp-for="@Model.ReceiptItems[i].RefundAmount" type="number">
+                                </td>
+                                <td>
+                                    @* <input class="form-control__table js-refund-personal-pay" asp-for="@Model.ReceiptItems[i].RefundPersonalPayAmount" type="number"> *@
+                                </td>
+                                <td>
+                                    <input class="form-control__table js-refund-scholarship" asp-for="@Model.ReceiptItems[i].RefundScholarshipAmount" type="number">
+                                </td>
+                                <td>
+                                    <select class="chosen-select form-control js-refund-return-bugget"
+                                            asp-items="ViewBag.YesNoAnswer"
+                                            asp-for="@Model.ReceiptItems[i].IsReturnBudget">
+                                    </select>
+                                </td>
+                                <td class="js-date-refund text-nowrap">
+                                    <input class="form-control__table text-center js-single-date"
+                                           asp-for="@Model.ReceiptItems[i].RefundedAt" type="text">
+                                </td>
+                            </tr>
+                        }
+
+                        if (Model.NoRemainningReceiptItems != null)
+                        {
+                            foreach (var item in Model.NoRemainningReceiptItems)
+                            {
+                                <tr>
+                                    <td></td>
+                                    <td>@item.Receipt?.Number</td>
+                                    <td>@item.Receipt?.CreatedAtText</td>
+                                    <td>@item.InvoiceItem?.Course?.Code</td>
+                                    <td>@item.InvoiceItem?.Section?.Number</td>
+                                    <td>@item.FeeItem?.NameEn</td>
+                                    <td>@item.TotalAmountText</td>
+                                    <td></td>
+                                    @* <td>@item.PersonalPayAmountText</td> *@
+                                    <td>@item.ScholarshipAmountText</td>
+                                    <td>@item.RemainingAmountText</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="17"><i>No Registration Data</i></td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td class="text-right border-right-0" colspan="11">Total Amount : </td>
+                        <td class="text-right border-right-0 border-left-0 js-total-amount">0.00</td>
+                        <td class="border-left-0" colspan="4"></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <div class="block__action-row pb-0">
+            <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">Save</button>
+            <a class="btn btn-mw-120 btn--cancel mb-0" asp-action="Index">Cancel</a>
+        </div>
+    </div>
+</div>

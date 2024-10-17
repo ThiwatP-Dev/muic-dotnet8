@@ -1,0 +1,147 @@
+@model GroupRegistrationViewModel
+@{
+    var totalSchedule = Model.SelectablePlannedSchedules?.Count ?? 0;
+}
+
+<div class="block block--underline mb-0">
+    <div class="block__title sticky bg-white d-flex justify-content-between mx-1">
+        <header id="js-group-registration-select-schedule-plan-title" class="color-primary align-self-center">
+
+        <div class="row px-4">
+            <div class="col-auto">
+                Registrable Student:   <b class="text-warning">@Model.RegistrableStudentAmount</b> / @(Model?.SelectedStudentIds?.Count ?? 0)
+            </div>
+            <div class="col-auto">
+                Total Schedule: <b>@totalSchedule</b> 
+            </div>
+        </div>
+    </div>
+    <div class="block__body">
+        @if (Model.SelectablePlannedSchedules != null)
+        {
+            for (var i = 0; i < Model.SelectablePlannedSchedules.Count; i++)
+            {
+                var schedule = Model.SelectablePlannedSchedules[i];
+
+                <div id="schedule-details-accordion@(i)" class="panel-group">
+                    <div class="block block--underline">
+                        <div class="block__title">
+                            <header>
+                                <input id="schedule-selection[@i]"
+                                       name="SelectablePlannedSchedules[@i].PlanSchedule.Id"
+                                       value="@schedule.PlanSchedule.Id"
+                                       type="checkbox"
+                                       class="form-check-input js-group-registration-schedule-selection"
+                                       data-schedule-detail-target="#schedule-details-accordion@(i)-1"
+                                       data-target="#schedule-@i" data-title="Schedule @(i+1)"
+                                       checked />
+                                <label class="mt-1 mb-0" for="schedule-selection[@i]"> 
+                                    <span id="js-group-registration-selection-schedule-title-@i" class="ml-2 align-self-center font-weight-bold color-primary">Schedule @(i+1)</span>
+                                </label>
+                                <input asp-for="SelectablePlannedSchedules[i].PlanSchedule.SectionIds" type="hidden">
+                                @for (var j = 0; j < schedule.RegistrableStudentIds.Count; j++)
+                                {
+                                    <input asp-for="SelectablePlannedSchedules[i].RegistrableStudentIds[j]" type="hidden">
+                                }
+                            </header>
+                            <div class="tools align-self-center">
+                                <a id="js-select-schedule-student"
+                                   href="#schedule-students-modal-@(i)" 
+                                   data-toggle="modal"
+                                   data-target="#schedule-students-modal-@(i)" 
+                                   data-student-ids="@schedule.SelectedStudentIdJson"
+                                   role="button" class="mx-5">
+                                    Student: <b>@schedule.RegistrableStudentIds.Count</b>
+                                </a>
+                                <div class="btn-group">
+                                    <a class="btn btn--white btn--circle collapsed" data-toggle="collapse" data-parent="#schedule-details-accordion@(i)" data-target="#schedule-details-accordion@(i)-1" aria-expanded="false">
+                                        <i class="la la-angle-down"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="block__body collapse" id="schedule-details-accordion@(i)-1" class="" aria-expanded="false">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover table--sm js-section-table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" class="w-50">Course</th>
+                                            <th scope="col" class="w-50 text-center">Seat Limit</th>
+                                            <th scope="col" class="w-50 text-center">Seat Avail.</th>
+                                            <th scope="col" class="w-50 text-center">Seat Used.</th>
+                                            <th scope="col" class="w-50 text-center">Day</th>
+                                            <th scope="col" class="w-50 text-center">Time</th>
+                                            <th scope="col" class="w-50 text-center">Room</th>
+                                            <th scope="col" class="w-50">Instructor</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in schedule.ScheduleSections)
+                                        {
+                                            <tr class="">
+                                                <td class="section-header u-font-size-18">
+                                                    <p class="my-1 class-lookup-title">@item.CourseCode <span class="class-lookup-title-sub"> (@item.Section)</span></p>
+                                                    <p class="my-1">@item.CourseName</p>
+                                                </td>
+                                                <td class="text-center">@item.SeatLimit</td>
+                                                <td class="text-center">@item.SeatAvailable</td>
+                                                <td class="text-center">@item.SeatUsed</td>
+                                                <td>
+                                                    @foreach (var time in item.ScheduleTimes)
+                                                    {
+                                                        <p class="my-1 text-center">@time.DayOfWeek</p>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @foreach (var time in item.ScheduleTimes)
+                                                    {
+                                                        <p class="my-1 text-center">@time.Time</p>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @foreach (var time in item.ScheduleTimes)
+                                                    {
+                                                        <p class="my-1 text-uppercase text-center">@time.Room</p>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @foreach (var time in item.ScheduleTimes)
+                                                    {
+                                                        <p class="my-1">@time.InstructorNameEn</p>
+                                                    }
+                                                </td>                               
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal fadeIn animated js-modal-form" id="schedule-students-modal-@(i)" tabindex="-1" role="dialog"
+                     aria-hidden="true" data-backdrop="static" data-keyboard="false">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="block mb-0">
+                                <div class="block__body">
+                                    <div class="block__title text-left height-3">
+                                        <header>Schedule @(i+1): Student List</header>
+                                    </div>
+                                    <div class="block__body text-left height-3 js-select-schedule-student-list">
+                                        <partial name="_ScheduleStudents" model="Model" />
+                                    </div>
+                                    <div class="block__action">
+                                        <div class="block__action-row">
+                                            <a id="js-reset-data" class="btn btn-mw-120 btn--cancel rounded" href="javascript:void(0);" data-dismiss="modal">Close</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>

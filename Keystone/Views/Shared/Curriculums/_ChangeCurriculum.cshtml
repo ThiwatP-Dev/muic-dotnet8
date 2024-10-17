@@ -1,0 +1,259 @@
+@model StudentTransferViewModel
+@{
+    var i = 0;
+}
+
+<div class="row form-group mb-2">
+    <input asp-for="StudentId" type="hidden">
+    <input asp-for="TransferUniversityId" type="hidden">
+    <input class="js-cascade-student-code" asp-for="StudentCode" type="hidden">
+    <input asp-for="StudentFirstName" type="hidden">
+    <input asp-for="StudentLastName" type="hidden">
+
+    <div class="col-4">
+        <div class="form-control-label d-flex align-items-center">First Name</div>
+        <div class="form-control-plaintext">@Model.StudentFirstName</div>
+    </div>
+    <div class="col-4">
+        <div class="form-control-label d-flex align-items-center">Last Name</div>
+        <div class="form-control-plaintext">@Model.StudentLastName</div>
+    </div>
+     <div class="col-2">
+        <div class="form-control-label d-flex align-items-center p-t-2">Credit</div>
+        <div class="js-student-status form-control-plaintext">@Model.Credit</div>
+    </div>
+    <div class="col-2">
+        <div class="form-control-label d-flex align-items-center p-t-2">GPA</div>
+        <div class="js-student-status form-control-plaintext">@Model.GPA</div>
+    </div>
+    
+</div>
+
+<div class="row form-group mb-2">
+    <div class="col-4">
+        <div class="form-control-label d-flex align-items-center">Academic Level</div>
+        <div class="form-control-plaintext">@Model.AcademicLevel</div>
+    </div>
+    <div class="col-4">
+        <div class="form-control-label d-flex align-items-center">Division</div>
+        <div class="form-control-plaintext">@Model.FacultyName</div>
+    </div>
+    <div class="col-4">
+        <div class="form-control-label d-flex align-items-center p-t-2">Major</div>
+        <div class="form-control-plaintext">@Model.DepartmentName</div>
+    </div>
+</div>
+
+<div class="row form-group mb-2">
+    <div class="col-4">
+        <div class="form-control-label d-flex align-items-center p-t-2">Curriculum</div>
+        <div class="js-student-status form-control-plaintext">@Model.CurriculumName</div>
+    </div>
+    <div class="col-8">
+        <div class="form-control-label d-flex align-items-center p-t-2">Curriculum Version</div>
+        <div class="js-student-status form-control-plaintext">@Model.CurriculumVersionName</div>
+    </div>
+</div>
+
+@if (Model.TransferUniversityId == null)
+{
+    <hr>
+
+    <div class="row form-group">
+        <div class="col-5">
+            <select class="chosen-select form-control js-cascade-curriculum" asp-for="CurriculumId" asp-items="@ViewBag.Curriculums" data-placeholder="Select">
+                <option value="" selected disabled>Select</option>
+            </select>
+            <label>New Curriculum<span class="text-danger">*</span></label>
+            <span class="text-danger" asp-validation-for="CurriculumId"></span>
+        </div>
+        <div class="col-5">
+            <select class="chosen-select form-control js-cascade-curriculum-version" asp-for="CurriculumVersionId" asp-items="@ViewBag.CurriculumVersions" data-placeholder="Select">
+                <option value="" selected disabled>Select</option>
+            </select>
+            <label>New Curriculum Version<span class="text-danger">*</span></label>
+            <span class="text-danger" asp-validation-for="CurriculumVersionId"></span>
+        </div>
+        <div class="col-2">
+            <button class="btn btn-mw-120 btn--primary" type="button" onclick="previewChangeCurriculum()">Preview</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-5 mt-2">
+            <div class="form-check">
+                <input class="form-check-input" asp-for="CountChangedTime" type="checkbox">
+                <label for="CountChangedTime">Count Changed Time</label>
+            </div>
+        </div>
+        <div class="col-5">
+            <div class="form-control-label d-flex align-items-center p-t-2">Total Changed Time</div>
+            <div class="js-student-status form-control-plaintext">@Model.ChangedMajorCount</div>
+        </div>
+    </div>
+}
+else
+{
+    <input asp-for="CurriculumId" type="hidden">
+    <input asp-for="CurriculumVersionId" type="hidden">
+}
+    
+<hr>
+
+<div class="form-group">
+    <table id="js-add-course" class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Term</th>
+                <th>Course</th>
+                @if (Model.TransferUniversityId == null)
+                {
+                    <th class="text-center w-125">Section</th>
+                }
+                
+                <th class="text-center w-75">Grade</th>
+                <th class="text-center w-75">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.StudentCourses != null && Model.StudentCourses.Any()) 
+            {
+                foreach (var item in Model.StudentCourses)
+                {
+                    <tr>
+                        @if (item.IsNewCourse)
+                        {
+                            var newCourseIndex = 0;
+                            <td>
+                                <select class="chosen-select form-control js-cascade-term" asp-for="StudentCourses[i].TermId" asp-items="@ViewBag.Terms" data-placeholder="Select">
+                                    <option value="" selected>Select</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="chosen-select form-control @(Model.TransferUniversityId == null ? "js-cascade-course" : "")" asp-for="StudentCourses[i].CourseId" asp-items="@ViewBag.NewCourses[newCourseIndex]" data-placeholder="Select">
+                                    <option value="" selected>Select</option>
+                                </select>
+                            </td>
+                            @if (Model.TransferUniversityId == null)
+                            {
+                                <td>
+                                    <select class="chosen-select form-control js-cascade-section" asp-for="StudentCourses[i].SectionId" data-placeholder="Select">
+                                        <option value="" selected>Select</option>
+                                    </select>
+                                </td>
+                            }
+                            
+                            <td>
+                                <select class="form-control__table chosen-select" asp-for="StudentCourses[i].GradeId" asp-items="@ViewBag.Grades" data-placeholder="Select">
+                                    <option selected value="">Select</option>
+                                </select>
+                            </td>
+
+                            <input name="StudentCourses[@i].IsNewCourse" value="true" type="hidden"/>
+
+                            <td class="td-actions text-nowrap">
+                                <a class="js-del-row" href="#!" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                    <i class="la la-trash delete"></i>
+                                </a>
+                            </td>
+                            newCourseIndex++;
+                        }
+                        else
+                        {
+                            <td class="disable-item">
+                                @item.TermText
+                                <input asp-for="@Model.StudentCourses[i].RegistrationCourseId" type="hidden"/>
+                                <input asp-for="@Model.StudentCourses[i].TermId" type="hidden"/>
+                                <input asp-for="@Model.StudentCourses[i].TermText" type="hidden"/>
+                                <input asp-for="@Model.StudentCourses[i].CourseId" type="hidden"/>
+                                <input asp-for="@Model.StudentCourses[i].CourseCode" type="hidden">
+                                <input asp-for="@Model.StudentCourses[i].CourseName" type="hidden"/>
+                                <input asp-for="@Model.StudentCourses[i].SectionId" type="hidden"/>
+                                <input asp-for="@Model.StudentCourses[i].SectionNumber" type="hidden"/>
+                                <input asp-for="@Model.StudentCourses[i].GradeId" type="hidden"/>
+                                <input asp-for="@Model.StudentCourses[i].GradeName" type="hidden"/>
+                                <input asp-for="@Model.StudentCourses[i].CourseGroupId" type="hidden"/>
+                                <input asp-for="@Model.StudentCourses[i].CourseGroupName" type="hidden"/>
+                            </td>
+                            <td class="disable-item">@item.CourseName</td>
+                            @if (Model.TransferUniversityId == null)
+                            {
+                                <td class="disable-item">@item.SectionNumber</td>
+                            }
+                            
+                            <td class="disable-item">@item.GradeName</td>
+                            <td class="td-actions text-nowrap">
+                                <a class="js-del-row" href="#!" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                    <i class="la la-trash delete"></i>
+                                </a>
+                            </td>
+                        }
+                    </tr>
+                    i++;
+                }
+            }
+
+            <tr>
+                <td>
+                    <select class="chosen-select form-control js-cascade-term" asp-items="@ViewBag.Terms"
+                            name="StudentCourses[@i].TermId" data-placeholder="Select">
+                        <option value="" selected>Select</option>
+                    </select>
+                </td>
+                <td>
+                    <select class="chosen-select form-control @(Model.TransferUniversityId == null ? "js-cascade-course" : "")"
+                            asp-items="@ViewBag.Courses" name="StudentCourses[@i].CourseId" data-placeholder="Select">
+                        <option value="" selected>Select</option>
+                    </select>
+                </td>
+                @if (Model.TransferUniversityId == null)
+                {
+                    <td>
+                        <select class="chosen-select form-control js-cascade-section" 
+                                name="StudentCourses[@i].SectionId" data-placeholder="Select">
+                            <option value="" selected>Select</option>
+                        </select>
+                    </td>
+                }
+                
+                <td>
+                    <select class="form-control__table chosen-select" name="StudentCourses[@i].GradeId" 
+                            asp-items="@ViewBag.Grades" data-placeholder="Select">
+                        <option selected value="">Select</option>
+                    </select>
+                </td>
+
+                <input name="StudentCourses[@i].IsNewCourse" value="true" type="hidden"/>
+
+                <td class="td-actions text-nowrap">
+                    <a class="js-del-row" href="#!" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                        <i class="la la-trash delete"></i>
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+
+<div class="row form-group">
+    <div class="col-12 text-right mb-0 block__action">
+        <button class="btn btn-mw-120 btn--primary" type="submit">Next</button>
+        <a asp-action="Index" class="btn btn-mw-120 btn--cancel">Cancel</a>
+    </div>
+</div>
+<script>
+    function previewChangeCurriculum() {
+        if ($("#CurriculumVersionId").val() != null)
+        {
+            window.location = '/ChangeCurriculumPreview?StudentCode=' + @Model.StudentCode + 
+                              '&CurriculumId=' + $("#CurriculumId").val() + '&CurriculumVersionId=' + $("#CurriculumVersionId").val();
+        }
+        else
+        {
+            alert('Please Select Version');
+        }
+        
+    }
+</script>

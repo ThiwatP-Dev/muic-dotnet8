@@ -1,0 +1,100 @@
+@model List<WithdrawalSearchResultViewModel>
+@{ 
+    ViewData["Title"] = "Withdrawal Export";
+    var recordNumber = 1;
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.Count ?? 0))</header>
+            </div>
+
+            <div class="block__body">
+                <div class="row">
+                    <div class="col ks-page-header">
+                        <a class="btn-back"
+                           href="@ViewBag.ReturnUrl">
+                            <i class="la la-angle-double-left mr-1"></i>Back
+                        </a>
+                    </div>
+                    <div class="col text-right">
+                        <a id="section-file-name" hidden></a>
+                        <input class="section-worksheet-name" value="Section Report @DateTime.Now.ToString(StringFormat.ShortDate).Replace("/", "-")" hidden>
+                        <button class="btn btn-mw-120 btn--primary mb-0 js-export-excel">Export Excel</button>
+                    </div>
+                </div>
+                 <div class="table-responsive">
+                                <table id="js-withdrawal-approve" class="table table-bordered m-0">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">#</th>
+                                            <th>Major</th>
+                                            <th class="text-center">Code</th>
+                                            <th class="text-nowrap">Name</th>
+                                            <th class="text-nowrap">Course</th>
+                                            <th>Credit</th>
+                                            <th class="text-center">Section</th>
+                                            <th>Lecturer</th>
+                                            <th>Type</th>
+                                            <th>Requested By</th>
+                                            <th class="text-center">Requested Date</th>
+                                            <th class="text-nowrap">Approver</th>
+                                            <th class="text-nowrap">Remark</th>
+                                            <th class="text-center">Status</th>
+                                            <th class="text-center">ApprovedDate</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (Model.Any())
+                                        {
+                                            @foreach (var item in Model)
+                                            {
+                                                <tr>
+                                                    <td>@recordNumber</td>
+                                                    <td>@item.Major</td>
+                                                    <td>@item.Code</td>
+                                                    <td>@item.Name</td>
+                                                    <td>@item.Course</td>
+                                                    <td>@item.Credit</td>
+                                                    <td>@item.Section</td>
+                                                    <td>@item.Instructor</td>
+                                                    <td>@item.TypeText</td>
+                                                    <td>@item.RequestedBy</td>
+                                                    <td>@item.RequestedDate</td>
+                                                    <td>@item.Approver</td>
+                                                    <td>@item.Remark</td>
+                                                    <td>@item.StatusText</td>
+                                                    <td>@item.ApprovedDate</td>
+                                                </tr>
+                                                recordNumber++;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td colspan="15">
+                                                    <i class="text-danger">No Data</i>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+
+                <div class="row">
+                    <div class="col text-nowrap text-right">
+                        <a id="section-file-name" hidden></a>
+                        <input class="withdrawal-worksheet-name" value="Withdrawal Data @DateTime.Now.ToString(StringFormat.ShortDate).Replace("/", "-")" hidden>
+                        <button class="btn btn-mw-120 btn--primary mb-0 js-export-excel">Export Excel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/withdrawal-export.js"></script>
+}

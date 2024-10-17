@@ -1,0 +1,197 @@
+@model GraduatingRequestViewModel
+@{
+    var index = 2;
+}
+
+<div class="block__body">
+    <div class="row">
+        <div class="col ks-page-header">
+            <a class="btn-back"
+                asp-controller="GradingReportByCurriculum"
+                asp-action="Index"
+                asp-route-code="@Model.Student.Code">
+                <i class="la la-angle-double-left mr-1"></i>Back
+            </a>
+        </div>
+        <div class="col text-nowrap text-right">
+            <a id="grading-file-name" hidden></a>
+            <input class="grading-table-count" value="@(Model.CurriculumCourseGroups.Count + 2)" hidden>
+            <input class="grading-worksheet-name" value="@Model.Student.Code" hidden>
+            <button class="btn btn-mw-120 btn--primary mb-0 js-export-excel">Export Excel</button>
+        </div>
+    </div>
+    @if (Model != null && Model.CurriculumCourseGroups != null && Model.CurriculumCourseGroups.Any())
+    {
+        <div class="table-responsive">
+            <table id="grading-curriculum-export-1" class="table table-bordered table-hover w-100x">
+                <thead>
+                    <tr>
+                        <th colspan="5" class="text-center">Student ID : @Model.Student.Code @Model.Student.FullNameEn (@Model.Student.FullNameTh) Major : @(Model.Student.AcademicInformation.Department?.Abbreviation ?? "-")</th>
+                    </tr>
+                    <tr>
+                        <th colspan="5" class="text-center">Nationality : @Model.Student.Nationality.NameEn @Model.Student.StudentFeeType.NameEn Cum-GPA : @Model.Student.AcademicInformation.GPA Credit Earn : @Model.Student.AcademicInformation.CreditEarned</th>
+                    </tr>
+                    <tr>
+                        <th colspan="5" class="text-left">@Model.Student.AcademicInformation.CurriculumVersion?.NameEn</th>
+                    </tr>
+                </thead>
+            </table>
+            @foreach (var courseGroup in Model.CurriculumCourseGroups)
+            {
+                <table id="grading-curriculum-export-@index" class="table table-bordered table-hover w-100x">
+                    <thead>
+                        <tr>
+                            <th colspan="5">@courseGroup.NameEn (@courseGroup.RequiredCreditCompleted @(courseGroup.RequiredCreditCompleted > 1 ? "Credits" : "Credit"))</th>
+                        </tr>
+                    </thead>
+                    @if(courseGroup.DescriptionEn != "" && courseGroup.DescriptionEn != null)
+                    {
+                        <tr>
+                            <th colspan="5">@courseGroup.DescriptionEn</th>
+                        </tr>
+                    }
+
+                    @if (courseGroup.Children != null)
+                    {
+                        foreach (var child in courseGroup.Children) 
+                        {
+                            <thead>
+                                <tr>
+                                    <th colspan="5">@child.NameEn (@child.RequiredCreditCompleted @(child.RequiredCreditCompleted > 1 ? "Credits" : "Credit"))</th>
+                                </tr>
+                            </thead>
+                            @if(child.DescriptionEn != "" && child.DescriptionEn != null)
+                            {
+                                <tr>
+                                    <th colspan="5">@child.DescriptionEn</th>
+                                </tr>
+                            }
+                            <thead>
+                                <tr>
+                                    <th>Course Code</th>
+                                    <th>Course Name</th>
+                                    <th>Course Credit</th>
+                                    <th>Passing Grade</th>
+                                    <th>Grade</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (child.Courses != null)
+                                {
+                                    foreach (var course in child.Courses) 
+                                    {
+                                        <tr>
+                                            <td>@course.CourseCode</td>
+                                            <td>@course.CourseNameEn</td>
+                                            <td>@course.CreditText</td>
+                                            <td>@course.RequiredGradeName</td>
+                                            <td>
+                                                @foreach (var grade in course.Grades)
+                                                {
+                                                    <span>@grade.RegisteredGradeName (@grade.TermText)</span><br/>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="5">
+                                            <i class="text-danger">No Data</i>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        }
+                    }
+                </table>
+                index++;
+            }
+        </div>
+
+        <div class="table-responsive">
+            <table id="grading-curriculum-export-@index" class="table table-bordered table-hover w-100x">
+                <thead>
+                    <tr>
+                        <th colspan="4">@Model?.OtherCourseGroups?.NameEn</th>
+                    </tr>
+                </thead>
+                <thead>
+                    <tr>
+                        <th>Course Code</th>
+                        <th>Course Name</th>
+                        <th>Course Credit</th>
+                        <th>Grade</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.OtherCourseGroups != null && Model.OtherCourseGroups.Courses.Any())
+                    {
+                        foreach (var course in Model.OtherCourseGroups.Courses) 
+                        {
+                            string gradeText = string.Empty;
+                            if(!string.IsNullOrEmpty(course.RegisteredGradeName))
+                            {
+                                if(course.IsTransferCourse && !course.IsStarCourse)
+                                {
+                                    gradeText = $"<span class=\"ks-label bg-info mx-3 mb-1\">{ course.RegisteredGradeName } ({ course.TermText })</span>";
+                                }
+                                else if (course.IsTransferCourse && course.IsStarCourse)
+                                {
+                                    gradeText = $"<span class=\"ks-label bg-info mx-3 mb-1\">{ course.RegisteredGradeName }* ({ course.TermText })</span>";
+                                }
+                                else 
+                                {
+                                    if(course.IsPassed)
+                                    {
+                                        gradeText = $"<span class=\"ks-label bg-success mx-3 mb-1\">{ course.RegisteredGradeName } ({ course.TermText })</span>";
+                                    }
+                                    else 
+                                    {
+                                        gradeText = $"<span class=\"ks-label bg-danger mx-3 mb-1\">{ course.RegisteredGradeName } ({ course.TermText })</span>";
+                                    }
+                                }
+                            }
+                            <tr>
+                                <td>@course.CourseCode</td>
+                                <td>@course.CourseNameEn</td>
+                                <td>@course.CreditText</td>
+                                <td>@Html.Raw(gradeText)</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4">
+                                <i class="text-danger">No Data</i>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row">
+            <div class="col ks-page-header">
+                <a class="btn-back"
+                   asp-controller="GradingReportByCurriculum"
+                   asp-action="Index"
+                   asp-route-code="@Model.Student.Code">
+                    <i class="la la-angle-double-left mr-1"></i>Back
+                </a>
+            </div>
+            <div class="col text-nowrap text-right">
+                <a id="grading-file-name" hidden></a>
+                <input class="grading-table-count" value="@index" hidden>
+                <input class="grading-worksheet-name" value="@Model.Student.Code" hidden>
+                <button class="btn btn-mw-120 btn--primary mb-0 js-export-excel">Export Excel</button>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/grading-curriculum-export.js"></script>
+}

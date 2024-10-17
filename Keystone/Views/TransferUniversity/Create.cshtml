@@ -1,0 +1,29 @@
+@model TransferUniversityViewModel
+@{ 
+    ViewData["Title"] = "Add Transfer University"; 
+}
+
+<section id="data-table-form-v1" class="row">
+    <div class="col-lg-12">
+        <div class="block block--underline">
+            <form class="ks-form container" asp-controller="TransferUniversity" asp-action="Create" method="post">
+                @Html.AntiForgeryToken()
+                <partial name="_Form"/>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Modals {
+    <partial name="_DeleteRowConfirmModals">
+}
+
+@section Scripts {
+    <script>
+        var inputTable = new RowAddAble({
+            TargetTable: '#js-add-transfer-course',
+            ButtonTitle: 'External Course'
+        })
+        inputTable.RenderButton();
+    </script>
+}

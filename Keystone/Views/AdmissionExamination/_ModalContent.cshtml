@@ -1,0 +1,94 @@
+@model AdmissionExaminationViewModel
+
+<div class="block__title">
+    <header class="color-primary">Entrance Examination</header>
+</div>
+
+<div class="block mb-0">
+    <div class="block__body">
+        <div class="row form-group mb-3">
+			<div class="col-6">
+				<div class="form-control-label d-flex align-items-center">Academic Level</div>
+				<div class="form-control-plaintext">@Model.AcademicLevel</div>
+			</div>
+            <div class="col-6">
+				<div class="form-control-label d-flex align-items-center">Admission Round</div>
+				<div class="form-control-plaintext">@Model.AdmissionRound</div>
+			</div>
+		</div>
+
+        <div class="row form-group mb-3">
+			<div class="col-6">
+				<div class="form-control-label d-flex align-items-center">Division</div>
+				<div class="form-control-plaintext">@Model.Faculty</div>
+			</div>
+			<div class="col-6">
+				<div class="form-control-label d-flex align-items-center">Major</div>
+				<div class="form-control-plaintext">@Model.Department</div>
+			</div>
+		</div>
+
+        <div class="row form-group mb-3">
+			<div class="col-6">
+				<div class="form-control-label d-flex align-items-center">English Name</div>
+				<div class="form-control-plaintext">@Model.NameEn</div>
+			</div>
+            <div class="col-6">
+				<div class="form-control-label d-flex align-items-center">Thai Name</div>
+				<div class="form-control-plaintext">@Model.NameTh</div>
+			</div>
+		</div>
+
+        <div class="row form-group mb-3">
+            <div class="col-12">
+				<div class="form-control-label d-flex align-items-center">Remark</div>
+				<div class="form-control-plaintext">@Model.Remark</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="table-responsive">
+                <table class="table table-bordered table-hover w-100x">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+							<th>Date</th>
+                            <th>Started Time</th>
+                            <th>Ended Time</th>
+                            <th>Room</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.AdmissionExaminationSchedules.Any())
+                        {
+                            foreach(var item in Model.AdmissionExaminationSchedules)
+                            {
+                                <tr>
+                                    <td>@item.AdmissionExaminationType?.NameEn</td>
+                                    <td>@item.TestedAtText</td>
+                                    <td>@item.StartTimeText</td>
+                                    <td>@item.EndTimeText</td>
+									<td>@item.Room?.NameEn</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td class="text-center" colspan="5">
+                                    <i class="text-danger">No Data</i>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+		</div>
+    </div>
+
+    <div class="block__action">
+        <div class="block__action-row">
+            <a class="btn btn-mw-120 btn--cancel rounded" href="javascript:void(0);" data-dismiss="modal">Close</a>
+        </div>
+    </div>
+</div>

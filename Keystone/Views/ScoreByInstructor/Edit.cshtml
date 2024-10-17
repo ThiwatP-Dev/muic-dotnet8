@@ -1,0 +1,61 @@
+@model EditScoringViewModel
+
+@{
+    ViewData["Title"] = "Edit Score";
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <form id="grading-score" class="ks-form container" asp-controller="ScoreByInstructor" asp-action="Edit" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+                <div class="block--underline">
+                    <div class="block__title">
+                        <header class="color-primary">
+                        <a asp-controller="ScoreByInstructor"
+                        asp-action="Index">
+                            <i class="la la-angle-double-left"></i>
+                        </a>
+                            @ViewData["Title"]
+                        </header>
+                    </div>
+                    <div class="block__body mb-0">
+                        <div class="d-flex justify-content-between row">
+                            <div class="col-2">
+                                <h4 class="font-weight-600 align-self-center">Term</h4>
+                            </div>
+                            <div class="col-6">
+                                <h4 class="font-weight-600 align-self-center">Course</h4>
+                            </div>
+                            <div class="col-4">
+                                <h4 class="font-weight-600 align-self-center">Main Instructor</h4>
+                            </div>
+                        </div>
+                        <div class="row d-flex justify-content-between">
+                            <div class="col-2">
+                                <h4 class="font-weight-300 align-self-center">@Model.TermText</h4>
+                            </div>
+                            <div class="col-6">
+                                <h4 class="font-weight-300 align-self-center">@Model.CourseAndCredit</h4>
+                            </div>
+                            <div class="col-4">
+                                <h4 class="font-weight-300 align-self-center">@Model.MainInstructorFullNameEn</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <partial name="_Scoring" model="Model"/>
+                    <input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl"/>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Modals {
+    <partial name="_DeleteRowConfirmModals" />
+    <partial name="_SectionsModals" model="Model.Sections"/>
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/grade-scoring.js"></script>
+}

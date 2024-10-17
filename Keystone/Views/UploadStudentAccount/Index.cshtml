@@ -1,0 +1,108 @@
+@model List<UploadStudentAccountViewModel>
+@{ 
+    ViewData["Title"] = "Upload Student Account";
+    var index = 1;
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Upload Student Account</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="UploadStudentAccount" asp-action="Index" method="POST" enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group">
+                        <div class="input-group col-6">
+                            <input id="file-name" class="form-control m-r-15" type="text">
+                            <input id="upload-input" name="UploadFile" type="file" />
+                            <a id="browse-btn" class="btn btn--primary mb-0 align-self-end">
+                                <i class="la la-file-upload"></i> Browse
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row form-group mb-0">
+                        <div class="col text-left text-nowrap">
+                           <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">
+                                <i class="la la-upload mr-2"></i>
+                                <span class="bold">Upload</span>
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.Count() ?? 0))</header>
+            </div>
+
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover w-100x">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center">Code</th>
+                                <th>Name</th>
+                                <th>Bank</th>
+                                <th>Account Number</th>
+                                <th class="text-center">Upload</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Any())
+                            {
+                                foreach (var item in Model) 
+                                {
+                                    <tr>
+                                        <td>@index</td>
+                                        <td>@item.StudentCode</td>
+                                        <td>@item.StudentFullName</td>
+                                        <td>@item.BankAbbreviation</td>
+                                        <td>@item.BankAccount</td>
+                                        <td>
+                                            @if (item.IsUploadSuccess)
+                                            {
+                                                <i class="color-success la la-check"></i>
+                                            } 
+                                            else
+                                            {
+                                                <i class="color-danger la la-close"></i>
+                                            }
+                                        </td>
+                                    </tr>
+                                    ++index;
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        $(function() {
+            $('#browse-btn').on('click', function() {
+                $('#upload-input').click();
+            });
+
+            $('#upload-input').on('change', function(e) {
+                $("#file-name").val(e.currentTarget.files[0].name);
+            });
+        })
+    </script>
+}

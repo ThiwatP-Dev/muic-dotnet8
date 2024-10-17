@@ -1,0 +1,336 @@
+@model PagedResult<SectionReportViewModel>
+@{ 
+    ViewData["Title"] = "Section Report"; 
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+    var recordNumber = Model?.FirstRowOnPage;
+}
+
+<section class="row">
+    <div class="col-12">
+        <div id="section-report-accordion1">
+            <div class="block block--underline">
+                <div class="block__title collapsed" data-toggle="collapse" data-parent="#section-report-accordion1" data-target="#section-report-accordion1-1">
+                    <header>Search Section</header>
+                    <div class="tools">
+                        <div class="btn-group">
+                            <a class="btn btn--white btn--circle">
+                                <i class="la la-angle-down"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="section-report-accordion1-1" class="collapse show" aria-expanded="true">
+                    <div class="block__body">
+                        <form class="form-horizontal" asp-controller="SectionReport" asp-action="Index" method="GET">
+                            @Html.AntiForgeryToken()
+                            <div class="row form-group m-b-30">
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="@ViewBag.AcademicLevels" data-placeholder="Select">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Academic Level<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="@ViewBag.Terms" data-placeholder="Select">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Term<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="@ViewBag.Faculties" data-placeholder="Select">
+                                        <option selected>Select</option>
+                                    </select>
+                                    <label>Division</label>
+                                </div>
+                                <div class="col-3">
+                                    <input class="form-control" asp-for="Criteria.CodeAndName" type="text">
+                                    <label>Course</label>
+                                </div>
+                            </div>
+
+                            <div class="row form-group m-b-30">
+                                <div class="col-3">
+                                    <select class="chosen-select form-control" asp-for="Criteria.InstructorId" asp-items="@ViewBag.Instructors" data-placeholder="Select">
+                                        <option selected>Select</option>
+                                    </select>
+                                    <label>Instructor</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control" asp-for="Criteria.SectionType" asp-items="@ViewBag.SectionTypes">
+                                        <option selected value="">All</option>
+                                    </select>
+                                    <label>Section Type</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control" asp-for="Criteria.IsClosed" asp-items="ViewBag.OpenCloseStatuses"></select>
+                                    <label>Open/Close</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control" asp-for="Criteria.Status" asp-items="ViewBag.Statuses">
+                                        <option selected value="">All</option>
+                                    </select>
+                                    <label>Section Status</label>
+                                </div>
+                            </div>
+
+                            <div class="row form-group m-b-30">
+                                 <div class="col-3">
+                                    <select class="chosen-select form-control" asp-for="Criteria.HaveMidterm" asp-items="ViewBag.Examinations"></select>
+                                    <label>Midterm</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control" asp-for="Criteria.HaveFinal" asp-items="ViewBag.Examinations"></select>
+                                    <label>Final</label>
+                                </div>
+                                <div class="col-3">
+                                    <input class="form-control js-single-date" asp-for="Criteria.StartedAt" type="text" autocomplete="off">
+                                    <label>Open Section From</label>
+                                </div>
+                                <div class="col-3">
+                                    <input class="form-control js-single-date" asp-for="Criteria.EndedAt" type="text" autocomplete="off">
+                                    <label>Open Section To</label>
+                                </div>
+                            </div>
+
+                            <div class="row form-group m-b-30">
+                                <div class="col-3">
+                                    <input class="form-control" asp-for="Criteria.StudentLessThan" type="number">
+                                    <label>Student Less Than</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control" asp-for="Criteria.IsNoStudent" asp-items="ViewBag.Examinations"></select>
+                                    <label>No Student</label>
+                                </div>
+                                <div class="col-3">
+                                    <select id="criteria-seatavailable" class="chosen-select form-control" asp-for="Criteria.SeatAvailable" asp-items="@ViewBag.SeatAvailableStatuses"></select>
+                                    <label for="criteria-seatavailable">Seat Available</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control" asp-for="Criteria.CreatedBy" asp-items="@ViewBag.Users">
+                                        <option selected value="">All</option>
+                                    </select>
+                                    <label>Created By</label>
+                                </div>
+                            </div>
+
+                            <div class="row form-group">
+                                <div class="col-12 align-self-end text-right">
+                                    <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                        <i class="la la-search mr-2"></i>Search
+                                    </button>
+                                    <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                                        Reset
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.RowCount ?? 0))</header>
+            </div>
+
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover w-100x">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th>Code</th>
+                                <th>Course</th>
+                                <th>Credit</th>
+                                <th class="text-center">Section</th>
+                                <th class="text-center">Section Type</th>
+                                <th>Main Instructor</th>
+                                <th>Master/Joint</th>
+                                <th>Division</th>
+                                <th>Day</th>
+                                <th>Time</th>
+                                <th>Instructor</th>
+                                <th>Room</th>
+                                <th>Midterm</th>
+                                <th>Final</th>
+                                <th>Open Section Date</th>
+                                <th>Close Section Date</th>
+                                <th class="text-center">Seat Available</th>
+                                <th class="text-center">Seat Limit</th>
+                                <th class="text-center">Student</th>
+                                <th class="text-center">Total Student</th>
+                                <th>Approved Date</th>
+                                @* <th>Approved By</th> *@
+                                <th>Create By</th>
+                                <th class="text-center">Open/Close</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Results.Any())
+                            {
+                                foreach (var item in Model.Results) 
+                                {
+                                    <tr>
+                                        <td>@recordNumber</td>
+                                        <td>@item.CodeAndSpecialChar</td>
+                                        <td>@item.CourseNameEn</td>
+                                        <td>@item.CreditText</td>
+                                        <td>@item.Number</td>
+                                        <td>@item.SectionTypes</td>
+                                        <td>@item.MainInstructorFullNameEn</td>
+                                        <td>
+                                            @if(item.ParentSectionId == 0 || item.ParentSectionId == null)
+                                            {
+                                                @for (var i = 0; i < item.JointSections.Count(); i++)
+                                                {
+                                                    if (i != item.JointSections.Count() - 1)
+                                                    {
+                                                        <span>@item.JointSections[i].CodeAndSpecialChar (@item.JointSections[i].Number),</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span> @item.JointSections[i].CodeAndSpecialChar (@item.JointSections[i].Number)</span>
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <span>@item.ParentCodeAndSpecialChar (@item.ParentSectionNumber)</span>
+                                            }
+                                        </td>
+                                        <td>@item.FacultyNameEn</td>
+                                        @if (item.SectionDetails != null && item.SectionDetails.Any())
+                                        {
+                                            <td>
+                                                @foreach (var detail in item.SectionDetails)
+                                                {
+                                                    <span>@(detail.Dayofweek + "\n")</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @foreach (var detail in item.SectionDetails)
+                                                {
+                                                    <span>@detail.StartTimeText - @detail.EndTimeText</span><br>
+                                                }
+                                            </td>
+                                            <td>
+                                                @foreach (var detail in item.SectionDetails)
+                                                {
+                                                    foreach (var instructorFullNameEn in detail.InstructorSections)
+                                                    {
+                                                        <span>@instructorFullNameEn</span><br>
+                                                    }
+                                                }
+                                            </td>
+                                            <td>
+                                                @foreach (var detail in item.SectionDetails)
+                                                {
+                                                    <span>@detail.RoomNameEn</span><br>
+                                                }
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        }
+                                        <td>@item.MidtermDateTime</td>
+                                        <td>@item.FinalDateTime</td>
+                                        <td>@item.OpenedSectionAtText</td>
+                                        <td>@item.ClosedSectionAtText</td>
+                                        <td>@item.SeatAvailable</td>
+                                        <td>@item.SeatLimit</td>
+                                        <td>@item.SeatUsed</td>
+                                        <td>@item.TotalSeatUsed</td>
+                                        <td>@item.ApprovedAtText</td>
+                                        <td>@item.CreatedByText</td>
+                                        <td>
+                                            <partial name="_BooleanClose" model="@item.IsClosed">
+                                        </td>
+                                        <td>
+                                            <partial name="_ApproveStatus" model="@item.Status">
+                                        </td>
+                                    </tr>
+                                    recordNumber++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="21">
+                                        <i class="text-danger">No Data</i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            @(await Component.InvokeAsync<PagerViewComponent>(Model))
+        </div>
+            <div class="row form-group float-right">
+                <form asp-controller="SectionReport" asp-action="ExportExcel">
+                    @if (Model != null && Model.Results.Any())
+                    {
+                        <input asp-for="Criteria.AcademicLevelId" hidden>
+                        <input asp-for="Criteria.TermId" hidden>
+                        <input asp-for="Criteria.FacultyId" hidden>
+                        <input asp-for="Criteria.CodeAndName" hidden>
+                        <input asp-for="Criteria.InstructorId" hidden>
+                        <input asp-for="Criteria.SectionType" hidden>
+                        <input asp-for="Criteria.IsClosed" hidden>
+                        <input asp-for="Criteria.Status" hidden>
+                        <input asp-for="Criteria.HaveMidterm" hidden>
+                        <input asp-for="Criteria.HaveFinal" hidden>
+                        <input asp-for="Criteria.StartedAt" hidden>
+                        <input asp-for="Criteria.EndedAt" hidden>
+                        <input asp-for="Criteria.StudentLessThan" hidden>
+                        <input asp-for="Criteria.IsNoStudent" hidden>
+                        <input asp-for="Criteria.SeatAvailable" hidden>
+                        <input asp-for="Criteria.CreatedBy" hidden>
+                        <input name="returnUrl" value="@contextPath" hidden>
+                        <div class="col text-nowrap text-right">
+                            <button class="btn btn-mw-120 btn--primary mb-0" type="submit">Preview [Group Course]</button>
+                        </div>
+                    }
+                </form>
+                <form asp-controller="SectionReport" asp-action="ExportExcels">
+                    @if (Model != null && Model.Results.Any())
+                    {
+                        <input asp-for="Criteria.AcademicLevelId" hidden>
+                        <input asp-for="Criteria.TermId" hidden>
+                        <input asp-for="Criteria.FacultyId" hidden>
+                        <input asp-for="Criteria.CodeAndName" hidden>
+                        <input asp-for="Criteria.InstructorId" hidden>
+                        <input asp-for="Criteria.SectionType" hidden>
+                        <input asp-for="Criteria.IsClosed" hidden>
+                        <input asp-for="Criteria.Status" hidden>
+                        <input asp-for="Criteria.HaveMidterm" hidden>
+                        <input asp-for="Criteria.HaveFinal" hidden>
+                        <input asp-for="Criteria.StartedAt" hidden>
+                        <input asp-for="Criteria.EndedAt" hidden>
+                        <input asp-for="Criteria.StudentLessThan" hidden>
+                        <input asp-for="Criteria.IsNoStudent" hidden>
+                        <input asp-for="Criteria.SeatAvailable" hidden>
+                        <input asp-for="Criteria.CreatedBy" hidden>
+                        <input name="returnUrl" value="@contextPath" hidden>
+                        <div class="col text-nowrap text-right">
+                            <button class="btn btn-mw-120 btn--primary mb-0" type="submit">Preview</button>
+                        </div>
+                    }
+                </form>
+            </div>
+        </div>
+
+        
+    </div>
+</section>

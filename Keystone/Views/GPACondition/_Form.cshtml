@@ -1,0 +1,37 @@
+@model GPACondition
+
+<div class="block__title">
+    <header>@ViewData["Title"]</header>
+</div>
+
+<div class="block__body">
+    <div class="row form-group">
+        <div class="col-12">
+            <input class="form-control js-default-zero js-click-highlight" asp-for="GPA" type="text">
+            <label for="GPA">GPA<span class="text-danger">*</span></label>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-12">
+            <input class="form-control js-single-date" asp-for="ExpiredAt" type="text" autocomplete="off">
+            <label>Expired Date</label>
+        </div>
+    </div>
+    
+    <div class="row mb-3">
+        <div class="col-12 form-check">
+            <input class="form-check-input" asp-for="IsActive" type="checkbox">
+            <label for="IsActive">Active</label>
+        </div>
+    </div>
+</div>
+
+<input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+
+<div class="block__action container">
+    <div class="block__action-row">
+        <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+        <a class="btn btn-mw-120 btn--cancel" href="@ViewBag.ReturnUrl">Cancel</a>
+    </div>
+</div>

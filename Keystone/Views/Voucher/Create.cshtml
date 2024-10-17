@@ -1,0 +1,55 @@
+@model Voucher
+@{
+    ViewData["Title"] = "Create Voucher";
+}
+
+<section id="data-table-form-v1" class="row">
+    <div class="col-lg-12">
+        <div class="block block--underline">
+            <form class="ks-form container" asp-controller="Voucher" asp-action="Create" method="GET">
+                @Html.AntiForgeryToken()
+                <div class="block__body">
+                    <div class="row form-group mb-3">
+                        <div class="col-4">
+                            <input class="form-control" asp-for="Code">
+                            <label>Code<span class="text-danger">*</span></label>
+                        </div>
+
+                        <input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+
+                        <div class="col-2 align-self-end text-right text-nowrap">
+                            <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="block block--underline">
+            <form class="ks-form container" asp-controller="Voucher" asp-action="Create" method="post">
+                @Html.AntiForgeryToken()
+                <partial name="_Form"/>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Modals {
+    <partial name="_DeleteRowConfirmModals">
+}
+
+@section Scripts {
+    <script>
+        $(document).ready( function() {
+            var contractTable = new RowAddAble({
+                TargetTable: "#js-add-fee",
+                TableTitle: 'Fee',
+                ButtonTitle: 'Fee'
+            });
+            contractTable.RenderButton();
+        });
+    </script>
+}

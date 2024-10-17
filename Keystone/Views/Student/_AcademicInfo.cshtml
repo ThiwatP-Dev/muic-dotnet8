@@ -1,0 +1,98 @@
+@model AcademicInformation
+@{
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+    @* var index = 1; *@
+}
+
+<section class="ks-student-info">
+    <form class="form-horizontal" asp-controller="Student" asp-action="SaveAcademicInformation" asp-route-studentId="@ViewData["StudentId"]" method="POST">
+        <div class="block no-shadow h-100x m-b-30">
+            <div class="block__body">
+                <div class="section-title">
+                    <h4>Academic Information</h4>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-3">
+                        <input class="form-control" asp-for="OldStudentCode" type="text">
+                        <label for="OldStudentCode">Previous Student ID</label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-academic-level" asp-for="AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label for="AcademicLevelId">Academic Level<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control js-batch js-default-zero js-click-highlight" asp-for="Batch" type="text">
+                        <label for="Batch">Batch<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-academic-program" asp-for="AcademicProgramId" asp-items="ViewBag.AcademicPrograms">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label for="AcademicProgramId">Program<span class="text-danger">*</span></label>
+                    </div>
+                </div>
+                
+                <div class="row form-group">
+                    <div class="col-3">
+                        <select class="chosen-select form-control" asp-for="StudentGroupId" asp-items="ViewBag.StudentGroups">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label for="StudentGroupId">Student Group<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-control-label d-flex align-items-center">GPA</div>
+					    <div class="form-control-plaintext">@Model.GPAString</div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-control-label d-flex align-items-center">Advisor</div>
+					    <div class="form-control-plaintext">@Model.Advisor?.FullNameEn</div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-control-label d-flex align-items-center">Changed Major Count</div>
+					    <div class="form-control-plaintext">@Model.ChangedMajorCount</div>
+                    </div>
+                </div>
+
+                <div class="section-title">
+                    <h4>Credit Information</h4>
+                </div>
+                <div class="row form-group">
+                    <div class="col-2">
+                        <div class="form-control-label d-flex align-items-center">Credit Earn</div>
+					    <div class="form-control-plaintext">@Model.CreditEarned</div>
+                    </div>
+                    <div class="col-2">
+                        <div class="form-control-label d-flex align-items-center">Credit Complete</div>
+					    <div class="form-control-plaintext">@Model.CreditComp</div>
+                    </div>
+                    <div class="col-2">
+                        <div class="form-control-label d-flex align-items-center">Credit Transfer</div>
+					    <div class="form-control-plaintext">@Model.CreditTransfer</div>
+                    </div>
+                    <div class="col-2">
+                        <input class="form-control" asp-for="MinimumCredit" type="text">
+                        <label for="MinimumCredit">Minimum Credit</label>
+                    </div>
+                    <div class="col-2">
+                        <input class="form-control" asp-for="MaximumCredit" type="text">
+                        <label for="MaximumCredit">Maximum Credit</label>
+                    </div>
+                </div>
+
+                @* @if(Model.StudentId != Guid.Empty)
+                {
+                    <div class="row form-group">
+                        <div class="col-6">
+                            <a class="btn btn--primary mb-0" asp-controller="TermFeeSimulate" asp-action="Index" asp-route-returnUrl="@ViewBag.ReturnUrl" asp-route-studentId="@(ViewData["StudentId"])">
+                                <i class="mr-1 font-weight-800"></i> Simulate Fee
+                            </a>
+                        </div>
+                    </div>
+                } *@
+            </div>
+        </div>
+    </form>
+</section>

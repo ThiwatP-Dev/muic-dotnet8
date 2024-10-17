@@ -1,0 +1,14 @@
+@model ScholarshipBudget
+@{ 
+    ViewData["Title"] = "Add Scholarship Budget"; 
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <form class="ks-form container" asp-controller="ScholarshipBudget" asp-action="Edit" method="POST">
+                <partial name="_Form">
+            </form>
+        </div>
+    </div>
+</section>

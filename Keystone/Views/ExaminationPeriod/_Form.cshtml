@@ -1,0 +1,74 @@
+@model ExaminationPeriod
+
+<div class="block__title">
+    <header>@ViewData["Title"]</header>
+</div>
+
+<section>
+    <div class="block__body">
+        <div class="row form-group">
+            <div class="col-4">
+                <select class="chosen-select form-control js-cascade-academic-level" asp-for="AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                    <option selected disabled>Select</option>
+                </select>
+                <label>Academic Level<span class="text-danger">*</span></label>
+            </div>
+            <div class="col-4">
+                <select class="chosen-select form-control js-cascade-term" asp-for="TermId" asp-items="@ViewBag.Terms">
+                    <option selected disabled>Select</option>
+                </select>
+                <label>Term<span class="text-danger">*</span></label>
+            </div>
+            <div class="col-4">
+                <input class="form-control js-default-zero js-click-highlight" asp-for="Period" type="number" min="0">
+                <label>Period<span class="text-danger">*</span></label>
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-4">
+                <input class="form-control js-single-date" asp-for="MidtermDate" type="text" autocomplete="off">
+                <label>Midterm Date<span class="text-danger">*</span></label>
+            </div>
+            <div class="col-4">
+                <input class="form-control js-time-mask" asp-for="MidtermStart">
+                <label>Midterm Start<span class="text-danger">*</span></label>
+            </div>
+            <div class="col-4">
+                <input class="form-control js-time-mask" asp-for="MidtermEnd">
+                <label>Midterm End<span class="text-danger">*</span></label>
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-4">
+                <input class="form-control js-single-date" asp-for="FinalDate" type="text" autocomplete="off">
+                <label>Final Date<span class="text-danger">*</span></label>
+            </div>
+            <div class="col-4">
+                <input class="form-control js-time-mask" asp-for="FinalStart">
+                <label>Final Start<span class="text-danger">*</span></label>
+            </div>
+            <div class="col-4">
+                <input class="form-control js-time-mask" asp-for="FinalEnd">
+                <label>Final End<span class="text-danger">*</span></label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" asp-for="IsActive">
+                <label for="IsActive">Active</label>
+            </div>
+        </div>
+    </div>
+    
+    <input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+
+    <div class="block__action container">
+        <div class="block__action-row">
+            <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+            <a class="btn btn-mw-120 btn--cancel" href="@ViewBag.ReturnUrl">Cancel</a>
+        </div>
+    </div>
+</section>

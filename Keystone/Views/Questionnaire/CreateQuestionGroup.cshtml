@@ -1,0 +1,15 @@
+@model Questionnaire
+@{
+    ViewData["Title"] = $"Create { Model.NameEn } | Questionnaire Form";
+}
+
+<div class="questionnaire">
+    <form method="post" asp-action="CreateQuestionGroup">
+        @Html.AntiForgeryToken()
+        <partial name="_Questionnaire" model="@Model" />
+    </form>
+</div>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/questionnaire/questionnaire-form.js"></script>
+}

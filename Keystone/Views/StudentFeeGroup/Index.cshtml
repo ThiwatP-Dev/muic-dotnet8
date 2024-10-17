@@ -1,0 +1,163 @@
+﻿@model PagedResult<StudentFeeGroup>
+@{ 
+    ViewData["Title"] = "Student Fee Group";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+    var recordNumber = Model?.FirstRowOnPage;
+}
+
+<section class="row">
+    <div class="ks-page-header col-lg-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+        <ul class="d-flex flex-md-row align-items-md-center float-right">
+            <li class="list-inline-item mx-3 mb-0">
+                <a class="btn btn--primary" asp-action="Create" asp-route-returnUrl="@contextPath">
+                    <i class="la la-plus mr-1 font-weight-800"></i> Add Student Fee Group
+                </a>
+            </li>
+        </ul>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Fee Group</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="StudentFeeGroup" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group mb-0">
+                        <div class="col-2">
+                            <input class="form-control" asp-for="Criteria.CodeAndName">
+                            <label>Code or Name</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.AcademicLevelId" 
+                                    asp-items="ViewBag.AcademicLevels" data-placeholder="Select">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Academic Level<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-2">
+                            <select class="chosen-select form-control" asp-for="Criteria.IsThai" asp-items="ViewBag.ThaiStatuses"></select>
+                            <label>Thai/Non-Thai</label>
+                        </div>
+                        <div class="col-2">
+                            <select class="chosen-select form-control" asp-for="Criteria.StudentFeeTypeId" asp-items="ViewBag.StudentFeeTypes"
+                                    data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Student Fee Type</label>
+                        </div>
+                        <div class="col-3 align-self-end text-right text-nowrap">
+                           <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.RowCount ?? 0))</header>
+            </div>
+            
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table id="js-term" class="table table-bordered table-hover w-100x js-datatable-export-excel">
+                        <thead>
+                            <tr>
+                                <th class="text-center w-25 no-print">#</th>
+                                <th class="text-center">Code</th>
+                                <th>Name</th>
+                                <th>Batch</th>
+                                <th>Started Term</th>
+                                <th>Ended Term</th>
+                                <th>Student Fee Type</th>
+                                <th class="text-center w-75">Thai/Non-Thai</th>
+                                <th class="text-center w-75">Lumpsum</th>
+                                <th class="text-center w-75">Status</th>
+                                <th>Remark</th>
+                                <th class="text-center w-75 no-print">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Results.Any())
+                            {
+                                foreach (var item in Model.Results)
+                                {
+                                    <tr>
+                                        <td>@recordNumber</td>
+                                        <td>@item.Code</td>
+                                        <td>@item.Name</td>
+                                        <td>@item.BatchRange</td>
+                                        <td>@item.StartedTerm</td>
+                                        <td>@item.EndedTerm</td>
+                                        <td>@item.StudentFeeType</td>
+                                        <td>
+                                            @if (item.IsThai == null)
+                                            {
+                                                <span>All</span>
+                                            }
+                                            else
+                                            {
+                                                <partial name="_BooleanThai" model="@item.IsThai"/>
+                                            }
+                                        </td>
+                                        <td>
+                                            <partial name="_BooleanResult" model="@item.IsLumpsumPayment">
+                                        </td>
+                                        <td>
+                                            <partial name="_BooleanActive" model="@item.IsActive">
+                                        </td>
+                                        <td>@item.Remark</td>
+                                        <td class="text-nowrap td-actions">
+                                            <a asp-controller="StudentFeeGroup" asp-action="Edit"
+                                               asp-route-Id="@item.Id" asp-route-returnUrl="@contextPath">
+                                                <i class="la la-edit edit"></i>
+                                            </a>
+                                            <a data-toggle="modal"
+                                               data-target="#delete-confirm-modal"
+                                               data-controller="StudentFeeGroup"
+                                               data-action="Delete"
+                                               data-value="@item.Id">
+                                                <i class="la la-trash delete"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    recordNumber++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td class="text-center" colspan="11">
+                                        <i class="text-danger">No Data</i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<partial name="_DeleteConfirmModals">
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/match-student-fee-group.js"></script>
+    <script type="text/javascript" src="~/js/pages/datatable-export-excel.js"></script>
+}

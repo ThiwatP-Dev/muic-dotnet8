@@ -1,0 +1,195 @@
+@model ExemptedExaminationScoreDetail
+@Html.AntiForgeryToken()
+
+<div class="block__title">
+    <header>@ViewData["Title"]</header>
+</div>
+
+<div class="block__body">
+
+    <div class="row form-group">
+        <div class="col-4">
+            <select class="chosen-select form-control" asp-for="ExemptedExaminationId" asp-items="ViewBag.ExemptedAdmissionExaminations">
+                <option selected disabled>Select</option>
+            </select>
+            <label>Exempted Examination<span class="text-danger">*</span></label>
+            <span class="text-danger help-block"></span>
+        </div>
+        <div class="col-4">
+            <select class="chosen-select form-control js-cascade-academic-level" asp-for="AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                <option selected disabled>Select</option>
+            </select>
+            <label>Academic Level<span class="text-danger">*</span></label>
+            <span class="text-danger help-block"></span>
+        </div>
+        <div class="col-4">
+            <select class="chosen-select form-control" asp-for="AdmissionTypeId" asp-items="ViewBag.AdmissionTypes">
+                <option selected disabled>Select</option>
+            </select>
+            <label>Admission Type<span class="text-danger">*</span></label>
+            <span class="text-danger help-block"></span>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-4">
+            <input class="form-control js-single-date" asp-for="IssuedDateInput" type="text" autocomplete="off">
+            <label>Issued Date</label>
+        </div>
+        <div class="col-4">
+            <input class="form-control js-single-date" asp-for="ExpiredDateInput" type="text" autocomplete="off">
+            <label>Expired Date</label>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="form-group">
+        <table id="js-course-exemption" class="table table-bordered m-0">
+            <thead>
+                <tr>
+                    <th class="text-center w-50">#</th>
+                    <th class="text-center w-100">Min Score</th>
+                    <th class="text-center w-100">Max Score</th>
+                    <th>Course</th>
+                    <th>Remark</th>
+                    <th class="text-center w-75">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model?.PreferredCourses != null && Model.PreferredCourses.Any())
+                {
+                    var preferredCourseIndex = 0;
+                    foreach(var item in Model.PreferredCourses)
+                    {
+                        <tr>
+                            <td>@(preferredCourseIndex + 1)</td>
+                            <td>
+                                <input class="form-control__table" asp-for="@Model.PreferredCourses[preferredCourseIndex].MinScore" name="PreferredCourses[@preferredCourseIndex].MinScore" type="number">
+                            </td>
+                            <td>
+                                <input class="form-control__table" asp-for="@Model.PreferredCourses[preferredCourseIndex].MaxScore" name="PreferredCourses[@preferredCourseIndex].MaxScore" type="number">
+                            </td>
+                            <td>
+                                <select class="chosen-select form-control" asp-for="@Model.PreferredCourses[preferredCourseIndex].CourseId" name="PreferredCourses[@preferredCourseIndex].CourseId"
+                                        asp-items="ViewBag.Courses" data-placeholder="Select">
+                                    <option selected disabled>Select</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input class="form-control__table" asp-for="@Model.PreferredCourses[preferredCourseIndex].Remark" name="PreferredCourses[@preferredCourseIndex].Remark" type="text">
+                            </td>
+                            <td class="text-nowrap td-actions">
+                                <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                    <i class="la la-trash delete"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        preferredCourseIndex++;
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td>1</td>
+                        <td>
+                            <input class="form-control__table" name="PreferredCourses[0].MinScore" type="number">
+                        </td>
+                        <td>
+                            <input class="form-control__table" name="PreferredCourses[0].MaxScore" type="number">
+                        </td>
+                        <td>
+                            <select class="chosen-select form-control" name="PreferredCourses[0].CourseId"
+                                    asp-items="ViewBag.Courses" data-placeholder="Select">
+                                <option selected disabled>Select</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input class="form-control__table" name="PreferredCourses[0].Remark" type="text">
+                        </td>
+                        <td class="text-nowrap td-actions">
+                            <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                <i class="la la-trash delete"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <hr>
+
+    <div class="form-group">
+        <table id="js-faculty-department" class="table table-bordered m-0">
+            <thead>
+                <tr>
+                    <th class="text-center w-50">#</th>
+                    <th>Division</th>
+                    <th>Major</th>
+                    <th class="text-center w-100">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model?.AffectedFacultyDepartments != null && Model.AffectedFacultyDepartments.Any())
+                {
+                    var affectedFacultyDepartmentIndex = 0;
+                    foreach(var affectedFacultyDepartment in Model.AffectedFacultyDepartments)
+                    {
+                        <tr>
+                            <td>@(affectedFacultyDepartmentIndex + 1)</td>
+                            <td>
+                                <select class="chosen-select form-control js-cascade-faculty" asp-for="@Model.AffectedFacultyDepartments[affectedFacultyDepartmentIndex].FacultyId" name="AffectedFacultyDepartments[@affectedFacultyDepartmentIndex].FacultyId"
+                                        asp-items="ViewBag.Faculties" data-placeholder="Select">
+                                    <option selected disabled>Select</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="chosen-select form-control js-cascade-multiple-department" asp-for="@Model.AffectedFacultyDepartments[affectedFacultyDepartmentIndex].DepartmentIds" name="AffectedFacultyDepartments[@affectedFacultyDepartmentIndex].DepartmentIds"
+                                        asp-items="affectedFacultyDepartment.FacultyDepartments" data-placeholder="All Departments" multiple>
+                                </select>
+                            </td>
+                            <td class="text-nowrap td-actions">
+                                <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                    <i class="la la-trash delete"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        ++affectedFacultyDepartmentIndex;
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td>1</td>
+                        <td>
+                            <select class="chosen-select form-control js-cascade-faculty" name="AffectedFacultyDepartments[0].FacultyId"
+                                    asp-items="ViewBag.Faculties" data-placeholder="Select">
+                                <option selected disabled>Select</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select class="chosen-select form-control js-cascade-multiple-department" name="AffectedFacultyDepartments[0].DepartmentIds"
+                                    asp-items="ViewBag.Departments" data-placeholder="All Departments" multiple>
+                            </select>
+                        </td>
+                        <td class="text-nowrap td-actions">
+                            <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                <i class="la la-trash delete"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+
+<div class="block__action container">
+    <div class="block__action-row">
+        <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+        <a class="btn btn-mw-120 btn--cancel" href="@ViewBag.ReturnUrl">Cancel</a>
+    </div>
+</div>

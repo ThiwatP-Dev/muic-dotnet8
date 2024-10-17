@@ -1,0 +1,151 @@
+@model ScholarshipBalanceReportViewModel
+@{ 
+    ViewData["Title"] = "Scholarship Balance Report"; 
+    var index = 1;
+}
+
+<div class="row">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</div>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="ScholarshipBalanceReport" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group m-b-30">
+                        <div class="col-4">
+                            <select class="chosen-select form-control" asp-for="Criteria.AcademicYear" asp-items="ViewBag.AcademicYears">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Academic Year<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-scholarship-type" asp-for="Criteria.ScholarshipTypeId" asp-items="ViewBag.ScholarshipTypes" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Scholarship Type</label>
+                        </div>
+                        <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-scholarship" asp-for="Criteria.ScholarshipId" asp-items="ViewBag.Scholarships" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Scholarship</label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-12 align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (Model != null && Model.ScholarshipDetails.Any())
+{
+    <section class="row">
+        <div class="col-12">
+            <div class="block block--underline">
+                <div class="block__body">
+                    <header>
+                        <h3 class="text-center"><b>Scholarships Part</b></h3>
+                        <h3 class="text-center"><b>Scholarships Allocated By Academic Year @Model.ScholarshipDetails[0].Year</b></h3>
+                        <h3 class="text-center"><b>Mahidol University International College</b></h3>
+                    </header>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover js-report-table w-100x">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">#</th>
+                                    <th>Name</th>
+                                    <th class="text-center">Code</th>
+                                    <th>Major</th>
+                                    <th class="text-right">Limited Amount</th>
+                                    <th class="text-center">Total</th>
+                                    <th class="text-right">Per Scholarship</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.ScholarshipDetails != null && Model.ScholarshipDetails.Any())
+                                {
+                                    foreach (var item in Model.ScholarshipDetails) 
+                                    {
+                                        <tr>
+                                            <td></td>
+                                            <td><b>@item.Name<b></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>@item.BudgetText</td>
+                                            <td>@item.TotalStudent</td>
+                                            <td>@item.PriceText</td>
+                                        </tr>
+
+                                        if (item.ScholarshipStudentDeatils != null && item.ScholarshipStudentDeatils.Any())
+                                        {
+                                            foreach (var detail in item.ScholarshipStudentDeatils)
+                                            {
+                                                <tr>
+                                                    <td>@index</td>
+                                                    <td>@detail.FullName</td>
+                                                    <td>@detail.Code</td>
+                                                    <td>@detail.Department</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td>@detail.PriceText</td>
+                                                </tr>
+                                                ++index;
+                                            }
+                                            index = 1;
+                                        }
+                                        <tr style="background-color:#ecebf1">
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td class="text-center"><b>Total</b></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>@item.TotalText</td>
+                                        </tr>
+                                        <tr style="background-color:#ecebf1">
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td class="text-center"><b>Balance</b></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td>@item.BalanceText</td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td class="text-center" colspan="7">
+                                            <i class="text-danger">No Data</i>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/ajax-cascading/scholarshiptype-cascade.js"></script>
+}

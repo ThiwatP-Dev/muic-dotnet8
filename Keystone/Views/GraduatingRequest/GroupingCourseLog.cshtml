@@ -1,0 +1,173 @@
+@model GraduatingRequestViewModel
+@{
+    ViewData["Title"] = "Graduating Grouping Course Log " + @Model.Student.FullNameEn;
+    var index = 1;
+    var searchReturnUrl = ViewBag.ReturnUrl;
+    var contextPath = $"{ Context.Request.Path }{ Context.Request.QueryString }";
+    TempData["returnUrl"] = searchReturnUrl;
+}
+<section>
+    <div class="row">
+        <div class="ks-page-header col-lg-12">
+            <h2 class="ks-page-header__title">
+                <a class="btn-back" href="@searchReturnUrl">
+                    <i class="la la-angle-double-left mr-1"></i>Back
+                </a>
+            </h2>
+        </div>
+    </div>
+</section>
+
+<section id="registration-courses">
+    <div class="block block--underline">
+        <div class="block__title">
+            <header>
+                <h3 class="ks-page-header__title">Grouping Course Log - @Model.Student.Code @Model.Student.FullNameEn
+                </h3>
+            </header>
+            <div class="tools">
+                <a class="btn btn--primary mb-0" asp-controller="GraduatingRequest" asp-action="GroupingCourseCreate"
+                    asp-route-graduatingrequestId="@Model.GraduatingRequest.Id" asp-route-returnUrl="@contextPath">
+                    <i class="la la-plus mr-1 font-weight-800"></i>Add
+                </a>
+            </div> 
+        </div>
+        <div class="block__body">
+            <table id="js-grouping-course-log" class="table table-bordered m-0">
+                <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th class="text-center">Created Date</th>
+                        <th>Created By</th>
+                        <th>Remark</th>
+                        <th class="text-center">Published</th>
+                        <th class="text-center">Approved</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.CourseGroupingLogs)
+                    {
+                        <tr>
+                            <td>@index</td>
+                            <td>@item.CreatedAtText</td>
+                            <td>@item.CreatedBy</td>
+                            <td>@item.Remark</td>
+                            <td class="text-center">
+                                <partial name="_BooleanResult" model="@item.IsPublished">
+                            </td>
+                            <td class="text-center">
+                                <partial name="_BooleanResult" model="@item.IsApproved">
+                            </td>
+                            <td class="text-nowrap td-actions">
+                                <a asp-controller="GraduatingRequest"
+                                   asp-action="GroupingCourseDetails"
+                                   asp-route-id="@item.Id"
+                                   asp-route-returnUrl="@contextPath"
+                                   asp-route-returnMainUrl="@searchReturnUrl">
+                                    <i class="la la-edit edit"></i>
+                                </a>
+                                @if (item.IsPublished)
+                                {
+                                    <a data-toggle="modal" 
+                                        data-target="#change-status-confirm-modal" 
+                                        data-controller="GraduatingRequest" 
+                                        data-action="UpdateCourseGroupingLogUnpublish" 
+                                        data-value="@item.Id"
+                                        data-message="Are you sure to un-publish this?"
+                                        data-return-url="@contextPath">
+                                        <i class="la la-eye-slash edit"></i>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a data-toggle="modal" 
+                                        data-target="#change-status-confirm-modal" 
+                                        data-controller="GraduatingRequest" 
+                                        data-action="UpdateCourseGroupingLogPublish" 
+                                        data-value="@item.Id"
+                                        data-message="Are you sure to publish this?"
+                                        data-return-url="@contextPath">
+                                        <i class="la la-eye edit"></i>
+                                    </a>
+                                }
+                                @if (item.IsApproved)
+                                {
+                                    <a data-toggle="modal" 
+                                        data-target="#change-status-confirm-modal" 
+                                        data-controller="GraduatingRequest" 
+                                        data-action="UpdateCourseGroupingLogUnapprove" 
+                                        data-value="@item.Id"
+                                        data-message="Are you sure to un-approve this?"
+                                        data-return-url="@contextPath">
+                                        <i class="la la-times edit"></i>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a data-toggle="modal" 
+                                        data-target="#change-status-confirm-modal" 
+                                        data-controller="GraduatingRequest" 
+                                        data-action="UpdateCourseGroupingLogApprove" 
+                                        data-value="@item.Id"
+                                        data-message="Are you sure to approve this?"
+                                        data-return-url="@contextPath">
+                                        <i class="la la-check edit"></i>
+                                    </a>
+                                }
+                                <a data-toggle="modal" 
+                                    data-target="#delete-confirm-modal" 
+                                    data-controller="GraduatingRequest" 
+                                    data-action="DeleteCourseGroupingLog" 
+                                    data-value="@item.Id"
+                                    data-return-url="@contextPath">
+                                    <i class="la la-trash delete"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        ++index;
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<partial name="_DeleteConfirmModals">
+
+<div id="change-status-confirm-modal" class="modal fadeIn animated" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+  	<div class="modal-dialog modal-dialog-centered" role="document">
+    	<div class="modal-content">
+      		<div class="block mb-0">
+        		<div class="block__body">
+          			<h3 class="color-primary m-b-15">
+            			<i class="la la-save m-r-5"></i>
+            			Confirm 
+          			</h3>
+          			<p id="change-status-confirm-modal-text"></p>
+        		</div>
+        		<div class="block__action">
+          			<div class="block__action-row">
+              			<a class="btn btn-mw-120 btn--success js-confirm-btn" href="#!">Yes</a>
+              			<a class="btn btn-mw-120 btn--cancel" href="javascript:void(0);" data-dismiss="modal">No</a>
+          			</div>
+        		</div>
+      		</div>
+    	</div>
+  	</div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            var inputTable = new RowAddAble({
+                TargetTable: '#js-course-prediction-table',
+                ButtonTitle: 'Course Prediction',
+                TableTitle: 'Course Prediction'
+            });
+            inputTable.RenderButton();
+        });
+        
+    </script>
+}

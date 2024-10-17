@@ -1,0 +1,22 @@
+@model string
+
+@if (Model == "a")
+{
+    <span class="text-success">Approved</span>
+}
+else if (Model == "r")
+{
+   <span class="text-danger">Reject</span>
+}
+else if (Model == "c")
+{
+   <span class="text-muted">Confirm</span>
+}
+else if (Model == "ne")
+{
+   <span class="text-danger">No Exam</span>
+}
+else
+{
+   <span class="text-muted">Waiting</span>
+}

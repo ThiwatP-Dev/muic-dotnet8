@@ -1,0 +1,44 @@
+@model ReportViewModel
+@{ 
+    ViewData["Title"] = "MUIC Grade Report Preview";
+    var gradeReports = Model.Body as List<TranscriptInformation>;
+}
+@if(gradeReports != null)
+{
+    foreach (var item in gradeReports)
+    {
+        <img id="@($"img-student-{item.StudentCode}")" 
+             src="@(item.ProfileImageURL == null ? "/images/default-profile-grade.png" : item.ProfileImageURL)" onerror="this.src = '/images/default-profile-grade.png'" hidden>
+    }
+}
+
+<section class="row">
+    <div class="ks-page-header">
+        <a class="btn-back" asp-action="Index"
+           asp-route-code="@Model.Criteria.Code"
+           asp-route-studentCodeFrom="@Model.Criteria.StudentCodeFrom"
+           asp-route-studentCodeTo="@Model.Criteria.StudentCodeTo"
+           asp-route-type="@Model.Criteria.Type"
+           asp-route-purpose="@Model.Criteria.Purpose"
+           asp-route-language="@Model.Criteria.Language"
+           asp-route-isUrgent="@Model.Criteria.IsUrgent"
+           asp-route-status="@Model.Criteria.Status"
+           asp-route-approvedById="@Model.Criteria.ApprovedById"
+           asp-route-isOfficial="@Model.Criteria.IsOfficial">
+            <i class="la la-angle-double-left mr-1"></i>
+        </a>
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</section>
+
+<partial name="_PdfPreview" model="@Model">
+
+<section>
+    <div class="block__action-row pr-0">
+        <a class="btn btn-mw-120 btn--success" asp-action="Index">Finish</a>
+    </div>
+</section>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/pdf-render/muic-grade-report.js"></script>
+}

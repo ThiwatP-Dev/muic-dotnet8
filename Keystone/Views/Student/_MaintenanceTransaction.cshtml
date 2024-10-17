@@ -1,0 +1,81 @@
+@model Student
+@{
+    var index = 1;
+    var model = Model.MaintenanceStatuses;
+    var tabPermission = Model.TabPermissions?.FirstOrDefault(x => x.Tab.ToUpper() == "MAINTENANCE");
+    var isEditable = tabPermission?.IsWritable  ?? false;
+
+}
+
+<div class="block block--underline">
+    <div class="block__title">
+        <header>Maintenance Transaction</header>
+        <div class="tools">
+            @if (isEditable)
+            {
+                <a class="btn btn-mw-120 btn--primary"
+               href="#" 
+               data-toggle="modal" 
+               data-target="#create-modal-maintenance-transaction">
+                <i class="la la-plus mr-1 font-weight-800"></i> Add
+            </a>
+            }
+        </div>
+    </div>
+    
+    <div class="block__body table-responsive">
+        <table class="table table-bordered m-0">
+            <thead>
+                <tr>
+                    <th class="text-nowrap text-center">#</th>
+                    <th class="text-nowrap text-center">Year</th>
+                    <th class="text-nowrap text-center">Term</th>
+                    <th class="text-nowrap text-right">Paid Amount</th>
+                    <th class="text-nowrap text-center">Paid Date</th>
+                    <th class="text-nowrap">Remark</th>
+                    <th class="text-nowrap text-center">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (model != null && model.Any())
+                {
+                    @foreach (var item in model)
+                    {
+                        <tr>
+                            <td class="text-nowrap">@index</td>
+                            <td class="text-nowrap">@item.Term?.AcademicYear</td>
+                            <td class="text-nowrap">@item.Term?.AcademicTerm</td>
+                            <td class="text-nowrap">@item.MaintenanceFee?.FeeText</td>
+                            <td class="text-nowrap">@item.PaidDateText</td>
+                            <td class="text-nowrap">@item.Remark</td>
+                            <td class="text-nowarp td-actions">
+                                @if (isEditable)
+                                {
+                                    <a data-toggle="modal"
+                                   data-target="#edit-modal-maintenance"
+                                   data-value="@item.Id">
+                                        <i class="la la-edit edit"></i>
+                                    </a>
+                                }
+                            </td>
+                        </tr>
+                        ++index;
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="7">
+                            <i class="text-danger">No Data</i>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<partial name="~/Views/Student/Maintenance/_CreateModal.cshtml" 
+         model="@(ViewData["StudentId"].ToString() == Guid.Empty.ToString() ? new MaintenanceStatus()
+         : new MaintenanceStatus { StudentId = (Guid)ViewData["StudentId"] })"/>
+<partial name="~/Views/Student/Maintenance/_EditModal.cshtml" model="new MaintenanceStatus()"/>

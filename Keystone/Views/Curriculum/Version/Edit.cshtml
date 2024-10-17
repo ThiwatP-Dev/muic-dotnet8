@@ -1,0 +1,15 @@
+@model CurriculumVersion
+@{ 
+    ViewData["Title"] = "Edit Curriculum Version"; 
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <form class="ks-form container" asp-controller="CurriculumVersion" asp-action="Edit" method="POST">
+                @Html.AntiForgeryToken()
+                <partial name="~/Views/Curriculum/Version/_Form.cshtml">
+            </form>
+        </div>
+    </div>
+</section>

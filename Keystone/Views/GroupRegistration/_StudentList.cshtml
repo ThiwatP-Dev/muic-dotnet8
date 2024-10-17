@@ -1,0 +1,26 @@
+@model GroupRegistrationViewModel
+
+@if (Model != null && Model.SelectableStudents != null)
+{
+    <div class="col-12 p-0 my-4">
+        <h4 class="d-flex justify-content-between">
+            <span>Selectable students</span>
+        </h4>
+        <a id="js-all-switch" class="btn btn--primary unchecked my-2">
+            <i class="far fa-check-square mr-1"></i> Select All
+        </a>
+        <select id="js-multi-select-callback" class="js-multi-selectlist my-2" multiple="multiple">
+            @foreach (var item in Model.SelectableStudents)
+            {
+                if (item.IsSelected)
+                {
+                    <option value="@(item.Student.Id)" selected>@(item.Student.CodeAndName)</option>
+                }
+                else
+                {
+                    <option value="@(item.Student.Id)">@(item.Student.CodeAndName)</option>
+                }
+            }
+        </select>
+    </div>
+}

@@ -1,0 +1,168 @@
+@model WaiveStudentViewModel
+@{
+    ViewData["Title"] = "Create Waive Group";
+}
+
+<section>
+    <div class="row">
+		<div class="ks-page-header col-12">
+			<h2 class="ks-page-header__title">
+				<a class="btn-back" href="@ViewBag.ReturnUrl">
+					<i class="la la-angle-double-left mr-1"></i>Back
+				</a>
+			</h2>
+		</div>
+	</div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>@ViewData["Title"]</header>
+            </div>
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="WaiveGroup" asp-action="Create" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group m-b-30">
+                        <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels"  data-placeholder="Select">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Academic Level<span class="text-danger">*</span></label>
+                        </div>
+
+                        <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="ViewBag.Terms">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Term<span class="text-danger">*</span></label>
+                        </div>
+
+                        <div class="col-4">
+                            <select class="chosen-select form-control" asp-for="Criteria.FeeItemId" asp-items="ViewBag.FeeItems">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Fee Item<span class="text-danger">*</span></label>
+                        </div>                       
+                    </div>
+
+                    <div class="row form-group mb-0">
+                        <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-course" asp-for="Criteria.CourseId" asp-items="@ViewBag.Courses" data-placeholder="Select">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Course</label>
+                        </div>
+
+                        <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-section" asp-for="Criteria.SectionId" asp-items="@ViewBag.Sections" data-placeholder="Select">
+                                <option selected>Select</option>
+                            </select>
+                            <label>Section</label>
+                        </div>
+
+                        <input name="returnUrl" value="@ViewBag.ReturnUrl" type="hidden">
+
+                        <div class="col-4 align-self-end text-right text-nowrap">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <a id="js-reset-btn" class="btn btn-mw-120 btn--reset" asp-action="Create">Reset</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="WaiveGroup" asp-action="Create" method="POST">
+                    <div class="col-12">
+                        <div class="row form-group m-b-30">
+                            <div class="col-4">
+                                <input class="form-control" name="WaiveAmount" type="number" min="0">
+                                <label>Waive Amount<span class="text-danger">*</span></label>
+                            </div>
+                            <div class="col-4">
+                                <input class="form-control" name="WaiveRemark" type="text">
+                                <label>Waive Remark<span class="text-danger"></span></label>
+                            </div>
+
+                            <input asp-for="Criteria.AcademicLevelId" type="hidden">
+                            <input asp-for="Criteria.TermId" type="hidden">
+                            <input asp-for="Criteria.FeeItemId"  type="hidden">
+                            <input asp-for="Criteria.CourseId"  type="hidden">
+                            <input asp-for="Criteria.SectionId" type="hidden">
+                            <input name="returnUrl" value="@ViewBag.ReturnUrl" type="hidden">
+
+                            <div class="col-4 align-self-end text-right text-nowrap">
+                                <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                    Save
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-group table-responsive js-render-nicescroll p-b-50">
+                            <table id="js-waive-group" class="table table-bordered table-hover w-100x">
+                                <thead>
+                                    <tr>
+                                        <th class="w-25 text-center">
+                                            <input id="checkAll" class="js-check-all" name="Students" type="checkbox">
+                                            <label class="mt-2 mb-0 m-l-2" for="checkAll"></label>
+                                        </th>
+                                        <th class="text-center">Date</th>
+                                        <th>Student Id</th>
+                                        <th>Name</th>
+                                        <th>Invoice</th>
+                                        <th>Course</th>
+                                        <th class="text-center">Section</th>
+                                        <th class="text-right">Amount</th>
+                                        <th class="text-right">Current Waive Amount</th>
+                                        <th class="text-right">Total Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="js-items">
+                                    @if (Model != null && Model.Results.Any())
+                                    {
+                                        for (int i = 0; i < Model.Results.Count(); i++)
+                                        {
+                                            <tr class="js-suggestion-parent">
+                                                <td>
+                                                    <input asp-for="@Model.Results[i].Id" type="hidden">
+                                                    <input asp-for="@Model.Results[i].InvoiceId" type="hidden">
+                                                    <input id="Results[@i]" class="form-check-input" name="Results[@i].IsSelected" type="checkbox" value="@Model.Results[i].IsSelected">
+                                                    <label class="js-focus-item m-0" for="Results[@i]"></label>
+                                                </td>
+                                                <td>@Model.Results[i].Invoice.CreatedAtText</td>
+                                                <td>@Model.Results[i].Invoice.Student.Code</td>
+                                                <td>@Model.Results[i].Invoice.Student.FullNameEn</td>
+                                                <td>@Model.Results[i].Invoice.Number</td>
+                                                <td>@Model.Results[i].Course?.Code</td>
+                                                <td>@Model.Results[i].Section?.Number</td>
+                                                <td>@Model.Results[i].AmountText</td>
+                                                <td>@Model.Results[i].DiscountAmountText</td>
+                                                <td>@Model.Results[i].TotalAmountText</td>
+                                            </tr>
+                                        }
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/waive-group.js"></script>
+}

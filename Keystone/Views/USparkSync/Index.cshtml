@@ -1,0 +1,17 @@
+@{ 
+    ViewData["Title"] = "Sync aata from USpark";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="col-4">
+            <form class="form-horizontal" asp-controller="USparkSync" asp-action="GenerateStudentPredefinedCourses" method="POST">
+                @Html.AntiForgeryToken()
+                <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">
+                    Generate Student Predefined Courses
+                </button>
+            </form>
+        </div>
+    </div> 
+</section>

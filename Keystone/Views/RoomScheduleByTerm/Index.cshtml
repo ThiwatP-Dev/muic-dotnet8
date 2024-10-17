@@ -1,0 +1,183 @@
+@model RoomScheduleByTermViewModel
+@{
+    ViewData["Title"] = "Room Schedule By Term";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+
+<div class="row">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</div>
+
+<section class="row ks-room-schedule">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>@ViewData["Title"]</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="RoomScheduleByTerm" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group m-b-30">
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels" data-placeholder="Select">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Academic Level<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="ViewBag.Terms" data-placeholder="Select">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Term<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-campus" asp-for="Criteria.CampusId" asp-items="ViewBag.Campuses" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Campus</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-building" asp-for="Criteria.BuildingId" asp-items="ViewBag.Buildings" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Building</label>
+                        </div>
+                    </div>
+
+                    <diV class="row form-group m-b-30">
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.RoomtypeId" asp-items="ViewBag.RoomTypes" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Room type</label>
+                        </div>
+                        <div class="col-3">
+                            <h4 class="font-size-default m-y-4">Room</h4>
+                            <select class="chosen-select form-control js-cascade-rooms" asp-for="Criteria.RoomIds" asp-items="ViewBag.Rooms" data-placeholder="Select" multiple></select>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.CapacityFrom" type="number">
+                            <label>Capacity From</label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.CapacityTo" type="number">
+                            <label>Capacity To</label>
+                        </div>
+                    </div>
+
+                    <diV class="row form-group">
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.Status" asp-items="ViewBag.SectionStatuses" data-placeholder="Select">
+                                <option selected value="">All</option>
+                            </select>
+                            <label>Section Status</label>
+                        </div>
+                        <div class="col align-self-end text-right text-nowrap">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </diV>
+                </form>
+            </div>
+        </div>
+	</div>
+</section>
+
+@if (Model != null)
+{
+    <section class="row">
+        <div class="col-12">
+            <div class="block block--underline">
+                <div class="block__title">
+                    <div class="row">
+                        <div class="col-6">
+                            <header>Search Result (@(Model?.Rooms?.Count() ?? 0))</header>
+                        </div>
+                        
+                        <div class="col-6">
+                            <ul class="d-flex flex-md-row align-items-md-center float-right">
+                                <li class="list-inline-item mx-3 mb-0">
+                                    <form class="form-horizontal" asp-controller="RoomScheduleByTerm" asp-action="Preview" method="POST">
+                                        @if (Model != null && Model.Rooms.Any())
+                                        {
+                                            foreach(var item in Model.RoomIds)
+                                            {
+                                                <input name="roomIds" value="@item" hidden>
+                                            }
+                                            <input name="termId" value="@Model.Criteria?.TermId" hidden>
+                                            <input name="sectionStatus" value="@Model.Criteria?.Status" hidden>
+                                            <input name="returnUrl" value="@contextPath" hidden>
+                                            <button class="btn btn-mw-120 btn--primary" type="submit">Preview</button>
+                                        }
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="block__body">
+                    <div class="table-responsive">
+                        <table id="js-room-schedule-search" class="table table-bordered m-0">
+                            <thead>
+                                <tr>
+                                    <th>Room</th>
+                                    <th class="text-center">Floor</th>
+                                    <th class="text-center">Capacity</th>
+                                    <th>Room Type</th>
+                                    <th>Building</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.Rooms.Any())
+                                {
+                                    @foreach (var item in Model.Rooms)
+                                    {
+                                        <tr>
+                                            <td>@item.NameEn</td>
+                                            <td>@item.Floor</td>
+                                            <td>@item.Capacity</td>
+                                            <td>@item.RoomType</td>
+                                            <td>@item.BuildingName</td>
+                                            <td class="text-nowrap td-actions">
+                                                <a asp-controller="RoomScheduleByTerm"
+                                                asp-action="Details"
+                                                asp-route-roomId="@item.Id"
+                                                asp-route-termId="@Model.Criteria?.TermId"
+                                                asp-route-sectionStatus="@Model.Criteria?.Status"
+                                                asp-route-returnUrl="@contextPath">
+                                                    <i class="la la-info info"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td class="text-center" colspan="6">
+                                            <i class="text-danger">No Data</i>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                @(await Component.InvokeAsync<PagerViewComponent>(Model))
+            </div>
+        </div>
+    </section>
+}
+
+@section Scripts {
+    <script src="~/js/pages/ajax-cascading/building-cascade.js"></script>
+}

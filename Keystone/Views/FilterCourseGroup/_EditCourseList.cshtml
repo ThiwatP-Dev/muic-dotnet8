@@ -1,0 +1,74 @@
+@model FilterCourseGroupViewModel
+@{ 
+    ViewData["Title"] = "Edit Course Group";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>@ViewData["Title"]</header>
+            </div>
+            <form class="ks-form container" asp-controller="FilterCourseGroup" asp-action="Edit" method="POST">
+                @Html.AntiForgeryToken()
+                <div class="block__action container">
+                    <div class="block__action-row">
+                        <a data-toggle="modal" 
+                           class="btn btn-mw-120 btn--primary"
+                           data-target="#add-filter-course-modal">
+                            <i class="la la-plus info"></i>Add Courses
+                        </a>
+                    </div>
+                </div>
+                <div class="row form-group m-b-30">
+                    <div class="col-12 form-group table-responsive">
+                        <table class="table table-bordered m-0">
+                            <thead>
+                                <tr>
+                                    <th class="w-25 text-center">#</th>
+                                    <th>Course</th>
+                                    <th>Division</th>
+                                    <th>Major</th>
+                                    <th class="text-center w-120">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.Courses != null && Model.Courses.Any())
+                                {
+                                    for (var i = 0; i < Model.Courses.Count; i++)
+                                    {
+                                        <tr>
+                                            <td>@(i+1)</td>
+                                            <td>@Model.Courses[i].CourseAndCredit</td>
+                                            <td>@Model.Courses[i].Faculty</td>
+                                            <td>@Model.Courses[i].Department</td>
+                                            <td class="text-nowrap td-actions">
+                                                <a data-toggle="modal" 
+                                                   data-target="#delete-confirm-modal" 
+                                                   data-controller="FilterCourseGroup"
+                                                   data-action="DeleteCourse" 
+                                                   data-value="@Model.Courses[i].FilterCourseGroupDetailId"
+                                                   data-return-url="@contextPath">
+                                                    <i class="la la-trash delete"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="7">
+                                            <i class="text-danger">No Data</i>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>   
+                </div>   
+            </form>
+        </div>
+    </div>
+</section>

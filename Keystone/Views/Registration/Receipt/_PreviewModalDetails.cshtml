@@ -1,0 +1,183 @@
+@model ReceiptModalViewModel
+@{
+    var i = 0;
+    var j = 0;
+}
+
+<div class="block block--underline mb-0">
+    <div class="block__title">
+        <header>Receipt Preview</header>
+    </div>
+
+    <div class="block__body">
+        <h4 class="font-weight-700 js-waive-input d-none">Waive Fee</h4>
+        <div class="row form-group js-waive-input d-none">
+            <div class="col-3">
+                <select id="js-waive-item" class="chosen-select form-control" asp-items="ViewBag.FeeItems">
+                    <option selected disabled>Select</option>
+                </select>
+                <label>Fee Item</label>
+            </div>
+            <div class="col-4">
+                <select id="js-cascade-fee-course" class="chosen-select form-control" disabled>
+                    <option selected disabled>Select</option>
+                </select>
+                <label>Course</label>
+            </div>
+            <div class="col-2 pr-0">
+                <input id="js-cascade-fee-amount" class="form-control" type="number">
+                <label>Amount</label>
+            </div>
+            <div class="col-3 text-right align-self-end">
+                <button id="js-add-waive" class="btn btn--primary btn-mw-120" type="button">
+                    Waive
+                </button>
+            </div>
+        </div>
+
+        <form id="js-fee-items" asp-controller="Receipt" asp-action="WaiveFee" method="POST">
+            <div id="js-receipt-details" class="block block__content">
+                @if (Model.ReceiptDetailViewModels != null)
+                {
+                    <div class="row content-title">
+                        <div class="col-6">Description</div>
+                        <div class="col-2 text-right">Amount</div>
+                        <div class="col-2 text-right">Scholarship</div>
+                        <div class="col-2 text-right">Total Amount</div>
+                    </div>
+                    @foreach (var item in Model.ReceiptDetailViewModels)
+                    {
+                        j = 0;
+                        if (!item.IsTermFee || item.ReceiptModalItems.Count() > 1)
+                        {
+                            <div class="row content-detail toggle-navigator js-main-item">
+                                <div class="col-6 pl-0">
+                                    <span class="hidden-row-toggle disable-item"><i class="fas fa-plus-circle"></i></span>
+                                    <span>@item.ItemTitle</span>
+                                    <input class="js-fee-id" asp-for="ReceiptDetailViewModels[i].ItemId" type="hidden">
+                                </div>
+                                <div class="col-2 text-right pr-1">
+                                    <span>@item.TotalText</span>
+                                    <input class="js-fee-amount" asp-for="ReceiptDetailViewModels[i].Total" type="hidden">
+                                </div>
+                                <div class="col-2 text-right pr-1">
+                                    <span>@item.ScholarshipAmountText</span>
+                                </div>
+                                <div class="col-2 text-right pr-0">
+                                    <span>@item.TotalAmountText</span>
+                                </div>
+                            </div>
+                            <div class="hidden-row d-none js-sub-item">
+                                @foreach (var receiptModalItem in item.ReceiptModalItems)
+                                {
+                                    <div class="row content-detail js-fee-detail">
+                                        <div class="col-6 p-l-33 js-fee-course">
+                                            <span>@receiptModalItem.CourseAndCredit</span>
+                                            <input class="js-fee-item-id" asp-for="ReceiptDetailViewModels[i].ReceiptModalItems[j].FeeItemId" type="hidden">
+                                            <input class="js-fee-course-id" asp-for="ReceiptDetailViewModels[i].ReceiptModalItems[j].CourseId" type="hidden">
+                                            <input class="js-fee-course-name" asp-for="ReceiptDetailViewModels[i].ReceiptModalItems[j].CourseName" type="hidden">
+                                        </div>
+                                        @if (receiptModalItem.Amount < 0)
+                                        {
+                                            <div class="col-2 text-right text-danger pr-1">
+                                                <span>@receiptModalItem.AmountText</span>
+                                                <input class="js-fee-amount" asp-for="ReceiptDetailViewModels[i].ReceiptModalItems[j].Amount" type="hidden">
+                                            </div>
+                                            <div class="col-2 text-right pr-1">
+                                                <span>@receiptModalItem.ScholarshipAmountText</span>
+                                            </div>
+                                            <div class="col-2 text-right pr-0">
+                                                <span>@receiptModalItem.TotalAmountText</span>
+                                            </div>
+                                            @* <div class="col-2 pr-0"></div> *@
+                                        }
+                                        else
+                                        {
+                                            <div class="col-2 text-right pr-1">
+                                                <span>@receiptModalItem.AmountText</span>
+                                                <input class="js-fee-amount" asp-for="ReceiptDetailViewModels[i].ReceiptModalItems[j].Amount" type="hidden">
+                                            </div>
+                                            <div class="col-2 text-right pr-1">
+                                                <span>@receiptModalItem.ScholarshipAmountText</span>
+                                            </div>
+                                            <div class="col-2 text-right pr-0">
+                                                <span>@receiptModalItem.TotalAmountText</span>
+                                            </div>
+                                        }
+                                    </div>
+                                    j++;
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="row content-detail js-main-item">
+                                <div class="col-6 p-l-22">
+                                    <span>@item.ItemTitle</span>
+                                    <input class="js-fee-id" asp-for="ReceiptDetailViewModels[i].ItemId" type="hidden"
+                                           data-alter-name="ReceiptDetailViewModels[0].ReceiptModalItems[0].FeeItemId">
+                                </div>
+                                @if (item.Total < 0)
+                                {
+                                    <div class="col-2 text-right text-danger pr-1">
+                                        <span>@item.TotalText</span>
+                                        <input class="js-fee-amount" asp-for="ReceiptDetailViewModels[i].Total" type="hidden"
+                                               data-alter-name="ReceiptDetailViewModels[0].ReceiptModalItems[0].Amount">
+                                    </div>
+                                    <div class="col-2 text-right pr-1">
+                                        <span>@item.ScholarshipAmountText</span>
+                                    </div>
+                                    <div class="col-2 text-right pr-0">
+                                        <span>@item.TotalAmountText</span>
+                                    </div>
+                                    @* <div class="col-2 pr-0"></div> *@
+                                }
+                                else
+                                {
+                                    <div class="col-2 text-right pr-1">
+                                        <span>@item.TotalText</span>
+                                        <input class="js-fee-amount" asp-for="ReceiptDetailViewModels[i].Total" type="hidden"
+                                               data-alter-name="ReceiptDetailViewModels[0].ReceiptModalItems[0].Amount">
+                                    </div>
+
+                                    <div class="col-2 text-right pr-1">
+                                        <span>@item.ScholarshipAmountText</span>
+                                    </div>
+                                    <div class="col-2 js-personal-fee-amount text-right pr-0">
+                                        <span>@item.TotalAmountText</span>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        i++;
+                    }
+                    <div class="row content-title mt-2 mb-0 js-total-row">
+                        <div class="col-6 text-left">
+                            Total :
+                        </div>
+                        <div class="col-2 text-right pr-1">
+                            <span id="js-receipt-total">@Model.TotalText</span>
+                        </div>
+
+                        <div class="col-2 text-right pr-1">
+                            <span>@Model.ScholarshipTotalText</span>
+                        </div>
+                        <div class="col-2 text-right">
+                            <span>@Model.TotalAmountText</span>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="row content-detail">
+                        <div class="col-12">No Courses</div>
+                    </div>
+                }
+            </div>
+
+            <div class="block__action-row">
+                <a class="btn btn-mw-120 btn--white mb-0" href="javascript:void(0);" data-dismiss="modal">Close</a>
+            </div>
+        </form>
+    </div>
+</div>

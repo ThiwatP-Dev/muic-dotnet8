@@ -1,0 +1,104 @@
+@model GraduatingRequestViewModel
+
+<section>
+    <form asp-controller="GradingReportByCurriculum" asp-action="ExportExcel">
+        <div class="block__body">
+            @if (Model != null && Model.CurriculumCourseGroups != null && Model.CurriculumCourseGroups.Any())
+            {
+                <input name="code" value="@Model?.Student?.Code" hidden>
+                <div class="row form-group">
+                    <div class="col text-nowrap text-right">
+                        <button class="btn btn-mw-120 btn--primary mb-0" type="submit">Preview</button>
+                    </div>
+                </div>
+                
+                foreach (var courseGroup in Model.CurriculumCourseGroups)
+                {
+                    <div class="block block--underline">
+                        <div class="block__title">
+                            <header>@courseGroup.NameEn (@courseGroup.RequiredCreditCompleted @(courseGroup.RequiredCreditCompleted > 1 ? "Credits" : "Credit"))</header>
+                        </div>
+                        <div class="block__body">  
+                            @if(courseGroup.DescriptionEn != "" && courseGroup.DescriptionEn != null)
+                            {
+                                <span class="block__body btn--primary text-pre-warp">@courseGroup.DescriptionEn</span>
+                            }
+                            
+                            @{
+                                var htmlString = "";
+                                htmlString = UIHelper.GetCourseGroupRegistration(courseGroup, htmlString);
+                                @Html.Raw(htmlString)
+                            }
+                        </div>
+                    </div>
+                }
+            }
+
+            <div class="block block--underline">
+                <div class="block__title">
+                    <header>@Model?.OtherCourseGroups?.NameEn</header>
+                </div>
+                <div class="block__body">  
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover w-100x">
+                            <thead>
+                                <tr>
+                                    <th>Course Code</th>
+                                    <th>Course Name</th>
+                                    <th class="text-center">COURSE CREDIT</th>
+                                    <th class="text-center">Grade</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.OtherCourseGroups != null && Model.OtherCourseGroups.Courses.Any())
+                                {
+                                    foreach (var course in Model.OtherCourseGroups.Courses)
+                                    {
+                                        string gradeText = string.Empty;
+                                        if(!string.IsNullOrEmpty(course.RegisteredGradeName))
+                                        {
+                                            if(course.IsTransferCourse && !course.IsStarCourse)
+                                            {
+                                                gradeText = $"<span class=\"ks-label bg-info mx-3 mb-1\">{ course.RegisteredGradeName } ({ course.TermText })</span>";
+                                            }
+                                            else if (course.IsTransferCourse && course.IsStarCourse)
+                                            {
+                                                gradeText = $"<span class=\"ks-label bg-info mx-3 mb-1\">{ course.RegisteredGradeName }* ({ course.TermText })</span>";
+                                            }
+                                            else 
+                                            {
+                                                if(course.IsPassed)
+                                                {
+                                                    gradeText = $"<span class=\"ks-label bg-success mx-3 mb-1\">{ course.RegisteredGradeName } ({ course.TermText })</span>";
+                                                }
+                                                else 
+                                                {
+                                                    gradeText = $"<span class=\"ks-label bg-danger mx-3 mb-1\">{ course.RegisteredGradeName } ({ course.TermText })</span>";
+                                                }
+                                            }
+                                        }
+                                        <tr>
+                                            <td>@course.CourseCode</td>
+                                            <td>@course.CourseNameEn</td>
+                                            <td>@course.CreditText</td>
+                                            <td>@Html.Raw(gradeText)</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>                    
+                        </table>
+                    </div>
+                </div>
+            </div>
+            @if (Model != null && Model.CurriculumCourseGroups != null && Model.CurriculumCourseGroups.Any())
+            {
+                <input name="code" value="@Model?.Student?.Code" hidden>
+                <div class="row form-group">
+                    <div class="col text-nowrap text-right">
+                        <button class="btn btn-mw-120 btn--primary mb-0" type="submit">Preview</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </form>
+</section>

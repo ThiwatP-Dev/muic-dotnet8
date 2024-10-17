@@ -1,0 +1,119 @@
+@model UpdateFinalDateViewModel
+@{ 
+    ViewData["Title"] = "Exam Final Date Report";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+    var index = 1;
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Exam Final Date</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="ExamFinalDateReport" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group m-b-30">
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Academic Level<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="ViewBag.Terms">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Term<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.CodeAndName" type="text">
+                            <label>Course</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.SectionType" asp-items="ViewBag.SectionTypes">
+                                <option selected value="">All</option>
+                            </select>
+                            <label>Section Type</label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.SectionStatus" asp-items="ViewBag.SectionStatuses">
+                                <option selected value="">All</option>
+                            </select>
+                            <label>Section Status</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.HaveFinal" asp-items="ViewBag.YesNoAnswer">
+                                <option selected value="">All</option>
+                            </select>
+                            <label>Has Final Date</label>
+                        </div>
+                        <div class="col-6 align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    @if (Model != null && Model.Results.Any())
+    {
+        @Html.AntiForgeryToken()
+        <div class="col-12">
+            <div class="block block--underline">
+                <div class="block__title">
+                    <header>Search Result (@(Model?.Results?.Count() ?? 0))</header>
+                </div>
+
+                <div class="block__body">
+                    <div class="table-responsive js-render-nicescroll">
+                        <table class="table table-bordered table-hover js-report-table w-100x">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">#</th>
+                                    <th class="text-center">Course Code</th>
+                                    <th>Course Name</th>
+                                    <th class="text-center">Course Credit</th>
+                                    <th class="text-center">Section</th>
+                                    <th class="text-center">Section Type</th>
+                                    <th>Instructor</th>
+                                    <th class="text-center w-250">Final</th>
+                                    <th class="text-center">Total Student</th>
+                                    <th class="text-center">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="js-items">
+                                @for (int i = 0; i < Model.Results.Count(); i++)
+                                {
+                                    <tr>
+                                        <td>@index</td>
+                                        <td>@Model.Results[i].CourseCode</td>
+                                        <td>@Model.Results[i].CourseName</td>
+                                        <td>@Model.Results[i].CourseCreditText</td>
+                                        <td>@Model.Results[i].SectionNumber</td>
+                                        <td>@Model.Results[i].SectionTypes</td>
+                                        <td>@Model.Results[i].InstructorName</td>
+                                        <td>@Model.Results[i].FinalDateTimeText</td>
+                                        <td>@Model.Results[i].SeatUsedText</td>
+                                        <td>@Model.Results[i].StatusText</td>
+                                    </tr>
+                                    index++;
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</section>

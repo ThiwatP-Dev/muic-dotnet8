@@ -1,0 +1,33 @@
+@model Room
+@{ 
+    ViewData["Title"] = "Add Room"; 
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <form class="ks-form container" asp-controller="Room" asp-action="Create" method="POST">
+                @Html.AntiForgeryToken()
+                <partial name="_Form">
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Modals {
+    <partial name="_DeleteRowConfirmModals">
+}
+
+@section Scripts {
+    <script>
+        $(document).ready( function() {
+            var contractTable = new RowAddAble({
+                TargetTable: "#js-add-facility",
+                TableTitle: 'Facility',
+                ButtonTitle: 'Facility'
+            });
+            contractTable.RenderButton();
+        });
+    </script>
+    <script type="text/javascript" src="~/js/pages/ajax-cascading/building-cascade.js"></script>
+}

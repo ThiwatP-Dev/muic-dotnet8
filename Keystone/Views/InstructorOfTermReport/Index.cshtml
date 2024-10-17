@@ -1,0 +1,218 @@
+@model PagedResult<InstructorViewModel>
+@{
+    ViewData["Title"] = "Instructor Search";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+
+<section class="row">
+	<div class="col-md-12">
+		<div class="panel-group">
+			<div class="block block--underline">
+				<div class="block__title collapsed" data-toggle="collapse" data-target="#instructor-search-table">
+					<header>Instructor Search</header>
+					<div class="tools">
+						<div class="btn-group">
+							<a class="btn btn--white btn--circle">
+								<i class="la la-angle-down"></i>
+							</a>
+						</div>
+					</div>
+				</div>
+				<!--end .block-head -->
+				<div id="instructor-search-table" class="collapse show" aria-expanded="true">
+					<div class="block__body">
+                        <form class="form-horizontal" asp-controller="InstructorOfTermReport" asp-action="Index" id="search-criteria" method="GET">
+                            @Html.AntiForgeryToken()
+                            <div class="row form-group m-b-30">
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="@ViewBag.AcademicLevels" data-placeholder="Select">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Academic Level<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="@ViewBag.Terms" data-placeholder="Select">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Term<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-2">
+                                    <div class="form-group">
+                                        <input id="Code" class="form-control" asp-for="Criteria.Code" type="text" autofocus>
+                                        <label>Instructor ID</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-2">
+                                    <div class="form-group">
+                                        <input class="form-control" asp-for="Criteria.FirstName">
+                                        <label>First Name</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-2">
+                                    <div class="form-group">
+                                        <input class="form-control" asp-for="Criteria.LastName">
+                                        <label>Last Name</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row form-group mb-0">
+                                <div class="col-3">
+                                    <div class="form-group">
+                                        <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="@ViewBag.Faculties" data-placeholder="Select">
+                                            <option selected>Select</option>
+                                        </select>
+                                        <label>Division</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-3">
+                                    <div class="form-group">
+                                        <select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentId" asp-items="@ViewBag.Departments" data-placeholder="Select">
+                                            <option selected>Select</option>
+                                        </select>
+                                        <label>Major</label>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <select class="form-control chosen-select" asp-for="Criteria.Status" asp-items="@ViewBag.Statuses" data-placeholder="All"></select>
+                                    <label>Status</label>
+                                </div>
+
+                                <div class="col-2">
+                                    <select class="form-control chosen-select" asp-for="Criteria.InstructorTypeId" asp-items="@ViewBag.InstructorTypes" data-placeholder="All">
+                                        <option selected>Select</option>
+                                    </select>
+                                    <label>Type</label>
+                                </div>
+
+                                <div class="col-2 align-self-end text-right">
+                                    <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">
+                                        <i class="la la-search mr-2"></i>Search
+                                    </button>
+                                    <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                        Reset
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+					</div>
+					<!--end .block-body -->
+				</div>
+			</div>
+			<!--end .block -->
+		</div>
+	</div>
+    <!-- End Instructor Search -->
+    <div class="col-md-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <form id="export-excel-form" asp-controller="InstructorOfTermReport" asp-action="ExportExcel" method="POST">
+                    <header>Search Result (@(Model?.RowCount ?? 0))</header>
+                    @if(Model?.Results != null)
+                    {
+                        <div class="tools pr-4">
+                            <a id="copy-text" class='btn btn--primary btn-mw-120 mb-0 m-r-5' >
+                                <i class="la la-envelope mr-2 font-weight-800"></i>Copy Emails
+                            </a>
+                            <button id="js-export-excel" class="btn btn--primary mb-0" type="submit">
+                                <i class="la la-file-excel mr-2 font-weight-800"></i>Export Excel
+                            </button>
+                            <input name="Criteria.FirstName" value="@Model.Criteria.FirstName" type="hidden">
+                            <input name="Criteria.Code" value="@Model.Criteria.Code" type="hidden">
+                            <input name="Criteria.FacultyId" value="@Model.Criteria.FacultyId" type="hidden">
+                            <input name="Criteria.LastName" value="@Model.Criteria.LastName" type="hidden">
+                            <input name="Criteria.Status" value="@Model.Criteria.Status" type="hidden">
+                            <input name="Criteria.DepartmentId" value="@Model.Criteria.DepartmentId" type="hidden">
+                            <input name="Criteria.InstructorTypeId" value="@Model.Criteria.InstructorTypeId" type="hidden">
+                            <input name="Criteria.CodeAndName" value="@Model.Criteria.CodeAndName" type="hidden">
+                            <input name="Criteria.TermId" value="@Model.Criteria.TermId" type="hidden">
+                            <input name="Criteria.AcademicLevelId" value="@Model.Criteria.AcademicLevelId" type="hidden">
+                            <input name="returnUrl" type="hidden" value="@contextPath">
+                        </div>
+                    }
+                </form>
+                <input class="js-text" value="@Model.Criteria.InstructorEmails" type="hidden">
+            </div>
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table id="js-instructor-search" class="table table-bordered m-0">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Instructor ID</th>
+                                <th class="text-center">Image</th>
+                                <th>Full name</th>
+                                <th>Division</th>
+                                <th>Major</th>
+                                <th>Email</th>
+                                <th>Type</th>
+                                <th class="text-center">Status</th>
+                             @*   <th class="text-center">Actions</th>*@
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Results != null)
+                            {
+                                @foreach (var item in Model.Results)
+                                {
+                                    <tr>
+                                        <td>@item.Code</td>
+                                        <td>
+                                            <img class="w-100 h-100 img-cover" src="@item.ProfileImageURL" alt="Image Not Found" onerror="this.onerror=null;this.src='/images/default-profile-m.png';">
+                                        </td>
+                                        <td class="text-uppercase">@item.FullNameEn</td>
+                                        <td>@item.FacultyNameEn</td>
+                                        <td>@item.DepartmentCode</td>
+                                        <td>@item.Email</td>
+                                        <td>@item.Type</td>
+                                        <td>
+                                            <partial name="_BooleanActive" model="@item.IsActive" />
+                                        </td>
+                                     @*   <td class="text-nowrap td-actions">
+                                            <a asp-controller="Instructor"
+                                               asp-action="Details"
+                                               asp-route-Id="@item.Id"
+                                               asp-route-returnUrl="@contextPath">
+                                                <i class="la la-info info"></i>
+                                            </a>
+                                            <a asp-controller="Instructor"
+                                               asp-action="Edit"
+                                               asp-route-Id="@item.Id"
+                                               asp-route-returnUrl="@contextPath">
+                                                <i class="la la-edit edit"></i>
+                                            </a>
+                                            <a data-toggle="modal" 
+                                               data-target="#delete-confirm-modal"
+                                               data-controller="Instructor" 
+                                               data-action="Delete" 
+                                               data-value="@item.Id">
+                                                <i class="la la-trash delete"></i>
+                                            </a>
+                                        </td>*@
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td class="text-center" colspan="10">NO DATA</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @(await Component.InvokeAsync<PagerViewComponent>(Model))
+    </div>
+</section>
+
+@section Modals {
+    <partial name="_DeleteConfirmModals">
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/instructor.js"></script>
+}

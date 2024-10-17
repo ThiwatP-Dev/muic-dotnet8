@@ -1,0 +1,158 @@
+@model PagedResult<ScoringViewModel>
+
+@{
+    ViewData["Title"] = "Grading by Score";
+    var index = Model?.FirstRowOnPage;
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+    bool isGradeMember = false;
+    bool.TryParse(ViewBag.IsGradeMember + "", out isGradeMember);
+}
+
+<section class="row">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Course</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="ScoreByInstructor" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group mb-0">
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Academic Level<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="ViewBag.Terms">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Term<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.CourseCode" type="text">
+                            <label>Course</label>
+                        </div>
+                        <div class="col-3 align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+@if(Model != null)
+{
+    <section class="row">
+        <div class="col-12">
+            <div class="block block--underline">
+                <div class="block__title">
+                    <header>Result Course(@(Model.Results?.Count ?? 0))</header>
+                </div>
+                <div class="block__body">
+                    <div class="table-responsive">
+                        <table id="ja-grade-score-main-table" class="table table-bordered table-hover w-100x mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="text-center w-25">#</th>
+                                    <th>Course</th>
+                                    <th>Joint Course</th>
+                                    <th class="text-center w-100">Grade Entered</th>
+                                    <th class="text-center w-75">AU/I</th>
+                                    @* <th class="text-center w-50">Skip</th> *@
+                                    <th class="text-center w-50">Withdrawn</th>
+                                    @* <th class="text-center w-50">Publish</th> *@
+                                    <th class="text-center w-100">Registered students</th>
+                                    <th class="text-center w-50">Last Grade Entered Date</th>
+                                    <th class="text-center w-100">Submitted</th>
+                                    <th class="text-center w-50">Last Date Submitted</th>
+                                    <th class="text-nowrap text-center w-150">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.Results.Any())
+                                {
+                                    foreach (var item in Model.Results)
+                                    {
+                                        <tr>
+                                            <td>@(index++)</td>
+                                            <td>@item.CourseAndCredit</td>
+                                            <td>@item.CourseAndCreditJoint</td>
+                                            <td>@item.ScoreStudent</td>
+                                            <td>@item.GradeAuOrIStudent</td>
+                                            @* <td>@item.Skip</td> *@
+                                            <td>@item.WithdrawnStudent</td>
+                                            @* <td>@item.PublishedStudent</td> *@
+                                            <td>@item.TotalStudent</td>
+                                            <td data-sort="@(item.LastGradeDate?.Ticks ?? 0)">
+                                                @(item.LastGradeDate?.ToString(StringFormat.ShortDate) ?? "N/A")
+                                            </td>
+                                            <td>
+                                                <partial name="_BooleanResult" model="@item.IsBarcode"/>
+                                            </td>
+                                            <td data-sort="@(item.SubmitDate?.Ticks ?? 0)">
+                                                @(item.SubmitDate?.ToString(StringFormat.ShortDate) ?? "N/A")
+                                            </td>
+                                            <td class="text-nowrap td-actions">
+                                                @if (item.IsMarkAllocation)
+                                                {
+                                                    <a asp-controller="ScoreByInstructor" 
+                                                       asp-action="Edit" 
+                                                       asp-route-courseId="@item.CourseId"
+                                                       asp-route-termId="@item.TermId"
+                                                       asp-route-returnUrl="@contextPath">
+                                                        <i class="la la-edit edit"></i>
+                                                    </a>
+                                                }
+                                                @if (item.ScoreStudent != 0 || item.GradeAuOrIStudent != 0)
+                                                {
+                                                    <a asp-controller="GradeScoreSummary" 
+                                                       asp-action="EditGrade" 
+                                                       asp-route-courseId="@item.CourseId"
+                                                       asp-route-termId="@item.TermId"
+                                                       asp-route-returnUrl="@contextPath">
+                                                        <i class="la la-info info"></i>
+                                                    </a>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="10">
+                                            <i class="text-danger">No data</i>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            @(await Component.InvokeAsync<PagerViewComponent>(Model))
+        </div>
+    </section>
+}
+
+<partial name="_DeleteConfirmModals" />
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/grade-scoring-index.js"></script>
+}

@@ -1,0 +1,100 @@
+@model GraduatingRequestViewModel
+@{
+    ViewData["Title"] = "Graduating Grouping Course Log " + @Model.Student.FullNameEn;
+    var searchReturnUrl = ViewBag.ReturnUrl;
+    var mainUrl = ViewBag.ReturnMainUrl;
+    var contextPath = $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+
+<section>
+    <div class="row">
+        <div class="ks-page-header col-lg-12">
+            <h2 class="ks-page-header__title">
+                <a class="btn-back" href="@searchReturnUrl">
+                    <i class="la la-angle-double-left mr-1"></i>Back
+                </a>
+            </h2>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="block block--underline">
+        <div class="block__title">
+            <header>
+                <h3 class="ks-page-header__title">@Model.Student.Code @Model.Student.FullNameEn</h3>
+            </header>
+        </div>
+        <div class="block__body">
+            <div class="row form-group mb-2">
+                <div class="col-4">
+                    <input name="returnUrl" value="@searchReturnUrl" hidden>
+                    <input name="retrunMainUrl" value="@mainUrl" hidden>
+                    <div class="form-control-label d-flex align-items-center">Curriculum Version</div>
+                    <div class="form-control-plaintext">@Model.Student.AcademicInformation.CurriculumVersion.Curriculum.NameEn</div>
+                </div>
+                <div class="col-8">
+                    <input class="form-control" asp-for="CourseGroupingLog.Remark" type="text">
+                    <label>Remark</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="registration-courses">
+    <div class="block block--underline">
+        <div class="block__title">
+            <header>
+                <h3 class="ks-page-header__title">Registration Course</h3>
+            </header>
+        </div>
+        <div class="block__body">
+            <div class="form-group">
+                <table id="js-registration-courses" class="table table-bordered m-0">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Code</th>
+                            <th>Name</th>
+                            <th>Equal Course</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.CourseGroupingCreates != null && Model.CourseGroupingCreates.Any())
+                        {
+                            for (int i = 0; i < Model.CourseGroupingCreates.Count(); i++)
+                            {
+                                <tr>
+                                    @for (int j = 0; j < Model.CourseGroupingCreates[i].RegistrationCourseIds.Count(); j++)
+                                    {
+                                        <input type="hidden" asp-for="CourseGroupingCreates[i].RegistrationCourseIds[j]">
+                                    }
+
+                                    <input type="hidden" asp-for="CourseGroupingCreates[i].CourseGroupId">
+                                    <input type="hidden" asp-for="CourseGroupingCreates[i].CourseGroupName">
+                                    <input type="hidden" asp-for="CourseGroupingCreates[i].CourseId">
+                                    <input type="hidden" asp-for="CourseGroupingCreates[i].CourseCode">
+                                    <input type="hidden" asp-for="CourseGroupingCreates[i].CourseName">
+                                    <td>@Model.CourseGroupingCreates[i].CourseCode</td>
+                                    <td>@Model.CourseGroupingCreates[i].CourseName</td>
+                                    <td>
+                                        <select class="chosen-select form-control" asp-for="CourseGroupingCreates[i].EquivalentCourseId"
+                                                asp-items="ViewBag.EqualCourses" data-placeholder="Select">
+                                            <option selected value="">Select</option>
+                                        </select>
+                                    </td>
+                                    <td class="text-nowrap text-center td-actions">
+                                        <a class="js-del-row" href="#!" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                            <i class="la la-trash delete"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>

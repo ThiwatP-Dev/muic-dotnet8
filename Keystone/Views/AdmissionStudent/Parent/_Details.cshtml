@@ -1,0 +1,83 @@
+@model ParentInformation
+
+<div class="row form-group">
+    <div class="col-4">
+        <div class="form-control-label d-flex align-items-center">English Name</div>
+        <div class="form-control-plaintext">@Model?.FullNameEn</div>
+    </div>
+    <div class="col-4">
+        <div class="form-control-label d-flex align-items-center">Thai Name</div>
+        <div class="form-control-plaintext">@Model?.FullNameTh</div>
+    </div>
+    <div class="col-4">
+        <div class="form-control-label d-flex align-items-center">Citizen Number</div>
+        <div class="form-control-plaintext">@Model?.CitizenNumber</div>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-4">
+        <div class="form-control-label d-flex align-items-center">Relationship</div>
+        <div class="form-control-plaintext">@Model?.Relationship?.NameEn</div>
+    </div>
+    <div class="col-4">
+        <div class="form-control-label d-flex align-items-center">Email</div>
+        <div class="form-control-plaintext">@Model?.Email</div>
+    </div>
+    <div class="col-4">
+        <div class="form-control-label d-flex align-items-center">Telephone Number</div>
+        <div class="form-control-plaintext">@Model.TelephoneNumber1</div>
+    </div>
+</div >
+
+<div class="row form-group">
+    <div class="col-12">
+        <div class="form-control-label d-flex align-items-center">English Address</div>
+        <div class="form-control-plaintext">@Model?.AddressEn</div>
+    </div>
+
+    <div class="col-12">
+        <div class="form-control-label d-flex align-items-center">Thai Address</div>
+        <div class="form-control-plaintext">@Model?.AddressTh</div>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-4">
+        <div class="form-control-label d-flex align-items-center">Country</div>
+        <div class="form-control-plaintext">@Model?.Country?.NameEn</div>
+    </div>
+    <div class="col-4">
+        <div class="form-control-label d-flex align-items-center">Province</div>
+        <div class="form-control-plaintext">@Model?.Province?.NameEn</div>
+    </div>
+    <div class="col-4">
+        <div class="form-control-label d-flex align-items-center">District</div>
+        <div class="form-control-plaintext">@Model?.District?.NameEn</div>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-4">
+        <div class="form-control-label d-flex align-items-center">Subdistrict</div>
+        <div class="form-control-plaintext">@Model?.Subdistrict?.NameEn</div>
+    </div>
+    <div class="col-4">
+        <div class="form-control-label d-flex align-items-center">ZIP Code</div>
+        <div class="form-control-plaintext">@Model?.ZipCode</div>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-4">
+        <input id="CheckboxDetailsMain" class="form-check-input" name="IsMainParent" type="checkbox" @(Model == null ? "" : (Model.IsMainParent == true ? "checked" : "")) readonly>
+        <label for="CheckboxDetailsMain">Main Parent</label>
+    </div>
+    <div class="col-4">
+        <input id="CheckboxDetailsEmergency" class="form-check-input" name="IsEmergencyContact" type="checkbox" @(Model == null ? "" : (Model.IsEmergencyContact == true ? "checked" : "")) readonly>
+        <label for="CheckboxDetailsEmergency">Emergency Contact</label>
+    </div>
+    <div class="col-4">
+        <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-mw-120 btn--cancel rounded">Close</a>
+    </div>
+</div>

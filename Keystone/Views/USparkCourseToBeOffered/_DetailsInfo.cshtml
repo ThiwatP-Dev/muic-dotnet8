@@ -1,0 +1,70 @@
+@model Section
+
+<div class="block__title text-left">
+    <header class="p-a-20 w-100x">
+        <span class="class-lookup-head p-a-8">Section @Model?.Number</span>
+        <div class="class-lookup-title m-b-10">
+            @Model?.Course?.Code
+            <span class="class-lookup-title-sub"> (@Model?.Course?.Credit Credits)</span>
+        </div>
+        <div class="class-lookup-title font-weight-700 mb-3">@Model?.Course?.NameEn</div>
+        <div class="class-lookup-details">@Model?.Remark</div>
+    </header>
+</div>
+
+<div class="block mb-0">
+    <div class="block__body">
+        <label class="class-lookup-title">Prerequisite Course</label>
+        <div class="block p-a-20">
+            <div class="class-lookup-details"></div>
+        </div>
+        <label class="class-lookup-title">Examination</label>
+        <div class="block p-a-20">
+            <div class="d-flex class-lookup-details">
+                <div class="w-100x font-weight-700">Midterm</div>
+                <div class="w-100x d-flex justify-content-end text-right">@Model?.Midterm</div>
+            </div>
+            <div class="d-flex class-lookup-details">
+                <div class="w-100x font-weight-700">Final</div>
+                <div class="w-100x d-flex justify-content-end text-right">@Model?.Final</div>
+            </div>
+        </div>
+        <label class="class-lookup-title">Class Details</label>
+        <div class="block p-a-20">
+            @if (Model != null && Model.SectionDetails != null)
+            {   
+                @foreach (var item in Model.SectionDetails)
+                {
+                    <div class="class-lookup-details">
+                        <span class="class-lookup-details-half m-b-10">@item.Dayofweek</span> 
+                        <span class="class-lookup-details-half text-right">@item.Time</span>
+                        <span class="class-lookup-details-half font-weight-700">@item.Room?.NameEn</span>
+                        <span class="class-lookup-details-half font-weight-700 text-right">
+                            @foreach (var instructor in item.InstructorSections)
+                            {   
+                                <div class="text-right">
+                                    <a class="color-black"
+                                       asp-controller="Instructor"
+                                       asp-action="Details"
+                                       asp-route-id="@instructor.InstructorId"
+                                       asp-route-tabIndex="2">
+                                        @instructor.Instructor.FullNameEn
+                                    </a>
+                                </div>
+                            }
+                        </span>
+                        <span class="class-lookup-details m-b-10">@item.Remark</span> 
+                    </div>
+                }
+            }  
+        </div>
+    </div>
+
+    <div class="block__action">
+        <div class="block__action-row">
+            <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-mw-120 btn--cancel rounded">Close</a>
+        </div>
+    </div>
+</div>
+
+

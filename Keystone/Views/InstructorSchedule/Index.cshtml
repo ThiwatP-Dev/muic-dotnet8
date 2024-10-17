@@ -1,0 +1,113 @@
+@model PagedResult<SearchInstructorScheduleViewModel>
+@{
+    ViewData["Title"] = "Instructor Schedule";
+}
+
+<section class="ks-instructor-schedule">
+    <div class="col-12">
+		<div class="panel-group">
+			<div class="block block--underline">
+				<div class="block__title">
+					<header>Instructor Schedule</header>
+				</div>
+
+                <div class="block__body">
+                    <form class="form-horizontal" asp-controller="InstructorSchedule" asp-action="Index" method="GET">
+                        @Html.AntiForgeryToken()
+                        <div class="row form-group m-b-30">
+                            <div class="col-3">
+                                <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                                    <option selected disabled>Select</option>
+                                </select>
+                                <label>Academic Level<span class="text-danger">*</span></label>
+                            </div>
+                            <div class="col-3">
+                                <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="ViewBag.Terms">
+                                    <option selected disabled>Select</option>
+                                </select>
+                                <label>Term<span class="text-danger">*</span></label>
+                            </div>
+                            <div class="col-3">
+                                <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="ViewBag.Faculties">
+                                    <option selected>Select</option>
+                                </select>
+                                <label>Division</label>
+                            </div>
+                            <div class="col-3">
+                                <select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentId" asp-items="ViewBag.Departments">
+                                    <option selected>Select</option>
+                                </select>
+                                <label>Major</label>
+                            </div>
+                        </div>
+                        
+                        <div class="row form-group m-b-30">
+                            <div class="col-6">
+                                <h4 class="font-size-default m-y-4">Instructor</h4>
+                                <select class="chosen-select form-control js-cascade-multiple-instructor" asp-for="Criteria.InstructorIds"
+                                        asp-items="ViewBag.Instructors" data-placeholder="Select" multiple>
+                                </select>
+                            </div>
+                            <div class="col-6 text-right align-self-end">
+                                <button type="submit" class="btn btn--primary btn-mw-120 mb-0 m-r-5">
+                                    <i class="la la-search mr-2"></i>Search
+                                </button>
+                                <button type="button" class="btn btn-mw-120 btn--white mb-0 js-reset-btn">
+                                    Reset
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+			</div>
+		</div>
+	</div>
+
+    @if (Model != null)
+    {
+        <div class="col-lg-12">
+	    	<div class="block block--underline">
+                <div class="block__title">
+                    <header>Search Result (@(Model?.RowCount ?? 0))</header>
+                </div>
+                
+                <div class="block__body table-responsive">
+                    <table id="js-instructor-schedule-search" class="table table-bordered m-0">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Code</th>
+                                <th>Name</th>
+                                <th>Academic Level</th>
+                                <th>Division</th>
+                                <th>Major</th>
+                                <th class="text-center no-sort">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Results)
+                            {
+                                <tr>
+                                    <td>@item.Code</td>
+                                    <td>@item.NameEn</td>
+                                    <td>@item.AcademicLevel</td>
+                                    <td>@item.Faculty</td>
+                                    <td>@item.Department</td>
+                                    <td class="text-nowrap td-actions">
+                                        <a asp-controller="InstructorSchedule"
+                                           asp-action="Details"
+                                           asp-route-termId="@Model.Criteria.TermId"
+                                           asp-route-facultyId="@Model.Criteria.FacultyId"
+                                           asp-route-instructorId="@item.Id">
+                                            <i class="la la-info info"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+	    	</div>
+            @(await Component.InvokeAsync<PagerViewComponent>(Model))
+        </div>
+    }
+</section>

@@ -1,0 +1,15 @@
+@model GradeCondition
+@{ 
+    ViewData["Title"] = "Edit Grade Condition"; 
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <form class="ks-form container" asp-controller="GradeCondition" asp-action="Edit" method="POST">
+                @Html.AntiForgeryToken()
+                <partial name="_Form">
+            </form>
+        </div>
+    </div>
+</section>

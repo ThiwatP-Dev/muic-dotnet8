@@ -1,0 +1,84 @@
+@model List<SpecializationGroup>
+@{
+    ViewData["Title"] = "Module";
+    var index = 1;
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+ }
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Module</header>
+                <div class="tools pr-4">
+                    <a class="btn btn--primary" asp-action="Create">
+                        <i class="la la-plus mr-1 font-weight-800"></i> Add Module
+                    </a>
+                </div>
+            </div>
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover w-100x">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center">Code</th>
+                                <th>English Name</th>
+                                <th>Thai Name</th>
+                                <th>English Short Name</th>
+                                <th>Thai Short Name</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Last Update</th>
+                                <th class="text-nowarp text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model) 
+                            {
+                                <tr>
+                                    <td>@index</td>
+                                    <td>@item.Code</td>
+                                    <td>@item.NameEn</td>
+                                    <td>@item.NameTh</td>
+                                    <td>@item.ShortNameEn</td>
+                                    <td>@item.ShortNameTh</td>
+                                    <td>
+                                        <partial name="_BooleanActive" model="@item.IsActive">
+                                    </td>
+                                    <td>@item.LastUpdate</td>
+                                    <td class="text-nowrap td-actions">
+                                        <a asp-controller="Module" asp-action="Edit" asp-route-Id="@item.Id">
+                                            <i class="la la-edit edit"></i>
+                                        </a>
+                                        <a asp-controller="Module"
+                                           asp-action="Details"
+                                           asp-route-moduleId="@item.Id"
+                                           asp-route-returnUrl="@contextPath">
+                                            <i class="la la-info info"></i>
+                                        </a>
+                                        <a data-toggle="modal" 
+                                           data-target="#delete-confirm-modal" 
+                                           data-controller="Module" 
+                                           data-action="Delete" 
+                                           data-value="@item.Id">
+						                    <i class="la la-trash delete"></i>
+					                    </a>
+                                    </td>
+                                </tr>
+                                index++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Modals {
+    <partial name="_DeleteConfirmModals">
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/curriculum-details.js"></script>
+}

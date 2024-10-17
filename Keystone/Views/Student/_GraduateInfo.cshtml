@@ -1,0 +1,65 @@
+
+@model List<GraduationInformation>
+
+@if(Model != null && Model.Any())
+{
+    foreach(var item in Model)
+    {
+        if(item.IsActive == true)
+        {
+            <section class="ks-graduation-info">
+                <div class="block block--underline no-shadow h-100x m-b-30">
+                    <div class="block__body">
+                        <div class="section-title">
+                            <span>
+                                <h4>Curriculum Version</h4>
+                            </span>
+                            <span class="text-nowarp text-center td-actions">
+                                <a asp-controller="GraduationInformation"
+                                   asp-action="Edit"
+                                   asp-route-Id="@item.Id">
+                                    <i class="la la-edit edit"></i>
+                                </a>
+                            </span>
+                            
+                            <div class="row form-group mb-2">
+                                <div class="col-4">
+                                    <div class="form-control-plaintext">@item.CurriculumInformation?.CurriculumVersion?.NameEn</div>
+                                </div>
+                                <div class="form-group mb-3 col-md-3 col-xl-3">
+                                    <partial name="_BooleanActive" model="@item.IsActive" />
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div class="section-title">
+                            <h4>Graduation</h4>
+                        </div>
+    
+                        <div class="row form-group">
+                            <div class="col-md-4 align-self-center">
+                                <div class="form-control-label d-flex align-items-center">Graduated Date</div>
+                                <div class="form-control-plaintext">@item.GraduatedAtText</div>
+                            </div>
+                            <div class="col-md-4 align-self-center">
+                                <div class="form-control-label d-flex align-items-center">Graduated Term</div>
+                                <div class="form-control-plaintext">@item.Term.TermText</div>
+                            </div>
+                            <div class="col-md-4 align-self-center">
+                                <div class="form-control-label d-flex align-items-center">Honor</div>
+                                <div class="form-control-plaintext">@item.AcademicHonor?.NameEn</div>
+                            </div>
+                        </div>
+    
+                        <div class="row form-group">
+                            <div class="col-md-12 align-self-center">
+                                <div class="form-control-label d-flex align-items-center">Graduation Remark</div>
+                                <div class="form-control-plaintext">@item.Remark</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        }
+    }
+}

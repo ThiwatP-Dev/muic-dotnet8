@@ -1,0 +1,84 @@
+@model ExaminationPeriod
+@{
+    var index = 1;
+}
+
+<section class="row">
+	<div class="ks-page-header col-12">
+		<h2 class="ks-page-header__title">
+			<a class="btn-back" href="@ViewBag.ReturnUrl">
+				<i class="la la-angle-double-left"></i>
+			</a>
+			<span>Examination Period Details</span>
+		</h2>
+	</div>
+</section>
+
+<section>
+	<div class="block block--underline">
+        <div class="block__body">
+            <div class="row form-group">
+                <div class="col-3">
+                    <div class="form-control-label d-flex align-items-center">Term</div>
+                    <div class="form-control-plaintext">@Model?.Term?.TermText</div>
+                </div>
+                <div class="col-3">
+                    <div class="form-control-label d-flex align-items-center">Period</div>
+                    <div class="form-control-plaintext">@Model?.Period</div>
+                </div>
+                <div class="col-3">
+                    <div class="form-control-label d-flex align-items-center">Midterm Date</div>
+                    <div class="form-control-plaintext">@Model?.MidtermDateText</div>
+                </div>
+                <div class="col-3">
+                    <div class="form-control-label d-flex align-items-center">Midterm Time</div>
+                    <div class="form-control-plaintext">@Model?.MidtermTimeText</div>
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-6"></div>
+                <div class="col-3">
+                    <div class="form-control-label d-flex align-items-center">Final Date</div>
+                    <div class="form-control-plaintext">@Model?.FinalDateText</div>
+                </div>
+                <div class="col-3">
+                    <div class="form-control-label d-flex align-items-center">Final Time</div>
+                    <div class="form-control-plaintext">@Model?.FinalTimeText</div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table id="js-faculty" class="table table-bordered table-hover w-100x">
+                    <thead>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th>Course</th>
+                            <th>Course Name</th>
+                            <th class="text-center">Special Case</th>
+                            <th class="text-center">Evening</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Courses.Any())
+                        {
+                            @foreach(var item in Model.Courses) 
+                            {
+                                <tr>
+                                    <td>@index</td>
+                                    <td>@item.Course.Code</td>
+                                    <td>@item.Course.NameEn</td>
+                                    <td>
+                                        <partial name="_BooleanCheck" model="@item.IsSpeacialCase" />
+                                    </td>
+                                    <td>
+                                        <partial name="_BooleanCheck" model="@item.IsEvening" />
+                                    </td>
+                                </tr>
+                                index++;
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>

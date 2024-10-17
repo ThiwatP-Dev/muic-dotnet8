@@ -1,0 +1,60 @@
+@model RoomScheduleDetailByTermPreview
+@{
+    ViewData["Title"] = $"Room: { Model.Name }  Academic Year: { Model.Term }";
+}
+
+<section>
+    <div class="row">
+        <div class="ks-page-header col-lg-12">
+            <h2 class="ks-page-header__title">
+                <a class="btn-back" href="@ViewBag.ReturnUrl">
+                    <i class="la la-angle-double-left mr-1"></i>Back
+                </a>
+            </h2>
+        </div>
+    </div>
+
+    <div class="block block--underline">
+        <div class="block__title d-flex justify-content-between">
+			<header class="align-self-center">
+                <span class="mr-3 my-2">Room : @Model.Name</span>
+                <span class="mr-3 my-2">Building : @Model.BuildingName</span>
+                <span class="mr-3 my-2">Academic Year : @Model.Term</span>
+                <span class="mr-3 my-2">Campus : @Model.CampusName</span>
+                <span class="my-2">as of : @Model.PrintDateString</span>
+            </header>
+            <div class="tool">
+                <ul class="d-flex flex-md-row align-items-md-center float-right">
+                    <li class="list-inline-item mx-3 mb-0">
+                        <form class="form-horizontal" asp-controller="RoomScheduleByTerm" asp-action="Preview" method="POST">
+                            @if (Model != null)
+                            {
+                                <input name="roomIds" value="@Model.RoomId" hidden>
+                                <input name="termId" value="@Model.TermId" hidden>
+                                <input name="sectionStatus" value="@Model.SectionStatus" hidden>
+                                <input name="returnUrl" value="@ViewBag.ReturnUrl" hidden>
+                                <button class="btn btn-mw-120 btn--primary" type="submit">Print</button>
+                            }
+                        </form>
+                    </li>
+                </ul>
+            </div>
+		</div>
+        
+        <div id="js-printJS-form" class="block__body">
+            <div class="block__title">
+                <header class="p-0">Class Schedule</header>
+            </div>
+            <div class="mx-auto">
+                <div id="js-schedule" class="table-responsive" data-schedules="@ViewBag.CoursesJsonData">
+                    <partial name="_Schedule">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts 
+{
+    <script src="~/js/pages/room-schedule.js"></script>
+}

@@ -1,0 +1,96 @@
+﻿@model HolidayCalendarDetailViewModel
+
+<div class="block block--underline mb-0">
+    <div class="block__title">
+        <header>Holiday</header>
+        <div class="tools pr-4">
+            <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-mw-120 btn--cancel rounded">Close</a>
+        </div>
+    </div>
+
+    <div class="block__body">
+        <div class="row form-group mb-3">
+            <div class="col-12">
+                <div class="form-control-label d-flex align-items-center"><b>Title</b></div>
+                <div class="form-control-plaintext text-wrap">@Model?.Title</div>
+            </div>
+        </div>
+        <div class="row form-group mb-3">
+            <div class="col-12">
+                <div class="form-control-label d-flex align-items-center"><b>Remark</b></div>
+                <div class="form-control-plaintext text-wrap">@Model?.Remark</div>
+            </div>
+        </div>
+        <div class="row form-group mb-3">
+            <div class="col-3">
+                <div class="form-control-label d-flex align-items-center"><b>Start From</b></div>
+                <div class="form-control-plaintext text-wrap">@Model?.Start.ToString(StringFormat.DayShortMonthYear)</div>
+            </div>
+            <div class="col-3">
+                <div class="form-control-label d-flex align-items-center"><b>End</b></div>
+                <div class="form-control-plaintext text-wrap">@Model?.End.ToString(StringFormat.DayShortMonthYear)</div>
+            </div>
+            <div class="col-3">
+                <div class="form-control-label d-flex align-items-center"><b>Is Allow Make Up</b></div>
+                <div class="form-control-plaintext text-wrap">@Model?.IsAllowMakeup</div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <span class="class-lookup-title">Section Slot During Holiday Date</span>
+            <table class="table table-bordered table-hover js-holiday-table w-100x">
+                <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th class="text-center">Date</th>
+                        <th class="text-center">Day</th>
+                        <th class="text-center">Time</th>
+                        <th >Course</th>
+                        <th class="text-center">Section</th>
+                        <th>Room</th>
+                        <th>Teaching Type</th>
+                        <th>Make Up Status</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.SectionSlots != null && Model.SectionSlots.Any())
+                    {
+                        var index = 1;
+                        foreach (var item in Model.SectionSlots.OrderBy(x => x.Date))
+                        {
+                            <tr>
+                                <td>@index</td>
+                                <td>@item.DateText</td>
+                                <td>@item.Dayofweek</td>
+                                <td>@item.Time</td>
+                                <td>@item.Section?.Course?.CodeAndName</td>
+                                <td>@item.Section?.Number</td>
+                                <td>@item.Room?.NameEn</td>
+                                <td>@item.TeachingType?.NameEn</td>
+                                <td>@item.IsMakeUpClass</td>
+                                <td class="@("Cancel".Equals(item.StatusText)? "text-danger" : " ")">@item.StatusText</td>
+                            </tr>
+                            ++index;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="10" class="text-center">
+                                <i class="text-danger">No Data</i>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="block__action">
+        <div class="block__action-row">
+            <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-mw-120 btn--cancel rounded">Close</a>
+        </div>
+    </div>
+
+</div>

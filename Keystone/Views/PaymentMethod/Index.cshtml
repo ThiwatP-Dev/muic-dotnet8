@@ -1,0 +1,85 @@
+@model PagedResult<PaymentMethod>
+@{ 
+    ViewData["Title"] = "Payment Method";
+    var recordNumber = Model?.FirstRowOnPage;
+}
+
+<section class="row">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+        <ul class="d-flex flex-md-row align-items-md-center float-right">
+            <li class="list-inline-item mx-3 mb-0">
+                <a class="btn btn--primary" asp-action="Create">
+                    <i class="la la-plus mr-1 font-weight-800"></i> Add Payment Method
+                </a>
+            </li>
+        </ul>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-md-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.RowCount ?? 0))</header>
+            </div>
+            
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table id="js-payment-method" class="table table-bordered table-hover w-100x js-datatable-export-excel">
+                        <thead>
+                            <tr>
+                                <th class="text-center w-25 no-print">#</th>
+                                <th>English Name</th>
+                                <th>Thai Name</th>
+                                <th class="text-center w-125">Status</th>
+                                <th class="text-center w-150 no-print">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null)
+                            {
+                                foreach(var item in Model.Results)
+                                {
+                                    <tr>
+                                        <td>@recordNumber</td>
+                                        <td>@item.NameEn</td>
+                                        <td>@item.NameTh</td>
+                                        <td>
+                                            <partial name="_BooleanActive" model="@item.IsActive"/>
+                                        </td>
+                                        <td class="text-nowrap td-actions">
+                                            <a asp-controller="PaymentMethod" asp-action="Edit" asp-route-id="@item.Id">
+                                                <i class="la la-edit edit"></i>
+                                            </a>
+                                            <a data-toggle="modal" 
+                                               data-target="#delete-confirm-modal" 
+                                               data-controller="PaymentMethod" 
+                                               data-value="@item.Id"
+                                               data-action="Delete">
+                                                <i class="la la-trash delete"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    recordNumber++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="5"><i class="text-danger">No Data</i></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<partial name="_DeleteConfirmModals" />
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/datatable-export-excel.js"></script>
+}

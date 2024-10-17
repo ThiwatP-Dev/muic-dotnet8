@@ -1,0 +1,137 @@
+.questionnaire {
+
+    &-header {
+        position: relative;
+        height: 106px;
+        padding: 10px;
+        box-shadow: 0 1px 5px 1px rgba(52, 40, 104, 0.075);
+        background-color: $white;
+
+        &__title {
+
+        }
+
+        &__description {
+
+        }
+    }
+
+    &-body {
+        height: 100vh;
+
+        .block {
+
+            border-top: 2px solid $primary;
+        }
+    }
+
+            
+    .block {
+
+        &__title {
+
+            header {
+                line-height: normal;
+            }
+
+            .form-control-label {
+                font-size: 16px;
+            }
+        }
+
+        .group-description {
+            padding: 25px;
+            background-color: #f4f4f4;
+        }
+
+        .form-control-plaintext {
+            white-space: normal;
+        }
+
+        .question-wrapper {
+
+            margin: 10px 0;
+
+            .question-order {
+                width: fit-content;
+                margin-bottom: 0;
+                padding: 8px;
+                background-color: #eee;
+            }
+            
+            .question-body {
+                padding: 25px;
+                border: 2px solid #f4f4f4;
+
+                .answer-wrapper {
+                    margin: 25px 0;
+                    min-height: 50px;
+
+                    .form-check {
+
+                        margin-bottom: 32px;
+
+                        &:last-child {
+                            margin-bottom: 17px;
+                        }
+
+                        input[type="text"] {
+                            height: initial;
+                            padding-top: 0;
+                            padding-bottom: 10px;
+                        }
+
+                        label {
+                            width: 100%;
+                        }
+                    }
+                                 
+                    ::placeholder {
+                        color: $black;
+                        opacity: .6;
+                    }
+                }
+                
+                .btn-add-option {
+                    padding-bottom: 8px;
+                    cursor: pointer;
+                    
+                    &:hover {
+                        border-bottom: 1px solid #f4f4f4;
+                    }
+                }
+            }
+
+            .question-footer {
+                display: flex;
+
+                .next-question-btn  {
+                    display: none;
+                }
+            }
+        }
+
+        .question-wrapper.active {
+
+            .next-question-btn  {
+                display: inline-block;
+            }
+
+            .question-body {
+                border-left: 2px solid $primary;
+            }
+
+            .question-order {
+                background-color: $primary;
+                color: $white;
+            }
+        }
+    }
+
+    .block-group.editing {
+            
+        .form-control-plaintext {
+            display: none;
+        }
+    }
+}

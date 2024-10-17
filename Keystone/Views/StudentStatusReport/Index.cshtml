@@ -1,0 +1,506 @@
+@model PagedResult<Student>
+@{ 
+    ViewData["Title"] = "Student Status Report"; 
+    var recordNumber = Model?.FirstRowOnPage;
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline" id="student-status-report-search">
+            <div class="block__title collapsed" data-toggle="collapse" data-parent="#student-status-report-search" data-target="#student-status-report-1"
+    	         aria-expanded="false">
+                 <header>Search Student Status Report</header>
+    	    	<div class="tools">
+    	    		<div class="btn-group">
+    	    			<a class="btn btn--white btn--circle">
+    	    				<i class="la la-angle-down"></i>
+    	    			</a>
+    	    		</div>
+    	    	</div>
+    	    </div>
+
+            <div id="student-status-report-1" class="collapse show" aria-expanded="true">
+                <div class="block__body">
+                    <form class="form-horizontal" asp-controller="StudentStatusReport" asp-action="Index" method="GET">
+                        @Html.AntiForgeryToken()
+                        <div class="row form-group m-b-30">
+                            <div class="col-3">
+                                <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                                    <option selected>Select</option>
+                                </select>
+                                <label>Academic Level<span class="text-danger">*</span></label>
+                            </div>
+                            <div class="col-3">
+                                <h4 class="font-size-default m-y-4">Intaked Term</h4>
+                                <select class="chosen-select form-control js-cascade-multiple-term" asp-for="Criteria.TermIds" asp-items="ViewBag.Terms" data-placeholder="Select" multiple></select>
+                            </div>
+                            <div class="col-3">
+                                <h4 class="font-size-default m-y-4">Division</h4>
+                                <select class="chosen-select form-control js-cascade-multiple-faculty" asp-for="Criteria.FacultyIds" asp-items="ViewBag.Faculties" data-placeholder="Select" multiple></select>
+                            </div>
+                            <div class="col-3">
+                                <h4 class="font-size-default m-y-4">Major</h4>
+                                <select class="chosen-select form-control js-cascade-multiple-department" asp-for="Criteria.DepartmentIds" asp-items="ViewBag.Departments" data-placeholder="Select" multiple></select>
+                            </div>
+                        </div>
+
+                        <div class="row form-group m-b-30">
+                            <div class="col-3">
+                                <select class="chosen-select form-control js-cascade-curriculum" asp-for="Criteria.CurriculumId" asp-items="ViewBag.Curriculums">
+                                    <option selected>Select</option>
+                                </select>
+                                <label>Curriculum</label>
+                            </div>
+                            <div class="col-3">
+                                <select class="chosen-select form-control js-cascade-curriculum-version" asp-for="Criteria.CurriculumVersionId" asp-items="ViewBag.CurriculumVersions">
+                                    <option selected>Select</option>
+                                </select>
+                                <label>Curriculum Version</label>
+                            </div>
+                            <div class="col-3">
+                                <input class="form-control" asp-for="Criteria.StudentCodeFrom" type="number">
+                                <label>Code From</label>
+                            </div>
+                            <div class="col-3">
+                                <input class="form-control" asp-for="Criteria.StudentCodeTo" type="number">
+                                <label>To</label>
+                            </div>
+                        </div>
+
+                        <div class="row form-group m-b-30">
+                            <div class="col-3">
+                                <input class="form-control" asp-for="Criteria.CodeAndName" type="text">
+                                <label>Name</label>
+                            </div>
+                            <div class="col-3">
+                                <h4 class="font-size-default m-y-4">Student Status</h4>
+                                <select class="chosen-select form-control" asp-for="Criteria.StudentStatuses" asp-items="ViewBag.StudentStatuses" data-placeholder="Select" multiple></select>
+                            </div>
+                            <div class="col-3">
+                                <h4 class="font-size-default m-y-4">Student Fee Type</h4>
+                                <select class="chosen-select form-control" asp-for="Criteria.StudentFeeTypeIds" asp-items="ViewBag.StudentFeeTypes" data-placeholder="Select" multiple></select>
+                            </div>
+                            <div class="col-3">
+                                <h4 class="font-size-default m-y-4">Resident Type</h4>
+                                <select class="chosen-select form-control" asp-for="Criteria.ResidentTypeIds" asp-items="ViewBag.ResidentTypes" data-placeholder="Select" multiple></select>
+                            </div>                        
+                        </div>
+
+                        <div class="row form-group m-b-30">
+                            <div class="col-3">
+                                <select class="chosen-select form-control" asp-for="Criteria.IsThai" asp-items="ViewBag.ThaiStatuses"></select>
+                                <label>Thai/Non-Thai</label>
+                            </div>
+                            <div class="col-3">
+                                <h4 class="font-size-default m-y-4">Nationality</h4>
+                                <select class="chosen-select form-control" asp-for="Criteria.NationalityIds" asp-items="ViewBag.Nationalities" data-placeholder="Select" multiple></select>
+                            </div>
+                            <div class="col-3">
+                                <input class="form-control" asp-for="Criteria.StartStudentBatch" type="text">
+                                <label>Batch From</label>
+                            </div>
+                            <div class="col-3">
+                                <input class="form-control" asp-for="Criteria.EndStudentBatch" type="text">
+                                <label>Batch To</label>
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-3">
+                                <input class="form-control" asp-for="Criteria.BirthYear" type="text">
+                                <label>Year</label>
+                            </div>
+                            <div class="col-3">
+                                <select class="chosen-select form-control" asp-for="Criteria.Type" asp-items="ViewBag.ReportTypes"></select>
+                                <label>Report Type</label>
+                            </div>
+                            <div class="col-3">
+                                <h4 class="font-size-default m-y-4">Admission Type</h4>
+                                <select class="chosen-select form-control" asp-for="Criteria.AdmissionTypeIds" asp-items="ViewBag.AdmissionTypes" data-placeholder="Select" multiple></select>
+                            </div>
+                            <div class="col-3">
+                                <select class="chosen-select form-control" asp-for="Criteria.MinorId" asp-items="ViewBag.Minors" data-placeholder="Select">
+                                    <option selected value="">Select</option>
+                                </select>
+                                <label>Minor</label>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col align-self-end text-right">
+                                <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                    <i class="la la-search mr-2"></i>Search
+                                </button>
+                                <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                                    Reset
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (Model != null)
+{
+    <section class="row">
+        <div class="col-12">
+            <div class="block block--underline">
+                <div class="block__title">
+                    <header>Search Result (@(Model?.RowCount ?? 0))</header>
+                </div>
+                <div class="block__body">
+                    <div class="p-4 table-responsive">
+                        <table class="table table-bordered table-hover js-report-table w-100x">
+                            @if (Model.Criteria.Type == "f")
+                            {
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">#</th>
+                                        <th>Thai Id</th>
+                                        <th>Passport</th>
+                                        <th class="text-center">Batch</th>
+                                        <th class="text-center">Code</th>
+                                        <th>Title</th>
+                                        <th>First Name</th>
+                                        <th>Middle Name</th>
+                                        <th>Last Name</th>
+                                        <th>Native First Name</th>
+                                        <th>Native Middle Name</th>
+                                        <th>Native Last Name</th>
+                                        <th>Gender</th>
+                                        <th class="text-center">Date of Birth</th>
+                                        <th class="text-center">Age</th>
+                                        <th>Country of Citizenship</th>
+                                        <th>Nationality</th>
+                                        <th>Race</th>
+                                        <th>Language</th>
+                                        <th>Religion</th>
+                                        <th>Marital Status</th>
+                                        @* <th>Math Track</th>
+                                        <th>English Track</th> *@
+                                        <th>Student Fee Type</th>
+                                        <th>Resident Type</th>
+                                        <th>Email</th>
+                                        <th>Admission Email</th>
+                                        <th>Telephone Number</th>
+                                        <th>Status</th>
+                                        <th>Status Term</th>
+                                        <th>Status Date</th>
+                                        <th>Intake Term</th>
+                                        <th>Intake Date</th>
+                                        <th>Admission Type</th>
+                                        <th>Advisor English Name</th>
+                                        <th>Advisor Thai Name</th>
+                                        <th>Degree</th>
+                                        <th>Division</th>
+                                        <th>Major</th>
+                                        <th>Main Curriculum Code</th>
+                                        <th>Main Curriculum Name</th>
+                                        <th>Main CurriculumVersion Code</th>
+                                        <th>Main CurriculumVersion Name</th>
+                                        <th>Current Address</th>
+                                        <th>Current Sub District</th>
+                                        <th>Current District</th>
+                                        <th>Current Province</th>
+                                        <th>Current Country</th>
+                                        <th>Current Postal Code</th>
+                                        <th>Current Phone Number</th>
+                                        <th>Hourse Registration Address</th>
+                                        <th>Hourse Registration Sub District</th>
+                                        <th>Hourse Registration District</th>
+                                        <th>Hourse Registration Province</th>
+                                        <th>Hourse Registration Country</th>
+                                        <th>Hourse Registration Postal Code</th>
+                                        <th>Hourse Registration Phone Number</th>
+                                        <th>Father English First Name</th>
+                                        <th>Father English Middle Name</th>
+                                        <th>Father English Last Name</th>
+                                        <th>Father Native First Name</th>
+                                        <th>Father Native Middle Name</th>
+                                        <th>Father Native Last Name</th>
+                                        <th>Father Occupation</th>
+                                        <th>Father Address</th>
+                                        <th>Father Sub District</th>
+                                        <th>Father District</th>
+                                        <th>Father Province</th>
+                                        <th>Father Country</th>
+                                        <th>Father Postal Code</th>
+                                        <th>Father Phone Number</th>
+                                        <th>Father Email</th>
+                                        <th>Mother English First Name</th>
+                                        <th>Mother English Middle Name</th>
+                                        <th>Mother English Last Name</th>
+                                        <th>Mother Native First Name</th>
+                                        <th>Mother Native Middle Name</th>
+                                        <th>Mother Native Last Name</th>
+                                        <th>Mother Occupation</th>
+                                        <th>Mother Address</th>
+                                        <th>Mother Sub District</th>
+                                        <th>Mother District</th>
+                                        <th>Mother Province</th>
+                                        <th>Mother Country</th>
+                                        <th>Mother Postal Code</th>
+                                        <th>Mother Phone Number</th>
+                                        <th>Mother Email</th>
+                                        <th>Guardian English First Name</th>
+                                        <th>Guardian English Middle Name</th>
+                                        <th>Guardian English Last Name</th>
+                                        <th>Guardian Native First Name</th>
+                                        <th>Guardian Native Middle Name</th>
+                                        <th>Guardian Native Last Name</th>
+                                        <th>Guardian Occupation</th>
+                                        <th>Guardian Address</th>
+                                        <th>Guardian Sub District</th>
+                                        <th>Guardian District</th>
+                                        <th>Guardian Province</th>
+                                        <th>Guardian Country</th>
+                                        <th>Guardian Postal Code</th>
+                                        <th>Guardian Phone Number</th>
+                                        <th>Guardian Email</th>
+                                        <th>Emergency English First Name</th>
+                                        <th>Emergency English Middle Name</th>
+                                        <th>Emergency English Last Name</th>
+                                        <th>Emergency Native First Name</th>
+                                        <th>Emergency Native Middle Name</th>
+                                        <th>Emergency Native Last Name</th>
+                                        <th>Emergency Occupation</th>
+                                        <th>Emergency Address</th>
+                                        <th>Emergency Sub District</th>
+                                        <th>Emergency District</th>
+                                        <th>Emergency Province</th>
+                                        <th>Emergency Country</th>
+                                        <th>Emergency Postal Code</th>
+                                        <th>Emergency Phone Number</th>
+                                        <th>Emergency Email</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                    @if (Model != null && Model.Results.Any())
+                                    {
+                                        foreach (var item in Model.Results) 
+                                        {
+                                            <tr>
+                                                <td>@recordNumber</td>
+                                                <td>@item.CitizenNumber</td>
+                                                <td>@item.Passport</td>
+                                                <td>@item.AcademicInformation?.Batch</td>
+                                                <td>@item.Code</td>
+                                                <td>@item.Title?.NameEn</td>
+                                                <td>@item.FirstNameEn</td>
+                                                <td>@item.MidNameEn</td>
+                                                <td>@item.LastNameEn</td>
+                                                <td>@item.FirstNameTh</td>
+                                                <td>@item.MidNameTh</td>
+                                                <td>@item.LastNameTh</td>
+                                                <td>@item.GenderText</td>
+                                                <td>@item.BirthDate.ToString(StringFormat.ShortDate)</td>
+                                                <td>@item.Age</td>
+                                                <td>@item.BirthCountry?.NameEn</td>
+                                                <td>@item.Nationality?.NameEn</td>
+                                                <td>@item.Race?.NameEn</td>
+                                                <td>@item.NativeLanguageText</td>
+                                                <td>@item.Religion?.NameEn</td>
+                                                <td>@item.MaritalStatusText</td>
+                                                @* <td></td>
+                                                <td></td> *@
+                                                <td>@item.StudentFeeType?.NameEn</td>
+                                                <td>@item.ResidentType?.NameEn</td>
+                                                <td>@item.Email</td>
+                                                <td>@item.PersonalEmail</td>
+                                                <td>@item.TelephoneNumber1</td>
+                                                <td>@item.StudentStatusText</td>
+                                                <td>@item.StatusLogTerm</td>
+                                                <td>@item.StatusLogDate</td>
+                                                <td>@item.AdmissionInformation?.AdmissionTerm?.TermText</td>
+                                                <td>@item.AdmissionInformation?.AdmissionDateText</td>
+                                                <td>@item.AdmissionInformation?.AdmissionType?.NameEn</td>
+                                                <td>@item.AcademicInformation?.Advisor?.FullNameEn</td>
+                                                <td>@item.AcademicInformation?.Advisor?.FullNameTh</td>
+                                                <td>@item.CurriculumInformations?.FirstOrDefault()?.CurriculumVersion?.DegreeNameEn</td>
+                                                <td>@item.AcademicInformation?.Faculty?.NameEn</td>
+                                                <td>@item.AcademicInformation?.Department?.Code</td>
+                                                <td>@item.AcademicInformation?.CurriculumVersion?.Curriculum?.ReferenceCode</td>
+                                                <td>@item.AcademicInformation?.CurriculumVersion?.Curriculum?.NameEn</td>
+                                                <td>@item.AcademicInformation?.CurriculumVersion?.Code</td>
+                                                <td>@item.AcademicInformation?.CurriculumVersion?.NameEn</td>
+                                                <td>@item.CurrentAddress?.AddressEn</td>
+                                                <td>@item.CurrentAddress?.Subdistrict?.NameEn</td>
+                                                <td>@item.CurrentAddress?.District?.NameEn</td>
+                                                <td>@item.CurrentAddress?.Province?.NameEn</td>
+                                                <td>@item.CurrentAddress?.Country?.NameEn</td>
+                                                <td>@item.CurrentAddress?.ZipCode</td>
+                                                <td>@item.CurrentAddress?.TelephoneNumber</td>
+                                                <td>@item.PermanentAddress?.AddressEn</td>
+                                                <td>@item.PermanentAddress?.Subdistrict?.NameEn</td>
+                                                <td>@item.PermanentAddress?.District?.NameEn</td>
+                                                <td>@item.PermanentAddress?.Province?.NameEn</td>
+                                                <td>@item.PermanentAddress?.Country?.NameEn</td>
+                                                <td>@item.PermanentAddress?.ZipCode</td>
+                                                <td>@item.PermanentAddress?.TelephoneNumber</td>
+                                                <td>@item.FatherInformation?.FirstNameEn</td>
+                                                <td>@item.FatherInformation?.MidNameEn</td>
+                                                <td>@item.FatherInformation?.LastNameEn</td>
+                                                <td>@item.FatherInformation?.FirstNameTh</td>
+                                                <td>@item.FatherInformation?.MidNameTh</td>
+                                                <td>@item.FatherInformation?.LastNameTh</td>
+                                                <td>@item.FatherInformation?.Occupation?.NameEn</td>
+                                                <td>@item.FatherInformation?.AddressEn</td>
+                                                <td>@item.FatherInformation?.Subdistrict?.NameEn</td>
+                                                <td>@item.FatherInformation?.District?.NameEn</td>
+                                                <td>@item.FatherInformation?.Province?.NameEn</td>
+                                                <td>@item.FatherInformation?.Country?.NameEn</td>
+                                                <td>@item.FatherInformation?.ZipCode</td>
+                                                <td>@item.FatherInformation?.TelephoneNumber1</td>
+                                                <td>@item.FatherInformation?.Email</td>
+                                                <td>@item.MotherInformation?.FirstNameEn</td>
+                                                <td>@item.MotherInformation?.MidNameEn</td>
+                                                <td>@item.MotherInformation?.LastNameEn</td>
+                                                <td>@item.MotherInformation?.FirstNameTh</td>
+                                                <td>@item.MotherInformation?.MidNameTh</td>
+                                                <td>@item.MotherInformation?.LastNameTh</td>
+                                                <td>@item.MotherInformation?.Occupation?.NameEn</td>
+                                                <td>@item.MotherInformation?.AddressEn</td>
+                                                <td>@item.MotherInformation?.Subdistrict?.NameEn</td>
+                                                <td>@item.MotherInformation?.District?.NameEn</td>
+                                                <td>@item.MotherInformation?.Province?.NameEn</td>
+                                                <td>@item.MotherInformation?.Country?.NameEn</td>
+                                                <td>@item.MotherInformation?.ZipCode</td>
+                                                <td>@item.MotherInformation?.TelephoneNumber1</td>
+                                                <td>@item.MotherInformation?.Email</td>
+
+                                                <td>@item.MainParentInformation?.FirstNameEn</td>
+                                                <td>@item.MainParentInformation?.MidNameEn</td>
+                                                <td>@item.MainParentInformation?.LastNameEn</td>
+                                                <td>@item.MainParentInformation?.FirstNameTh</td>
+                                                <td>@item.MainParentInformation?.MidNameTh</td>
+                                                <td>@item.MainParentInformation?.LastNameTh</td>
+                                                <td>@item.MainParentInformation?.Occupation?.NameEn</td>
+                                                <td>@item.MainParentInformation?.AddressEn</td>
+                                                <td>@item.MainParentInformation?.Subdistrict?.NameEn</td>
+                                                <td>@item.MainParentInformation?.District?.NameEn</td>
+                                                <td>@item.MainParentInformation?.Province?.NameEn</td>
+                                                <td>@item.MainParentInformation?.Country?.NameEn</td>
+                                                <td>@item.MainParentInformation?.ZipCode</td>
+                                                <td>@item.MainParentInformation?.TelephoneNumber1</td>
+                                                <td>@item.MainParentInformation?.Email</td>
+
+                                                <td>@item.EmergencyInformation?.FirstNameEn</td>
+                                                <td>@item.EmergencyInformation?.MidNameEn</td>
+                                                <td>@item.EmergencyInformation?.LastNameEn</td>
+                                                <td>@item.EmergencyInformation?.FirstNameTh</td>
+                                                <td>@item.EmergencyInformation?.MidNameTh</td>
+                                                <td>@item.EmergencyInformation?.LastNameTh</td>
+                                                <td>@item.EmergencyInformation?.Occupation?.NameEn</td>
+                                                <td>@item.EmergencyInformation?.AddressEn</td>
+                                                <td>@item.EmergencyInformation?.Subdistrict?.NameEn</td>
+                                                <td>@item.EmergencyInformation?.District?.NameEn</td>
+                                                <td>@item.EmergencyInformation?.Province?.NameEn</td>
+                                                <td>@item.EmergencyInformation?.Country?.NameEn</td>
+                                                <td>@item.EmergencyInformation?.ZipCode</td>
+                                                <td>@item.EmergencyInformation?.TelephoneNumber1</td>
+                                                <td>@item.EmergencyInformation?.Email</td>
+                                            </tr>
+                                            recordNumber++;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="111">
+                                                <i class="text-danger">No Data</i>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            }
+                            else
+                            {
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">#</th>
+                                        <th>Thai Id</th>
+                                        <th>Passport</th>
+                                        <th class="text-center">Batch</th>
+                                        <th class="text-center">Code</th>
+                                        <th>Title</th>
+                                        <th>First Name</th>
+                                        <th>Middle Name</th>
+                                        <th>Last Name</th>
+                                        <th>Gender</th>
+                                        <th class="text-center">Date of Birth</th>
+                                        <th class="text-center">Age</th>
+                                        <th>Nationality</th>
+                                        <th>Language</th>
+                                        <th>Religion</th>
+                                        <th>Student Fee Type</th>
+                                        <th>Resident Type</th>
+                                        <th>Email</th>
+                                        <th>Admission Email</th>
+                                        <th>Status</th>
+                                        <th>Advisor Name</th>
+                                        <th>Main CurriculumVersion Code</th>
+                                        <th>Degree</th>
+                                        <th>Division</th>
+                                        <th>Major</th>
+                                        <th>Main CurriculumVersion Name</th>
+                                        <th>Main Curriculum Name</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                    @if (Model != null && Model.Results.Any())
+                                    {
+                                        foreach (var item in Model.Results) 
+                                        {
+                                            <tr>
+                                                <td>@recordNumber</td>
+                                                <td>@item.CitizenNumber</td>
+                                                <td>@item.Passport</td>
+                                                <td>@item.AcademicInformation?.Batch</td>
+                                                <td>@item.Code</td>
+                                                <td>@item.Title?.NameEn</td>
+                                                <td>@item.FirstNameEn</td>
+                                                <td>@item.MidNameEn</td>
+                                                <td>@item.LastNameEn</td>
+                                                <td>@item.GenderText</td>
+                                                <td>@item.BirthDateText</td>
+                                                <td>@item.Age</td>
+                                                <td>@item.Nationality?.NameEn</td>
+                                                <td>@item.NativeLanguageText</td>
+                                                <td>@item.Religion?.NameEn</td>
+                                                <td>@item.StudentFeeType?.NameEn</td>
+                                                <td>@item.ResidentType?.NameEn</td>
+                                                <td>@item.Email</td>
+                                                <td>@item.PersonalEmail</td>
+                                                <td>@item.StudentStatusText</td>
+                                                <td>@item.AcademicInformation?.Advisor?.FullNameEn</td>
+                                                <td>@item.AcademicInformation?.CurriculumVersion?.Curriculum?.ReferenceCode</td>
+                                                <td>@item.AcademicInformation?.CurriculumVersion?.DegreeNameEn</td>
+                                                <td>@item.AcademicInformation?.Faculty?.NameEn</td>
+                                                <td>@item.AcademicInformation?.Department?.NameEn</td>
+                                                <td>@item.AcademicInformation?.CurriculumVersion?.Curriculum?.NameEn</td>
+                                                <td>@item.AcademicInformation?.CurriculumVersion?.NameEn</td>
+                                            </tr>
+                                            recordNumber++;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="27">
+                                                <i class="text-danger">No Data</i>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            }
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}

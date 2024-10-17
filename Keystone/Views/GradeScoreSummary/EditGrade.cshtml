@@ -1,0 +1,247 @@
+@model GradingReportViewModel
+@{
+    ViewData["Title"] = "Grading Confirm";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+    var studentIndex = 0;
+}
+<section>
+    <div class="block block--underline mb-0">
+        <div class="block__title">
+            <header class="color-primary">
+            <a asp-controller="ScoreByInstructor"
+               asp-action="Edit" 
+               asp-route-returnUrl="@contextPath"
+               asp-route-termId="@Model.TermId"
+               asp-route-courseId="@Model.CourseId">
+                <i class="la la-angle-double-left"></i>
+            </a>
+                @ViewData["Title"]
+            </header>
+        </div>
+        <div class="block__body">
+            <div class="form-group mb-0 row">
+                <div class="col-2">
+                    <b>Term</b>
+                </div>
+                <div class="col-4">
+                    <b>Course</b>
+                </div>
+                <div class="col-2">
+                    <b>Section</b>
+                </div>
+                <div class="col-4">
+                    <b>Main Instructor</b>
+                </div>
+            </div>
+            <div class="form-group mb-0 row">
+                <div class="col-2">
+                    @Model.Semester
+                </div>
+                <div class="col-4">
+                    @Model.Course @Model.CourseCreitText
+                </div>
+                <div class="col-2">
+                    @Model.SectionString
+                </div>
+                <div class="col-4">
+                    @Model.InstructorsString
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section>
+    <div class="block block--underline mb-0">
+        <div class="block__body">
+            <div class="row form-group mb-6">
+                <div class="col-2">
+                    <a class="btn btn-mw-120 btn--primary" 
+                    asp-controller="ScoreByInstructor"
+                    asp-action="Edit" 
+                    asp-route-returnUrl="@contextPath"
+                    asp-route-termId="@Model.TermId"
+                    asp-route-courseId="@Model.CourseId">
+                        <i class="la la-edit edit"></i>
+                        Edit Score
+                    </a>
+                </div>
+                <div class="col text-right">
+                     @if (Model.StudentRawScores != null && Model.StudentRawScores.Any())
+                     {
+                        <a class='btn btn-mw-120 btn--primary @(Model.HaveBarcode ? "" : "d-none")'
+                        asp-action="Report"
+                        asp-route-termId="@Model.TermId"
+                        asp-route-courseId="@Model.CourseId"
+                        asp-route-type="c">
+                            <i class="la la-sort-numeric-asc signal"></i>Print by Code
+                        </a>
+
+                        <a class='btn btn-mw-120 btn--primary @(Model.HaveBarcode ? "" : "d-none")'
+                        asp-action="Report"
+                        asp-route-termId="@Model.TermId"
+                        asp-route-courseId="@Model.CourseId"
+                        asp-route-type="n">
+                        <i class="la la-sort-alpha-asc signal"></i>Print by Name
+                        </a>
+                     }
+
+                    <a class="btn btn-mw-120 btn--primary" 
+                       asp-controller="GradeScoreSummary"
+                       asp-action="Edit" 
+                       asp-route-returnUrl="@contextPath"
+                       asp-route-termId="@Model.TermId"
+                       asp-route-courseId="@Model.CourseId">
+                       <i class="la la-signal signal"></i>Show Histogram
+                    </a>
+                </div>
+            </div>
+            <div class="form-group mb-0">
+                <div class="table-responsive">
+                    <table id="grade-summary-table" class="table table-bordered table-hover m-0">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center w-100">Course</th>
+                                <th class="text-center w-50">Section</th>
+                                <th class="text-center w-50">Section Type</th>
+                                <th class="text-center w-100">Code</th>
+                                <th>Name</th>
+                                <th class="text-center w-100">Grade</th>
+                                @for(int i = 0; i < Model.MarkAllocaiton?.Count; i++)
+                                {
+                                    <th class="text-center w-100">
+                                        @Model.MarkAllocaiton[i].Abbreviation
+                                        <br>
+                                        <span class="text-nowrap">(<span class="score-limit">@Model.MarkAllocaiton[i].FullScore</span>)</span>
+                                    </th>
+                                }
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody class="js-items">
+                            @if (Model.StudentRawScores != null && Model.StudentRawScores.Any())
+                            {
+                                foreach (var studentScore in Model.StudentRawScores)
+                                {
+                                    var status = string.Empty;
+                                    if (studentScore.IsWithdrawal)
+                                    {
+                                        status = "bg-secondary-lighter";
+                                    }
+                                    else if (studentScore.IsGradePublish)
+                                    {
+                                        status = "bg-secondary-lighter text-success";
+                                    }
+                                    <tr class="@status">
+                                        <td class="text-center">
+                                        </td>
+                                        <td class="text-center js-course-code"> @studentScore.CourseCode</td>
+                                        <td class="text-center js-section-number">@studentScore.SectionNumber</td>
+                                        <td class="text-center">@studentScore.SectionType</td>
+                                        <td class="text-center js-student-code">@studentScore.StudentCode</td>
+                                        <td class="js-student-name">@studentScore.StudentName</td>
+                                        <td id="student-grade-@studentScore.Id">@(studentScore.GradeName)</td>
+                                        @for(int i = 0; i < Model.MarkAllocaiton?.Count; i++)
+                                        {
+                                            @for (var j = 0; j < Model.StudentRawScores[studentIndex].StudentRawScoreDetails.Count; j++)
+                                            {
+                                                if(Model.StudentRawScores[studentIndex].StudentRawScoreDetails[j].MarkAllocationId == Model.MarkAllocaiton?[i].Id)
+                                                {
+                                                    <td class="text-center">
+                                                        @Model.StudentRawScores[studentIndex].StudentRawScoreDetails[j].Score
+                                                    </td> 
+                                                }
+                                            }
+                                        }
+                                        <td class="text-nowrap td-actions">
+                                            @if(!studentScore.IsGradePublish)
+                                            {
+                                                <a href="#!"
+                                                data-toggle="modal"
+                                                data-target="#result-edit-grade-modal"
+                                                data-grade="@Model.StudentRawScores[studentIndex].GradeName"
+                                                data-studentScoreId="@Model.StudentRawScores[studentIndex].Id">
+                                                    <i class="la la-edit edit"></i>
+                                                </a>
+                                            }
+                                                <a href="#!"
+                                                data-toggle="modal"
+                                                data-target="#grade-log-modal"
+                                                data-studentScoreId="@Model.StudentRawScores[studentIndex].Id">
+                                                    <i class="la la-info info"></i>
+                                                </a>
+                                        </td>
+                                        <input name="Model.StudentRawScores[@studentIndex].Id" value="@studentScore.Id" type="hidden">
+                                    </tr>
+                                    ++studentIndex;
+                                }
+                            }
+                            else 
+                            {
+                                <tr id="js-table-text-row">
+                                    <td colspan="15">
+                                        <i id="js-table-text">No Data</i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section>
+    <div class="block">
+        <div class="block__body" id="js-get-standard-grading">
+            <div class="block__action-row">
+                @if (Model.StudentRawScores != null && Model.StudentRawScores.Any())
+                {
+                    @if(Model.HaveBarcode)
+                    {
+                        <form id="submit-generate-barcode" asp-controller="GradeScoreSummary" asp-action="Save" method="post">
+                            <input name="CourseId" value="@Model.CourseId" hidden>
+                            <input name="TermId" value="@Model.TermId" hidden>
+                            <a class="btn btn-mw-120 btn--primary" 
+                            data-toggle="modal" 
+                            data-form-id="#submit-generate-barcode"
+                            data-target="#confirm-modal"
+                            asp-route-courseId="@Model.CourseId">Submit</a>
+                        </form>
+                    }
+                    else
+                    {
+                        <a class="btn btn-mw-120 btn--primary"
+                        asp-controller="GradeScoreSummary"
+                        asp-action="Save"
+                        asp-route-termId="@Model.TermId"
+                        asp-route-courseId="@Model.CourseId">Submit</a>
+                    }
+                }
+                else
+                {
+                    <a asp-controller="ScoreByInstructor"
+                    class="btn btn-mw-120 btn--primary" 
+                    asp-action="Edit" 
+                    asp-route-returnUrl="@contextPath"
+                    asp-route-termId="@Model.TermId"
+                    asp-route-courseId="@Model.CourseId">
+                        Back
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+<input id="grade-score-course-id" value="@Model.CourseId" hidden>
+<input id="grade-score-term-id" value="@Model.TermId" hidden>
+@section Modals {
+    <partial name="_ResultEditGradeModals">
+    <partial name="_GradeLogModals">
+    <partial name="_ConfirmModals">
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/grade-score-summary-modal.js"></script>
+}

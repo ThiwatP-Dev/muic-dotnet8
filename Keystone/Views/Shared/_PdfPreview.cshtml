@@ -1,0 +1,10 @@
+@{ 
+    var controllerName = this.ViewContext.RouteData.Values["controller"].ToString() + " Preview";
+    ViewData["Title"] = controllerName;
+}
+
+<section id="js-pdf-preview" data-model="@JsonConvert.SerializeObject(Model)">
+    <div class="block block__body">
+        <iframe id="js-print-preview" class="w-100x h-85vh"></iframe>
+    </div>
+</section>

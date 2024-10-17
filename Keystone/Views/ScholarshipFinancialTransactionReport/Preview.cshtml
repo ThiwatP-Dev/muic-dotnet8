@@ -1,0 +1,12 @@
+@model ReportViewModel
+@{ 
+    ViewData["Title"] = "Scholarship Financial Transaction Preview";
+}
+
+<img id="js-garuda-logo" src="~/images/garuda.png" hidden>
+
+<partial name="_PdfPreview" model="@Model">
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/pdf-render/scholarship-finance-transaction.js"></script>
+}

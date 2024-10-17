@@ -1,0 +1,25 @@
+<div id="js-change-publication-confirm-modal" class="modal fadeIn animated" tabindex="-1" role="dialog"
+     arial-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form id="change-publication-confirm-form" method="POST" asp-action="ChangePublicationStatus" class="block mb-0">
+                <div class="block__body table-responsive">
+                    <input id="RegistrationCourseId" name="RegistrationCourseId" type="hidden">
+                    <input id="IsGradePublished" name="IsGradePublished" type="hidden">
+                    <input id="TermId" name="TermId" type="hidden">
+                    <input id="StudentCode" name="StudentCode" type="hidden">
+                    <h3 class="color-danger m-b-15 js-modal-header">
+                        Change Grade Publish Status
+                    </h3>
+                    <p>Are you sure to change grade publication status?</p>
+                </div>
+                <div class="block__action">
+                    <div class="block__action-row">
+                        <a href="#!" class="btn btn-mw-120 btn--danger rounded js-confirm-btn">Yes</a>
+                        <a href="javascript:void(0);" class="btn btn-mw-120 btn--cancel rounded" data-dismiss="modal">No</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

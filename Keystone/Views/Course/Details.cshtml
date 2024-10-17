@@ -1,0 +1,189 @@
+@model Course
+
+<section class="row">
+	<div class="ks-page-header col-12">
+		<h2 class="ks-page-header__title">
+			<a class="btn-back" href="@ViewBag.ReturnUrl">
+				<i class="la la-angle-double-left"></i>
+			</a>
+			<span>Course Details</span>
+		</h2>
+	</div>
+</section>
+
+<section>
+	<div class="block block--underline">
+		<div class="block__title">
+			<div class="row">
+				<div class="col-8">
+					<header>
+						<span class="my-2 color-white font-size-14 badge bg-primary p-a-10">@Model.CodeAndName</span>
+					</header>
+				</div>
+				<div class="col-4 d-flex justify-content-end align-items-end">
+					<div class="tools p-a-1">
+						<span class="color-primary font-size-16"></span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="block__body">
+			<div class="row form-group">
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Academic Level</div>
+					<div class="form-control-plaintext">@Model.AcademicLevel?.NameEn</div>
+				</div>
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Division</div>
+					<div class="form-control-plaintext">@Model.Faculty?.NameEn</div>
+				</div>
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Major</div>
+					<div class="form-control-plaintext">@Model.Department?.NameEn</div>
+				</div>
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Minimum Seat</div>
+					<div class="form-control-plaintext">@Model.MinimumSeat</div>
+				</div>
+			</div>
+
+			<div class="row form-group">
+				<div class="col-6">
+					<div class="form-control-label d-flex align-items-center">English Name</div>
+					<div class="form-control-plaintext">@Model.NameEn</div>
+				</div>
+				<div class="col-6">
+					<div class="form-control-label d-flex align-items-center">Thai Name</div>
+					<div class="form-control-plaintext">@Model.NameTh</div>
+				</div>
+			</div>
+
+			<div class="row form-group">
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Short English Name</div>
+					<div class="form-control-plaintext">@Model.ShortNameEn</div>
+				</div>
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Short Thai Name</div>
+					<div class="form-control-plaintext">@Model.ShortNameTh</div>
+				</div>
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Course Rate</div>
+					<div class="form-control-plaintext">@Model.CourseRate?.NameEn</div>
+				</div>
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Grade Template</div>
+					<div class="form-control-plaintext">@Model.GradeTemplate?.Name</div>
+				</div>
+			</div>
+
+            <div class="row form-group">
+				<div class="col-4">
+					<div class="form-control-label d-flex align-items-center">English Name Show in Transcript</div>
+					<div class="form-control-plaintext">@Model.TranscriptNameEn1</div>
+				</div>
+				<div class="col-4">
+					<div class="form-control-plaintext">@Model.TranscriptNameEn2</div>
+				</div>
+				<div class="col-4">
+					<div class="form-control-plaintext">@Model.TranscriptNameEn3</div>
+				</div>
+            </div>
+
+			<div class="row form-group">
+				<div class="col-4">
+					<div class="form-control-label d-flex align-items-center">Thai Name Show in Transcript</div>
+					<div class="form-control-plaintext">@Model.TranscriptNameTh1</div>
+				</div>
+				<div class="col-4">
+					<div class="form-control-plaintext">@Model.TranscriptNameTh2</div>
+				</div>
+				<div class="col-4">
+					<div class="form-control-plaintext">@Model.TranscriptNameTh3</div>
+				</div>
+            </div>
+
+			<div class="row form-group">
+				<div class="col-12">
+					<div class="form-control-label d-flex align-items-center">English Description</div>
+					<div class="form-control-plaintext">@Model.DescriptionEn</div>
+				</div>
+				<div class="col-12">
+					<div class="form-control-label d-flex align-items-center">Thai Description</div>
+					<div class="form-control-plaintext">@Model.DescriptionTh</div>
+				</div>
+            </div>
+
+			<div class="row form-group">
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Teaching Type</div>
+					<div class="form-control-plaintext">@Model.TeachingType?.NameEn</div>
+				</div>
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Credit</div>
+					<div class="form-control-plaintext">@Model.Credit</div>
+				</div>
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Registration Credit</div>
+					<div class="form-control-plaintext">@Model.RegistrationCredit</div>
+				</div>
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Payment Credit</div>
+					<div class="form-control-plaintext">@Model.PaymentCredit</div>
+				</div>
+			</div>
+
+            <div class="row form-group">
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Hour</div>
+					<div class="form-control-plaintext">@Model.Hour</div>
+				</div>
+				<div class="col-2">
+					<div class="form-control-label d-flex align-items-center">Lecture</div>
+					<div class="form-control-plaintext">@Model.Lecture</div>
+				</div>
+				<div class="col-2">
+					<div class="form-control-label d-flex align-items-center">Lab</div>
+					<div class="form-control-plaintext">@Model.Lab</div>
+				</div>
+				<div class="col-2">
+					<div class="form-control-label d-flex align-items-center">Other</div>
+					<div class="form-control-plaintext">@Model.Other</div>
+				</div>
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Show Transcript</div>
+					<div class="form-control-plaintext">@(Model.IsShowInTranscript ? "Yes" : "No")</div>
+				</div>
+			</div>
+
+            <div class="row form-group">
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Calculate Credit</div>
+					<div class="form-control-plaintext">@(Model.IsCalculateCredit ? "Yes" : "No")</div>
+				</div>
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Intensive Course</div>
+					<div class="form-control-plaintext">@(Model.IsIntensiveCourse ? "Yes" : "No")</div>
+				</div>
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Section Group</div>
+					<div class="form-control-plaintext">@(Model.IsSectionGroup ? "Yes" : "No")</div>
+				</div>
+			</div>
+
+			<div class="row form-group">
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Is currently allow to be added in Course to be Offered</div>
+					<div class="form-control-plaintext">@(Model.IsAllowAddNewSection ? "Yes" : "No")</div>
+				</div>
+			</div>
+
+			<div class="row form-group mb-0">
+				<div class="col-12">
+					<div class="form-control-label d-flex align-items-center">Excluding Native Languages</div>
+					<div class="form-control-plaintext">@Model.ExcludingNativeLanguageText</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

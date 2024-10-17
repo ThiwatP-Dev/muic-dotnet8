@@ -1,0 +1,50 @@
+/*------------------------------------
+    Sass Variables
+------------------------------------*/
+
+//
+// Breakpoints
+//
+$g-2xs: 446px !default; // Double extra small devices (<=445px)
+// Extra small devices (portrait phones, <=575px)
+$g-sm: 576px !default; // Small devices (landscape phones, >=576 & <=767)
+$g-md: 768px !default; // Medium devices (tablets, >=768 & <=991)
+$g-lg: 992px !default; // Large devices (desktops, >=992 & <=1199)
+$g-xl: 1200px !default; // Extra large devices (large desktops, >=1200)
+
+//Pallets
+$primary: #2c304d;
+$secondary: #c2c2c2; 
+$default: #744DA9;
+
+$black : #343a40;
+$dark: #222222;
+$black_25: rgba(#20252B, 0.25);
+$black_50: rgba(#20252B, 0.5);
+$white: #ffffff;
+$white_25: rgba(255, 255, 255, 0.25);
+$white_40: rgba(255, 255, 255, 0.4);
+$white_50: rgba(255, 255, 255, 0.5);
+$white-light: #f9f9f9;
+$white-blight: #d2d2d2;
+$white-smoke: #e7eaec;
+$white-lighter: #f3f3f4;
+
+$smoke: #c2c2c2;
+$shadow: rgba(52,40,104,.15);
+
+$info: #35A7FF;
+$success: #2ecc71;
+$warning: #ffa801;
+$danger: #FF5964;
+
+$gray: rgba(12, 12, 12, 0.12);
+$gray-dark: #999;
+
+$excel: #1F7244;
+
+// FONT
+$default-font-size: 1rem;
+$primary-font-family: 'Waree';
+$secondary-font-family: 'Segoe UI';
+$tertiary-font-family: 'san serif';

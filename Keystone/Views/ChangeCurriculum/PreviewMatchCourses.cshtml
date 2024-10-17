@@ -1,0 +1,36 @@
+@model StudentTransferViewModel
+@{ 
+    ViewData["Title"] = "Preview Match Courses";
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <a class="btn-back" href="/ChangeCurriculum?StudentCode=@Model.StudentCode&CurriculumId=@Model.CurriculumId&CurriculumVersionId=@Model.CurriculumVersionId">
+                    <i class="la la-angle-double-left"></i>
+                </a>    
+                <header>@ViewData["Title"]</header>
+            </div>
+
+            <div class="block__body">
+                <div class="row form-group mb-2">
+                    <div class="col-2">
+                        <div class="form-control-label d-flex align-items-center">Student Code</div>
+                        <div class="form-control-plaintext">@Model.StudentCode</div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-control-label d-flex align-items-center">Student Name</div>
+                        <div class="form-control-plaintext">@Model.StudentFirstName @Model.StudentLastName</div>
+                    </div>
+                </div>
+
+                @if (Model.StudentCourseEquivalents != null)
+                {
+                    <hr>
+                    <partial name="Curriculums/_PreviewMatchCourses" model="@Model" />
+                }
+            </div>
+        </div>
+    </div>
+</section>

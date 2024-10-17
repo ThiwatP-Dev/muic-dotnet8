@@ -1,0 +1,46 @@
+@model StudentTransferViewModel
+@{ 
+    ViewData["Title"] = "Course Categorization";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>@ViewData["Title"]</header>
+            </div>
+
+            <div class="block__body">
+                <div class="row form-group mb-2">
+                    <div class="col-4">
+                        <div class="form-control-label d-flex align-items-center">Student Code</div>
+                        <div class="form-control-plaintext">@Model.StudentCode</div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-control-label d-flex align-items-center">Student Name</div>
+                        <div class="form-control-plaintext">@Model.StudentFirstName @Model.StudentLastName</div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-control-label d-flex align-items-center">New Curriculum</div>
+                        <div class="form-control-plaintext">@Model.CurriculumName - @Model.CurriculumVersionName</div>
+                    </div>
+                </div>
+
+                @if (Model.StudentCourseCategorizations != null)
+                {
+                    <hr>
+                    <form class="form-horizontal" asp-controller="ChangeCurriculum" asp-action="Summary" method="POST">
+                        @* <input name="returnUrl" value="@contextPath" type="hidden"> *@
+                        <input name="returnUrl" value="@ViewBag.ReturnUrl" type="hidden">
+                        <partial name="Curriculums/_CourseCategorization" model="@Model" />
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/course-categorize.js"></script>
+}

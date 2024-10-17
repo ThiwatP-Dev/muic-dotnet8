@@ -1,0 +1,137 @@
+@model GraduatedStudentReportViewModel
+@{ 
+    ViewData["Title"] = "Graduated Student Report";
+    var index = 1;
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+
+<div class="row">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</div>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Graduated Student</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="GraduatedStudentReport" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group m-b-30">
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Academic Level<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="ViewBag.Terms">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Graduated Term</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.HonorId" asp-items="ViewBag.Honors">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Honor</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.StudentStatus" asp-items="ViewBag.StudentStatuses">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Student Status</label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group mb-0">
+                        <div class="col-3">
+                            <input class="form-control js-single-date" asp-for="Criteria.StartedAt" type="text">
+                            <label>Graduated Date From</label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control js-single-date" asp-for="Criteria.EndedAt" type="text">
+                            <label>To</label>
+                        </div>
+                        <div class="col-6 align-self-end text-right text-nowrap">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (Model != null)
+{
+    <section class="row">
+        <div class="col-12">
+            <div class="block block--underline">
+                <div class="block__title">
+                    <header>Search Result (@(Model?.GraduatedStudentReportDetails?.Count() ?? 0))</header>
+                </div>
+
+                <div class="block__body table-responsive unset-overflow">
+                    <table class="table table-bordered table-hover js-report-table w-100x">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center">Graduated Term</th>
+                                <th class="text-center">Code</th>
+                                <th>Name</th>
+                                <th class="text-center">Graduated Date</th>
+                                <th>Honor</th>
+                                <th class="text-center">Student Status</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.GraduatedStudentReportDetails != null && Model.GraduatedStudentReportDetails.Any())
+                            {
+                                foreach (var item in Model.GraduatedStudentReportDetails) 
+                                {
+                                    <tr>
+                                        <td>@index</td>
+                                        <td>@item.GraduatedTerm</td>
+                                        <td>@item.Code</td>
+                                        <td>@item.Name</td>
+                                        <td>@item.GraduatedDate</td>
+                                        <td>@item.Honor</td>
+                                        <td>@item.StudentStatus</td>
+                                        <td class="text-nowrap td-actions">
+                                            <a asp-controller="Student" 
+                                                asp-action="Details"
+                                                asp-route-code="@item.Code"
+                                                asp-route-returnUrl="@contextPath">
+                                                <i class="la la-info info"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    ++index;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="9">
+                                        <i class="text-danger">No Data</i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+}

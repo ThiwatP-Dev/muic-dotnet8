@@ -1,0 +1,239 @@
+@model PrerequisiteCheckViewModel
+@{ 
+    ViewData["Title"] = "Prerequisite Check"; 
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Prerequisite Check</header>
+            </div>
+
+            <div class="block__body">
+                <form id="js-form" class="form-horizontal" asp-controller="PrerequisiteCheck" asp-action="Index" method="POST">
+                    @Html.AntiForgeryToken()
+                    <input id="js-type" asp-for="Criteria.Type" type="hidden" value="major">
+                    <div class="row form-group">
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.StudentCode" type="text">
+                            <label>Student Code<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-9">
+                            <select class="chosen-select form-control" asp-for="Criteria.CourseId" asp-items="ViewBag.Courses">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Course<span class="text-danger">*</span></label>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-12 align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="button" onclick="submitMajor();">
+                                <i class="la la-search mr-2"></i>Check for Curriculum Version
+                            </button>
+                            @* <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="button" onclick="submitFreeElect();">
+                                <i class="la la-search mr-2"></i>Check for Free Elective
+                            </button> *@
+                            <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (Model != null && Model.CurriculumInformations != null && Model.CurriculumInformations.Any())
+{
+    foreach(var item in Model.CurriculumInformations)
+    {
+        <section class="ks-instructor-general-info">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel-group">
+                        <div class="block">
+                            <div class="block__body" style="position: relative;">
+                                <div class="row">
+                                    <div class="form-group mb-3 col-4">
+                                        <div class="section-title"><h4>Division</h4></div>
+                                        <div class="form-control-plaintext">@item.Department?.NameEn</div>
+                                    </div>
+                                    <div class="form-group mb-3 col-4">
+                                            <div class="section-title"><h4>Major</h4></div>
+                                        <div class="form-control-plaintext">@item.Department?.Faculty?.NameEn</div>
+                                    </div>
+                                    <div class="form-group mb-3 col-4">
+                                        <div class="section-title"><h4>Curriculum</h4></div>
+                                        <div class="form-control-plaintext">@item.CurriculumVersion?.NameEn</div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="section-title"><h4>Specialization Information</h4></div>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover w-100x">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">#</th>
+                                                <th>Type</th>
+                                                <th>English Name</th>
+                                                <th>Thai Name</th>
+                                                <th>Type</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (item.SpecializationGroupInformations != null && item.SpecializationGroupInformations.Any())
+                                            {
+                                                var index = 1;
+                                                foreach (var detail in item.SpecializationGroupInformations) 
+                                                {
+                                                    <tr>
+                                                        <td>@index</td>
+                                                        <td>@detail.SpecializationGroup?.TypeText</td>
+                                                        <td>@detail.SpecializationGroup?.NameEn</td>
+                                                        <td>@detail.SpecializationGroup?.NameTh</td>
+                                                        <td>@detail.SpecializationGroup?.TypeText</td>
+                                                    </tr>
+                                                    ++index;
+                                                }
+                                                index = 1;
+                                            }
+                                            else
+                                            {
+                                                <tr>
+                                                    <td colspan="5" class="text-center">
+                                                        <i class="text-danger">No Data</i>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+}
+
+<div class="block block--underline">
+    <div class="block__title">
+        <header>Prerequisites</header>
+    </div>
+    <div class="block__body">
+        <div class="table-responsive">
+            <table class="table table-bordered m-0">
+                <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th>Description</th>
+                        <th>Curriculum</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Prerequisites != null && Model.Prerequisites.Any())
+                    {
+                        var group = Model.Prerequisites.GroupBy(x => x.Curriculum)
+                                                       .Select(x => new { 
+                                                           Curriculum = x.Key,
+                                                           Prerequisite = x
+                                                       });
+                        var index = 1;
+                        var groupCount = group.Count();
+                        @foreach (var groupItem in group)
+                        {
+                            var groupIndex = 1;
+                            @foreach (var item in groupItem.Prerequisite)
+                            {
+                                <tr>
+                                    <td>@(groupCount == 1 ? $"{groupIndex}" : $"{index}.{groupIndex}")</td>
+                                    <td>@item.Description</td>
+                                    <td>@item.Curriculum</td>
+                                    <td><partial name="_BooleanPass" model="@item.IsPass" /></td>
+                                </tr>
+                                groupIndex++;
+                            }
+                            index++;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6">
+                                <i class="text-danger">No Data</i>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="block block--underline">
+    <div class="block__title">
+        <header>Student's Grade List</header>
+    </div>
+    <div class="block__body">
+        <div class="table-responsive">
+            <table id="js-grade" class="table table-bordered m-0">
+                <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th>Course Name</th>
+                        <th>Status</th>
+                        <th>Grade</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.RegistrationCourses != null && Model.RegistrationCourses.Any())
+                    {
+                        var index = 1;
+                        @foreach (var item in Model.RegistrationCourses)
+                        {
+                            <tr>
+                                <td>@index</td>
+                                <td>@item.Course.CourseAndCredit</td>
+                                <td>@item.GradeStatusText</td>
+                                <td>@item.GradeName</td>
+                            </tr>
+                            index++;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6">
+                                <i class="text-danger">No Data</i>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function submitMajor()
+        {
+            $("#js-type").val("major");
+            $("#js-form").submit();
+        }
+
+        function submitFreeElect()
+        {
+            $("#js-type").val("free");
+            $("#js-form").submit();
+        }
+        $(document).ready(function() {
+            $('#js-grade').DataTable();
+        });
+    </script>
+}

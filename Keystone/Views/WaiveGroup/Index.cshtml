@@ -1,0 +1,130 @@
+@model PagedResult<WaiveGroupViewModel>
+@{ 
+    ViewData["Title"] = "Waive Group"; 
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+    var index = 1;
+}
+
+<div class="row">
+    <div class="ks-page-header col-12">
+        <ul class="d-flex flex-md-row align-items-md-center float-right">
+            <li class="list-inline-item mx-3 mb-0">
+                <a class='btn btn--primary' asp-action="Create" asp-route-returnUrl="@contextPath">
+                    <i class="la la-plus mr-1 font-weight-800"></i> Waive Student
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>@ViewData["Title"]</header>
+            </div>
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="WaiveGroup" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group m-b-30">
+                        <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels"  data-placeholder="Select">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Academic Level<span class="text-danger">*</span></label>
+                        </div>
+
+                        <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="ViewBag.Terms">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Term<span class="text-danger">*</span></label>
+                        </div>
+
+                        <div class="col-4">
+                            <select class="chosen-select form-control" asp-for="Criteria.FeeItemId" asp-items="ViewBag.FeeItems">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Fee Item</label>
+                        </div>                       
+                    </div>
+
+                    <div class="row form-group mb-0">
+                        <div class="col-4">
+                            <input class="form-control" asp-for="Criteria.Code" type="number">
+                            <label>Student Code</label>
+                        </div>
+
+                        <div class="col-8 align-self-end text-right text-nowrap">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <a id="js-reset-btn" class="btn btn-mw-120 btn--reset" asp-action="Index">Reset</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.Results?.Count() ?? 0))</header>
+            </div>
+            
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover w-100x">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th>Student Id</th>
+                                <th>Name</th>
+                                <th>Invoice Number</th>
+                                <th>Receipt Number</th>
+                                <th>Fee Item</th>
+                                <th>Course</th>
+                                <th class="text-center">Section</th>
+                                <th class="text-right">Amount</th>
+                                <th class="text-right">Discount Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Results.Any())
+                            {
+                                foreach (var item in Model.Results) 
+                                {
+                                    <tr>
+                                        <td>@index</td>
+                                        <td>@item.StudentCode</td>
+                                        <td>@item.StudentFullNameEn</td>
+                                        <td>@item.InvoiceNumber</td>
+                                        <td>@item.ReceiptNumber</td>
+                                        <td>@item.FeeItemNameEn</td>
+                                        <td>@item.CourseNameEn</td>
+                                        <td>@item.SectionNumber</td>
+                                        <td>@item.AmountText</td>
+                                        <td>@item.DiscountAmountText</td>
+                                    </tr>
+                                    index++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="10">
+                                        <i class="text-danger">No Data</i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @(await Component.InvokeAsync<PagerViewComponent>(Model))
+    </div>
+</section>

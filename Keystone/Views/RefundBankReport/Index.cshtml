@@ -1,0 +1,179 @@
+@model RefundBankReportViewModel
+@{
+    ViewData["Title"] = "Refund Bank Report";
+    var index = 0;
+}
+
+<section class="row">
+    <div class="col-12">
+        <div id="refund-bank-report-accordion1" class="panel-group">
+            <div class="block block--underline">
+                <div class="block__title collapsed" data-toggle="collapse" data-parent="#refund-bank-report-accordion1" data-target="#refund-bank-report-accordion1-1">
+                    <header>@ViewData["Title"]</header>
+                    <div class="tools">
+                        <div class="btn-group">
+                            <a class="btn btn--white btn--circle">
+                                <i class="la la-angle-down"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="refund-bank-report-accordion1-1" class="collapse show" aria-expanded="true">
+                    <div class="block__body">
+                        <form asp-controller="RefundBankReport" asp-action="Index" class="form-horizontal" method="GET">
+                            @Html.AntiForgeryToken()
+                            <div class="row form-group m-b-30">
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Academic Level<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="ViewBag.Terms">
+                                        <option selected disabled>Select</option>
+                                    </select>   
+                                    <label>Term<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control" asp-for="Criteria.HasAccount" asp-items="ViewBag.YesNoAnswer"></select>
+                                    <label>Has Account</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="chosen-select form-control" asp-for="Criteria.Status" asp-items="ViewBag.YesNoAnswer"></select>
+                                    <label>Refund</label>
+                                </div>
+                            </div>
+
+                            <div class="row form-group m-b-30">
+                                <div class="col-3">
+                                    <input asp-for="Criteria.CreatedFrom" type="text" class="form-control js-single-date" autocomplete="off">
+                                    <label>Created Date From</label>
+                                </div>
+                                <div class="col-3">
+                                    <input asp-for="Criteria.CreatedTo" type="text" class="form-control js-single-date" autocomplete="off" />
+                                    <label>To</label>
+                                </div>
+                                <div class="col-3">
+                                    <input asp-for="Criteria.StartedAt" type="text" class="form-control js-single-date" autocomplete="off">
+                                    <label>Refund Date From</label>
+                                </div>
+                                <div class="col-3">
+                                    <input asp-for="Criteria.EndedAt" type="text" class="form-control js-single-date" autocomplete="off" />
+                                    <label>To</label>
+                                </div>
+                            </div>
+                            <div class="row form-group mb-0">
+                                <div class="col-12 text-right align-self-end">
+                                    <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">
+                                        <i class="la la-search mr-2"></i>
+                                        <span class="bold">Search</span>
+                                    </button>
+                                    <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                        Reset
+                                    </button>
+                                </div>
+                            </div>   
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (Model != null)
+{
+    <section class="row">
+        <div class="col-12">
+            <div class="block block--underline">
+                <div class="block__title">
+                    <header>Search Result (@Model.RefundBankReportDetails?.Count())</header>
+                </div>
+
+                <div class="block__body">
+                    <form id="js-submit-change-date" method="POST">
+                        @Html.AntiForgeryToken()
+                        <div class="row form-group">
+                            <div class="col-3 js-get-date disable-item">
+                                <input class="form-control js-single-date" type="text" disabled>
+                                <label>Change Refund Date</label>
+                            </div>
+                            <div class="col-3 align-self-end">
+                                <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table id="js-refund-bank" class="table table-bordered text-uppercase table-hover js-report-table w-100x">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center w-50">
+                                            <input id="check-all" class="js-check-all" name="select-item" type="checkbox">
+                                            <label class="mt-2 mb-0 ml-1" for="check-all"></label>
+                                        </th>
+                                        <th>Student Code</th>
+                                        <th>Account Name</th>
+                                        <th>Bank Branch</th>
+                                        <th>Account Number</th>
+                                        <th class="text-right">Amount</th>
+                                        <th class="text-center">Created Date</th>
+                                        <th>Created By</th>
+                                        <th class="text-center">Refund Date</th>
+                                        <th class="text-nowarp text-center no-sort">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="js-items">
+                                    @if (Model.RefundBankReportDetails.Any())
+                                    {
+                                        foreach (var item in Model.RefundBankReportDetails)
+                                        {
+                                            <tr class="@(item.AccountNumber == "-" ? "bg-danger-pastel" : "")">
+                                                <td>
+                                                    <input id="check@(index)" class="js-change-date" type="checkbox" />
+                                                    <label class="form-check-input m-0" for="check@(index)"></label>
+                                                </td>
+                                                <td>@item.StudentCode</td>
+                                                <td>@item.AccountName</td>
+                                                <td>@item.BankBranch</td>
+                                                <td>@item.AccountNumber</td>
+                                                <td>@item.AmountText</td>
+                                                <td>@item.CreatedDate</td>
+                                                <td>@item.CreatedBy</td>
+                                                <td>
+                                                    <input class="form-control__table js-refund-date" asp-for="@item.RefundedAt" 
+                                                        data-original-date="@item.RefundedAt" data-items="@item.RefundIdString" disabled/>
+                                                </td>
+                                                <td class="td-actions">
+                                                    <a asp-action="Details" asp-controller="RefundBankReport"
+                                                    asp-route-stundentId="@item.StudentId" asp-route-termId="@item.TermId">
+                                                        <i class="la la-info info"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            ++index;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="10">
+                                                <i class="text-danger">No Data</i>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/refund-bank.js"></script>
+}

@@ -1,0 +1,58 @@
+@model GradeLogsViewModel
+@{
+    var index = 1;
+}
+<div class="row form-group">
+    <div class="col-6">
+        <input class="form-control" type="text" readonly value="@Model.Student">
+        <label>Student</label>
+    </div>
+    <div class="col-6">
+        <input class="form-control" type="text" readonly value="@Model.Course">
+        <label>Course</label>
+    </div>
+</div>
+<div class="form-group mb-0">
+    <div class="table-responsive">
+        <table class="table table-bordered m-0">
+            <thead>
+                <tr>
+                    <th class="text-center">#</th>
+                    <th class="text-center">Previous Grade</th>
+                    <th class="text-center">Current Grade</th>
+                    <th class="text-center">Type</th>
+                    <th>Remark</th>
+                    <th class="text-center">CreatedAt</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if(Model.GradingLogs.Any())
+                {
+                    foreach(var item in Model.GradingLogs)
+                    {
+                        <tr>
+                            <td class="text-center">@index</td>
+                            <td class="text-center">@(item.PreviousGrade)</td>
+                            <td class="text-center">@(item.CurrentGrade)</td>
+                            <td class="text-center">@(item.Type)</td>
+                            <td>@(item.Remark)</td>
+                            <td class="text-center">@(item.CreatedAtText)</td>
+                        </tr>
+                        index++;
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" class="text-center text-danger">No Data</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div><br>
+    <div class="block__action pb-0">
+        <div class="block__action-row">
+            <a class="btn btn-mw-120 btn--cancel rounded" href="javascript:void(0);" data-dismiss="modal">Close</a>
+        </div>
+    </div>
+</div>

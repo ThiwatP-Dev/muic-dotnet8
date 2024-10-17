@@ -1,0 +1,17 @@
+@{ 
+    ViewData["Title"] = "Admission Student Temporary Card"; 
+}
+
+<section id="report-input">
+    <div class="block block__body">
+        <form id="js-pdf-form" action="" method="post">
+            <partial name="_FormIdCardSubstitute">
+        </form>
+    </div>
+</section>
+
+<section id="report-preview">
+    <div class="block block__body">
+        <iframe id="js-preview" class="w-100x h-600"></iframe>
+    </div>
+</section>

@@ -1,0 +1,47 @@
+$size: 450;
+$size-x: 100;
+
+@mixin my-padding-mixin($some-number) {
+    padding: $some-number;
+}
+
+@mixin width-x {
+    @for $i from 1 through $size {
+        .width-#{$i} {
+            width: #{$i}px !important;
+        }
+    }
+    &-130 {
+        width: 130px;
+    }
+}
+
+@mixin width-x-x {
+    @for $i from 1 through $size-x {
+        .width-#{$i}-x {
+            width: #{$i}px !important;
+        }
+    }
+}
+
+@mixin height-x {
+    @for $i from 1 through $size {
+        .height-#{$i*5} {
+            height: #{$i*5}px !important;
+        }
+    }
+}
+
+@mixin height-x-x {
+    @for $i from 1 through $size-x {
+        .height-#{$i}-x {
+            height: #{$i}px !important;
+        }
+    }
+}
+
+@include width-x;
+@include width-x-x;
+
+@include height-x;
+@include height-x-x;

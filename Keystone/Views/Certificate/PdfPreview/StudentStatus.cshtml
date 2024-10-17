@@ -1,0 +1,17 @@
+@{ 
+    ViewData["Title"] = "Certificate Preview";
+}
+
+<partial name="PdfPreview/_PreviewHeader" model="@Model">
+
+@section Scripts {
+
+    @if (Model.Language == "en")
+    {
+        <script type="text/javascript" src="~/js/pages/pdf-render/student-status-certification-en.js"></script>
+    }
+    else
+    {
+        <script type="text/javascript" src="~/js/pages/pdf-render/student-status-certification-th.js"></script>
+    }
+}

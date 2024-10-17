@@ -1,0 +1,34 @@
+@model GradeManagementViewModel
+
+<div class="block block--underline mb-0">
+    <div class="block__body">
+        <div class="d-flex justify-content-between">
+            <h4 class="font-weight-700 align-self-center">Student Score List</h4>
+            <div class="text-right mb-2">
+                <a class="btn btn-mw-120 btn--primary" href="#!" id="js-export-score">
+                    <i class="la la-edit"></i> Export Excel
+                </a>
+                <a class="btn btn-mw-120 btn--primary" href="#!" data-toggle="modal" data-target="#sections-modal">
+                    <i class="la la-edit mr-1"></i>Modify Section
+                </a>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-8"></div>
+            <div class="input-group col-4">
+                <input id="file-name" class="form-control m-r-15" type="text">
+                <input id="upload-input" name="Model.UploadFile" type="file" />
+                <a id="browse-btn" class="btn btn--primary mb-0 align-self-end mr-1">
+                    <i class="la la-file-upload"></i> Browse
+                </a>
+                <a class="btn btn--primary mb-0 align-self-end" id="js-import-score" href="#!">
+                    Import Excel
+                </a>
+            </div>
+        </div>
+        
+        <div id="js-get-students-score" class="form-group mb-3">
+            <partial name="~/Views/GradeManagement/GradingSteps/_ScoringTable.cshtml" model="@Model">
+        </div>
+    </div>
+</div>

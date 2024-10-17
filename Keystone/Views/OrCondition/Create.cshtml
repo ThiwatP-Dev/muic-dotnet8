@@ -1,0 +1,19 @@
+@model OrCondition
+@{ 
+    ViewData["Title"] = "Add Or Condition"; 
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <form class="ks-form container" asp-controller="OrCondition" asp-action="Create" method="POST">
+                @Html.AntiForgeryToken()
+                <partial name="_Form"/>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/condition-type-id.js"></script>
+}

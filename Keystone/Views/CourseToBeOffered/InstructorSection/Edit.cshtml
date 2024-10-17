@@ -1,0 +1,99 @@
+@model List<InstructorSection>
+@{ 
+    ViewData["Title"] = "Edit Instructor Details";
+    var sections = $"Section { Model.FirstOrDefault()?.SectionDetail?.Section?.Number }";
+    var course = $" { Model.FirstOrDefault()?.SectionDetail?.Section?.Course?.Code } - { Model.FirstOrDefault()?.SectionDetail?.Section?.Course?.NameEn }";
+    var courseId = ViewBag.Criteria.CourseId;
+    var sectionId = ViewBag.Criteria.SectionId;
+    var termId = ViewBag.Criteria.TermId;
+    var academicLevelId = ViewBag.Criteria.AcademicLevelId;
+    var seatAvailable = ViewBag.Criteria.SeatAvailable;
+    var instructorCode = "";
+    var index = 1;
+}
+
+<section class="row">
+    <div class="col-lg-12">
+        <div class="block block--underline">
+            @if (Model.Any())
+            {
+                <form class="ks-form container" asp-controller="InstructorSection" asp-action="Edit" method="POST">
+                    @Html.AntiForgeryToken()
+                    <div class="block__title">
+                        <header class="row m-t-25 pb-0">
+                            <div class="row m-b-25">@ViewData["Title"]</div>
+                            <span class="class-lookup-head p-a-8 mb-0 mr-2">@sections</span>
+                            <span class="font-weight-700">@course</span>
+                        </header>
+                    </div>
+                    <div class="block__body">
+                        <div class="row text-danger" asp-validation-summary="ModelOnly"></div>
+                        @for (int i = 0; i < Model.Count; i++)
+                        {
+                            if (instructorCode != Model[i].Instructor?.Code) 
+                            {
+                                <div class="row m-b-15">
+                                    <span class="color-primary font-weight-700">
+                                        @($"#{ index } : { Model[i].Instructor?.Code } - { Model[i].Instructor?.FullNameEn }")
+                                    </span>
+                                </div>
+                                instructorCode = Model[i].Instructor?.Code;
+                                index++;
+                            }
+                            
+                            <div class="row form-group m-b-30">
+                                <div class="col-md-4">
+                                    <input class="form-control" asp-for="@Model[i].Hours">
+                                    <label>Teaching Load</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input class="form-control js-single-date" asp-for="@Model[i].StartedAt" type="text">
+                                    <label>Start Date</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input class="form-control js-single-date" asp-for="@Model[i].EndedAt" type="text">
+                                    <label>End Date</label>
+                                </div>
+                            </div>
+                            <input asp-for="@Model[i].Id" type="hidden">
+                            <input asp-for="@Model[i].InstructorId" type="hidden">
+                            <input asp-for="@Model[i].SectionDetailId" type="hidden">
+                        }
+                    </div>
+
+                    <div class="block__action container">
+                        <div class="block__action-row">
+                            <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+                            <a class="btn btn-mw-120 btn--cancel" 
+                               asp-controller="CourseToBeOffered" 
+                               asp-action="Index" 
+                               asp-route-courseId="@courseId"
+                               asp-route-sectionId="@sectionId"
+                               asp-route-termId="@termId"
+                               asp-route-academicLevelId="@academicLevelId"
+                               asp-route-seatAvailable="@seatAvailable">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            }
+            else
+            {
+                <div class="block__body text-center">
+                    <h3 class="text-danger">No data available in this section.</h3>
+                </div>
+                <div class="block__action container">
+                    <div class="block__action-row">
+                        <a class="btn btn-mw-120 btn--cancel" 
+                           asp-controller="CourseToBeOffered" 
+                           asp-action="Index"
+                           asp-route-courseId="@courseId"
+                           asp-route-sectionId="@sectionId"
+                           asp-route-termId="@termId"
+                           asp-route-academicLevelId="@academicLevelId"
+                           asp-route-seatAvailable="@seatAvailable">Back</a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>

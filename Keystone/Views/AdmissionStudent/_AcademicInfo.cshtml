@@ -1,0 +1,78 @@
+@model AcademicInformation
+
+<section class="ks-student-info">
+    <form class="form-horizontal" asp-controller="AdmissionStudent" asp-action="SaveAcademicInformation" asp-route-studentId="@ViewData["StudentId"]" method="post">
+        <div class="block no-shadow h-100x m-b-30">
+            <div class="block__body">
+                <div class="section-title">
+                    <h4>Academic Information</h4>
+                </div>
+                
+                <div class="row form-group">
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-academic-level" asp-for="AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label for="AcademicLevelId">Academic Level<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control js-batch js-default-zero js-click-highlight" asp-for="Batch" type="text">
+                        <label for="Batch">Batch<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-faculty" asp-for="FacultyId" asp-items="ViewBag.Faculties">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Division<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-department" asp-for="DepartmentId" asp-items="ViewBag.Departments">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Major</label>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-curriculum-version" asp-for="CurriculumVersionId" asp-items="ViewBag.AdmissionCurriculumVersions">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Curriculum Version</label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control" asp-for="StudyPlanId" asp-items="ViewBag.StudyPlans">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label for="StudyPlanId">Study Plan</label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-academic-program" asp-for="AcademicProgramId" asp-items="ViewBag.AcademicPrograms">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label for="AcademicProgramId">Program<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-student-group" asp-for="StudentGroupId" asp-items="ViewBag.StudentGroups">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label for="StudentGroupId">Student Group<span class="text-danger">*</span></label>
+                    </div>
+                </div>
+                
+                @* <div class="row form-group">
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-student-fee-group" asp-for="StudentFeeGroupId" asp-items="ViewBag.StudentFeeGroups">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label for="StudentFeeGroupId">Student Fee Group<span class="text-danger">*</span></label>
+                    </div>
+                </div> *@
+                <input asp-for="Id" type="hidden">
+                <input asp-for="FacultyId" type="hidden">
+                <input asp-for="DepartmentId" type="hidden">
+                <input asp-for="CurriculumVersionId" type="hidden">
+            </div>
+        </div>
+    </form>
+</section>

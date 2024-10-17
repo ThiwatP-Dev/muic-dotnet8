@@ -1,0 +1,52 @@
+@model List<StudentStatusLog>
+@{
+    var index = 1;
+}
+
+<section class="ks-studentstatuslogs-info">
+    <form class="form-horizontal" asp-controller="student" asp-route-studentId="@ViewData["StudentId"]">
+        <div class="block no-shadow h-100x mn-h-50vh m-b-30">
+            <div class="block__body">
+                <div class=table-responsive>
+                    <table class="table table-bordered table-hover w-100x">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center">Term</th>
+                                <th class="text-center">Source</th>
+                                <th>Status</th>
+                                <th class="text-center">Effective Date</th>
+                                <th>Remark</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                             @if (Model != null)
+                            {
+                                foreach (var status in Model) 
+                                {
+                                    <tr>
+                                        <td>@index</td>
+                                        <td>@status.Term?.TermText</td>
+                                        <td>@status.Source</td>
+                                        <td>@status.StudentStatusText</td>
+                                        <td>@status.EffectiveAtText</td>
+                                        <td>@status.Remark</td>
+                                    </tr>
+                                    ++index;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td class="text-center" colspan="5">
+                                        <i class="text-danger">No Data</i>
+                                    </td>
+                                </tr>
+                            }  
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </form>
+</section>

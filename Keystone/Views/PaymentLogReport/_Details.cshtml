@@ -1,0 +1,86 @@
+@model PaymentLogReportViewModel
+
+<div class="block block--underline mb-0">
+    <div class="block__title">
+        <header>Payment Log Details</header>
+    </div>
+
+    <div class="block__body">
+        <div class="row form-group mb-3">
+            <div class="col-6">
+                <div class="form-control-label d-flex align-items-center">Reference 1</div>
+                <div class="form-control-plaintext text-wrap">@Model?.Reference1</div>
+            </div>
+            <div class="col-6">
+                <div class="form-control-label d-flex align-items-center">Reference 2</div>
+                <div class="form-control-plaintext text-wrap">@Model?.Reference2</div>
+            </div>
+        </div>
+
+        <div class="row form-group mb-3">
+            <div class="col-4">
+                <div class="form-control-label d-flex align-items-center">Invoice Number</div>
+                <div class="form-control-plaintext text-wrap">@Model?.InvoiceNumber</div>
+            </div>
+            <div class="col-4">
+                <div class="form-control-label d-flex align-items-center">Invoice Amount</div>
+                <div class="form-control-plaintext text-wrap">@Model?.TotalAmountText</div>
+            </div>
+            <div class="col-4">
+                <div class="form-control-label d-flex align-items-center">Invoice Status</div>
+                <div class="form-control-plaintext text-wrap">
+                    @if (Model == null || Model?.InvoiceIsCancel == null)
+                    {
+                        <span class="ks-label bg-danger">Not found</span>
+                    }
+                    else if (Model.InvoiceIsCancel.Value)
+                    {
+                        <span class="ks-label bg-danger">Cancel</span>
+                    }
+                    else if (Model.InvoiceIsPaid.Value)
+                    {
+                        <span class="ks-label bg-success">Paid</span>
+                    }
+                    else
+                    {
+                        <span class="ks-label bg-danger">UnPaid</span>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="row form-group mb-3">
+            <div class="col-4">
+                <div class="form-control-label d-flex align-items-center">Transaction Date</div>
+                <div class="form-control-plaintext text-wrap">@Model?.CreatedAt</div>
+            </div>
+            <div class="col-4">
+                <div class="form-control-label d-flex align-items-center">Paid Amount</div>
+                <div class="form-control-plaintext text-wrap">@Model?.PaidAmountText</div>
+            </div>
+        </div>
+
+        <div class="row form-group mb-3">
+            <div class="col-12">
+                <div class="form-control-label d-flex align-items-center">Response</div>
+                @if (string.IsNullOrEmpty(Model?.Response))
+                {
+                    <pre id="display-json" data-model="@JsonConvert.SerializeObject(Model?.ResponseObject)">
+                        @Model?.Response
+                            </pre>
+                }
+                else
+                {
+                    <div class="form-control-plaintext text-wrap">@Model?.Response</div>
+                }
+
+            </div>
+        </div>
+    </div>
+
+    <div class="block__action">
+        <div class="block__action-row">
+            <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-mw-120 btn--cancel rounded">Close</a>
+        </div>
+    </div>
+</div>

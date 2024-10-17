@@ -1,0 +1,238 @@
+@model ImportScholarshipStudentViewModel
+@{ 
+    ViewData["Title"] = "Import Scholarship Student";
+    var successIndex = 1;    
+    var failIndex = 1;
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>@ViewData["Title"]</header>
+            </div>
+
+            @if (Model == null)
+            {
+                <div class="block__body">
+                    <form class="form-horizontal" asp-controller="ImportScholarshipStudent" asp-action="Index" method="POST" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+                        <div class="row form-group">
+                            <div class="col-6">
+                                <select class="chosen-select form-control js-cascade-scholarship-type" name="ScholarshipTypeId" asp-items="ViewBag.ScholarshipTypes" data-placeholder="Select">
+                                    <option selected disabled>Select</option>
+                                </select>
+                                <label>Scholarship Type<span class="text-danger">*</span></label>
+                            </div>
+                            <div class="col-6">
+                                <select class="chosen-select form-control js-cascade-scholarship" name ="ScholarshipId" asp-items="ViewBag.Scholarships" data-placeholder="Select">
+                                    <option selected disabled>Select</option>
+                                </select>
+                                <label>Scholarship<span class="text-danger">*</span></label>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-6">
+                                <input class="form-control js-single-date" name="Date" type="text" autocomplete="off">
+                                <label>Date<span class="text-danger">*</span></label>
+                            </div>
+                            <div class="input-group col-6">
+                                <input id="file-name" class="form-control m-r-15" type="text">
+                                <label>File(".xlsx", ".xls")<span class="text-danger">*</span></label>
+                                <input id="upload-input" name="UploadFile" type="file" />
+                                <a id="browse-btn" class="btn btn--primary mb-0 align-self-end">
+                                    <i class="la la-file-upload"></i> Browse
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row form-group mb-0">
+                            <div class="col text-right text-nowrap">
+                                <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">
+                                    <i class="la la-upload mr-2"></i>
+                                    <span class="bold">Import</span>
+                                </button>
+                                <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                    Reset
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            }
+            else
+            {
+                <div class="block__body">
+                    <div class="row form-group">
+                        <div class="col-6">
+                            <select class="chosen-select form-control" disabled>
+                                <option selected disabled>@Model?.ScholarshipType?.NameEn</option>
+                            </select>
+                            <label>Scholarship Type<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-6">
+                            <select class="chosen-select form-control" disabled>
+                                <option selected disabled>@Model?.Scholarship?.NameEn</option>
+                            </select>
+                            <label>Scholarship<span class="text-danger">*</span></label>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-6">
+                            <select class="chosen-select form-control" disabled>
+                                <option selected disabled>@Model?.ReferenceDateText</option>
+                            </select>
+                            <label>Reference Date<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-6">
+                            <select class="chosen-select form-control" disabled>
+                                <option selected disabled>@Model?.FileName</option>
+                            </select>
+                            <label>File Name<span class="text-danger">*</span></label>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="ks-page-header col-12 mb-3">
+                            <ul class="d-flex flex-md-row align-items-md-center float-right">
+                                <li class="list-inline-item mx-3 mb-0">
+                                    <a class="btn btn--primary" asp-action="Index">Back</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            }
+            
+        </div>
+    </div>
+</section>
+
+
+<section class="row">
+    <div class="col-12">
+        @if (Model != null)
+        {
+            <div class="block block--underline">
+                <form class="form-horizontal" asp-controller="ImportScholarshipStudent" asp-action="Save" method="POST">
+                    @Html.AntiForgeryToken()
+                    <div class="block__title">
+                        <header>Success Result (@(Model?.Success?.Count() ?? 0))</header>
+                        @if(Model.Success.Any())
+                        {
+                            <div class="tools">
+                                <button class="btn btn--primary btn-mw-120" type="submit">
+                                    <i class="la la-disk mr-1 font-weight-800"></i> Save
+                                </button>
+                            </div>
+                        }
+                    </div>
+                    <div class="block__body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered js-report-table table-hover w-100x">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">#</th>
+                                        <th>Student Code</th>
+                                        <th>Name</th>
+                                        <th class="text-center">Effective Term</th>
+                                        <th class="text-center">Expire Term</th>
+                                        <th class="text-right">Amount</th>
+                                        <th>Remark</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (var i =0 ; i < Model.Success.Count ; i++) 
+                                    {                                     
+                                        <tr>
+                                            <input asp-for="@Model.Success[i].StudentCode" type="hidden">
+                                            <input asp-for="@Model.Success[i].EffectiveTermId" type="hidden"> 
+                                            <input asp-for="@Model.Success[i].ExpireTermId" type="hidden">    
+                                            <input asp-for="@Model.Success[i].Amount" type="hidden"> 
+                                            <input asp-for="@Model.Success[i].Remark" type="hidden">
+                                            <input asp-for="@Model.Scholarship.Id" type="hidden">    
+                                            <input asp-for="@Model.ReferenceDate" type="hidden"> 
+                                            <input asp-for="@Model.Success[i].Remark" type="hidden">     
+                                            <td>@successIndex</td>
+                                            <td>@Model.Success[i].StudentCode</td>
+                                            <td>@Model.Success[i].StudentFullName</td>
+                                            <td>@Model.Success[i].EffectivedTermText</td>
+                                            <td>@Model.Success[i].ExpiredTermText</td>
+                                            <td>@Model.Success[i].AmountText</td>
+                                            <td>@Model.Success[i].Remark</td>
+                                        </tr>                                        
+                                        ++successIndex;
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        }
+        
+    </div>
+
+    <div class="col-12">
+        @if (Model != null)
+        {
+            <div class="block block--underline">
+                <div class="block__title">
+                    <header>Fail Result (@(Model?.Fail?.Count() ?? 0))</header>
+                </div>
+
+                <div class="block__body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered js-report-table table-hover w-100x">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">#</th>
+                                    <th>Student Code</th>
+                                    <th class="text-center">Effective Term</th>
+                                    <th class="text-center">Effective Year</th>
+                                    <th class="text-center">Expire Term</th>
+                                    <th class="text-center">Expire Year</th>
+                                    <th class="text-right">Amount</th>
+                                    <th>Remark</th>
+                                    <th>Comment</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Fail) 
+                                {
+                                    <tr>
+                                        <td>@failIndex</td>
+                                        <td>@item.StudentCode</td>
+                                        <td>@item.EffectiveTerm</td>
+                                        <td>@item.EffectiveYear</td>
+                                        <td>@item.ExpireTerm</td>
+                                        <td>@item.ExpireYear</td>
+                                        <td>@item.AmountText</td>
+                                        <td>@item.Remark</td>
+                                        <td>@item.Comment</td>
+                                    </tr>
+                                    ++failIndex;
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        $(function() {
+            $('#browse-btn').on('click', function() {
+                $('#upload-input').click();
+            });
+
+            $('#upload-input').on('change', function(e) {
+                $("#file-name").val(e.currentTarget.files[0].name);
+            });
+
+        })
+    </script>
+
+    <script type="text/javascript" src="~/js/pages/ajax-cascading/scholarshiptype-cascade.js"></script>
+}

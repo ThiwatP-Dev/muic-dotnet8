@@ -1,0 +1,95 @@
+@model ScholarshipProfileViewModel
+
+<div class="block">
+	<div class="block__body height-3">
+        <form asp-controller="ScholarshipProfile" asp-action="Index" method="post">
+            <div class="form-group">
+                <input type="text" class="form-control search-form pl-2" placeholder="Student Code or Name" name="Keyword">
+                <button type="submit" class="btn btn--primary btn--circle btn--search m-t-2">
+                    <i class="la la-search"></i>
+                </button>
+            </div>
+        </form>
+
+        <div class="row">
+            <div class="form-group mb-0 col-md-3 col-xl-3">
+                <div class="media m-b-10">
+                    <div class="d-flex m-r-20">
+                        <img class="w-100 h-100 img-cover" src="@Model.ProfileImageURL" alt="Image Not Found" onerror="this.onerror=null;this.src='/images/default-profile-m.png';">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group mb-0 col-md-3 col-xl-3">
+                <div class="section-title"><h4>Code</h4></div>
+                <div class="form-control-plaintext">@Model.StudentCode</div>
+            </div>
+            <div class="form-group mb-0 col-md-3 col-xl-3">
+                <div class="section-title"><h4>Name</h4></div>
+                <div class="form-control-plaintext text-uppercase">@Model.FirstName @Model.LastName</div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group mb-0 col">
+				<div class="form-control-label d-flex align-items-center">GPA</div>
+				<div class="form-control-plaintext">@Model.GPAText</div>
+            </div>
+            <div class="form-group mb-0 col">
+				<div class="form-control-label d-flex align-items-center">Credit Earn</div>
+				<div class="form-control-plaintext">@Model.CreditEarned</div>
+            </div>
+            <div class="form-group mb-0 col">
+				<div class="form-control-label d-flex align-items-center">Registration Credit</div>
+				<div class="form-control-plaintext">@Model.RegistrationCredit</div>
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="section-title my-4">
+            <h4>General Information</h4>
+        </div>
+        
+        <div class="row">
+            <div class="form-group mb-0 col-3">
+				<div class="form-control-label d-flex align-items-center">Division</div>
+				<div class="form-control-plaintext">@Model.Faculty</div>
+            </div>
+            <div class="form-group mb-0 col-3">
+				<div class="form-control-label d-flex align-items-center">Major</div>
+				<div class="form-control-plaintext">@Model.Department</div>
+            </div>
+            <div class="form-group mb-0 col-6">
+				<div class="form-control-label d-flex align-items-center">Curriculum Version</div>
+				<div class="form-control-plaintext">@Model.CurriculumVersion</div>
+            </div>
+        </div>
+
+        <div class="section-title my-4">
+            <h4>Status</h4>
+        </div>
+
+        <div class="row">
+            <div class="form-group mb-3 col">
+				<div class="form-control-label d-flex align-items-center">Allowed Registration</div>
+                <partial name="_BooleanResult" model="@Model.AllowRegistration" />
+            </div>
+            <div class="form-group mb-3 col">
+				<div class="form-control-label d-flex align-items-center">Finished Registration</div>
+                <partial name="_BooleanResult" model="@Model.IsFinishedRegistration" />
+            </div>
+            <div class="form-group mb-3 col">
+				<div class="form-control-label d-flex align-items-center">Advising</div>
+                <partial name="_BooleanResult" model="@Model.AllowAdvising" />
+            </div>
+            <div class="form-group mb-3 col">
+				<div class="form-control-label d-flex align-items-center">Graduating</div>
+                <partial name="_BooleanResult" model="@Model.IsGraduating" />
+            </div>
+            <div class="form-group mb-3 col">
+				<div class="form-control-label d-flex align-items-center">Maintain</div>
+                <partial name="_BooleanResult" model="@Model.IsMaintainedStatus" />
+            </div>
+        </div>
+	</div>
+</div>

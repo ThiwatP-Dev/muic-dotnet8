@@ -1,0 +1,96 @@
+@media print {
+
+    /** Setting margins */
+    @page {
+        margin: 0
+    }
+    
+    body {
+        zoom: .75;
+
+        &.sidebar-expand {
+            .ks-content,
+            .ks-heading {
+                margin-left: 0;
+                width: 100%;
+            }
+    
+            .ks-sidebar {
+                display: none;
+            }
+        }
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        page-break-after: avoid;
+        page-break-inside: avoid
+    }
+
+    img {
+        page-break-inside: avoid;
+        page-break-after: avoid;
+    }
+
+    table,
+    pre {
+        page-break-inside: avoid
+    }
+
+    ul,
+    ol,
+    dl {
+        page-break-before: avoid
+    }
+
+    table {
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+
+    .wrapper-content {
+        padding: 0;
+    }
+
+    .ks-page-header {
+        display: none;
+    }
+
+    .print-btn, hr {
+        display: none !important;
+    }
+
+    table, tbody {
+        width: 100% !important;
+        border: 1px solid #000 !important;
+        border-style: dotted !important;
+    }
+
+    .class-time-slot {
+        position: absolute;
+        color: #000 !important;
+        border: 1px solid #000 !important;
+        border-style: dotted !important;
+        background-color: transparent !important;
+    }
+
+    .page-break  { 
+        display: block; 
+        page-break-after: always; 
+    }
+
+    .ks-content,
+    .ks-heading {
+        margin-left: 0 !important;
+        width: 100% !important;
+    }
+
+    .ks-sidebar,
+    .ks-logo {
+        display: none;
+    }
+}

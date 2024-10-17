@@ -1,0 +1,132 @@
+@model WithdrawByCourseViewModel
+@Html.AntiForgeryToken()
+
+@if (Model != null)
+{
+    <div class="block">
+        <div class="block__body">
+            <form asp-controller="Withdrawal" asp-action="SaveWithdrawalByCourse" asp-route-returnUrl="@ViewBag.ReturnUrl" method="POST">
+                <div class="row form-group">
+                    <div class="col-6">
+                        <select class="chosen-select form-control js-render-type" asp-for="Type" asp-items="ViewBag.WithdrawalTypes">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Type<span class="text-danger">*</span></label>
+                        <span class="text-danger" asp-validation-for="Type"></span>
+                    </div>
+              @*       <div class="col-3">
+                       <select class="chosen-select form-control js-render-approved-by" asp-for="ApprovedBy">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Approved by<span class="text-danger">*</span></label>
+                        <span class="text-danger" asp-validation-for="ApprovedBy"></span>
+                    </div>*@
+                    <div class="col-3">
+                        <input class="form-control js-single-date" asp-for="RequestedAt" type="text" autocomplete="off">
+                        <label>Requested At<span class="text-danger">*</span></label>
+                        <span class="text-danger" asp-validation-for="RequestedAt"></span>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-6">
+                        <div class="block p-4">
+                            <div class="d-flex justify-content-between py-1 m-b-10">
+                                <span class="color-primary font-weight-700">Student List</span>
+                                <span class="form-group mb-0">
+                                    <input id="js-search" class="form-control search-form--mini" type="text" placeholder="Code or Name">
+                                    <i class="la la-search inline-icon"></i>
+                                </span>
+                            </div>         
+                            <div class="box-scroll__content js-render-nicescroll p-0 m-b-50">
+                                <table id="js-withdrawal-students" class="table table-bordered m-0">
+                                    <thead class="scroll-header">
+                                        <tr>
+                                            <th class="w-50">
+                                                <input id="checkAll" class="js-check-all" name="Students" type="checkbox">
+                                                <label class="mt-2 mb-0 m-l-2" for="checkAll"></label>
+                                            </th>
+                                            <th class="text-center">Code</th>
+                                            <th>Name</th>
+                                            <th class="text-center w-75">Payment</th>
+                                            <th class="text-center w-100">Withdrawal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="js-items">
+                                        @if (Model.RegistrationCourses.Any())
+                                        {
+                                            var i = 1;
+                                            foreach (var item in Model.RegistrationCourses)
+                                            {
+                                                <tr class="js-suggestion-parent">
+                                                    <td>
+                                                        <input id="Student[@i]" class="js-add-student" type="checkbox"
+                                                               data-student-id="@item.StudentId"
+                                                               data-paid-status="@item.IsPaid"
+                                                               data-registrationcourse-id="@item.Id">
+                                                        <label class="form-check-input" for="Student[@i]"></label>
+                                                    </td>
+                                                    <td class="js-focus-item">@item.Student?.Code</td>
+                                                    <td class="js-focus-item">@item.Student?.FullNameEn</td>
+                                                    <td class="text-center">
+                                                        <partial name="_BooleanResult" model="@item.IsPaid">
+                                                    </td>
+                                                    <td>@item.WithdrawalTypes</td>
+                                                </tr>
+                                                i++;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td colspan="5">
+                                                    <i class="text-danger">No Data</i>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="block p-4">
+                            <div class="color-primary font-weight-700 py-2 mb-2">
+                                Adding Withdrawal Student
+                            </div>
+                            <div class="box-scroll__content js-render-nicescroll p-0 mb-3">
+                                <table id="js-selected-students" class="table table-bordered m-0">
+                                    <thead class="scroll-header">
+                                        <tr>
+                                            <th class="text-center w-25">#</th>
+                                            <th class="text-center">Code</th>
+                                            <th>Name</th>
+                                            <th class="text-center w-75">Payment</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr id="js-default-row">
+                                            <td class="text-center" colspan="4">
+                                                <i class="text-danger">No adding student</i>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <input asp-for="CourseId" type="hidden">
+                            <input asp-for="SectionId" type="hidden">
+                            <input asp-for="TermId" type="hidden">
+                            <input asp-for="AcademicLevelId" type="hidden">
+                            
+                            <div class="block__action-row py-0">
+                                <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">Save</button>
+                                <a class="btn btn-mw-120 btn--link mb-0" href="@ViewBag.ReturnUrl">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+}

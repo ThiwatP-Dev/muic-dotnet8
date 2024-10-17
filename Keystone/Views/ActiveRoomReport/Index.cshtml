@@ -1,0 +1,198 @@
+@model ActiveRoomReportViewModel
+@{
+    ViewData["Title"] = "Active Room Report";
+    var index = 1;
+}
+
+<div class="row">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</div>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="ActiveRoomReport" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group m-b-30">
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-campus" asp-for="Criteria.CampusId" asp-items="ViewBag.Campuses">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Campus</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-building" asp-for="Criteria.BuildingId" asp-items="ViewBag.Buildings">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Building</label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.Floor" type="text">
+                            <label>Floor</label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.CodeAndName" type="text">
+                            <label>Room</label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-3">
+                            <input class="form-control js-single-date" asp-for="Criteria.Date" type="text" autocomplete="off">
+                            <label>Date<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.Type" asp-items="ViewBag.UsingTypes">
+                                <option selected value="">All</option>
+                            </select>
+                            <label>Using Type<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-6 align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.Details?.Count() ?? 0))</header>
+            </div>
+
+            <div class="block__body">
+                <div class="p-4">
+                    <table class="table table-bordered table-hover js-report-table w-100x">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th>Campus</th>
+                                <th>Building</th>
+                                <th class="text-center">Floor</th>
+                                <th>Room</th>
+                                <th class="text-center">Time</th>
+                                <th>Type</th>
+                                <th class="">Remark</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Details.Any())
+                            {
+                                foreach (var item in Model.Details)
+                                {
+                                    <tr>
+                                        <td>@index</td>
+                                        <td>@item.Campus</td>
+                                        <td>@item.Building</td>
+                                        <td>@item.Floor</td>
+                                        <td>@item.Name</td>
+                                        @if (item.RoomSlots != null && item.RoomSlots.Any())
+                                        {
+                                            <td>
+                                                @foreach (var slot in item.RoomSlots)
+                                                {
+                                                    <p class="@(slot.IsSameDate ? "bg-danger-pastel" : "")">
+                                                        @slot.StartTimeText - @slot.EndTimeText
+                                                    </p>
+                                                }
+                                            </td>
+                                            <td>
+                                                @foreach (var slot in item.RoomSlots)
+                                                {
+                                                    <p>@slot.UsingTypeText</p>
+                                                }
+                                            </td>
+                                            <td>
+                                                @foreach (var slot in item.RoomSlots)
+                                                {
+                                                    if (slot.SectionSlot != null)
+                                                    {
+                                                        <p>@slot.SectionSlot.Section.Course.Code (@slot.SectionSlot.Section.Number) @(slot.SectionSlot.IsMakeUpClass ? "[M]" : "")</p>
+                                                    }
+                                                    else if (slot.ExaminationReservation != null)
+                                                    {
+                                                        <p>@slot.ExaminationReservation.Section.Course.Code (@slot.SectionSlot.Section.Number)</p>
+                                                    }
+                                                    else if (slot.RoomReservation != null)
+                                                    {
+                                                        <p>@slot.RoomReservation.Remark</p>
+                                                    }
+                                                    else
+                                                    {
+                                                        <p></p>
+                                                    }
+                                                }
+                                            </td>
+                                        }
+                                        else if (item.RoomSlot != null)
+                                        {
+                                            <td>
+                                                <p class="@(item.RoomSlot.IsSameDate ? "bg-danger-pastel" : "")">
+                                                    @item.RoomSlot.StartTimeText - @item.RoomSlot.EndTimeText
+                                                </p>
+                                            </td>
+                                            <td>
+
+                                                <p>@item.RoomSlot.UsingTypeText</p>
+                                            </td>
+                                            <td>
+                                                @if (item.RoomSlot.SectionSlot != null && item.RoomSlot.SectionSlot.Section != null)
+                                                {
+                                                <p>@item.RoomSlot.SectionSlot.Section.Course.Code (@item.RoomSlot.SectionSlot.Section.Number) @(item.RoomSlot.SectionSlot.IsMakeUpClass ? "[M]" : "")</p>
+                                                }
+                                                else if (item.RoomSlot.ExaminationReservation != null && item.RoomSlot.ExaminationReservation.Section != null)
+                                                {
+                                                <p>@item.RoomSlot.ExaminationReservation.Section.Course.Code (@item.RoomSlot.ExaminationReservation.Section.Number)</p>
+                                                }
+                                                else if (item.RoomSlot.RoomReservation != null)
+                                                {
+                                                <p>@item.RoomSlot.RoomReservation.Remark</p>
+                                                }
+                                                else
+                                                {
+                                                <p></p>
+                                                }
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        }
+                                    </tr>
+                                    ++index;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="7">
+                                        <i class="text-danger">No Data</i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @(await Component.InvokeAsync<PagerViewComponent>(Model))
+    </div>
+</section>
+
+@section Scripts {
+<script src="~/js/pages/ajax-cascading/building-cascade.js"></script>
+}

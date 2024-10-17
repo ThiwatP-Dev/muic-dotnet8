@@ -1,0 +1,211 @@
+/*------------------------------------
+    Block
+------------------------------------*/
+
+.block {
+    position: relative;
+    margin-bottom: 24px;
+    background-color: $white;
+    color: $black;
+    border-radius: 2px;
+    -webkit-box-shadow: 0 0 5px $white-light;
+    box-shadow: 0 1px 5px 1px rgba($shadow,.075);
+
+    &:before,
+    :after {
+        display: table;
+    }
+
+    &:after {
+        clear: both;
+    }
+
+    &__title {
+        
+        position: relative;
+        min-height: 56px;
+        vertical-align: middle;
+        line-height: 52px;
+        border-radius: 2px 2px 0 0;
+
+        header {
+            display: inline-block;
+            padding: 11px 24px;
+            vertical-align: middle;
+            line-height: 17px;
+            @include px-to-rem(font-size, 17px);
+            font-weight: 700;
+
+            h1,h2,h3,h4,h5,h6 {
+                margin: 0;
+                vertical-align: middle;
+                line-height: 1;
+            }
+
+            &.block__title-info {
+                width: 100%;
+                padding: 15px;
+
+                >div.row {
+                    white-space: nowrap;
+
+                    >.info-group {
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: flex-end;
+                    }
+                }
+            }
+        }
+    }
+
+    &__body {
+        position: relative;
+        padding: 24px;
+        &:last-child {
+            border-radius: 0 0 2px 2px;
+        }
+    }
+
+    &__action {
+        position: relative;
+        padding-bottom: 8px;
+
+        &:before,
+        &:after {
+            display: table;
+            content: " ";
+        }
+
+        &:after {
+            clear: both;
+        }
+
+        &:last-child {
+            border-radius: 0 0 2px 2px;
+        }
+
+        &-row {
+            padding: 6px 16px;
+            text-align: right;
+        }
+        
+    }
+
+    &__content {
+        padding: 1rem;
+
+        .content-header {
+            font-weight: 700;
+            text-overflow: ellipsis;
+            margin-bottom: .75rem;
+            padding-bottom: .75rem;
+            color: $primary;
+            border-bottom: 1px solid $white-smoke;
+        }
+
+        .content-title {
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            color: $black;
+        }
+
+        .content-detail {
+            margin: 0rem;
+            margin-bottom: 0.25rem;
+            padding-bottom: 0.25rem;
+            color: $dark;
+            border-bottom: 0.5px dashed $white-smoke;
+        }
+    }
+
+    .tools {
+        padding-right: 16px;
+        float: right;
+
+        div {
+            display: inline-block;
+        }
+
+        .btn-group {
+            margin-right: 4px;
+        }
+    }
+
+    &--underline > &__title {
+        border-bottom: 1px solid rgba($white-smoke, .65); 
+    }
+
+    &.no-shadow {
+        box-shadow: none !important;
+    }
+    
+}
+
+.panel-group {
+    .block {
+        border: inherit;
+        -webkit-transition: margin 0.33s ease-out;
+        -o-transition: margin 0.33s ease-out;
+        transition: margin 0.33s ease-out;
+
+        .fa-angle-down, 
+        .fa-chevron-down, 
+        .fa-caret-down {
+            -webkit-transform: rotate(0deg);
+            -ms-transform: rotate(0deg);
+            -o-transform: rotate(0deg);
+            transform: rotate(0deg);
+            -webkit-transition: all 0.1s linear;
+            -o-transition: all 0.1s linear;
+            transition: all 0.1s linear;
+        }
+
+        .collapsed {
+            .fa-angle-down, 
+            .fa-chevron-down, 
+            .fa-caret-down {
+                -webkit-transform: rotate(90deg);
+                -ms-transform: rotate(90deg);
+                -o-transform: rotate(90deg);
+                transform: rotate(90deg);
+            }
+
+            .fa-plus {
+                -webkit-transform: rotate(0deg);
+                -ms-transform: rotate(0deg);
+                -o-transform: rotate(0deg);
+                transform: rotate(0deg);
+            }
+        }
+
+        .fa-plus {
+            -webkit-transform: rotate(-135deg);
+            -ms-transform: rotate(-135deg);
+            -o-transform: rotate(-135deg);
+            transform: rotate(-135deg);
+            -webkit-transition: all 0.3s ease-out;
+            -o-transition: all 0.3s ease-out;
+            transition: all 0.3s ease-out;
+        }
+
+        + & {
+            margin-top: 1px;
+        }
+
+        &.expanded {
+            margin: 16px 0px;
+
+            &:first-child{
+                margin-top: 0;
+            }
+        }
+    }
+}
+
+.sticky {
+    top: 0;
+    position: sticky;
+    display: block;
+    z-index: 1001;
+}

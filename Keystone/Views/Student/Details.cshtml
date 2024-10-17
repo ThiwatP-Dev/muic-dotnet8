@@ -1,0 +1,306 @@
+@model Student
+@{
+    ViewData["Profile"] = (Model.ProfileImageURL == null) ? "../images/img100x100.jpg" : Model.ProfileImageURL ;
+    ViewData["Title"] = $"{ @Model.Code } - { Model.FullNameEn }";
+    ViewData["CurriculumVersion"] = @Model.AcademicInformation?.CurriculumVersion?.CodeAndName;
+    ViewData["SubTitle"] = $"{ @Model.AcademicInformation?.Faculty?.NameEn }, { @Model.AcademicInformation?.Department?.NameEn }";
+    ViewData["GPA"] = @Model.AcademicInformation?.GPAString;
+    ViewData["Credit"] = @Model.AcademicInformation?.CreditComp;
+    ViewData["LastUpdate"] = Model.LastUpdate;
+    ViewData["StudentId"] = Model.Id;
+    ViewData["StudentStatus"] = Model.StudentStatusText;
+    ViewData["IsActive"] = Model.IsActive;
+    ViewData["IsStudentExtended"] = Model.IsStudentExtended;
+    ViewData["Scholarship"] = Model.ScholarshipStudent?.Scholarship?.NameEn ?? "N/A";
+    ViewData["IsCurrentStudentProbation"] = @Model.IsCurrentStudentProbation;
+    ViewData["Advisor"] = @Model.AcademicInformation?.Advisor?.FullNameEn;
+    ViewData["Page"] = "s";
+}
+
+<section id="student-profile" class="row">
+    <div class="col-md-12">
+        <div class="tabs-scroller float-left"><i class="la la-angle-double-left"></i></div>
+        <div class="tabs-scroller float-right"><i class="la la-angle-double-right"></i></div>
+        <div class="nav-tabs-wrapper">
+            <ul class="nav nav-tabs ks-tabs" role="tablist">
+                 @if (Model.TabPermissions != null)
+                {
+                    @foreach (var tab in Model.TabPermissions)
+                    {
+                        @if (tab.Tab.ToUpper() == "GENERAL")
+                        {
+                            <li class="nav-item">
+                                <a id="nav-link-0" class="nav-link active" href="#nav-tab-0" data-toggle="tab" data-savable="true">
+                                    General
+                                </a>
+                            </li>
+                        }
+                        else if (tab.Tab.ToUpper() == "ACADEMIC")
+                        {
+                            <li class="nav-item">
+                                <a id="nav-link-1" class="nav-link" href="#nav-tab-1" data-toggle="tab" data-savable="true">
+                                    Academic
+                                </a>
+                            </li>
+                        }
+                        else if (tab.Tab.ToUpper() == "CURRICULUM")
+                        {
+                            <li class="nav-item">
+                                <a id="nav-link-2" class="nav-link" href="#nav-tab-2" data-toggle="tab" data-savable="false">
+                                    Curriculum
+                                </a>
+                            </li>
+                        }
+                        else if (tab.Tab.ToUpper() == "ADMISSION")
+                        {
+                            <li class="nav-item">
+                                <a id="nav-link-3" class="nav-link" href="#nav-tab-3" data-toggle="tab" data-savable="true">
+                                    Admission
+                                </a>
+                            </li>
+                        }
+                        else if (tab.Tab.ToUpper() == "GRADUATION")
+                        {
+                            <li class="nav-item">
+                                <a id="nav-link-4" class="nav-link" href="#nav-tab-4" data-toggle="tab" data-savable="true">
+                                    Graduation
+                                </a>
+                            </li>
+                        }
+                        else if (tab.Tab.ToUpper() == "INCIDENT")
+                        {
+                            <li class="nav-item">
+                                <a id="nav-link-5" class="nav-link" href="#nav-tab-5" data-toggle="tab" data-savable="true">
+                                    Incident
+                                </a>
+                            </li>
+                        }
+                        else if (tab.Tab.ToUpper() == "ADDRESS")
+                        {
+                            <li class="nav-item">
+                                <a id="nav-link-6" class="nav-link" href="#nav-tab-6" data-toggle="tab" data-savable="false">
+                                    Address
+                                </a>
+                            </li>
+                        }
+                        else if (tab.Tab.ToUpper() == "CONTACT")
+                        {
+                            <li class="nav-item">
+                                <a id="nav-link-7" class="nav-link" href="#nav-tab-7" data-toggle="tab" data-savable="true">
+                                    Contact
+                                </a>
+                            </li>
+                        }
+                        else if (tab.Tab.ToUpper() == "PARENT")
+                        {
+                            <li class="nav-item">
+                                <a id="nav-link-8" class="nav-link" href="#nav-tab-8" data-toggle="tab" data-savable="false">
+                                    Parent
+                                </a>
+                            </li>
+                        }
+                        else if (tab.Tab.ToUpper() == "MAINTENANCE")
+                        {
+                            <li class="nav-item">
+                                <a id="nav-link-9" class="nav-link" href="#nav-tab-9" data-toggle="tab" data-savable="false">
+                                    Maintenance
+                                </a>
+                            </li>
+                        }
+                    @*  else if (tab.Tab.ToUpper() == "CHEATING")
+                        {
+                            <li class="nav-item">
+                                <a id="nav-link-10" class="nav-link" href="#nav-tab-10" data-toggle="tab" data-savable="false">
+                                    Cheating
+                                </a>
+                            </li>
+                        }*@
+                      @*  else if (tab.Tab.ToUpper() == "DOCUMENT")
+                        {
+                            <li class="nav-item">
+                                <a id="nav-link-11" class="nav-link" href="#nav-tab-11" data-toggle="tab" data-savable="true">
+                                    Document
+                                </a>
+                            </li>
+                        }*@
+                        else if (tab.Tab.ToUpper() == "GRADE")
+                        {
+                            <li class="nav-item">
+                                <a id="nav-link-12" class="nav-link" href="#nav-tab-12" data-toggle="tab" data-savable="false">
+                                    Grade
+                                </a>
+                            </li>
+                        }
+                        else if (tab.Tab.ToUpper() == "STATUS LOGS")
+                        {
+                            <li class="nav-item">
+                                <a id="nav-link-13" class="nav-link" href="#nav-tab-13" data-toggle="tab" data-savable="false">
+                                    Status Logs
+                                </a>
+                            </li>
+                        }
+                        else if (tab.Tab.ToUpper() == "PROBATION")
+                        {
+                            <li class="nav-item">
+                                <a id="nav-link-14" class="nav-link" href="#nav-tab-14" data-toggle="tab" data-savable="false">
+                                    Probation
+                                </a>
+                            </li>
+                        }
+                    }
+                }
+            </ul>
+        </div>
+
+        <div id="student-profile-tab-content" class="tab-content">
+            @if (Model.TabPermissions != null)
+            {
+                @foreach (var tab in Model.TabPermissions)
+                {
+                    @if (tab.Tab.ToUpper() == "GENERAL")
+                    {
+                       <div id="nav-tab-0" class="tab-pane show active" role="tabpanel">
+                            <partial name="_GeneralInfo">
+                        </div>
+                    }
+                    else if (tab.Tab.ToUpper() == "ACADEMIC")
+                    {
+                        <div id="nav-tab-1" class="tab-pane" role="tabpanel">
+                            <partial name="_AcademicInfo" model="Model.AcademicInformation">
+                        </div>
+                    }
+                    else if (tab.Tab.ToUpper() == "CURRICULUM")
+                    {
+                        <div id="nav-tab-2" class="tab-pane" role="tabpanel">
+                            <partial name="_CurriculumInformation" model="Model">
+                        </div>
+                    }
+                    else if (tab.Tab.ToUpper() == "ADMISSION")
+                    {
+                        <div id="nav-tab-3" class="tab-pane" role="tabpanel">
+                            <partial name="_AdmissionInfo" model="Model.AdmissionInformation">
+                        </div>
+                    }
+                    else if (tab.Tab.ToUpper() == "GRADUATION")
+                    {
+                        <div id="nav-tab-4" class="tab-pane" role="tabpanel">
+                            <partial name="_GraduateInfo" model="Model.GraduationInformations">
+                        </div>
+                    }
+                    else if (tab.Tab.ToUpper() == "INCIDENT")
+                    {
+                        <div id="nav-tab-5" class="tab-pane" role="tabpanel">
+                            <partial name="_IncidentInfo">
+                        </div>
+                    }
+                    else if (tab.Tab.ToUpper() == "ADDRESS")
+                    {
+                        <div id="nav-tab-6" class="tab-pane" role="tabpanel">
+                            <partial name="_AddressInfo" model="Model">
+                        </div>
+                    }
+                    else if (tab.Tab.ToUpper() == "CONTACT")
+                    {
+                        <div id="nav-tab-7" class="tab-pane" role="tabpanel">
+                            <partial name="_ContactInfo">
+                        </div>
+                    }
+                    else if (tab.Tab.ToUpper() == "PARENT")
+                    {
+                        <div id="nav-tab-8" class="tab-pane" role="tabpanel">
+                            <partial name="_ParentInfo" model="Model">
+                        </div>
+                    }
+                    else if (tab.Tab.ToUpper() == "MAINTENANCE")
+                    {
+                        <div id="nav-tab-9" class="tab-pane" role="tabpanel">
+                            <partial name="_Maintenance">
+                        </div>
+                    }
+         @*           else if (tab.Tab.ToUpper() == "CHEATING")
+                    {
+                         <div id="nav-tab-10" class="tab-pane" role="tabpanel">
+                            <partial name="_Cheating" model="Model.CheatingStatuses">
+                        </div>
+                    }
+                    else if (tab.Tab.ToUpper() == "DOCUMENT")
+                    {
+                         <div id="nav-tab-11" class="tab-pane" role="tabpanel">
+                            <partial name="_DocumentInfo" model="Model.StudentRequiredDocument">
+                        </div>
+                    }*@
+                    else if (tab.Tab.ToUpper() == "GRADE")
+                    {
+                         <div id="nav-tab-12" class="tab-pane" role="tabpanel">
+                            <partial name="_Registration" model="Model.StudentRegistrationCoursesViewModels">
+                        </div>
+                    }
+                    else if (tab.Tab.ToUpper() == "STATUS LOGS")
+                    {
+                        <div id="nav-tab-13" class="tab-pane" role="tabpanel">
+                            <partial name="_StudentStatusLogs" model="Model.StudentStatusLogs">
+                        </div>
+                    }
+                    else if (tab.Tab.ToUpper() == "PROBATION")
+                    {
+                        <div id="nav-tab-14" class="tab-pane" role="tabpanel">
+                            <partial name="_StudentProbation" model="Model.StudentProbations">
+                        </div>
+                    }
+                }
+            }        
+        </div>
+    </div>
+</section>
+
+@section Modals {
+    <partial name="_DeleteConfirmModals">
+    <partial name="_DeleteRowConfirmModals">
+    <partial name="_ConfirmUpdateModals">
+    <partial name="_ChangeStudentStatusModals" model="new Student()">
+}
+
+@section Scripts {
+    <script>
+        var activeModelForm = "";
+    </script>
+
+    <script type="text/javascript" src="~/js/pages/tabs.js"></script>
+    <script type="text/javascript" src="~/js/pages/address.js"></script>
+    <script type="text/javascript" src="~/js/pages/cheating-status.js"></script>
+    <script type="text/javascript" src="~/js/pages/parent.js"></script>
+    <script type="text/javascript" src="~/js/pages/maintenance.js"></script>
+    <script type="text/javascript" src="~/js/pages/curriculum-information.js"></script>
+    <script>
+        $(document).ready(function() 
+        {
+            $('.js-modal-form').on('show.bs.modal', function (event) 
+            {
+                activeModelForm = `#${$(this)[0].id}`
+            });
+
+            var tab = '#nav-link-' + getUrlParameter('tabIndex');
+            $(tab).tab('show');
+
+            var inputTable = new RowAddAble({
+                TargetTable: '#js-exam-table',
+                TableTitle: 'Examination',
+                ButtonTitle: 'Examination'
+            })
+            inputTable.RenderButton();
+        });
+    </script>
+
+    <!-- cascade ajax -->
+    <script type="text/javascript" src="~/js/pages/ajax-cascading/card-expiration.js"></script>
+    <script type="text/javascript" src="~/js/pages/incident.js"></script>
+
+    <script type="text/javascript" src="~/js/pages/citizen-passport-trigger.js"></script>
+    <script type="text/javascript" src="~/js/helpers/address-selects-helper.js"></script>
+    <script type="text/javascript" src="~/js/pages/student-document.js"></script>
+    <script type="text/javascript" src="~/js/pages/student-profile.js"></script>
+    <script type="text/javascript" src="~/js/plugins/webcam-easy.min.js"></script>
+    <script type="text/javascript" src="~/js/pages/webcam.js"></script>
+}
+
+<partial name="~/Views/Shared/Student/_UploadProfileModal.cshtml">

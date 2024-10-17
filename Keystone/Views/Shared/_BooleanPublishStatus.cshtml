@@ -1,0 +1,17 @@
+@model string
+@if (Model == "pu")
+{
+    <span class="text-success">Published</span>
+}
+else if (Model == "pa")
+{
+    <span class="text-warning">Patial</span>
+}
+else if (Model == "pe")
+{
+    <span class="text-danger">Pending</span>
+}
+else
+{
+    <span>N/A</span>
+}

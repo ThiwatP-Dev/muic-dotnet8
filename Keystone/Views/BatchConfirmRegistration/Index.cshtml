@@ -1,0 +1,209 @@
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+@model BatchRegistrationConfirmationViewModel
+@{
+    ViewData["Title"] = "Batch Registration Confirmation";
+    var contextPath = $"{Context.Request.Path}{Context.Request.QueryString}";
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>@ViewData["Title"]</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="BatchConfirmRegistration" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+
+                    <div class="row form-group mb-0">
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId"
+                                    asp-items="ViewBag.AcademicLevels" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Academic Level<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-term"
+                                    asp-items="ViewBag.Terms" asp-for="Criteria.TermId" data-placeholder="Select">
+                                <option selected>Select</option>
+                            </select>
+                            <label>Term</label>
+                        </div>
+                        <div class="col-3 align-self-end text-right text-nowrap">
+                            <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <a id="js-reset-btn" class="btn btn-mw-120 btn--reset mb-0" asp-action="Index">Reset</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__body">
+                <div class="col-12">
+                    <h2>Registration Course Sync Info</h2>
+                </div>
+                <div class="col-12">
+                    Please make sure the registration course sync was completed before you start the batch confirmation process. Or you might not have the complete student registration information. 
+                </div>
+                <div class="col-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered w-100x">
+                            <thead>
+                                <tr>
+                                    <th>Latest Sync At</th>
+                                    <th>Result</th>
+                                    <th>Remark</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.DataSyncLogs != null && Model.DataSyncLogs.Any())
+                                {
+                                    @for (int i = 0; i < Model.DataSyncLogs.Count; i++)
+                                    {
+                                        <tr>
+                                            <td>@(Model.DataSyncLogs[i].SyncFinishTimeUtc?.AddHours(7).ToString(StringFormat.ShortDateTime))</td>
+                                            <td>@Model.DataSyncLogs[i].SyncResult</td>
+                                            <td>@Model.DataSyncLogs[i].Remark</td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="3" class="text-center">
+                                            No Data
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__body">
+                @if (Model != null && Model.Criteria != null && Model.Criteria.AcademicLevelId > 0 && Model.IsAbleToCreateNewJob && (await AuthorizationService.AuthorizeAsync(User, "Permit_BatchConfirmRegistration_Write")).Succeeded)
+                {
+                    <div class="col-12 text-right">
+                        <form class="form-horizontal" asp-controller="BatchConfirmRegistration" asp-action="CreateJob" method="get">
+                            <input type="hidden" asp-for="Criteria.AcademicLevelId" />
+                            <input type="hidden" asp-for="Criteria.TermId" />
+                            <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">
+                                Create Batch Confirm Student Registration Task
+                            </button>
+                        </form>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-12 text-right">
+                        <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit" disabled>
+                            Create Batch Confirm Student Registration Task
+                        </button>
+                    </div>
+                }
+                <div class="col-12">
+                    <h2>List of Batch Confirm Student Registration Task</h2>
+                </div>
+                <div class="col-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered w-100x">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Term</th>
+                                    <th>Requested By</th>
+                                    <th>Requested At</th>
+                                    <th>Start At</th>
+                                    <th>Finish At</th>
+                                    <th>Run Time</th>
+                                    <th>Result</th>
+                                    <th class="text-right">#Total</th>
+                                    <th class="text-right">#Confirmation</th>
+                                    <th class="text-right">#Failed</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.BatchRegistrationConfirmJobs != null && Model.BatchRegistrationConfirmJobs.Any())
+                                {
+                                    @for (int i = 0; i < Model.BatchRegistrationConfirmJobs.Count; i++)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @(
+                                                    i + 1
+                                                    )
+                                            </td>
+                                            <td>@Model.BatchRegistrationConfirmJobs[i].Term</td>
+                                            <td>@Model.BatchRegistrationConfirmJobs[i].CreatedByFullNameEn</td>
+                                            <td>@Model.BatchRegistrationConfirmJobs[i].CreatedDateTimeText</td>
+                                            <td>@Model.BatchRegistrationConfirmJobs[i].StartProcessDateTimeThString</td>
+                                            <td>@Model.BatchRegistrationConfirmJobs[i].FinishProcessDateTimeThString</td>
+                                            <td>
+                                                @if (Model.BatchRegistrationConfirmJobs[i].IsRunning)
+                                                {
+                                                    @("Is Running")
+                                                }
+                                                else if (Model.BatchRegistrationConfirmJobs[i].FinishProcessDateTimeUtc.HasValue)
+                                                {
+                                                    @((Model.BatchRegistrationConfirmJobs[i].FinishProcessDateTimeUtc - Model.BatchRegistrationConfirmJobs[i].StartProcessDateTimeUtc).Value.ToString("d'd 'h'h 'm'm 's's'"))
+                                                } 
+                                                else
+                                                {
+                                                    @("Problem please contract anministrator")
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (Model.BatchRegistrationConfirmJobs[i].IsCompleted)
+                                                {
+                                                    @(Model.BatchRegistrationConfirmJobs[i].RunRemark)
+                                                }                    
+                                            </td>
+                                            <td class="text-right">@Model.BatchRegistrationConfirmJobs[i].TotalCase</td>
+                                            <td class="text-right">@Model.BatchRegistrationConfirmJobs[i].SuccessCase</td>
+                                            <td class="text-right">@Model.BatchRegistrationConfirmJobs[i].ErrorCase</td>
+                                            <td class="text-center td-actions">
+                                                <a asp-controller="BatchConfirmRegistration"
+                                                   asp-action="Detail"
+                                                   asp-route-Id="@Model.BatchRegistrationConfirmJobs[i].Id"
+                                                   asp-route-returnUrl="@contextPath">
+                                                    <i class="la la-info info"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="12" class="text-center">
+                                            No Data
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>

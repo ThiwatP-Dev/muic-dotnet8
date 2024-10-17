@@ -1,0 +1,20 @@
+@model List<TeachingLoadViewModel>
+@{ 
+    ViewData["Title"] = "Add Teaching Load"; 
+}
+
+<section class="row">
+    <div class="col-lg-12">
+        <div class="block block--underline">
+            <form class="ks-form container" asp-controller="TeachingLoad" asp-action="Create" method="post">
+                @Html.AntiForgeryToken()
+                <partial name="_Form"/>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/teaching-load.js"></script>
+    <script type="text/javascript" src="~/js/pages/create-load.js"></script>
+}

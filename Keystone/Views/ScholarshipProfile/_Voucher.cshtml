@@ -1,0 +1,84 @@
+@model ScholarshipProfileViewModel
+@{
+    var index = 1;
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+    if (!contextPath.Contains("?Keyword"))
+    {
+        contextPath += $"?Keyword={ Model.StudentCode }";
+    }
+}
+
+<div class="form-group text-right mb-3">
+    <a class="btn btn--primary" asp-controller="Voucher" asp-action="Create" asp-route-code="@Model.StudentCode" asp-route-returnUrl="@contextPath">
+        <i class="la la-plus mr-1 font-weight-800"></i> Add
+    </a>
+</div>
+
+<div class="form-group table-responsive mb-3">
+    <table class="table table-bordered m-0">
+        <thead>
+            <tr>
+                <th class="w-25">#</th>
+                <th>Term</th>
+                <th class="text-center">Requested Date</th>
+                <th class="text-right">Total Amount</th>
+                <th class="text-center">Paid Date</th>
+                <th class="text-center">Status</th>
+                <th class="text-center w-150">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Vouchers != null && Model.Vouchers.Any()) 
+            {
+                foreach (var item in Model.Vouchers)
+                {
+                    <tr>
+                        <td>@index</td>
+                        <td>@item.Term?.TermText</td>
+                        <td>@item.RequestedAtText</td>
+                        <td>@item.TotalAmountText</td>
+                        <td>@item.PaidAtText</td>
+                        <td>@item.StatusText</td>
+                        <td class="text-nowrap td-actions">
+                            <a data-toggle="modal"
+                               data-target="#voucher-details-modal"
+                               data-value="@item.Id">
+                               <i class="la la-info info"></i>
+                            </a>
+                            <a asp-controller="Voucher" 
+                               asp-action="Edit" 
+                               asp-route-id="@item.Id"
+                               asp-route-returnUrl="@contextPath">
+                               <i class="la la-edit edit"></i>
+                            </a>
+                            <a data-toggle="modal" 
+                               data-target="#delete-confirm-modal" 
+                               asp-controller="Voucher" 
+                               asp-action="Delete" 
+                               asp-route-Id="@item.Id"
+                               asp-route-returnUrl="@contextPath">
+                               <i class="la la-trash delete"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    index++;
+                }
+            }
+            else
+            {
+                <tr>
+                    <td class="text-center" colspan="7">NO DATA</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3" class="text-right"><b>Total</b></td>
+                <td class="text-right">
+                    <b>@Model?.Vouchers?.Sum(x => (decimal?)x.TotalAmount)?.ToString(StringFormat.Money)</b>
+                </td>
+                <td colspan="3"></td>
+            </tr>
+        </tfoot>
+    </table>
+</div>

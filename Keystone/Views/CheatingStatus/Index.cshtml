@@ -1,0 +1,189 @@
+@model PagedResult<CheatingStatusViewModel>
+@{ 
+    ViewData["Title"] = "Cheating Status";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+    var recordNumber = Model?.FirstRowOnPage;
+}
+
+<section class="row d-print-none">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+        <ul class="d-flex flex-md-row align-items-md-center float-right">
+            <li class="list-inline-item mx-3 mb-0">
+                <a class="btn btn--primary" asp-action="Create" asp-route-returnUrl="@contextPath">
+                    <i class="la la-plus mr-1 font-weight-800"></i> Add
+                </a>
+            </li>
+        </ul>
+    </div>
+</section>
+
+<section class="row d-print-none">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="CheatingStatus" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group m-b-30">
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-academic-level"
+                                    asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Academic Level<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="@ViewBag.Terms" data-placeholder="Select">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Term<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.ExaminationTypeId" asp-items="@ViewBag.ExamType" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Examination Type</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.IncidentId" asp-items="@ViewBag.Incidents" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Punish Type</label>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.Code" type="text">
+                            <label>Student Code</label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.CodeAndName" type="text">
+                            <label>Course Code</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control" data-placeholder="Select"
+                                    asp-items="ViewBag.AllYesNoAnswer" asp-for="Criteria.IsInvestigation">
+                            </select>
+                            <label>Investigation</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control" data-placeholder="Select"
+                                    asp-items="ViewBag.AllYesNoAnswer" asp-for="Criteria.IsCheating">
+                            </select>
+                            <label>Confirm Cheating</label>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-3">
+                            <select class="chosen-select form-control" data-placeholder="Select"
+                                    asp-items="ViewBag.AllYesNoAnswer" asp-for="Criteria.IsRegistrationApprove">
+                            </select>
+                            <label>Registration Approve</label>
+                        </div>
+                        <div class="col-9 align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title d-print-none">
+                <header>Search Result (@(Model?.RowCount ?? 0))</header>
+                <div class="tools d-print-none">
+                    <button class="btn btn--primary btn-mw-120" onclick="window.print()">
+                        <i class="la la-print mr-1 font-weight-800"></i> Print
+                    </button>
+                </div>
+            </div>
+
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table class="table table-bordered m-0">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th>Code</th>
+                                <th>Name</th>
+                                <th>Exam Type</th>
+                                <th>Punish Type</th>
+                                <th class="text-center d-print-none">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Results.Any())
+                            {
+                                foreach (var item in Model.Results)
+                                {
+                                    <tr>
+                                        <td>@recordNumber</td>
+                                        <td>@item.StudentCode</td>
+                                        <td>@item.StudentFullName</td>
+                                        <td>@item.ExaminationType</td>
+                                        <td>@item.PunishType</td>
+                                        <td class="text-nowrap td-actions d-print-none">
+                                            <a asp-action="Details" 
+                                               asp-controller="CheatingStatus" 
+                                               asp-route-id="@item.Id"
+                                               asp-route-page="cheating"
+                                               asp-route-returnUrl="@contextPath">
+                                                   <i class="la la-info info"></i>
+                                            </a>
+                                            <a asp-controller="GradeMaintenance" 
+                                               asp-action="Index" 
+                                               asp-route-AcademicLevelId="@item.AcademicLevelId"
+                                               asp-route-TermId="@item.TermId"
+                                               asp-route-Code="@item.StudentCode"
+                                               asp-route-returnUrl="@contextPath">
+                                                <i class="la la-font font"></i>
+                                            </a>
+                                            <a asp-controller="CheatingStatus" 
+                                               asp-action="Edit" 
+                                               asp-route-Id="@item.Id"
+                                               asp-route-page="cheating"
+                                               asp-route-returnUrl="@contextPath">
+                                                <i class="la la-edit edit"></i>
+                                            </a>
+                                            <a data-toggle="modal" 
+                                               data-target="#delete-confirm-modal" 
+                                               data-controller="CheatingStatus" 
+                                               asp-action="Delete" 
+                                               asp-route-Id="@item.Id"
+                                               asp-route-page="cheating"
+                                               asp-route-returnUrl="@contextPath">
+                                                <i class="la la-trash delete"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+
+                                    recordNumber++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="8">
+                                        <i class="text-danger">No Data</i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @(await Component.InvokeAsync<PagerViewComponent>(Model))
+    </div>
+</section>
+
+<partial name="_DeleteConfirmModals" />

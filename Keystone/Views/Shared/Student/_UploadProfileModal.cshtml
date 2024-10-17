@@ -1,0 +1,59 @@
+<div id="webcam-modal" class="modal fadeIn animated" tabindex="-1" role="dialog"
+     aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <form id="upload-profile-image-form" method="POST" asp-controller="Student" asp-action="UploadProfileImage" enctype="multipart/form-data">
+        <input type="file" name="UploadFile">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document" style="max-width: 900px">
+            <div class="modal-content">
+                <div class="block block--underline mb-0">
+                    <div class="block__title">
+                        <header>Select profile image</header>
+                        <div class="tools">
+                            <a href="#" class="btn btn--white btn--circle" data-dismiss="modal">
+                                <i class="fas fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="block__body" id="body">
+                        <div class="row form-group">
+                            <div class="col-12">
+                                    <a class="btn btn--primary mb-0 align-self-end" onclick="selectTakePhoto();">
+                                        <i class="la la-camera"></i> Take a photo
+                                    </a>
+                                    <a class="btn btn--primary mb-0 align-self-end" onclick="selectUpload();">
+                                        <i class="la la-file-upload"></i> Upload
+                                    </a>
+                            </div>
+                            <div class="col-12 p-y-15" id="webcam-row">
+                                <video id="webcam" autoplay playsinline width="800" height="600"></video>
+                                <canvas id="canvas" class="d-none"></canvas>
+                                <audio id="snapSound" src="~/audio/snap.wav" preload = "auto"></audio>
+                                <a href="#" id="download-photo" download="selfie.png" target="_blank" title="Save Photo" class="d-none" rel="noopener noreferrer"><i class="material-icons">file_download</i></a>
+                                <input type="hidden" id="UploadFileBase64" name="UploadFileBase64">
+                            </div>
+                            <div class="col-12 p-y-15" id="upload-row">
+                                <input type="file" id="UploadFile" name="UploadFile" onchange="onSelectFile(this, 0);" />
+                                <a class="btn btn--primary mb-0 align-self-end" onclick="document.getElementById('UploadFile').click();">
+                                    <i class="la la-file-upload"></i> Browse
+                                </a>
+                                <input class="form-control m-r-15" id="filename" type="text">
+                            </div>
+                        </div>
+                        <input type="hidden" id="StudentCode" name="StudentCode">
+                        <input type="hidden" id="ReturnController" name="ReturnController">
+                    </div>
+                    <div class="block__action">
+                        <div class="block__action-row">
+                            <a id="takePhotoButton" href="#" onclick="takePhoto();" class="btn btn-mw-120 btn--primary mb-0">
+                                Capture
+                            </a>
+                            <a id="restartButton" href="#" onclick="startWebcam();" class="btn btn-mw-120 btn--primary mb-0 d-none">
+                                Restart
+                            </a>
+                            <button id="js-confirm-add" class="btn btn-mw-120 btn--primary d-none" type="button" onclick="submitForm()">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

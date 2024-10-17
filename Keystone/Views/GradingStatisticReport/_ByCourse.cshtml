@@ -1,0 +1,103 @@
+@model GradingStatisticReportViewModel
+@{
+    ViewData["Title"] = "Grading Statistic Report";
+    var recordNumber = 1;
+}
+
+@if (Model != null && Model.GradeByCourses != null && Model.GradeByCourses.Any())
+{
+    <div class="block__body">
+        <div class="table-responsive">
+            <table class="table table-bordered m-0 js-report-table w-100x">
+                <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th>Code</th>
+                        <th>Name</th>
+                        <th>Credit</th>
+                        @foreach (var item in Model.GradeHeaders)
+                        {
+                            <th class="text-center">@item</th>
+                            if (Model.Criteria.IsShowPercentage)
+                            {
+                                <th class="text-center">%</th>
+                            }
+                        }
+                        <th class="text-center">Student Taken</th>
+                        <th class="text-center">Student Pass</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.GradeByCourses.Any())
+                    {
+                        foreach (var item in Model.GradeByCourses)
+                        {
+                            <tr>
+                                <td>@recordNumber</td>
+                                <td>@item.Code</td>
+                                <td>@item.Name</td>
+                                <td>@item.Credit</td>
+
+                                @foreach (var gradeHeader in Model.GradeHeaders)
+                                {
+                                    var machingGrade = item.Grades.FirstOrDefault(x => x.Grade.Equals(gradeHeader, StringComparison.OrdinalIgnoreCase));
+                                    if (machingGrade != null)
+                                    {
+                                        <td class="text-center">@machingGrade.StudentCount</td>
+                                        if (Model.Criteria.IsShowPercentage)
+                                        {
+                                            <td class="text-center">@machingGrade.PercentageText</td>
+                                        }
+                                    }
+                                    else 
+                                    {
+                                        <td class="text-center">0</td>
+                                        if (Model.Criteria.IsShowPercentage)
+                                        {
+                                            <td class="text-center">0</td>
+                                        }
+                                    }
+                                }
+
+                                <td>@item.TotalStudentRegister</td>
+                                <td>@item.TotalStudentPass</td>
+
+                            </tr>
+                            recordNumber++;
+                        }
+                    }
+                </tbody>
+                <tfoot>
+                    @if (Model != null && Model.Footer != null)
+                    {
+                        <tr>
+                            <td class="text-right" colspan="4"><b>Total</b></td>
+                            @foreach (var gradeHeader in Model.GradeHeaders)
+                            {
+                                var machingGrade = Model.Footer.Grades.FirstOrDefault(x => x.Grade.Equals(gradeHeader, StringComparison.OrdinalIgnoreCase));
+                                if (machingGrade != null)
+                                {
+                                    <td class="text-center">@machingGrade.StudentCount</td>
+                                    if (Model.Criteria.IsShowPercentage)
+                                    {
+                                        <td class="text-center">@machingGrade.PercentageText</td>
+                                    }
+                                }
+                                else 
+                                {
+                                    <td class="text-center">0</td>
+                                    if (Model.Criteria.IsShowPercentage)
+                                    {
+                                        <td class="text-center">0</td>
+                                    }
+                                }
+                            }
+                            <td class="text-center">@Model.Footer.TotalStudentRegister</td>
+                            <td class="text-center">@Model.Footer.TotalStudentPass</td>
+                        </tr>
+                    }
+                </tfoot>
+            </table>
+        </div>
+    </div>
+}

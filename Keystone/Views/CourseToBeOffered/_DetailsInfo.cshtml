@@ -1,0 +1,220 @@
+@model Section
+
+<div class="block block--underline mb-0">
+    <div class="block__title">
+		<header>Section</header>
+	</div>
+
+    <div class="block__body">
+        <div class="row form-group mb-3">
+            <div class="col-6">
+                <div class="form-control-label d-flex align-items-center"><b>Course</b></div>
+                <div class="form-control-plaintext text-wrap">@Model?.Course?.CourseAndCredit</div>
+            </div>
+            <div class="col-3">
+                <div class="form-control-label d-flex align-items-center"><b>Section Number</b></div>
+                <div class="form-control-plaintext text-wrap">@Model?.Number</div>
+            </div>
+            <div class="col-3">
+                <div class="form-control-label d-flex align-items-center"><b>Status</b></div>
+                <div class="form-control-plaintext text-wrap">@Model?.StatusText</div>
+            </div>
+        </div>
+
+        <div class="row form-group mb-3">
+            <div class="col-3">
+                <div class="form-control-label d-flex align-items-center"><b>Seat Limit</b></div>
+                <div class="form-control-plaintext text-wrap">@Model?.SeatLimit</div>
+            </div>
+            <div class="col-3">
+                <div class="form-control-label d-flex align-items-center"><b>Seat Used</b></div>
+                <div class="form-control-plaintext text-wrap">@Model?.SeatUsed</div>
+            </div>
+            <div class="col-3">
+                <div class="form-control-label d-flex align-items-center"><b>Seat Available</b></div>
+                <div class="form-control-plaintext text-wrap">@Model?.SeatAvailable</div>
+            </div>
+            <div class="col-3">
+                <div class="form-control-label d-flex align-items-center"><b>Planned Seat</b></div>
+                <div class="form-control-plaintext text-wrap">@Model?.PlanningSeat</div>
+            </div>
+        </div>
+
+        @if(!string.IsNullOrEmpty(Model?.Batches))
+        {
+            <div class="row form-group mb-3">
+                <div class="col-12">
+                    <div class="form-control-label d-flex align-items-center"><b>Batch</b></div>
+                    <div class="form-control-plaintext text-wrap">@Model?.Batches</div>
+                </div>
+            </div>
+        }
+
+        @if(!string.IsNullOrEmpty(Model?.StudentCodes))
+        {
+            <div class="row form-group mb-3">
+                <div class="col-12">
+                    <div class="form-control-label d-flex align-items-center"><b>Students</b></div>
+                    <div class="form-control-plaintext text-wrap">@Model?.StudentCodes</div>
+                </div>
+            </div>
+        }
+
+        @if(Model != null)
+        {
+            <div class="row form-group mb-3">
+
+                @if(Model.FacultiesCodeAndName != null)
+                {
+                    <div class="col-6">
+                        <div class="form-control-label d-flex align-items-center"><b>Division</b></div>
+                        <div class="form-control-plaintext text-wrap">
+                            <partial name="_StringLoopNewLine" model="@Model?.FacultiesCodeAndName" />
+                        </div>
+                    </div>
+                }
+
+                @if(Model.DepartmentsCodeAndName != null)
+                {
+                    <div class="col-6">
+                        <div class="form-control-label d-flex align-items-center"><b>Major</b></div>
+                        <div class="form-control-plaintext text-wrap">
+                            <partial name="_StringLoopNewLine" model="@Model?.DepartmentsCodeAndName" />
+                        </div>
+                    </div>
+                }
+
+                @if(Model.CurriculumsCodeAndName != null)
+                {
+                    <div class="col-6">
+                        <div class="form-control-label d-flex align-items-center"><b>Curriculums</b></div>
+                        <div class="form-control-plaintext text-wrap">
+                            <partial name="_StringLoopNewLine" model="@Model?.CurriculumsCodeAndName" />
+                        </div>
+                    </div>
+                }
+
+                @if(Model.CurriculumVersionsCodeAndName != null)
+                {
+                    <div class="col-6">
+                        <div class="form-control-label d-flex align-items-center"><b>CurriculumVersions</b></div>
+                        <div class="form-control-plaintext text-wrap">
+                            <partial name="_StringLoopNewLine" model="@Model?.CurriculumVersionsCodeAndName" />
+                        </div>
+                    </div>
+                }
+                
+            </div>
+
+            @if(Model.MinorsCodeAndName != null)
+            {
+                <div class="row form-group mb-3">
+                    <div class="col-6">
+                        <div class="form-control-label d-flex align-items-center"><b>Minors</b></div>
+                        <div class="form-control-plaintext text-wrap">
+                            <partial name="_StringLoopNewLine" model="@Model?.MinorsCodeAndName" />
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+
+        <div class="row form-group mb-3">
+            <div class="col-12">
+                <div class="form-control-label d-flex align-items-center"><b>Remark</b></div>
+                <div class="form-control-plaintext text-wrap">@Model?.Remark</div>
+            </div>
+        </div>
+    
+        <div class="table-responsive">
+            <span class="class-lookup-title mb-2">Section Detail</span>
+            <table class="table table-bordered table-hover w-100x">
+                <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th class="text-center">Day</th>
+                        <th class="text-center">Time</th>
+                        <th>Room</th>
+                        <th>Teaching Type</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.SectionDetails != null && Model.SectionDetails.Any())
+                    {
+                        var index = 1;
+                        foreach (var item in Model.SectionDetails) 
+                        {
+                            <tr>
+                                <td class="text-center">@index</td>
+                                <td>@item.Dayofweek</td>
+                                <td>@item.Time</td>
+                                <td>@item.Room?.NameEn</td>
+                                <td>@item.TeachingType?.NameEn</td>
+                            </tr>
+                            ++index;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center">
+                                <i class="text-danger">No Data</i>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="table-responsive">
+            <span class="class-lookup-title">Section Slot</span>
+            <table class="table table-bordered table-hover w-100x">
+                <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th class="text-center">Date</th>
+                        <th class="text-center">Day</th>
+                        <th class="text-center">Time</th>
+                        <th>Room</th>
+                        <th>Teaching Type</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.SectionSlots != null && Model.SectionSlots.Any())
+                    {
+                        var index = 1;
+                        foreach (var item in Model.SectionSlots.OrderBy(x => x.Date)) 
+                        {
+                            <tr>
+                                <td>@index</td>
+                                <td>@item.DateText</td>
+                                <td>@item.Dayofweek</td>
+                                <td>@item.Time</td>
+                                <td>@item.Room?.NameEn</td>
+                                <td>@item.TeachingType?.NameEn</td>
+                                <td>@item.StatusText</td>
+                            </tr>
+                            ++index;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="7" class="text-center">
+                                <i class="text-danger">No Data</i>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="block__action">
+        <div class="block__action-row">
+            <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-mw-120 btn--cancel rounded">Close</a>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,228 @@
+@model PagedResult<StudentAbilityReprotViewModel>
+@{
+    ViewData["Title"] = "Student Ability Report";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+
+<section class="d-print-none">
+    <div class="block block--underline">
+        <div class="block__title">
+            <header>@ViewData["Title"]</header>
+        </div>
+        <form class="form-horizontal" asp-controller="StudentAbilityReport" asp-action="Index" method="GET">
+            @Html.AntiForgeryToken()
+            <div class="block__body">
+                <div class="row form-group m-b-30">
+                    <div class="col-3">
+                        <input class="form-control" asp-for="Criteria.StartStudentBatch" type="number">
+                        <label>Batch Start<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control" asp-for="Criteria.EndStudentBatch" type="number">
+                        <label>Batch End<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control" asp-for="Criteria.Code" type="text">
+                        <label>Code</label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control" asp-for="Criteria.NationalityId" asp-items="ViewBag.Nationalities" data-placeholder="Select">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Nationality</label>
+                    </div>
+                </div>
+
+                <div class="row form-group m-b-30">
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Academic Level</label>
+                    </div>
+                    <div class="col-3">
+                        <h4 class="font-size-default m-y-4">Intaked Term</h4>
+                        <select class="chosen-select form-control js-cascade-multiple-term" asp-for="Criteria.TermIds" asp-items="ViewBag.Terms" data-placeholder="Select" multiple></select>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="ViewBag.Faculties">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Division</label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentId" asp-items="ViewBag.Departments">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Major</label>
+                    </div>
+                </div>
+
+                <div class="row form-group m-b-30">
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-curriculum" asp-for="Criteria.CurriculumId" asp-items="ViewBag.Curriculums">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Curriculum</label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-curriculum-version" asp-for="Criteria.CurriculumVersionId" asp-items="ViewBag.CurriculumVersions" data-placeholder="Select">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Curriculum Version</label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control" asp-for="Criteria.FirstName" type="text">
+                        <label>First Name</label>
+                    </div> 
+                    <div class="col-3">
+                        <input class="form-control" asp-for="Criteria.LastName" type="text">
+                        <label>Last Name</label>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-3">
+                        <select class="chosen-select form-control" asp-for="Criteria.AbilityId" asp-items="ViewBag.Abilities">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Ability</label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control" asp-for="Criteria.Status" asp-items="ViewBag.Statuses" data-placeholder="Select"></select>
+                        <label>Status</label>
+                    </div>
+                    <div class="col align-self-end text-right text-nowrap">
+                        <button class="btn btn--primary btn-mw-120 m-r-5" type="submit">
+                            <i class="la la-search mr-2"></i>Search
+                        </button>
+                        <a id="js-reset-btn" class="btn btn-mw-120 btn--reset mb-0" asp-action="Index">Reset</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <form id="export-excel-form" class="form-horizontal" asp-controller="StudentAbilityReport" asp-action="ExportExcel" method="POST">
+            <div class="block block--underline">
+                <div class="block__title">
+                    <header>Search Result (@(Model?.RowCount ?? 0))</header>
+                    <header class="float-right">
+                            <input name="returnUrl" value="@contextPath" type="hidden">
+                            <button id="export-excel-pivot-button" class="btn btn--primary mb-0" type="button">
+                                <i class="la la-download info"></i>Export Excel[Pivot]
+                            </button>
+                            <button id="export-excel-button" class="btn btn--primary mb-0" type="button">
+                                <i class="la la-download info"></i>Export Excel
+                            </button>
+                    </header>
+                </div>
+                @Html.AntiForgeryToken()
+                <div class="block__body">
+                    <div class="table-responsive unset-overflow">
+                        <table id="js-student-ability-report" class="table table-bordered w-100x">
+                            <thead>
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Title</th>
+                                    <th>Name</th>
+                                    <th>Major</th>
+                                    <th class="text-center">Intake Term</th>
+                                    <th>English Track</th>
+                                    <th>Math Track</th>
+                                    <th>Other Ability</th>
+                                    <th>Predefind Course</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.Results.Any())
+                                {
+                                    for (var i = 0; i < Model.Results.Count(); i++)
+                                    {
+                                        <input name="[@i].Code" value="@Model.Results[i].Code" type="hidden">
+                                        <input name="[@i].StudentFirstName" value="@Model.Results[i].StudentFirstName" type="hidden">
+                                        <input name="[@i].StudentLastName" value="@Model.Results[i].StudentLastName" type="hidden">
+                                        <input name="[@i].StudentMidName" value="@Model.Results[i].StudentMidName" type="hidden">
+                                        <input name="[@i].Title" value="@Model.Results[i].Title" type="hidden">
+                                        <input name="[@i].IntakeTerm" value="@Model.Results[i].IntakeTerm" type="hidden">
+                                        <input name="[@i].Major" value="@Model.Results[i].Major" type="hidden">
+                                        @if (Model.Results[i].PredefindCourses != null && Model.Results[i].PredefindCourses.Any())
+                                        {
+                                            for (int j = 0; j < Model.Results[i].PredefindCourses.Count(); j++)
+                                            {
+                                                <input name="[@i].PredefindCourses[@j]" value="@Model.Results[i].PredefindCourses[j]" type="hidden">
+                                            }
+                                        }
+
+                                        @if (Model.Results[i].Abilities != null && Model.Results[i].Abilities.Any())
+                                        {
+                                            for (int j = 0; j < Model.Results[i].Abilities.Count(); j++)
+                                            {
+                                                <input name="[@i].Abilities[@j]" value="@Model.Results[i].Abilities[j]" type="hidden">
+                                            }
+                                            <tr>
+                                                <td>@Model.Results[i].Code</td>
+                                                <td>@Model.Results[i].Title</td>
+                                                <td>@Model.Results[i].FullName</td>
+                                                <td>@Model.Results[i].Major</td>
+                                                <td>@Model.Results[i].IntakeTerm</td>
+                                                <td>
+                                                    @foreach (var ability in Model.Results[i].Abilities.Where(x => x.Contains("EnglishTrack")))
+                                                    {
+                                                        @ability<br/>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @foreach (var ability in Model.Results[i].Abilities.Where(x => x.Contains("MathTrack")))
+                                                    {
+                                                        @ability<br/>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @foreach (var ability in Model.Results[i].Abilities.Where(x => !x.Contains("EnglishTrack") && !x.Contains("MathTrack")))
+                                                    {
+                                                        @ability<br/>
+                                                    }
+                                                </td>
+                                                <td>@string.Join(", ", Model.Results[i].PredefindCourses)</td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td>@Model.Results[i].Code</td>
+                                                <td>@Model.Results[i].Title</td>
+                                                <td>@Model.Results[i].FullName</td>
+                                                <td>@Model.Results[i].Major</td>
+                                                <td>@Model.Results[i].IntakeTerm</td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td>@string.Join(", ", Model.Results[i].PredefindCourses)</td>
+                                            </tr>
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="10" class="text-center">
+                                            <i class="text-danger">No Data</i>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/student-ability-report.js"></script>
+}

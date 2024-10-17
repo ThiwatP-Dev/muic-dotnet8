@@ -1,0 +1,154 @@
+@model Instructor
+
+<section class="ks-instructor-general-info">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel-group" id="accordion1">
+                <div class="block">
+                    <div class="block__title collapsed" data-toggle="collapse" data-parent="#accordion1" data-target="#accordion1-1">
+                        <header>General Information</header>
+                        <div class="tools">
+                            <div class="btn-group">
+                                <a class="btn btn--white btn--circle">
+                                    <i class="la la-angle-down"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end .block-head -->
+                    <div id="accordion1-1" class="collapse show" aria-expanded="true">
+                        <div class="block__body">
+                            <div class="row">
+                                <div class="form-group mb-3 col-md-3 col-xl-3">
+                                    <div class="form-control-label d-flex align-items-center">Instructor ID</div>
+                                    <div class="form-control-plaintext">@Model?.Code</div>
+                                </div>
+                                <div class="form-group mb-3 col-md-3 col-xl-3">
+                                    <div class="form-control-label d-flex align-items-center">Full name</div>
+                                    <div class="form-control-plaintext text-uppercase">@Model?.FullNameEn</div>
+                                </div>
+                                <div class="form-group mb-3 col-md-3 col-xl-3">
+                                    <div class="form-control-label d-flex align-items-center">ชื่อ-นามสกุล</div>
+                                    <div class="form-control-plaintext">@Model?.FullNameTh</div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group mb-3 col-md-3 col-xl-3">
+                                    <div class="form-control-label d-flex align-items-center">Gender</div>
+                                    <div class="form-control-plaintext">@Model?.GenderText</div>
+                                </div>
+                                <div class="form-group mb-3 col-md-3 col-xl-3">
+                                    <div class="form-control-label d-flex align-items-center">Nationality</div>
+                                    <div class="form-control-plaintext">@Model?.Nationality?.NameEn</div>
+                                </div>
+                                <div class="form-group mb-3 col-md-3 col-xl-3">
+                                    <div class="form-control-label d-flex align-items-center">Race</div>
+                                    <div class="form-control-plaintext">@Model?.Race?.NameEn</div>
+                                </div>
+                                <div class="form-group mb-3 col-md-3 col-xl-3">
+                                    <div class="form-control-label d-flex align-items-center">Religion</div>
+                                    <div class="form-control-plaintext">@Model?.Religion?.NameEn</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--end .block-body -->
+                    </div>
+                </div>
+                <!--end .block -->
+            </div>
+        </div>
+        <!-- End General Information -->
+
+        <div class="col-md-12">
+            <div class="panel-group" id="accordion2">
+                <div class="block">
+                    <div class="block__title collapsed" data-toggle="collapse" data-parent="#accordion2" data-target="#accordion2-1">
+                        <header>Contact Information</header>
+                        <div class="tools">
+                            <div class="btn-group">
+                                <a class="btn btn--white btn--circle">
+                                    <i class="la la-angle-down"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end .block-head -->
+                    <div id="accordion2-1" class="collapse show" aria-expanded="true">
+                        <div class="block__body">
+                            <div class="row">
+                                <div class="form-group mb-6 col-md-6 col-xl-6">
+                                    <div class="form-control-label d-flex align-items-center">Address</div>
+                                    <div class="form-control-plaintext">@Model?.Address</div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group mb-3 col-md-3 col-xl-3">
+                                    <div class="form-control-label d-flex align-items-center">Country</div>
+                                    <div class="form-control-plaintext">@Model?.Country?.NameEn</div>
+                                </div>
+                                @if(Model?.CityId == null)
+                                {
+                                    <div class="form-group mb-3 col-md-3 col-xl-3">
+                                        <div class="form-control-label d-flex align-items-center">Province</div>
+                                        <div class="form-control-plaintext">@Model?.Province?.NameEn</div>
+                                    </div>
+                                    <div class="form-group mb-3 col-md-3 col-xl-3">
+                                        <div class="form-control-label d-flex align-items-center">District</div>
+                                        <div class="form-control-plaintext">@Model?.District?.NameEn</div>
+                                    </div>
+                                    <div class="form-group mb-3 col-md-3 col-xl-3">
+                                        <div class="form-control-label d-flex align-items-center">Subdistrict</div>
+                                        <div class="form-control-plaintext">@Model?.Subdistrict?.NameEn</div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="form-group mb-3 col-md-3 col-xl-3">
+                                        <div class="form-control-label d-flex align-items-center">City</div>
+                                        <div class="form-control-plaintext">@Model?.City?.NameEn</div>
+                                    </div>
+                                    <div class="form-group mb-3 col-md-3 col-xl-3">
+                                        <div class="form-control-label d-flex align-items-center">State</div>
+                                        <div class="form-control-plaintext">@Model?.State?.NameEn</div>
+                                    </div>
+                                }
+                            </div>
+                            
+                            <div class="row">
+                                <div class="form-group mb-3 col-md-3 col-xl-3">
+                                    <div class="form-control-label d-flex align-items-center">Zip code</div>
+                                    <div class="form-control-plaintext">@Model?.ZipCode</div>
+                                </div>
+                                <div class="form-group mb-3 col-md-3 col-xl-3">
+                                    <div class="form-control-label d-flex align-items-center">Phone number</div>
+                                    <div class="form-control-plaintext">
+                                        <i class="la la-phone mr-2"></i> 
+                                        @($"{ Model?.TelephoneNumber1 }{ (Model?.TelephoneNumber2 == null ? "" : ", " + Model?.TelephoneNumber2) }")
+                                    </div>
+                                </div>
+
+                                <div class="form-group mb-3 col-md-3 col-xl-3">
+                                    <div class="form-control-label d-flex align-items-center">Email address</div>
+                                    <div class="form-control-plaintext">
+                                        <i class="la la-envelope mr-2"></i> @Model?.Email
+                                    </div>
+                                </div>
+
+                                <div class="form-group mb-3 col-md-3 col-xl-3">
+                                    <div class="form-control-label d-flex align-items-center">Personal Email address</div>
+                                    <div class="form-control-plaintext">
+                                        <i class="la la-envelope mr-2"></i> @Model?.PersonalEmail
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--end .block-body -->
+                    </div>
+                </div>
+                <!--end .block -->
+            </div>
+        </div>
+        <!-- End Contact Information -->
+    </div>
+</section>

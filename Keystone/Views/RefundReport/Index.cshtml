@@ -1,0 +1,174 @@
+@model RefundReportViewModel
+@{
+    ViewData["Title"] = "Refund Report";
+    var contextPath = $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title collapsed">
+                <header>Refund Report</header>
+            </div>
+
+            <div class="block__body">
+                <form asp-controller="RefundReport" asp-action="Index" class="form-horizontal" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group">
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                @*                <option selected disabled>Select</option>*@
+                            </select>
+                            <label>Academic Level<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="ViewBag.Terms">
+        @*                        <option selected disabled>Select</option>*@
+                            </select>
+                            <label>Term<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="ViewBag.Faculties" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label for="Criteria.FacultyId">Division</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentId" asp-items="ViewBag.Departments" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label for="Criteria.DepartmentId">Major</label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.Code" type="text">
+                            <label>Student Code</label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.Name" type="text">
+                            <label>Student Name</label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control js-single-date js-check-date" asp-for="Criteria.ReceiptDateFrom" type="text" autocomplete="off">
+                            <label>Created From</label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control js-single-date js-check-date" asp-for="Criteria.ReceiptDateTo" type="text" autocomplete="off">
+                            <label>Created To</label>
+                        </div>
+                    </div>
+                    <div class="row form-group m-b-30">
+                       @* <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.InvoiceType" asp-items="ViewBag.InvoiceType"></select>
+                            <label>Type</label>
+                        </div>*@
+         @*             <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.PaidStatus" asp-items="ViewBag.PaidStatuses"></select>
+                            <label>Paid Status</label>
+                        </div>*@
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.IsExcludeBalanceInvoice" asp-items="ViewBag.ExcludeBalanceInvoices"></select>
+                            <label>Balance Invoice Mode</label>
+                        </div>
+                        <div class="col-9 align-self-end text-right text-nowrap">
+                            <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">
+                                <i class="la la-search mr-2"></i>
+                                <span class="bold">Search</span>
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.Details?.Count() ?? 0))</header>
+            </div>
+
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover js-report-table w-100x">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Term</th>
+                                <th class="text-center">Invoice Number</th>
+                                @*<th class="text-center">Type</th>*@
+                                <th class="text-center">Student Code</th>
+                                <th>Student Name</th>
+                                <th class="text-center">Major</th>
+                                @*<th class="text-center">Paid</th>*@
+                                @* <th class="text-center">Paid Date</th> *@
+                                <th class="text-right">Total Amount</th>
+                                <th class="text-center">Create Date</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Details != null && Model.Details.Any())
+                            {
+                                foreach (var item in Model.Details)
+                                {
+                                    <tr>
+                                        <td>@item.Term</td>
+                                        <td>@item.InvoiceNumber</td>
+                                        @*<td>@item.InvoiceType</td>*@
+                                        <td>@item.StudentCode</td>
+                                        <td>@item.StudentFullName</td>
+                                        <td>@item.Major</td>
+                                        @*<td>
+                                            <partial name="_BooleanResult" model="@item.PaidStatus">
+                                        </td>*@
+                                        @* <td>@item.PaidDate</td> *@
+                                        <td>@item.TotalAmount</td>
+                                        <td>@item.CreateDate</td>
+                                        <td class="text-nowrap td-actions">
+                                            <a class="js-invoice-detail"
+                                       data-toggle="modal"
+                                       data-target="#js-invoice-details-modal"
+                                       data-value="@item.InvoiceId">
+                                                <i class="la la-info info"></i>
+                                            </a>
+                                            <a asp-controller="Invoice"
+                                       asp-action="InvoicePreview"
+                                       asp-route-Id="@item.InvoiceId"
+                                       asp-route-returnUrl="@contextPath">
+                                                <i class="la la-print info"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="9" class="text-center">
+                                        <i class="text-danger">No Data</i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @(await Component.InvokeAsync<PagerViewComponent>(Model))
+    </div>
+</section>
+
+@section Modals {
+<partial name="~/Views/Registration/Invoice/_DetailsModal.cshtml" model="new Invoice()" />
+}
+
+@section Scripts {
+<script src="~/js/pages/refund-report.js"></script>
+}

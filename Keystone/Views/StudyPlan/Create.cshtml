@@ -1,0 +1,23 @@
+@model StudyPlanViewModel
+@{ 
+    ViewData["Title"] = "Add Study Plan"; 
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <form id="js-study-plan-form" class="ks-form container" asp-controller="StudyPlan" asp-action="Create" method="POST">
+                @Html.AntiForgeryToken()
+                <partial name="_Form" model="@Model">
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Modals {
+    <partial name="_DeleteRowConfirmModals">
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/study-plan.js"></script>
+}

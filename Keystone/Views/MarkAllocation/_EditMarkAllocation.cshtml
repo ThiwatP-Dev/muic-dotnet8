@@ -1,0 +1,109 @@
+@model MarkAllocationViewModel
+
+<div class="block__body">
+    <form id="js-mark-allocation-form" asp-controller="MarkAllocation" asp-action="EditMarkAllocation" method="POST">
+        <div class="row form-group mb-3">
+            @* <div class="col-4">
+                <div class="form-control-label d-flex align-items-center">Max Score</div>
+                <div class="form-control-plaintext">100.00</div>
+            </div> *@
+            <div class="col-12 d-flex align-items-end justify-content-end">
+                <a class="btn btn-mw-120 btn--primary js-add-row mb-0" href="#!" data-target="#js-mark-allocation-table">
+                    <i class="la la-plus mr-2"></i>Add Mark Allocation
+                </a>
+            </div>
+        </div>
+        
+        <div class="row form-group mb-3">
+            <div class="col-12">
+                <table id="js-mark-allocation-table" class="table table-bordered m-0">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th class="text-center">Abbreviation</th>
+                            <th class="text-center text-nowrap w-400">Full Score @*(<span class="js-display-limit">100</span>)*@</th>
+                            <th class="text-center w-200">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Details != null && Model.Details.Any()) 
+                        {
+                            for (int i = 0 ; i < Model.Details.Count ; ++i)
+                            {
+                                <tr class="js-mark-allocation-details">
+                                    <td class="suggestion-parent">
+                                        <input class="form-control__table js-suggestion" asp-for="Details[i].Name">
+                                        <input asp-for="Details[i].Id" hidden>
+                                    </td>
+                                    <td>
+                                        <input class="form-control__table text-center" asp-for="Details[i].Abbreviation">
+                                    </td>
+                                    <td>
+                                        <input class="form-control__table text-center js-mask-score" asp-for="Details[i].Score" type="number" autocomplete="off">
+                                    </td>
+                                    <td class="td-actions text-nowrap text-center">
+                                        <a href="#!" class="js-move-up">
+                                            <i class="la la-angle-up info"></i>
+                                        </a>
+                                        <a href="#!" class="js-move-down">
+                                            <i class="la la-angle-down info"></i>
+                                        </a>
+                                        <a href="#!" class="js-del-score-row">
+                                            <i class="la la-trash delete"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td class="suggestion-parent">
+                                    <input class="form-control__table js-suggestion" name="Details[0].Name">
+                                    <input name="Details[0].Id" hidden>
+                                </td>
+                                <td>
+                                    <input class="form-control__table text-center" name="Details[0].Abbreviation">
+                                </td>
+                                <td>
+                                    <input class="form-control__table text-center js-mask-score" name="Details[0].Score" type="number" autocomplete="off">
+                                </td>
+                                <td class="td-actions text-nowrap text-center">
+                                    <a href="#!" class="js-move-up">
+                                        <i class="la la-angle-up info"></i>
+                                    </a>
+                                    <a href="#!" class="js-move-down">
+                                        <i class="la la-angle-down info"></i>
+                                    </a>
+                                    <a href="#!" class="js-del-score-row">
+                                        <i class="la la-trash delete"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+
+                        <input asp-for="CourseId" hidden>
+                        <input asp-for="TermId" hidden>
+                        <input class="js-score-changed" name="IsScoreChanged" hidden>
+                        <input name="returnUrl" value="@ViewBag.ReturnUrl" hidden>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td class="text-right border-right-0" colspan="2">Total : </td>
+                            <td class="text-center font-weight-700 border-right-0 border-left-0 js-total-score">0</td>
+                            <td class="border-left-0"></td>
+                            <input class="js-total-score-val" hidden>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        <div class="block__action">
+            <div class="block__action-row">
+                <button class="btn btn-mw-120 btn--primary js-save-mark-allocation" type="submit" disabled>Save</button>
+                <a class="btn btn-mw-120 btn--cancel rounded" href="@ViewBag.ReturnUrl">Close</a>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,26 @@
+@{ 
+    ViewData["Title"] = "Add Admission Verification"; 
+}
+
+<div id="flash-message"></div>
+
+<section class="row">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <form asp-controller="VerificationLetter" asp-action="Create" method="POST">
+                <partial name="_Form">
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/ajax-cascading/school-cascade.js"></script>
+    <script type="text/javascript" src="~/js/pages/admission-verification-form.js"></script>
+}

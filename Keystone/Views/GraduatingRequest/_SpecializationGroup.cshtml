@@ -1,0 +1,42 @@
+@model GraduatingRequestViewModel
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__body">
+                <div class="row form-group mb-3">
+                    <div class="col-2">
+                        <select class="chosen-select form-control js-graduating-special-type"
+                                asp-items="ViewBag.SpecializationTypes" data-placeholder="Select">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Type<span class="text-danger">*</span></label>
+                    </div>
+
+                    <div class="col-8">
+                        <select class="chosen-select form-control js-graduating-special-group" data-placeholder="Select">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Specialization Group</label>
+                    </div>
+
+                    <input class="js-graduating-special-student" value="@Model?.Student?.Id" type="hidden">
+
+                    <div class="col-2 align-self-end text-right text-nowrap">
+                        <button class="btn btn-mw-120 btn--primary mb-0 m-r-5 js-graduating-button" type="button">
+                            <i class="la la-search mr-2"></i>Check
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="block block--underline">
+            <div id="js-graduating-body" class="block__body">
+                
+            </div>
+        </div>
+    </div>
+</section>

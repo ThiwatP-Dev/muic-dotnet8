@@ -1,0 +1,124 @@
+@model CourseGroup
+<div class="block__title">
+    <header>
+        @ViewData["Title"]
+    </header>
+</div>
+
+<div class="block__body">
+    <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+    <div class="row form-group">
+        <div class="col-12 suggestion-parent">
+            <input class="form-control js-suggestion" asp-for="NameEn" type="text" autocomplete="off">
+            <label>English Group Name<span class="text-danger">*</span></label>
+            <ul class="suggestion-box js-suggestion-list">
+                @if (ViewBag.CurriculumCourseGroups != null)
+                {
+                    foreach (var item in ViewBag.CurriculumCourseGroups)
+                    {
+                        <li class="suggestion-result js-suggestion-item">@item.NameEn</li>
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-12 suggestion-parent">
+            <input class="form-control js-suggestion" asp-for="NameTh" type="text" autocomplete="off">
+            <label>Thai Group Name<span class="text-danger">*</span></label>
+            <ul class="suggestion-box js-suggestion-list">
+                @if (ViewBag.CurriculumCourseGroups != null)
+                {
+                    foreach (var item in ViewBag.CurriculumCourseGroups)
+                    {
+                        <li class="suggestion-result js-suggestion-item">@item.NameTh</li>
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-6">
+            <input class="form-control" asp-for="Sequence" type="number">
+            <label>Sequence</label>
+        </div>
+
+        <div class="col-6">
+            <input class="form-control" asp-for="Credit" type="number">
+            <label>Total Credit<span class="text-danger">*</span></label>
+        </div>
+    </div>
+
+    <div>
+        <div>
+            <label>Description</label>
+        </div>
+        <div class="block">
+            <div class="block__body">
+                <div class="form-group">
+                    <textarea class="form-control pt-0" asp-for="DescriptionEn" rows="10" placeholder=""></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <div>
+            <label>Remark</label>
+        </div>
+        <div class="block">
+            <div class="block__body">
+                <div class="form-group">
+                    <textarea class="form-control pt-0" asp-for="Remark" rows="5" placeholder=""></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    @* <div class="row form-group">
+        <div class="col-md-12">
+            <select class="chosen-select form-control" asp-for="Type" asp-items="ViewBag.GroupTypes"></select>
+            <label>Type<span class="text-danger">*</span></label>
+        </div>
+    </div> *@
+
+    @if ((Model.CurriculumVersionId != null && Model.CurriculumVersionId != 0) || !ViewBag.IsSpecialGroup)
+    {
+        <div class="row">
+            <div class="form-check">
+                <input class="form-check-input" asp-for="IsAutoAssignGraduationCourse" type="checkbox">
+                <label for="IsAutoAssignGraduationCourse">Auto Assign Graduation Course</label>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row form-group">
+            <div class="col-md-12">
+                <select class="chosen-select form-control" asp-for="RequiredGradeId" asp-items="ViewBag.Grades">
+                    <option selected value="">Select</option>
+                </select>
+                <label for="RequiredGradeId">Required Grade</label>
+            </div>
+        </div>
+        <input name="IsAutoAssignGraduationCourse" value="false" type="hidden">
+        <input asp-for="SpecializationGroupId" type="hidden">
+    }
+    
+    <input asp-for="CurriculumVersionId" type="hidden">
+    <input asp-for="SpecializationGroupType" type="hidden">
+    
+    <input asp-for="Id" type="hidden">
+    <input class="js-get-group-id" asp-for="CourseGroupId" type="hidden">
+    <input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+
+    <div class="block__action container">
+        <div class="block__action-row">
+            <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+            <a class="btn btn-mw-120 btn--cancel" href="@ViewBag.ReturnUrl">Cancel</a>
+        </div>
+    </div>
+</div>

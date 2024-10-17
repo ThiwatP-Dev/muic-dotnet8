@@ -1,0 +1,65 @@
+@model List<SpecializationGroupBlackList>
+@{
+	var index = 1;
+}
+
+<section id="curriculum">
+	<div class="block pt-3 px-2">
+		<div id="ability-blacklist-tab-content" class="tab-content">
+			<div id="nav-tab-0" class="tab-pane fadeIn faster animated show active" role="tabpanel">
+				<div class="d-flex flex-column">
+					<div class="block__body">
+						<div class="row form-group">
+							<div class="col-8 section-title">
+								<h4>Manage Blacklist Majors</h4>
+							</div>
+							<div class="col-4 align-self-end text-right">
+								<a class="btn btn-mw-120 btn--primary" data-toggle="modal"
+									data-target="#ability-blacklist-modal-create">
+									<i class="la la-plus mr-2"></i>
+									Add Blacklist Major
+								</a>
+							</div>
+						</div>
+						<div class="form-group mt-4">
+							<table id="js-tuition-fee-table" class="table table-bordered w-100x">
+								<thead>
+									<tr>
+										<th class="text-center">#</th>
+										<th>Name</th>
+										<th class="text-center">Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									@foreach (var item in Model)
+									{
+										<tr>
+											<td>@index</td>
+											<td>@item.Department.CodeAndName</td>
+											<td class="text-nowrap td-actions">
+												<a data-toggle="modal" 
+													data-target="#ability-blacklist-modal-edit"
+													data-specialization-group-blacklist-id="@item.Id">
+													<i class="la la-edit edit"></i>
+												</a>
+												<a data-toggle="modal" 
+													data-target="#delete-confirm-modal" 
+													data-controller="Ability"
+													data-action="DeleteBlacklistDepartment" 
+													data-value="@item.Id"
+													data-return-url="@ViewBag.ReturnUrl">
+													<i class="la la-trash delete"></i>
+												</a>
+											</td>
+										</tr>
+										index++;
+									}
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

@@ -1,0 +1,21 @@
+﻿@model StudentFeeGroup
+@{ 
+    ViewData["Title"] = "Add Student Fee Group"; 
+}
+
+<section class="row">
+    <div class="col-12">
+        <form class="form-horizontal" asp-controller="StudentFeeGroup" asp-action="Create" method="post">
+            @Html.AntiForgeryToken()
+            <partial name="_Form"/>
+        </form>
+    </div>
+</section>
+
+@section Modals {
+    <partial name="_DeleteRowConfirmModals">
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/student-fee-group.js"></script>
+}

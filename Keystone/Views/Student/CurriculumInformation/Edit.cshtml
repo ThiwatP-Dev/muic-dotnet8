@@ -1,0 +1,23 @@
+@model CurriculumInformation
+@{ 
+    ViewData["Title"] = "Edit Curriculum Information"; 
+}
+
+<section class="row">
+    <div class="col-lg-12">
+        <div class="block block--underline">
+            <form class="ks-form container" asp-controller="CurriculumInformation" asp-action="Edit" method="post">
+                @Html.AntiForgeryToken()
+                <partial name="~/Views/Student/CurriculumInformation/_Form.cshtml"/>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Modals {
+    <partial name="_DeleteRowConfirmModals">
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/curriculum-information.js"></script>
+}

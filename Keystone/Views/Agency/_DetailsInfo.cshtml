@@ -1,0 +1,71 @@
+@model Agency
+@{
+    var index = 1;
+}
+
+<div class="block block--underline mb-0">
+    <div class="block__title">
+		<header>Representative Information</header>
+	</div>
+    
+    <div class="block__body">
+        <div class="form-group">
+            <div class="form-control-label d-flex align-items-center">Address 1</div>
+            <div class="form-control-plaintext text-wrap">@Model.Address1</div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-control-label d-flex align-items-center">Address 2</div>
+            <div class="form-control-plaintext text-wrap">@Model.Address2</div>
+        </div>
+
+        <div class="form-group">
+            <div class="form-control-label d-flex align-items-center">Address 3</div>
+            <div class="form-control-plaintext text-wrap">@Model.Address3</div>
+        </div>
+
+        <div class="table-responsive">
+            <span class="class-lookup-title mb-2">Contract Information</span>
+
+            <table class="table table-bordered table-hover w-100x">
+                <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th>Signed Date</th>
+                        <th>Expired Date</th>
+                        <th>Remark</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.AgencyContracts != null && Model.AgencyContracts.Any())
+                    {
+                        foreach (var item in Model.AgencyContracts) 
+                        {
+                            <tr>
+                                <td class="text-center">@index</td>
+                                <td>@item.SignedAtText</td>
+                                <td>@item.ExpiredAtText</td>
+                                <td>@item.Remark</td>
+                            </tr>
+                            ++index;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4">
+                                <i class="text-danger">No Data</i>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="block__action">
+        <div class="block__action-row">
+            <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-mw-120 btn--cancel rounded">Close</a>
+        </div>
+    </div>
+</div>

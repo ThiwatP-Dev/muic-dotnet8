@@ -1,0 +1,59 @@
+@model CurriculumVersion
+
+<form id="form-black-list" asp-controller="CurriculumVersion" asp-action="SaveBlacklistCourses" method="POST">
+    <div class="block__body">
+        <div class="form-group">
+            <table id="js-blacklist-course-table" class="table table-bordered m-0">
+                <thead>
+                    <tr>
+                        <th class="text-center w-30">#</th>
+                        <th>Course</th>
+                        <th class="text-center w-75">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model?.CurriculumBlacklistCourses != null && Model.CurriculumBlacklistCourses.Any())
+                    {
+                        @for (int i = 0; i < Model.CurriculumBlacklistCourses.Count(); i++)
+                        {
+                            <tr>
+                                <td class="text-center w-30">@(i+1)</td>
+                                <td>
+                                    <select class="chosen-select form-control" asp-for="CurriculumBlacklistCourses[i].CourseId" asp-items="ViewBag.Courses">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                </td>
+                                <td class="text-nowrap td-actions">
+                                    <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                        <i class="la la-trash delete"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td class="text-center w-30">1</td>
+                            <td>
+                                <select class="chosen-select form-control" name="CurriculumBlacklistCourses[0].CourseId" asp-items="ViewBag.Courses">
+                                    <option selected disabled>Select</option>
+                                </select>
+                            </td>
+                            <td class="text-nowrap td-actions">
+                                <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                    <i class="la la-trash delete"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <input asp-for="Id" type="hidden">
+        <input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+        <div class="d-flex justify-content-end pr-4">
+            <button type="submit" class="btn btn-mw-120 btn--primary m-0"><i class="la la-save mr-1 font-weight-800"></i> Save</button>
+        </div>
+    </div>
+</form>

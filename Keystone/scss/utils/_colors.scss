@@ -1,0 +1,91 @@
+/*----------------------------------------------
+    Font Color Variables
+----------------------------------------------*/
+
+.color {
+
+    &-primary {
+        color: $primary !important;
+    }
+
+    &-info {
+        color: $info !important;
+    }
+
+    &-success {
+        color: $success !important;
+    }
+
+    &-warning {
+        color: $warning !important;
+    }
+
+    &-danger {
+        color: $danger !important;
+    }
+
+    &-excel {
+        color: $excel !important;
+    }
+    &-white {
+        color: $white !important;
+    }
+    &-black {
+        color: $black !important;
+    }
+}
+
+/*----------------------------------------------
+    background-color Color Variables
+----------------------------------------------*/
+
+.bg {
+
+    &-primary {
+        background-color: $primary !important;
+
+        &-lighter {
+            background-color: rgba($primary, 0.25) !important;
+        }
+    }
+
+    &-info {
+        background-color: $info !important;
+    }
+
+    &-success {
+        background-color: $success !important;
+    }
+
+    &-warning {
+        background-color: $warning !important;
+    }
+
+    &-danger {
+        background-color: $danger !important;
+
+        &-pastel {
+            background-color: rgba(255, 89, 100, 0.25) !important;
+        }
+    }
+
+    &-white {
+        background-color: $white !important;
+    }
+
+    &-pink {
+        background-color: pink !important;
+    }
+
+    &-darkgrey {
+        background-color: darkgrey !important;
+    }
+
+    &-secondary {
+        background-color: $secondary !important;
+
+        &-lighter {
+            background-color: rgba($secondary, 0.25) !important;
+        }
+    }
+}

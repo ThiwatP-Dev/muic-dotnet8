@@ -1,0 +1,212 @@
+@model PagedResult<Section>
+@{ 
+    ViewData["Title"] = "Update Room in Weekly Section"; 
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+    var recordNumber = Model?.FirstRowOnPage;
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>@ViewData["Title"]</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="SectionSlotRoom" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group">
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="@ViewBag.AcademicLevels">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Academic Level<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="@ViewBag.Terms">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Term<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="@ViewBag.Faculties" data-placeholder="Select">
+                                <option selected>Select</option>
+                            </select>
+                            <label>Division</label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.CodeAndName" type="text">
+                            <label>Course</label>
+                        </div>    
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.SectionNumber" type="text">
+                            <label>Section</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.InstructorId" asp-items="@ViewBag.Instructors" data-placeholder="Select">
+                                <option selected>Select</option>
+                            </select>
+                            <label>Instructor</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.SectionDetail" asp-items="@ViewBag.YesNoAnswer" data-placeholder="Select">
+                                <option selected value="">All</option>
+                            </select>
+                            <label>SectionDetail</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.SectionSlot" asp-items="@ViewBag.YesNoAnswer" data-placeholder="Select">
+                                <option selected value="">All</option>
+                            </select>
+                            <label>SectionSlot</label>
+                        </div>
+                    </div>
+                    <div class="row form-group mb-0">
+                        <div class="col align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary m-r-5" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset js-reset-btn" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.RowCount ?? 0))</header>
+            </div>
+            <div class="block__body">
+                <header class="block__title-info">
+                    <div class="row">
+                        <div class="col info-group">
+                            <h6 class="mb-3">TU = TOTAL SEAT USED</h6>
+                        </div>
+                        <div class="col info-group">
+                            <h6 class="mb-3">L = SEAT LIMIT</h6>
+                        </div>
+                        <div class="col info-group">
+                            <h6 class="mb-3">U = SEAT USED</h6>
+                        </div>
+                        <div class="col info-group">
+                            <h6 class="mb-3">P = PLANNING SEAT</h6>
+                        </div>
+                    </div>
+                </header>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover w-100x">
+                        <thead>
+                            <tr>
+                                <th rowspan="2" class="text-center">#</th>
+                                <th rowspan="2">Course</th>
+                                <th rowspan="2" class="text-center">Section</th>
+                                <th rowspan="2">Time</th>
+                                <th colspan="3" class="text-center">Section Slot</th>
+                                <th rowspan="2">Midterm /<br>Final</th>
+                                <th rowspan="2" class="text-center">L</th>
+                                <th rowspan="2" class="text-center">U</th>
+                                <th rowspan="2" class="text-center">P</th>
+                                <th rowspan="2" class="text-center">TU</th>
+                                <th rowspan="2" class="text-center">Status</th>
+                                <th rowspan="2" class="text-center">Open/Close</th>
+                                <th rowspan="2" class="text-center">Actions</th>
+                            </tr>
+                            <tr>
+                                <th class="text-center">Total</th>
+                                <th class="text-center">Assign Room</th>
+                                <th class="text-center">Unassign Room</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Results.Any())
+                            {
+                                foreach (var item in Model.Results) 
+                                {
+                                    <tr>
+                                        <td>@recordNumber</td>
+                                        <td>
+                                            <b>@item.Course?.CodeAndCredit</b><br>
+                                            <b>@item.Course?.NameEn</b><br>
+                                            @item.MainInstructor?.FullNameEn
+                                        </td>
+                                        <td>
+                                            @item.Number<br>
+                                            @item.SectionTypes
+                                        </td>
+                                        @if (item.SectionDetails != null && item.SectionDetails.Any())
+                                        {
+                                            <td>
+                                                <partial name="_StringLoop" model="@item.SectionDetails.Select(x => x.DayofweekAndTime).ToList()">
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td></td>
+                                        }
+                                        <td class="text-center">@(item.SectionSlots.Count())</td>
+                                        <td class="text-center">@(item.SectionSlots.Count(x => x.RoomId != 0 && x.RoomId != null))</td>
+                                        <td class="text-center">@(item.SectionSlots.Count(x => x.RoomId == 0 || x.RoomId == null))</td>
+                                        <td>
+                                            @("M: " + item.MidtermDateTimeText)<br>
+                                            @("F: " + item.FinalDateTimeText)
+                                        </td>
+                                        <td>@item.SeatLimit</td>
+                                        <td>@item.SeatUsed</td>
+                                        <td>@item.PlanningSeat</td>
+                                        <td>@item.TotalSeatUsed</td>
+                                        <td>
+                                            <partial name="_SectionStatus" model="@item.Status"></partial>
+                                        </td>
+                                        <td>
+                                            <partial name="_BooleanClose" model="@item.IsClosed">
+                                        </td>
+                                        <td class="text-nowrap td-actions">
+                                            @if(item.Status == "a")
+                                            {
+                                                <a asp-controller="SectionSlotRoom"
+                                                asp-action="Edit" 
+                                                asp-route-Id="@item.Id"
+                                                asp-route-returnUrl="@contextPath">
+                                                    <i class="la la-edit edit"></i>
+                                                </a>
+                                                @if (item.SectionDetails.Any())
+                                                {
+                                                    <a asp-action="ClearRoom" 
+                                                    asp-route-id="@item.Id">
+                                                    <i class="la la-close delete"></i>
+                                                    </a>
+                                                }
+                                            }
+                                        </td>
+                                    </tr>
+                                    recordNumber++;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="15">
+                                        <i class="text-danger">No Data</i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @(await Component.InvokeAsync<PagerViewComponent>(Model))
+    </div>
+</section>
+
+<partial name="_DeleteConfirmModals"/>

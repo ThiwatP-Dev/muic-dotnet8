@@ -1,0 +1,32 @@
+@model StudentImportImageResultModel
+
+<section>
+	<div class="block block--underline">
+		<div class="block__body">
+			<div class="row form-group">
+				<div class="col-6">
+					<h3 class="form-control-label d-flex align-items-center">Save Success</h3>
+					@foreach (var item in Model.SuccessFileNameList)
+					{
+						<div class="form-control-plaintext">@item</div>
+					}
+				</div>
+				<div class="col-6">
+					<h3 class="form-control-label d-flex align-items-center">Save Fail</h3>
+					@foreach (var item in Model.FailFileNameList)
+					{
+						<div class="form-control-plaintext">@item</div>
+					}
+				</div>
+			</div>
+
+			<div class="row form-group">
+				<div class="col-12 align-self-end text-right">
+					<a class="btn btn--primary" asp-action="Index">
+						<i class="font-weight-800"></i> Back
+					</a>
+				</div>
+			</div>
+        </div>
+    </div>
+</section>

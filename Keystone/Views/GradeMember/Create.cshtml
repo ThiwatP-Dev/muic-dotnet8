@@ -1,0 +1,104 @@
+@model GradeMemberViewModel
+@{ 
+    ViewData["Title"] = "Search User"; 
+    var numberIsChecked = Model.GradeMembers.Where(x => x.IsChecked == "on").Count();
+    var isCheckedAll = !Model.GradeMembers.Any() ? false : !Model.GradeMembers.Any(x => !(x.IsChecked == "on"));
+}   
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>@ViewData["Title"]</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="GradeMember" asp-action="Create" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group mb-0">
+                        <div class="col-8">
+                            <input class="form-control" asp-for="Criteria.CodeAndName" type="text">
+                            <label>Name</label>
+                        </div>
+                        <div class="col-4 align-self-end text-right text-nowrap">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                        <input name="returnUrl" value="@ViewBag.ReturnUrl" type="hidden">
+                    </div>  
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>User List(@(Model?.GradeMembers.Count ?? 0))</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="GradeMember" asp-action="SaveCreate" method="POST">
+                    <input name="returnUrl" value="@ViewBag.ReturnUrl" type="hidden">
+                    <div class="box-scroll__content border js-render-nicescroll p-0">
+                        <table id="js-grade-member-user" class="table table-bordered m-0">
+                            <thead class="scroll-header">
+                                <tr>
+                                    <th class="w-75 text-center">
+                                        <input id="checkAll" class="js-check-all" checked="@isCheckedAll" type="checkbox">
+                                        <label class="mt-2 mb-0 m-l-2" for="checkAll"></label><br>
+                                        <span class="js-item-count">(@numberIsChecked)</span>
+                                    </th>
+                                    <th class="w-300">Username</th>
+                                    <th>Name</th>
+                                </tr>
+                            </thead>
+                            <tbody class="js-items">
+                                @if(Model.GradeMembers != null && Model.GradeMembers.Any())
+                                {
+                                    @for (int i = 0; i < Model.GradeMembers.Count; i++)
+                                    {
+                                        <tr class="js-suggestion-parent">
+                                            <td class="w-50">
+                                                <input id="User[@i]" class="form-check-input" name="GradeMembers[@i].IsChecked" value="@Model.GradeMembers[i].IsChecked" checked="@Model.GradeMembers[i].IsChecked" type="checkbox">
+                                                <label class="js-focus-item m-0" for="User[@i]"></label>
+                                            </td>
+                                            <td>@Model.GradeMembers[i].UserName</td>
+                                            <td>@Model.GradeMembers[i].FullNameEn</td>
+                                        </tr>
+                                        <input asp-for="@Model.GradeMembers[i].UserId" type="hidden">
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="4">
+                                            <i class="text-danger">No Data</i>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="block__action-row">
+                        @if(Model.GradeMembers.Any())
+                        {
+                            <button class="btn btn-mw-120 btn--primary js-save-button" type="submit">Save</button>
+                        }
+                        <a class="btn btn-mw-120 btn--cancel" href="@ViewBag.ReturnUrl">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts{
+    <script type="text/javascript" src="~/js/pages/grade-member.js"></script>
+}

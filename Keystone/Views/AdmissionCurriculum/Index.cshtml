@@ -1,0 +1,152 @@
+@model PagedResult<AdmissionCurriculumViewModel>
+@{ 
+    ViewData["Title"] = "Admission Curriculum";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+
+<section class="row">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+        <ul class="d-flex flex-md-row align-items-md-center float-right">
+            <li class="list-inline-item mx-3 mb-0">
+                <a class="btn btn--primary" asp-action="Create" asp-route-returnUrl="@contextPath">
+                    <i class="la la-plus mr-1 font-weight-800"></i> Add Admission Curriculum
+                </a>
+            </li>
+        </ul>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Admission Curriculum</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="AdmissionCurriculum" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group m-b-30">
+                        <div class="col-2">
+                            <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels" data-placeholder="Select">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Academic Level<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-2">
+                            <select class="chosen-select form-control js-cascade-admission-term" asp-for="Criteria.TermId" asp-items="ViewBag.AdmissionTerms" data-placeholder="Select">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Admission Term<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-2">
+                            <select class="chosen-select form-control js-cascade-admission-round" asp-for="Criteria.AdmissionRoundId" asp-items="ViewBag.AdmissionRounds" data-placeholder="Select">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label class="text-nowrap">Admission Round<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="ViewBag.Faculties" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Division</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentId" asp-items="ViewBag.Departments" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Major</label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group m-b-0">
+                        <div class="col-12 align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.RowCount ?? 0))</header>
+            </div>
+
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table class="table table-bordered w-100x">
+                        <thead>
+                            <tr>
+                                <th>Academic Level</th>
+                                <th class="text-center">Admission Term</th>
+                                <th class="text-center">Round</th>
+                                <th>Division</th>
+                                <th>Curriculums</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Results.Any())
+                            {
+                                foreach (var item in Model.Results) 
+                                {
+                                    <tr>
+                                        <td>@item.AcademicLevel</td>
+                                        <td>@item.Term</td>
+                                        <td>@item.Round</td>
+                                        <td>@item.Faculty</td>
+                                        <td>
+                                            @foreach (var version in item.CurriculumVersions)
+                                            {
+                                                <div>
+                                                    <label>@version.CodeAndName</label>
+                                                </div>
+                                            }
+                                        </td>
+                                        <td class="text-nowrap td-actions">
+                                            <a asp-controller="AdmissionCurriculum"
+                                               asp-action="Edit"
+                                               asp-route-academicLevelId="@item.AcademicLevelId"
+                                               asp-route-admissionRoundId="@item.AdmissionRoundId"
+                                               asp-route-facultyId="@item.FacultyId"
+                                               asp-route-returnUrl="@contextPath">
+                                                <i class="la la-edit edit"></i>
+                                            </a>
+                                            <a href="/AdmissionCurriculum/Delete?academicLevelId=@item.AcademicLevelId&admissionRoundId=@item.AdmissionRoundId&facultyId=@item.FacultyId"
+                                               data-toggle="modal" 
+                                               data-target="#delete-confirm-modal">
+						                        <i class="la la-trash delete"></i>
+					                        </a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td class="text-center" colspan="6">
+                                        <i class="text-danger">No Data</i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @(await Component.InvokeAsync<PagerViewComponent>(Model))
+    </div>
+</section>
+
+<partial name="_DeleteConfirmModals">

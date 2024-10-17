@@ -1,0 +1,54 @@
+@model CertificationViewModel
+
+<partial name="_FormDetailsHeader" model="@Model">
+
+<div class="row form-group">
+    <div class="col-6">
+        <select class="chosen-select form-control js-cascade-academic-level" asp-for="AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+            <option selected disabled>Select</option>
+        </select>
+        <label>Academic Level</label>
+    </div>
+    <div class="col-6">
+        <input class="form-control" asp-for="DegreeName" type="text" autocomplete="off">
+        <label>Degree Name</label>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-6">
+        <select class="chosen-select form-control js-cascade-faculty" asp-for="FacultyId" asp-items="ViewBag.Faculties">
+            <option selected disabled>Select</option>
+        </select>
+        <label>Division</label>
+    </div>
+    <div class="col-6">
+        <select class="chosen-select form-control js-cascade-department" asp-for="DepartmentId" asp-items="ViewBag.Departments">
+            <option selected disabled>Select</option>
+        </select>
+        <label>Major</label>
+    </div>
+</div>
+
+<div class="row form-group">
+    <div class="col-3">
+        <input class="form-control" asp-for="Year">
+        <label>Academic Year</label>       
+    </div>
+    <div class="col-3">
+        <input class="form-control" asp-for="StudyYear">
+        <label>Study Year</label>       
+    </div>
+    <div class="col-3">
+        <input class="form-control" asp-for="GPA" type="number" min=0 max=4>
+        <label>GPA</label>       
+    </div>
+    <div class="col-3">
+        <input class="form-control" asp-for="VerifyCode" type="number" min=0>
+        <label>Verify Code</label>
+    </div>
+</div>
+
+<input asp-for="Language" type="hidden">
+<input asp-for="ErrorMessage" type="hidden">
+<input asp-for="StudentYear" type="hidden">

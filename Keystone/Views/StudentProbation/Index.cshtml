@@ -1,0 +1,192 @@
+@model StudentProbationViewModel
+@{ 
+    ViewData["Title"] = "Student Probation";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+    var index = 1;
+}
+
+<section class="row">
+    <div class="col-12" id="student-probation">
+        <div class="block block--underline">
+            <div class="block__title collapsed" data-toggle="collapse" data-parent="#student-probation" data-target="#student-probation-search">
+                <header>Student Probation</header>
+                <div class="tools">
+                    <div class="btn-group">
+                        <a class="btn btn--white btn--circle">
+                            <i class="la la-angle-down"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="student-probation-search" class="collapse show" aria-expanded="true">
+                <div class="block__body">
+                    <form class="form-horizontal" asp-action="Index" method="GET">
+                        @Html.AntiForgeryToken()
+                        <div class="row form-group">
+                            <div class="col-3">
+                                <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                                    <option selected disabled>Select</option>
+                                </select>
+                                <label>Academic Level<span class="text-danger">*</span></label>
+                            </div>
+                            <div class="col-3">
+                                <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="ViewBag.Terms">
+                                    <option selected value="">Select</option>
+                                </select>
+                                <label>Term</label>
+                            </div>
+                            <div class="col-3">
+                                <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="ViewBag.Faculties">
+                                    <option selected value="">Select</option>
+                                </select>
+                                <label>Faculty</label>
+                            </div>
+                            <div class="col-3">
+                                <select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentId" asp-items="ViewBag.Departments">
+                                    <option selected value="">Select</option>
+                                </select>
+                                <label>Department</label>
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-3">
+                                <input class="form-control" asp-for="Criteria.Code" type="text">
+                                <label>Student Code</label>
+                            </div>
+                            <div class="col-3">
+                                <input class="form-control" asp-for="Criteria.FirstName" type="text">
+                                <label>Student Name</label>
+                            </div>
+                            <div class="col-3">
+                                <select class="chosen-select form-control" asp-for="Criteria.ProbationId" asp-items="ViewBag.Probations">
+                                    <option selected value="">Select</option>
+                                </select>
+                                <label>Probation</label>
+                            </div>
+                            <div class="col-3">
+                                <select class="chosen-select form-control" asp-for="Criteria.RetireId" asp-items="ViewBag.Retires">
+                                    <option selected value="">Select</option>
+                                </select>
+                                <label>Retire</label>
+                            </div>
+                        </div>
+
+                        <div class="row form-group">
+                            <div class="col-3">
+                                <select class="chosen-select form-control" asp-for="Criteria.Status" asp-items="ViewBag.StudentStatuses">
+                                    <option selected value="">Select</option>
+                                </select>
+                                <label>Student Status</label>
+                            </div>
+                            <div class="col-9 align-self-end text-right text-nowrap">
+                                <button class="btn btn--primary btn-mw-120 m-r-5 mb-0" type="submit">
+                                    <i class="la la-search mr-2"></i>Search
+                                </button>
+                                <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="button">
+                                    Reset
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+		<div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.Students?.Count() ?? 0))</header>
+                <div class="tools pr-4">
+                    <a class='btn btn-mw-120 btn--primary mb-0'
+                       asp-action="Create"
+                       asp-route-returnUrl="@contextPath">
+                        <i class="la la-plus mr-2 font-weight-700"></i>Add Probation Student
+                    </a>
+                </div>
+            </div>
+
+			<div class="block__body">
+                <div class="border js-render-nicescroll p-0 m-b-30">
+                    <table id="js-student-probation" class="table table-bordered w-100x">
+                        <thead class="scroll-header">
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center">Code</th>
+                                <th>Name</th>
+                                @* <th>Division</th> *@
+                                <th>Major</th>
+                                <th class="text-center">Credit</th>
+                                <th class="text-center">GPA</th>
+                                <th class="text-center">Term</th>
+                                <th>Probation / Retire</th>
+                                <th>Student Status</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Students.Any())
+                            {
+                                foreach (var item in Model.Students) 
+                                {
+                                    <tr>
+                                        <td>@index</td>
+                                        <td>@item.StudentCode</td>
+                                        <td>@item.StudentFullName</td>
+                                        @* <td>@item.FacultyName</td> *@
+                                        <td>@item.DepartmentName</td>
+                                        <td>@item.CreditText</td>
+                                        <td>@item.StudentGPA</td>
+                                        <td>@item.TermText</td>
+                                        @if (!string.IsNullOrEmpty(item.ProbationName))
+                                        {
+                                            <td>@item.ProbationName</td>
+                                        }
+                                        else if (!string.IsNullOrEmpty(item.RetireName))
+                                        {
+                                            <td>@item.RetireName</td>
+                                        }
+                                        <td>@item.StudentStatus</td>
+                                        <td class="text-nowrap td-actions">
+                                            <a asp-controller="Student"
+                                               asp-action="Details"
+                                               asp-route-code="@item.StudentCode"
+                                               asp-route-returnUrl="@contextPath">
+                                                <i class="la la-user edit"></i>
+                                            </a>
+                                            <a data-toggle="modal" 
+                                               data-target="#delete-confirm-modal" 
+                                               asp-controller="StudentProbation" 
+                                               asp-action="Delete" 
+                                               asp-route-Id="@item.StudentProbationId"
+                                               asp-route-returnUrl="@contextPath">
+                                                <i class="la la-trash delete"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    ++index;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td class="text-center" colspan="10">
+                                        <i class="text-danger">No Data</i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+		</div>
+	</div>
+</section>
+
+@section Modals {
+    <partial name="_DeleteConfirmModals">
+}

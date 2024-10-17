@@ -1,0 +1,238 @@
+@model TeachingScheduleViewModel
+@{
+    ViewData["Title"] = "Teaching Schedule";
+    var index = 1;
+}
+
+<section class="row d-print-none">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Teaching Schedule</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="TeachingSchedule" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group m-b-30">
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-campus" asp-for="Criteria.CampusId" asp-items="ViewBag.Campuses" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Campus</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-building" asp-for="Criteria.BuildingId" asp-items="ViewBag.Buildings" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Building</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-room" asp-for="Criteria.RoomId" asp-items="ViewBag.Rooms" data-placeholder="Select">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Room<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.Floor" type="number">
+                            <label>Floor</label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-3">
+                            <input class="form-control js-single-date" asp-for="Criteria.Date" type="text" autocomplete="off">
+                            <label>Date<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.Type" asp-items="ViewBag.UsingTypes" data-placeholder="Select"></select>
+                            <label>Using Type</label>
+                        </div>
+                        <div class="col-6 align-self-end text-right text-nowrap">
+                            <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" asp-action="Index" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (Model != null)
+{
+    <section>
+        <div class="block block--underline">
+            <div class="block__title d-flex justify-content-between">
+                <header class="align-self-center">
+                    <span class="mr-3 my-2">Room : @Model?.RoomName</span>
+                    <span class="mr-3 my-2">Building : @Model?.BuildingName</span>
+                    @if (Model.Criteria.Type == "s")
+                    {
+                        <span class="mr-3 my-2">Academic Year : 
+                            @for (var i = 0; i < Model.TeachingScheduleDetails.Count(); ++i)
+                            {
+                                if (i == Model.TeachingScheduleDetails.Count() -1)
+                                {
+                                    <span>@Model.TeachingScheduleDetails[i].Term</span>
+                                }
+                                else
+                                {
+                                    <span>@Model.TeachingScheduleDetails[i].Term,</span>
+                                }
+                            }
+                        </span>
+                    }
+                    <span class="mr-3 my-2">Campus : @Model?.Campus</span>
+                    <span class="my-2">as of : @( DateTime.UtcNow.ToString(StringFormat.ShortDate) )</span>
+                </header>
+                <div class="tools">
+                    <button class="btn btn-mw-120 btn--primary rounded print-btn mb-0 js-print-btn" type="button">
+                        <i class="la la-print mr-2"></i>Print
+                    </button>
+                </div>
+            </div>
+
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table class="table table-bordered mb-4">
+                        @if (Model.Criteria.Type == "s")
+                        {
+                            <thead>
+                                <tr>
+                                    <th class="w-50 text-center">#</th>
+                                    <th class="w-150">Course Code</th>
+                                    <th>Course Title</th>
+                                    <th class="text-center">Section</th>
+                                    <th class="text-center">Day</th>
+                                    <th class="text-center">Time</th>
+                                    <th>Instructor</th>
+                                    <th class="text-center">Seat</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.TeachingScheduleDetails != null && Model.TeachingScheduleDetails.Any())
+                                {
+                                    foreach (var item in Model.TeachingScheduleDetails)
+                                    {
+                                        <tr>
+                                            <td>@index</td>
+                                            <td>@item.CourseCode</td>
+                                            <td>@item.CourseName</td>
+                                            <td>@item.Section</td>
+                                            <td>@item.Day</td>
+                                            <td>@item.Time</td>
+                                            <td>@item.SectionInstructor</td>
+                                            <td>@item.SeatUsed</td>
+                                        </tr>
+                                        index++;
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="8">
+                                            <i class="text-danger">No Data</i>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        }
+                        else if (Model.Criteria.Type == "a")
+                        {
+                            <thead>
+                                <tr>
+                                    <th class="w-50 text-center">#</th>
+                                    <th>Name</th>
+                                    <th class="text-center">Day</th>
+                                    <th class="text-center">Time</th>
+                                    <th class="text-center">Using Type</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.TeachingScheduleDetails != null && Model.TeachingScheduleDetails.Any())
+                                {
+                                    foreach (var item in Model.TeachingScheduleDetails)
+                                    {            
+                                        <tr>
+                                            <td>@index</td>
+                                            <td>@item.RoomReservationName</td>
+                                            <td>@item.Day</td>
+                                            <td>@item.Time</td>
+                                            <td>@item.UsingType</td>
+                                        </tr>
+                                        index++;
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="5">
+                                            <i class="text-danger">No Data</i>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        }
+                        else
+                        {
+                            <thead>
+                                <tr>
+                                    <th class="w-50 text-center">#</th>
+                                    <th>Name</th>
+                                    <th class="text-center">Day</th>
+                                    <th class="text-center">Time</th>
+                                    <th class="text-center">Using Type</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.TeachingScheduleDetails != null && Model.TeachingScheduleDetails.Any())
+                                {
+                                    foreach (var item in Model.TeachingScheduleDetails)
+                                    {            
+                                        <tr>
+                                            <td>@index</td>
+                                            <td>@item.ExaminationInstructor</td>
+                                            <td>@item.Day</td>
+                                            <td>@item.Time</td>
+                                            <td>@item.UsingType</td>
+                                        </tr>
+                                        index++;
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="5">
+                                            <i class="text-danger">No Data</i>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        }
+                    </table>
+                </div>
+
+                <div class="block__title">
+                    <header class="p-0">Class Schedule</header>
+                </div>
+                <div class="mx-auto">
+                    <div id="js-schedule" class="table-responsive" data-schedules="@ViewBag.CoursesJsonData">
+                        <partial name="_Schedule">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+
+@section Scripts 
+{
+    <script src="~/js/pages/class-schedule.js"></script>
+    <script src="~/js/pages/ajax-cascading/building-cascade.js"></script>
+}

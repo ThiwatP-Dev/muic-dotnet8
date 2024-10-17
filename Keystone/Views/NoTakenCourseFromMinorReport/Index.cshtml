@@ -1,0 +1,146 @@
+@model PagedResult<NoTakenCourseReportViewModel>
+@{
+    ViewData["Title"] = "No Taken Course From Minor Report";
+    var recordNumber = Model?.FirstRowOnPage;
+}
+
+<section class="d-print-none">
+    <div class="block block--underline">
+        <div class="block__title">
+            <header>No Taken Course Report</header>
+        </div>
+        
+        <form class="form-horizontal" asp-controller="NoTakenCourseFromMinorReport" asp-action="Index" method="GET">
+            @Html.AntiForgeryToken()
+            <div class="block__body">
+                <div class="row form-group m-b-30">
+                    <div class="col-4">
+                        <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels" data-placeholder="Select">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Academic Level<span class="text-danger">*</span></label>
+                    </div>
+                     <div class="col-4">
+                        <select class="chosen-select form-control" asp-for="Criteria.MinorId" asp-items="ViewBag.Minors" data-placeholder="Select">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Minor<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-4">
+                        <select class="chosen-select form-control js-cascade-course" asp-for="Criteria.CourseId" asp-items="ViewBag.Courses" data-placeholder="Select">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Course<span class="text-danger">*</span></label>
+                    </div>
+                </div>
+
+                <div class="row form-group m-b-30">
+                    <div class="col-3">
+                        <input class="form-control" asp-for="Criteria.StartStudentBatch" type="text">
+                        <label>Batch From</label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control" asp-for="Criteria.EndStudentBatch" type="text">
+                        <label>To</label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control" asp-for="Criteria.CreditFrom" type="number">
+                        <label>Credit Earned From</label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control" asp-for="Criteria.CreditTo" type="number">
+                        <label>Credit Earned To</label>
+                    </div>
+                </div>
+                <div class="row form-group mb-0">
+                    <div class="col-4">
+                        <select class="chosen-select form-control" asp-for="Criteria.StudentTypeId" asp-items="ViewBag.StudentFeeTypes">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Student Fee Type</label>
+                    </div>
+                    <div class="col-2">
+                        <select class="chosen-select form-control" asp-for="Criteria.StudentStatus" asp-items="ViewBag.StudentStatuses"></select>
+                        <label>Student Status</label>
+                    </div>
+                    <div class="col-2">
+                        <select class="chosen-select form-control" asp-for="Criteria.IsTaken" asp-items="ViewBag.Takens">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Taken Status</label>
+                    </div>
+                    <div class="col-4 align-self-end text-right text-nowrap">
+                        <button class="btn btn--primary btn-mw-120 m-r-5" type="submit">
+                            <i class="la la-search mr-2"></i>Search
+                        </button>
+                        <button class="btn btn-mw-120 btn--reset js-reset-btn" type="reset">
+                            Reset
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+
+<table id="no-taken-course-table" class="table table-bordered m-0 w-100x">
+    <thead>
+        <tr>
+            <th class="text-center">#</th>
+            <th>Student id</th>
+            <th>Title</th>
+            <th>English first name</th>
+            <th>English middle name</th>
+            <th>English last name</th>
+            <th>Student Fee Type</th>
+            <th>Resident Type</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Main contact detail mobile number</th>
+            <th>Main curriculumn code</th>
+            <th>Main curriculumn general name</th>
+            <th>Main curriculumn full name</th>
+            <th>Nationality</th>
+            <th>Country of citizenship</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Results.Any())
+        {
+            foreach (var item in Model.Results)
+            {
+                <tr>
+                    <td>@recordNumber</td>
+                    <td>@item.StudentCode</td>
+                    <td>@item.StudentTitle</td>
+                    <td>@item.StudentFirstNameEn</td>
+                    <td>@item.StudentMiddleNameEn</td>
+                    <td>@item.StudentLastNameEn</td>
+                    <td>@item.StudentType</td>
+                    <td>@item.StudentResidentType</td>
+                    <td>@item.StudentEmail</td>
+                    <td>@item.StudentStatusText</td>
+                    <td>@item.StudentContact</td>
+                    <td>@item.CurriculumnCode</td>
+                    <td>@item.CurriculumnName</td>
+                    <td>@item.CurriculumnVerisonName</td>
+                    <td>@item.Nationality</td>
+                    <td>@item.CountryName</td>
+                </tr>
+                recordNumber++;
+            }
+        }
+        else
+        {
+            <tr>
+                <td class="text-center" colspan="16">
+                    <i class="text-danger">No data</i>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/no-taken-course.js"></script>
+}

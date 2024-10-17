@@ -1,0 +1,86 @@
+@model ModifyRegistrationCourse
+@{ 
+    ViewData["Title"] = "Modify Registration Course"; 
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>@ViewData["Title"]</header>
+            </div>
+
+            <form class="ks-form container" asp-controller="ModifyRegistrationCourse" asp-action="Edit" method="POST">
+                @Html.AntiForgeryToken()
+                <div class="block__body">
+                    <div class="row form-group">
+                        <div class="col-8">
+                            <div class="form-control-label d-flex align-items-center">Current Course</div>
+                            <div class="form-control-plaintext">@Model?.CourseAndCredit</div>
+                        </div>
+                        <div class="col-2">
+                            <div class="form-control-label d-flex align-items-center">Current Star</div>
+                            <div class="form-control-plaintext">
+                                <partial name="_BooleanResult" model="@Model?.IsStarCourse"></partial>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="form-control-label d-flex align-items-center">Transfer Course</div>
+                            <div class="form-control-plaintext">
+                                <partial name="_BooleanResult" model="@Model?.IsTransfer"></partial>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <div class="col-8">
+                            <select class="chosen-select form-control" asp-for="ToCourseId" asp-items="ViewBag.Courses">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>New Course<span class="text-danger">*</span></label>
+                        </div>
+                        @*<div class="col-2 form-check mt-4">
+                            <input class="form-check-input" asp-for="ToTransferCourse" type="checkbox" disabled>
+                            <label for="ToTransferCourse">Transfer Course</label>
+                        </div>*@
+                        <div class="col-2 form-check mt-4">
+                            <input class="form-check-input" asp-for="ToStarCourse" type="checkbox">
+                            <label for="ToStarCourse">Star Course</label>
+                        </div>
+                        <div class="col-2 form-check mt-4">
+                            <input class="form-check-input" asp-for="ToTransferCourse" type="checkbox">
+                            <label for="ToTransferCourse">Transfer</label>
+                        </div>
+                    </div>
+                </div>
+                <input asp-for="RegistrationCourseId" type="hidden">
+                <input asp-for="CourseRateId" type="hidden">
+                <input asp-for="Code" type="hidden">
+                <input asp-for="NameEn" type="hidden">
+                <input asp-for="Credit" type="hidden">
+                <input asp-for="Lecture" type="hidden">
+                <input asp-for="Lab" type="hidden">
+                <input asp-for="Other" type="hidden">
+                <input asp-for="IsStarCourse" type="hidden">
+                <input asp-for="IsTransfer" type="hidden">
+
+                <div class="block__action container">
+                    <div class="block__action-row">
+                        <button class="btn btn-mw-120 btn--primary" asp-route-returnUrl="@ViewBag.ReturnUrl" type="submit">Save</button>
+                        <a class="btn btn-mw-120 btn--cancel" href="@ViewBag.ReturnUrl">Cancel</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Modify Registration Course Logs</header>
+            </div>
+            <div class="block__body">
+                <partial name="_Logs" model="@Model?.Logs"/>
+            </div>
+        </div>
+    </div>
+</section>

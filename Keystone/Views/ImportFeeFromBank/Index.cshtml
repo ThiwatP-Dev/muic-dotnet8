@@ -1,0 +1,160 @@
+@model ImportFeeFromBankViewModel
+@{ 
+    ViewData["Title"] = "Import Fee From Bank";
+    var successIndex = 1;
+    var failIndex = 1;
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>@ViewData["Title"]</header>
+            </div>
+
+            @if (Model == null)
+            {
+                <div class="block__body">
+                    <form class="form-horizontal" asp-controller="ImportFeeFromBank" asp-action="Index" method="POST" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+                        <div class="row form-group">
+                            <div class="input-group col-6">
+                                <input id="file-name" class="form-control m-r-15" type="text">
+                                <input id="upload-input" name="UploadFile" type="file" />
+                                <a id="browse-btn" class="btn btn--primary mb-0 align-self-end">
+                                    <i class="la la-file-upload"></i> Browse
+                                </a>
+                            </div>
+                            <div class="col-6">
+                                <select class="chosen-select form-control" name="PaymentMethodId" asp-items="ViewBag.PaymentMethods">
+                                    <option selected disabled>Select</option>
+                                </select>
+                                <label>Payment Method<span class="text-danger">*</span></label>
+                            </div>
+                        </div>
+                        <div class="row form-group mb-0">
+                            <div class="col text-left text-nowrap">
+                            <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">
+                                    <i class="la la-upload mr-2"></i>
+                                    <span class="bold">Upload</span>
+                                </button>
+                                <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                    Reset
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            }
+            else
+            {
+                <div class="block__body">
+                    <div class="ks-page-header col-12 mb-3">
+                        <ul class="d-flex flex-md-row align-items-md-center float-right">
+                            <li class="list-inline-item mx-3 mb-0">
+                                <a class="btn btn--primary" asp-action="Index">OK</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            }
+            
+        </div>
+    </div>
+</section>
+
+
+<section class="row">
+    <div class="col-6">
+        @if (Model != null)
+        {
+            <div class="block block--underline">
+                <div class="block__title">
+                    <header>Success Result (@(Model?.Success?.Count() ?? 0))</header>
+                </div>
+
+                <div class="block__body">
+                    <div class="table-responsive">
+                        <table id="js-signatory" class="table table-bordered js-report-table table-hover w-100x">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">#</th>
+                                    <th>Student Id</th>
+                                    <th>Invoice</th>
+                                    <th>Receipt</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Success) 
+                                {
+                                    <tr>
+                                        <td>@successIndex</td>
+                                        <td>@item.StudentCode</td>
+                                        <td>@item.InvoiceNumber</td>
+                                        <td>@item.ReceiptNumber</td>
+                                    </tr>
+                                    ++successIndex;
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        }
+        
+    </div>
+
+    <div class="col-6">
+        @if (Model != null)
+        {
+            <div class="block block--underline">
+                <div class="block__title">
+                    <header>Fail Result (@(Model?.Fail?.Count() ?? 0))</header>
+                </div>
+
+                <div class="block__body">
+                    <div class="table-responsive">
+                        <table id="js-signatory" class="table table-bordered js-report-table table-hover w-100x">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">#</th>
+                                    <th>Student Id</th>
+                                    <th>Name</th>
+                                    <th class="text-right">Amount</th>
+                                    <th class="text-center">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Fail) 
+                                {
+                                    <tr>
+                                        <td>@failIndex</td>
+                                        <td>@item.StudentCode</td>
+                                        <td>@item.StudentFullName</td>
+                                        <td>@item.AmountText</td>
+                                        <td>@item.PaidDateText</td>
+                                    </tr>
+                                    ++failIndex;
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        $(function() {
+            $('#browse-btn').on('click', function() {
+                $('#upload-input').click();
+            });
+
+            $('#upload-input').on('change', function(e) {
+                $("#file-name").val(e.currentTarget.files[0].name);
+            });
+        })
+    </script>
+}

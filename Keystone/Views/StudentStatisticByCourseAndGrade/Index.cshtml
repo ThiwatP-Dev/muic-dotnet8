@@ -1,0 +1,143 @@
+@model StudentStatisticByCourseAndGradeViewModel
+@{
+    ViewData["Title"] = "Student Statistic By Course And Grade Report";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+    var index = 1;
+}
+
+<section>
+    <div class="block block--underline">
+        <div class="block__title">
+            <header>Search Student Statistic By Course And Grade</header>
+        </div>
+
+        <div class="block__body">
+            <form class="form-horizontal" asp-controller="StudentStatisticByCourseAndGrade" asp-action="Index" method="GET">
+                @Html.AntiForgeryToken()
+                <div class="row form-group">
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Academic Level<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="ViewBag.Terms">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Term<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="ViewBag.Faculties">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Division</label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentId" asp-items="ViewBag.Departments">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Major</label>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col-6">
+                        <h4 class="font-size-default m-y-4">Courses</h4>
+                        <select class="chosen-select form-control js-cascade-multiple-course" asp-for="Criteria.CourseIds"
+                                asp-items="@ViewBag.Courses" data-placeholder="Select" multiple></select>
+                    </div>
+                    <div class="col-6 text-right align-self-end text-nowrap">
+                        <button class="btn btn--primary btn-mw-120 mb-0 m-r-5" type="submit">
+                            <i class="la la-search mr-2"></i>Search
+                        </button>
+                        <button class="btn btn-mw-120 btn--white mb-0 js-reset-btn" type="reset">
+                            Reset
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+	</div>
+
+    @if (Model != null)
+    {
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.Courses?.Count() ?? 0))</header>
+            </div>
+
+            <div class="block__body">
+                <table class="table table-bordered m-0 js-report-table w-100x">
+                    <thead>
+                        <tr>
+                            <th class="text-center">#</th>
+                            <th>Course Name</th>
+                            @foreach (var item in Model.GradeHeader)
+                            {
+                                <th class="text-center">@item</th>
+                            }
+                            <th class="text-center">Grand Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Courses != null && Model.Courses.Any())
+                        {
+                            foreach (var item in Model.Courses) 
+                            {
+                                <tr>
+                                    <td>@index</td>
+                                    <td>@item.CourseName</td>
+                                    @foreach (var gradeHeader in Model.GradeHeader)
+                                    {
+                                        var filterGrade = item.Grades.FirstOrDefault(x => x.GradeName == gradeHeader);
+                                        @if (filterGrade != null)
+                                        {
+                                            <td>@filterGrade.StudentCount</td>
+                                        }
+                                        else 
+                                        {
+                                            <td></td>
+                                        }
+                                    }
+                                    <td>@item.GrandTotal</td>
+                                </tr>
+                                ++index;
+                            }
+                            <tr class="bg-secondary-lighter">
+                                <td></td>
+                                <td><b>Grand Total</b></td>
+                                @for (int i = 0; i < Model.GradeHeader.Count; i++)
+                                {
+                                    var isEqual = false;
+                                    for (int j = 0; j < Model.Grades?.Count; j++)
+                                    {
+                                        if (Model.Grades[j].GradeName == Model.GradeHeader[i])
+                                        {
+                                            <td><b>@Model.Grades[j].StudentCount</b></td>
+                                            isEqual = true;
+                                        }
+                                    }
+
+                                    if (!isEqual)
+                                    {
+                                        <td></td>
+                                    }
+                                }
+                                <td><b>@Model.GrandTotal</b></td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="9">
+                                    <i class="text-danger">No Data</i>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</section>

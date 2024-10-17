@@ -1,0 +1,113 @@
+@model SlotViewModel
+
+<div class="block__title text-left height-3">
+    <header>@ViewData["Title"]</header>
+</div>
+
+<div class="block__body text-left height-3">
+    <div class="form-group">
+        <select class="chosen-select form-control js-cascade-registration-term" asp-for="RegistrationTermId" asp-items="ViewBag.RegistrationTerms">
+            <option selected disabled>Select</option>
+        </select>
+        <label>Registration Term<span class="text-danger">*</span></label>
+    </div>
+
+    <div class="form-group">
+        <input asp-for="Name" type="text" class="form-control">
+        <label>Name<span class="text-danger">*</span></label>
+    </div>
+
+    <div class="form-group">
+        <input asp-for="Description" type="text" class="form-control">
+        <label>Description</label>
+    </div>
+    
+    <div class="form-group">
+        <input asp-for="StartedAt" type="text" class="form-control js-date-time" autocomplete="off">
+        <label>Started Time</label>
+    </div>
+
+    <div class="form-group">
+        <input asp-for="EndedAt" type="text" class="form-control js-date-time" autocomplete="off">
+        <label>Ended Time</label>
+    </div>
+
+    <div class="form-group">
+        <select class="chosen-select form-control" asp-for="Type" asp-items="ViewBag.Types">
+            <option selected value="">Select</option>
+        </select>
+        <label>Type</label>
+    </div>
+
+    <div class="row">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" asp-for="IsSpecialSlot">
+            <label for="IsSpecialSlot">Special Slot</label>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" asp-for="IsActive">
+            <label for="IsActive">Active</label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <table id="js-add-registration-slot-condition" class="table table-bordered m-0">
+            <thead>
+                <tr>
+                    <th class="text-center w-50">#</th>
+                    <th>Registration Condition</th>
+                    <th class="text-center w-50">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if(Model.RegistrationSlotConditions == null || Model.RegistrationSlotConditions?.Count == 0)
+                {
+                    <tr>
+                        <td>1</td>
+                        <td>
+                            <select class="chosen-select form-control" name="RegistrationSlotConditions[0].RegistrationConditionId" asp-items="ViewBag.RegistrationConditions">
+                                <option selected disabled>Select</option>
+                            </select>
+                        </td>
+                        <td class="text-nowrap td-actions">
+                            <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                <i class="la la-trash delete"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    for(var i = 0 ;i < Model.RegistrationSlotConditions.Count ; i ++)
+                    {
+                        <tr>
+                            <td>@(i+1)</td>
+                            <td>
+                                <select class="chosen-select form-control" asp-for="RegistrationSlotConditions[i].RegistrationConditionId" asp-items="ViewBag.RegistrationConditions">
+                                    <option selected disabled>Select</option>
+                                </select>
+                            </td>
+                            <td class="text-nowrap td-actions">
+                                <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                    <i class="la la-trash delete"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<input name="returnUrl" type="hidden" value="@ViewBag.ReturnUrl">
+
+<div class="block__action container">
+    <div class="block__action-row">
+        <button type="submit" class="btn btn-mw-120 btn--primary">Save</button>
+        <a class="btn btn-mw-120 btn--cancel" href="@ViewBag.ReturnUrl">Cancel</a>
+    </div>
+</div>

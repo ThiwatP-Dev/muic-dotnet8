@@ -1,0 +1,40 @@
+@model GraduatingRequestViewModel
+
+<div class="block block--underline mb-0">
+    <form asp-controller="GraduatingRequest" asp-action="SaveChangeStatus" method="POST">
+        <input type="hidden" name="graduatingRequestId" value="@Model.GraduatingRequestId">
+        <div class="block__title">
+            <header>Change Status</header>
+        </div>
+
+        <div class="block__body">
+            <div class="row form-group">
+                <div class="col-12">
+                    <select class="chosen-select form-control" asp-for="Status" asp-items="@ViewBag.Statuses">
+                        <option selected disabled>Select</option>
+                    </select>
+                    <label>Status<span class="text-danger">*</span></label>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <div class="col-12">
+                    <input class="form-control" name="remark" type="text">
+                    <label>Remark</label>
+                </div>
+            </div>
+
+            <div class="block__action-row row">
+                <div class="col-6 form-check align-self-center text-left pl-0">
+                    <input class="form-check-input" asp-for="IsPublish" type="checkbox">
+                    <label for="IsPublish">Published</label>
+                </div>
+
+                <div class="col-6">
+                    <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+                    <a id="js-reset-data" class="btn btn-mw-120 btn--cancel rounded" href="javascript:void(0);" data-dismiss="modal">Close</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

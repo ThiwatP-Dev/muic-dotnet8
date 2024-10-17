@@ -1,0 +1,29 @@
+@model GradeTemplate
+@{
+    var index = 0;
+}
+
+@foreach(var item in Model.GradeIdsLong)
+{
+    <tr>
+        <td>@(index + 1)</td>
+        <td>
+            <input class="form-control__table js-grade-score" name="StandardGradingScores[@index].Minimum" data-score="min" disabled>
+            <input class="form-control__table js-grade-score" name="StandardGradingScores[@index].Minimum" data-score="min" hidden>
+        </td>
+        <td>
+            <input class="form-control__table js-grade-score" name="StandardGradingScores[@index].Maximum" data-score="max">
+        </td>
+        <td>
+            <select class="chosen-select form-control__table" name="StandardGradingScores[@index].GradeId" asp-items="@ViewBag.Grades" asp-for="@Model.GradeIdsLong[index]">
+                <option selected disabled value="">Select</option>
+            </select>
+        </td>
+        <td class="text-nowrap td-actions text-center">
+            <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                <i class="la la-trash delete"></i>
+            </a>
+        </td>
+    </tr>
+    ++index;
+}

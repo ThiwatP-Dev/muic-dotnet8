@@ -1,0 +1,43 @@
+@model QuestionnaireCourseGroupViewModel
+
+<div class="block__title">
+    <header>@ViewData["Title"]</header>
+</div>
+
+<div class="block__body">
+    <div class="row form-group">
+        <div class="col-12">
+            <input class="form-control" asp-for="Name" type="text">
+            <label>Name<span class="text-danger">*</span></label>
+            <span class="text-danger help-block" asp-validation-for="Name"></span>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-12">
+            <input class="form-control" asp-for="Description" type="text">
+            <label>Description</label>
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <div class="col-12">
+            <h4>Courses</h4>
+            <select class="chosen-select form-control" asp-for="CourseIds" asp-items="ViewBag.Courses" data-placeholder="Select" multiple></select>
+        </div>
+    </div>
+
+    <input asp-for="QuestionnaireCourseGroupId" type="hidden">
+    <input name="returnUrl" value="@ViewBag.ReturnUrl" type="hidden">
+
+    <div class="block__action-row row">
+        <div class="col-6 form-check align-self-center text-left pl-0">
+            <input class="form-check-input" asp-for="IsActive" type="checkbox">
+            <label for="IsActive">Active</label>
+        </div>
+        <div class="col-6">
+            <button class="btn btn-mw-120 btn--primary" asp-route-returnUrl="@ViewBag.ReturnUrl" type="submit">Save</button>
+            <a class="btn btn-mw-120 btn--cancel" href="@ViewBag.ReturnUrl">Cancel</a>
+        </div>
+    </div>
+</div>

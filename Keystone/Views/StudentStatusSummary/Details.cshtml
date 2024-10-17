@@ -1,0 +1,78 @@
+@model List<StudentStatusSummaryDetail>
+@{
+    var index = 1;
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+
+<section class="row">
+	<div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">
+            <a class="btn-back" href="@ViewBag.ReturnUrl">
+                <i class="la la-angle-double-left"></i>
+            </a>
+            <span>Back</span>
+        </h2>
+	</div>
+</section>
+
+<div class="row">
+    <div class="ks-page-header col-12">
+        <h2 class="ks-page-header__title">@ViewBag.Title</h2>
+        </ul>
+    </div>
+</div>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.Count() ?? 0))</header>
+            </div>
+
+            <div class="block__body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover js-report-table w-100x">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th>Code</th>
+                                <th class="text-center">Title</th>
+                                <th>Name</th>
+                                <th>Division</th>
+                                <th>Major</th>
+                                <th>Personal Email</th>
+                                <th class="text-center">Status</th>
+                                <th>Term</th>
+                                <th>Date</th>
+                                <th>Advisor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Any())
+                            {
+                                @foreach (var item in Model) 
+                                {
+                                    <tr>
+                                        <td>@index</td>
+                                        <td>@item.Code</td>
+                                        <td>@item.Title</td>
+                                        <td>@item.FullName</td>
+                                        <td>@item.FacultyName</td>
+                                        <td>@item.DepartmentName</td>
+                                        <td>@item.PersonalEmail</td>
+                                        <td>@item.StudentStatusText</td>
+                                        <td>@item.Term</td>
+                                        <td>@item.DateText</td>
+                                        <td>@item.AdvisorName</td>
+                                    </tr>
+
+                                    ++index;
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

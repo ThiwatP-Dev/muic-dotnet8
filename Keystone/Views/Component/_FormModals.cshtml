@@ -1,0 +1,50 @@
+<div class="modal fadeIn animated js-modal-form" id="form-modal" tabindex="-1" role="dialog" aria-labelledby="form-modal-label"
+  aria-hidden="true" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="block block--underline mb-0">
+        <div class="block__title">
+          <header>
+            Modal Form
+          </header>
+          <div class="tools">
+					  <a href="#" class="btn btn--white btn--circle" data-dismiss="modal">
+						  <i class="fas fa-times"></i>
+					  </a>
+				  </div>
+        </div>
+        <div class="block__body table-responsive">
+          <form id="js-form-v1" method="post">
+            <div class="form-group">
+              <input type="text" class="form-control" id="regular1">
+              <label for="regular1">Regular input</label>
+            </div>
+            <div class="form-group">
+              <input type="text" class="form-control" id="help1">
+              <label for="help1">Input with Help</label>
+              <p class="help-block">Help text</p>
+            </div>
+            <div class="form-group">
+              <select id="select1" name="select1" class="form-control">
+                <option value="">&nbsp;</option>
+                <option value="30">30</option>
+                <option value="40">40</option>
+                <option value="50">50</option>
+                <option value="60">60</option>
+                <option value="70">70</option>
+              </select>
+              <label for="select1">Select</label>
+            </div>
+          </form>
+        </div>
+        <!--end .block__body -->
+        <div class="block__action">
+          <div class="block__action-row">
+            <a href="#" class="btn btn-mw-120 btn--cancel" data-dismiss="modal">Cancel</a>
+            <a href="#" onclick="$('#js-form-v1').submit()" class="btn btn-mw-120 btn--success">Ok</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,42 @@
+@model IEnumerable<WithdrawalLog>
+
+<div class="block block--underline mb-0">
+    <div class="block__title">
+		<header>Withdrawal Logs</header>
+	</div>
+
+    <div class="block__body">
+        <div class="table-responsive">
+            <table class="table table-bordered m-0">
+                <thead>
+                    <tr>
+                        <th class="text-center">Status</th>
+                        <th>Created By</th>
+                        <th class="text-center">Created Date</th>
+                        <th>Remark</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.StatusText</td>
+                                <td>@item.CreatedByFullNameEn</td>
+                                <td>@item.CreatedAt.AddHours(7).ToString(StringFormat.ShortDateTime)</td>
+                                <td>@item.Remark</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="block__action">
+        <div class="block__action-row">
+            <a href="javascript:void(0);" data-dismiss="modal" class="btn btn-mw-120 btn--cancel rounded">Close</a>
+        </div>
+    </div>
+</div>

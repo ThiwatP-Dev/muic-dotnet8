@@ -1,0 +1,206 @@
+@model QuestionnaireApprovalViewModel
+@{ 
+    ViewData["Title"] = "Questionnaire Approval"; 
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Questionnaire Approval</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="QuestionnaireApproval" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group m-b-30">
+                        <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Academic Level<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="ViewBag.Terms">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Term<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-4">
+                            <select class="chosen-select form-control" asp-for="Criteria.Status" asp-items="ViewBag.Statuses">
+                                <option selected value="">All</option>
+                            </select>
+                            <label>Status</label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="ViewBag.Faculties">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Division</label>
+                        </div>
+                        <div class="col-4">
+                            <select class="chosen-select form-control js-cascade-filter-course-group" asp-for="Criteria.FilterCourseGroupId" asp-items="ViewBag.FilterCourseGroups">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Filter Course Group</label>
+                        </div>
+                        <div class="col-4">
+                            <input class="form-control" asp-for="Criteria.CourseCode">
+                            <label>Course</label>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        @* <div class="col-3">
+    						<select class="chosen-select form-control" asp-for="Criteria.IsRecalcScore" asp-items="ViewBag.YesNoAnswers" data-placeholder="Select"></select>
+                            <label>Recalculated Mean or SD<span class="text-danger">*Take a long time to calculate</span></label>
+                        </div> *@
+                        <div class="col align-self-end text-right">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0 js-search-btn" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+@if(Model != null)
+{
+    <section class="row">
+        <div class="col-12">
+            <form class="form-horizontal" asp-controller="QuestionnaireApproval" asp-action="ChangeStatus" method="POST">
+                <div class="block block--underline">
+                    <div class="block__title">
+                        <header>Course List (@(Model.Sections == null ? 0 : Model.Sections.Count))</header>
+                        <header class="float-right">
+                            <button class="btn btn-mw-120 btn--primary js-save-button" type="submit">Approve</button>
+                            @* <a class="btn btn-mw-120 btn--cancel" href="@ViewBag.ReturnUrl">Cancel</a> *@
+                        </header>
+                    </div>
+
+                    <div class="block__body">
+                        <input asp-for="TermId" type="hidden">
+                        <input name="returnUrl" value="@contextPath" type="hidden">
+                        <div class="table-responsive">
+                            <table id="js-questionnaire-approval" class="table table-bordered m-0 w-100x">
+                                <thead class="scroll-header">
+                                    <tr>
+                                        <th class="w-50 text-center no-print">
+                                            <input id="checkAll" class="js-check-all" name="IsChecked" type="checkbox">
+                                            <label class="mt-2 mb-0 m-l-2" for="checkAll"></label><br>
+                                            <span class="js-item-count">(0)</span>
+                                        </th>
+                                        <th>Course Code</th>
+                                        <th>Course Name</th>
+                                        <th class="text-center">Division</th>
+                                        <th class="text-center">Section</th>
+                                        <th class="text-center">Type</th>
+                                        <th>Title</th>
+                                        <th>Instructor</th>
+                                        <th class="text-center">Responses</th>
+                                        <th class="text-center">Enrolled Student</th>
+                                        <th class="text-center">Total Scores</th>
+                                        <th class="text-center">Total Scores (M+J)</th>
+                                        <th class="text-center">SD</th>
+                                        <th class="text-center">SD (M+J)</th>
+                                        <th >Status</th>
+                                        <th class="w-50 text-center no-print">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="js-items">
+                                    @if (Model != null && Model.Sections != null && Model.Sections.Any())
+                                    {
+                                        for (int i = 0; i < Model.Sections.Count; i++)
+                                        {
+                                            <tr class="js-suggestion-parent">
+                                                <td>
+                                                    @if (Model.Sections[i].Status != "p")
+                                                    {
+                                                        @if (Model.Sections[i].IsChecked)
+                                                        {
+                                                            <input id="Sections[@i]" class="form-check-input" name="Sections[@i].IsChecked" type="checkbox" value="true" checked>
+                                                        }
+                                                        else
+                                                        {
+                                                            <input id="Sections[@i]" class="form-check-input" name="Sections[@i].IsChecked" type="checkbox" value="true">
+                                                        }
+                                                        
+                                                    }
+                                                    <label class="m-0" for="Sections[@i]"></label>
+                                                    <input name="Sections[@i].IsChecked" value="false" type="hidden">
+                                                    <input asp-for="Sections[i].CourseId" type="hidden">
+                                                    <input asp-for="Sections[i].SectionId" type="hidden">
+                                                    <input asp-for="Sections[i].QuestionnaireApprovalId" type="hidden">
+                                                    <input asp-for="Sections[i].Status" type="hidden">
+                                                </td>
+                                                <td>@Model.Sections[i].Course</td>
+                                                <td>@Model.Sections[i].CourseName</td>
+                                                <td>@Model.Sections[i].Faculty</td>
+                                                <td>@Model.Sections[i].Section</td>
+                                                <td>@Model.Sections[i].SectionType</td>
+                                                <td>@Model.Sections[i].InstructorTitle</td>
+                                                <td>@Model.Sections[i].InstructorName</td>
+                                                <td>@Model.Sections[i].StudentServey</td>
+                                                <td>@Model.Sections[i].RegisteredStudents</td>
+                                                <td>@Model.Sections[i].Total</td>
+                                                <td>@Model.Sections[i].TotalRelatedSection</td>
+                                                <td>@Model.Sections[i].TotalSD</td>
+                                                <td>@Model.Sections[i].TotalRelatedSectionSD</td>
+                                                <td>@Model.Sections[i].StatusText</td>
+                                                <td class="text-nowrap td-actions">
+                                                    <a data-toggle="modal"
+                                                       data-target="#questionnaire-approval-log"
+                                                       data-value="@Model.Sections[i].QuestionnaireApprovalId">
+                                                        <i class="las la-history info"></i>
+                                                    </a>
+                                                    <a asp-controller="QuestionnaireReport"
+                                                       asp-action="Index"
+                                                       asp-route-academicLevelId="@Model.AcademicLevelId"
+                                                       asp-route-termId="@Model.TermId"
+                                                       asp-route-courseId="@Model.Sections[i].CourseId"
+                                                       asp-route-sectionId="@Model.Sections[i].SectionId"
+                                                       asp-route-instructorId="@Model.Sections[i].InstructorId"
+                                                       asp-route-returnUrl="@contextPath">
+                                                        <i class="la la-info info"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="16">
+                                                <i class="text-danger">No Data</i>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="block__action-row">
+                            <button class="btn btn-mw-120 btn--primary js-save-button" type="submit">Approve</button>
+                            @* <a class="btn btn-mw-120 btn--cancel" href="@ViewBag.ReturnUrl">Cancel</a> *@
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+}
+@section Modals {
+    <partial name="_DetailModal" model="new List<QuestionnaireApprovalLogDetail>()">
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/questionnaire-approval.js"></script>
+}

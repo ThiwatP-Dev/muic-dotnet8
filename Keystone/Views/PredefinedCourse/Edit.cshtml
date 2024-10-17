@@ -1,0 +1,15 @@
+@model PredefinedCourse
+@{
+    ViewData["Title"] = "Edit Predefined Course"; 
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <form class="ks-form container" asp-controller="PredefinedCourse" asp-action="Edit" method="POST">
+                @Html.AntiForgeryToken()
+                <partial name="_Form"/>
+            </form>
+        </div>
+    </div>
+</section>

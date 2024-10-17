@@ -1,0 +1,80 @@
+@model ExportProfileViewModel
+@{ 
+    ViewData["Title"] = "Export Student Profile";
+    var contextPath = $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+
+<section class="d-print-none">
+    <div class="block block--underline">
+        <div class="block__title">
+            <header>@ViewData["Title"]</header>
+        </div>
+        <form class="form-horizontal" asp-controller="ExportProfile" asp-action="Index" method="GET">
+            @Html.AntiForgeryToken()
+            <div class="block__body">
+                <div class="row form-group">
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels">
+                            <option selected disabled>Select</option>
+                        </select>
+                        <label>Academic Level<span class="text-danger">*</span></label>
+                    </div>
+                    <div class="col-3">
+                        <select class="chosen-select form-control js-cascade-admission-term" asp-for="Criteria.TermId" asp-items="ViewBag.Terms">
+                            <option selected value="">Select</option>
+                        </select>
+                        <label>Admission Term</label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control js-check-student-code" asp-for="Criteria.StudentCodeFrom" type="text">
+                        <label>Code From</label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control js-check-student-code" asp-for="Criteria.StudentCodeTo" type="text">
+                        <label>To</label>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-12 text-right">
+                        <button class="btn btn--primary btn-mw-120 m-r-5" type="submit">
+                            <i class="la la-search mr-2"></i>Search
+                        </button>
+                        <button class="btn btn-mw-120 btn--reset js-reset-btn" type="reset">
+                            Reset
+                        </button>
+                    </div>
+                </div>            
+            </div>
+        </form>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        @if (Model != null && Model.Results.Any())
+        {
+            <form class="form-horizontal" asp-controller="ExportProfile" asp-action="Download" method="POST">
+                <div class="block block--underline">
+                    <div class="block__body">
+                        <partial name="_Result" model="@Model"></partial>  
+
+                        <input name="returnUrl" type="hidden" value="@contextPath">
+
+                        <div class="block__action-row pb-0">
+                            <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">Download</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        }
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            CheckList.renderCheckbox('#js-export-profile');
+            $(".js-render-nicescroll").niceScroll();
+        })
+    </script>
+}

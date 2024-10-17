@@ -1,0 +1,68 @@
+/*------------------------------------
+    Paddings
+------------------------------------*/
+
+// Padding in Pixel
+$i: 1;
+@while $i <= 50 {
+  .p-a-#{$i} {
+    padding: $i*1px !important;
+  }
+  $i: $i + 1;
+}
+
+// Padding X in Pixel
+$i: 1;
+@while $i <= 50 {
+  .p-x-#{$i} {
+    padding-left: $i*1px !important;
+    padding-right: $i*1px !important;
+  }
+  $i: $i + 1;
+}
+
+// Padding Y in Pixel
+$i: 1;
+@while $i <= 50 {
+  .p-y-#{$i} {
+    padding-top: $i*1px !important;
+    padding-bottom: $i*1px !important;
+  }
+  $i: $i + 1;
+}
+
+// Padding Top in Pixel
+$i: 1;
+@while $i <= 50 {
+  .p-t-#{$i} {
+    padding-top: $i*1px !important;
+  }
+  $i: $i + 1;
+}
+
+// Padding Right in Pixel
+$i: 1;
+@while $i <= 50 {
+  .p-r-#{$i} {
+    padding-right: $i*1px !important;
+  }
+  $i: $i + 1;
+}
+
+// Padding Bottom in Pixel
+$i: 1;
+@while $i <= 50 {
+  .p-b-#{$i} {
+    padding-bottom: $i*1px !important;
+  }
+  $i: $i + 1;
+}
+
+// Padding Left in Pixel
+$i: 1;
+@while $i <= 50 {
+  .p-l-#{$i} {
+    padding-left: $i*1px !important;
+  }
+  $i: $i + 1;
+}

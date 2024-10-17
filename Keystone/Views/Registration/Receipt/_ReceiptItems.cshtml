@@ -1,0 +1,39 @@
+@model List<ReceiptItem>
+@{
+    var index = 1;
+}
+
+<table class="table table-bordered m-0">
+    <thead>
+        <tr>
+            <th class="text-center">#</th>
+            <th class="text-left">Invoice No.</th>
+            <th class="text-left">Course</th>
+            <th class="text-left">Section</th>
+            <th class="text-left">Fee Item</th>
+            <th class="text-right">Total Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@index</td>
+                <td><p class="text-left">@item.Invoice?.Number</p></td>
+                <td>@item.InvoiceItem?.Course?.Code</td>
+                <td>@item.InvoiceItem?.Section?.Number</td>
+                <td><p class="text-left">@item.InvoiceItem?.FeeItem?.CodeAndName</p></td>
+                <td><p class="text-right">@item.TotalAmountText</p></td>
+            </tr>
+            ++index;
+        }
+        <tr>
+            <tr>
+                <td class="text-right" colspan="5"><b>Total</b></td>
+                <td class="text-right"><b>@Model.Sum(x => x.TotalAmount).ToString(StringFormat.TwoDecimal)</b></td>
+            </tr>
+        </tr>
+    </tbody>
+</table>
+
+

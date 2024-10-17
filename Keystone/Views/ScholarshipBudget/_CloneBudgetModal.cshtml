@@ -1,0 +1,52 @@
+<div id="js-clone-budget-modal" class="modal fadeIn animated" tabindex="-1" role="dialog"
+     aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div id="modalWrapper">
+                <div class="block__title text-left">
+                    <header class="p-a-20 w-100x">Clone Budget</header>
+                </div>
+                <div class="block mb-0">
+                    <div class="block__body">
+                        <form asp-action="CloneScholarshipBudget" method="POST">
+                            <div class="row">
+                                <div class="col-5 pr-0">
+                                    <div class="form-group suggestion-parent">
+                                        <select id="js-scholarship" class="chosen-select form-control" name="fromScholarshipId" asp-items="ViewBag.Scholarships">
+                                            <option selected disabled>Select</option>
+                                        </select>
+                                        <label>Scholarship</label>
+                                    </div>
+                                </div>
+                                <div class="col-2 px-0 text-center align-self-center font-size-24">
+                                    <i class="la la-arrow-right"></i>
+                                </div>
+                                <div class="col-5 pl-0">
+                                    <div class="form-group suggestion-parent">
+                                        <select class="chosen-select form-control" name="toScholarshipId" asp-items="ViewBag.Scholarships">
+                                            <option selected disabled>Select</option>
+                                        </select>
+                                        <label>Target Scholarship</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr>
+                        
+                            <div id="js-budget-details">
+                                <partial name="_BudgetDetails" />
+                            </div>
+                            
+                            <div class="block__action">
+                                <div class="block__action-row">
+                                    <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+                                    <a id="js-reset-data" class="btn btn-mw-120 btn--cancel rounded" href="javascript:void(0);" data-dismiss="modal">Close</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div> 
+        </div>
+    </div>
+</div>

@@ -1,0 +1,34 @@
+@model ReportViewModel
+@{ 
+    ViewData["Title"] = "Grade Report Preview";
+}
+
+<section class="row">
+    <div class="ks-page-header">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</section>
+
+<section id="report-preview" data-model="@JsonConvert.SerializeObject(Model)">
+    <div class="block block__body">
+        <iframe id="js-print-preview" class="w-100x h-85vh"></iframe>
+    </div>
+</section>
+
+<section>
+    <div class="block__action-row pr-0">
+        <button id="js-confirm-print" class="btn btn-mw-120 btn--primary">
+            <i class="la la-print mr-2"></i>Print
+        </button>
+        <a class="btn btn-mw-120 btn--success" asp-action="Index">Finish</a>
+    </div>
+</section>
+
+<section id="js-temporary">
+    <canvas id="js-temporary-canvas" class="bg-danger-pastel" type="hidden" width="2090" height="825" hidden></canvas>
+    <canvas id="js-histogram-canvas" class="bg-danger-pastel" type="hidden" width="2090" height="825" hidden></canvas>
+</section>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/pdf-render/grading-report.js"></script>
+}

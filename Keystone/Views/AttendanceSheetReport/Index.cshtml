@@ -1,0 +1,224 @@
+@model AttendanceSheetReportViewModel
+@{
+    ViewData["Title"] = "Attendance Sheet";
+    var index = 1;
+}
+
+<section class="row">
+    <div class="col-12">
+        <div id="attendance-sheet-accordion1" class="d-print-none">
+            <div class="block block--underline">
+                <div class="block__title collapsed" data-toggle="collapse" data-parent="#attendance-sheet-accordion1" data-target="#attendance-sheet-accordion1-1">
+                    <header>Attendance Sheet</header>
+                    <div class="tools">
+                        <div class="btn-group">
+                            <a class="btn btn--white btn--circle">
+                                <i class="la la-angle-down"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="attendance-sheet-accordion1-1" class="collapse show" aria-expanded="true">
+                    <div class="block__body">
+                        <form asp-controller="AttendanceSheetReport" asp-action="Index" class="form-horizontal" method="GET">
+                            @Html.AntiForgeryToken()
+                            <div class="row form-group m-b-30">
+                                <div class="col-4">
+                                    <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels" data-placeholder="Select">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Academic Level<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-4">
+                                    <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="ViewBag.Terms" data-placeholder="Select">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Term<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-4">
+                                    <select class="chosen-select form-control js-cascade-course" asp-for="Criteria.CourseId" asp-items="ViewBag.Courses" data-placeholder="Select">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Course<span class="text-danger">*</span></label>
+                                </div>
+                            </div>
+
+                            <div class="row form-group m-b-30">
+                                <div class="col-4">
+                                    <select class="chosen-select form-control js-cascade-section" asp-for="Criteria.SectionId" asp-items="ViewBag.Sections" data-placeholder="Select">
+                                        <option selected value="">Select</option>
+                                    </select>
+                                    <label>Section Number<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-4">
+                                    <select class="chosen-select form-control js-cascade-attendance-instructor" asp-for="Criteria.InstructorId" asp-items="ViewBag.Instructors" data-placeholder="Select">
+                                        <option selected value="">Select</option>
+                                    </select>
+                                    <label>Instructor</label>
+                                </div>
+                                <div class="col-4">
+                                    <select class="chosen-select form-control" asp-for="Criteria.Type" asp-items="ViewBag.AttendanceTypes"></select>
+                                    <label>Attendance Type</label>
+                                </div>
+                            </div>
+
+                            <div class="row form-group">
+                                <div class="col-12 align-self-end text-right">
+                                    <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                        <i class="la la-search mr-2"></i>Search
+                                    </button>
+                                    <button class="btn btn-mw-120 btn--reset js-reset-btn mb-0" type="reset">
+                                        Reset
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (Model != null)
+{
+    <div class="row mb-3">
+        <div class="col-12">
+            <div class="text-right d-print-none">
+                <button class="btn btn--primary btn-mw-120" onclick="window.print()">
+                    <i class="la la-print mr-1 font-weight-800"></i> Print
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <section class="row">
+        <div class="col-12 font-size-16">
+            <div class="block block--underline">
+                @for (var j = 0; j < Model.PageCount; j++)
+                {
+                    <div class="block__title p-y-50">
+                        <header class="block__title-info">
+                            <div class="row">
+                                <div class="col-6 info-group">
+                                    <h3 class="mb-3 p-y-10"><b>International College, Mahidol University</b></h3>
+                                    <h3 class="mb-3">Class List for Instructor : @Model.InstructorFullName</h3>
+                                    <h3 class="mb-3">@Model.AcademicYear - @(Model.AcademicNextYear) : Trimester @Model.AcademicTerm</h3>
+                                    <h3>@Model.SubjectCodeAndName, Secton @Model.SectionNumber</h3>
+                                </div>
+                                <div class="col-6 info-group text-right">
+                                    <h3 class="mb-3 p-y-10">Generated: @Model.GeneratedDate</h3>
+                                    <h3 class="mb-3">(ATTENDANCE FORM)</h3>
+                                    <h3>Credit @Model.Credit</h3>
+                                </div>
+                            </div>
+                        </header>
+                    </div>
+
+                    @if (Model.Criteria.Type == "p")
+                    {
+                        <div class="block__body">
+                            <div class="row">
+                                @foreach (var item in Model.StudentList.Skip(j * 25).Take(25).ToList())
+                                {
+                                    <div class="col-5-block text-center m-b-30">
+                                        <div class="border p-3">
+                                            <img class="img-h125 img-cover" src="@(item.ProfileImageURL == null ? "/images/default-profile-m.png" : item.ProfileImageURL)">
+                                            <p></p>
+                                            <p>@item.StudentCode</p>
+                                            <p>@(item.Faculty != null ? $"{ item.Faculty } |" : "-") @(item.Department ?? "-")</p>
+                                            <p><partial name="_PaidStatus" model="@item.PaidStatus"></p>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            <div class="row">
+                                <div class="col-12 m-t-30 font-size-16">
+                                    Status <br>
+                                    Paid - Students have paid their tution fees.<br>
+                                    Unpaid - Students have NOT paid their fees. They will not be allowed to sit in the classes and examinations.
+                                </div>
+                            </div>
+                            <hr class="my-3" />
+                            <div class="page-break"></div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="block__body">
+                            <div class="table-responsive unset-overflow">
+                                <table class="table table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">No.</th>
+                                            <th class="text-center">Student Id</th>
+                                            <th class="text-center">Course</th>
+                                            <th class="text-center">Major</th>
+                                            <th>Student Name</th>
+                                            <th class="text-center">Status</th>
+                                            <th class="text-center d-print-none">Created Date</th>
+                                            @if (Model.StudentList.Count != 0)
+                                            {
+                                                for (int i = 1; i <= Model.TotalSectionDetail; i++)
+                                                {
+                                                    <th class="text-center">@(i)</th>
+                                                }
+                                            }
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (Model.StudentList.Count != 0)
+                                        {
+                                            foreach (var item in Model.StudentList.Skip(j * 25).Take(25).ToList())
+                                            {
+                                                <tr>
+                                                    <td class="w-50">@index</td>
+                                                    <td class="w-150">@item.StudentCode</td>
+                                                    <td class="w-130">@item.CourseCode</td>
+                                                    <td class="w-130">@(item.Department ?? "-")</td>
+                                                    <td>@item.FullNameEn</td>
+                                                    <td class="w-130">
+                                                        <partial name="_PaidStatus" model="@item.PaidStatus">
+                                                    </td>
+                                                    <td class="text-center d-print-none">@item.CreatedAtText</td>
+                                                    @for (int i = 0; i < Model.TotalSectionDetail; i++)
+                                                    {
+                                                        <td></td>
+                                                    }
+                                                </tr>
+                                                index++;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td colspan="24">
+                                                    <i class="text-danger">No Data</i>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-12 m-t-30 font-size-16">
+                                    Status <br>
+                                    Paid - Students have paid their tution fees.<br>
+                                    Unpaid - Students have NOT paid their fees.
+                                </div>
+                            </div>
+                            <hr class="my-3" />
+                            <div class="page-break"></div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </section>
+}
+
+@section Scripts {
+<script type="text/javascript" src="~/js/pages/attendance-sheet-report.js"></script>
+}

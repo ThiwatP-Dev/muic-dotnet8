@@ -1,0 +1,39 @@
+<div id="update-verification-modal" class="modal fadeIn animated" tabindex="-1" role="dialog"
+    aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div id="modalWrapper-edit-verification">
+                <form asp-controller="VerificationLetter" asp-action="Update" method="POST">
+                    <div class="block block--underline mb-0">
+                        <div class="block__title">
+                            <header>Update <span class="js-get-reference-number"></span> Received Information</header>
+                        </div>
+
+                        <input class="js-letter-id" name="id" type="hidden">
+
+                        <div class="block__body">
+                            <div class="row form-group">
+                                <div class="col-6">
+                                    <input class="form-control" name="receivedNumber">
+                                    <label>Received Number</label>
+                                </div>
+
+                                <div class="col-6">
+                                    <input class="form-control js-single-date" name="receivedAt">
+                                    <label>Received Date</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="block__action">
+                            <div class="block__action-row">
+                                <button class="btn btn-mw-120 btn--primary mb-0" type="submit">Save</button>
+                                <a class="btn btn-mw-120 btn--white mb-0" href="javascript:void(0);" data-dismiss="modal">Close</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div> 
+        </div>
+    </div>
+</div>

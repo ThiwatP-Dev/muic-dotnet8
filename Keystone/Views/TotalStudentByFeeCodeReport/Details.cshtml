@@ -1,0 +1,84 @@
+@model List<TotalStudentByFeeCodeDetail>
+@{
+    ViewData["Title"] = "Student By Fee Code";
+    var index = 1;
+}
+
+<section>
+    <div class="row">
+		<div class="ks-page-header col-12">
+			<h2 class="ks-page-header__title">
+				<a class="btn-back" href="@ViewBag.ReturnUrl">
+					<i class="la la-angle-double-left mr-1"></i>Back
+				</a>
+			</h2>
+		</div>
+	</div>
+    <div class="block block--underline">
+        <div class="block__title">
+            <header>@ViewBag.Term @ViewBag.FeeItem</header>
+        </div>
+        
+        <div class="block__body">
+            <table class="table table-bordered m-0 js-report-table w-100x">
+                <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th class="text-center">Date</th>
+                        <th class="text-right">Amount</th>
+                        <th>Code</th>
+                        <th class="text-center">Title</th>
+                        <th>Name</th>
+                        <th class="text-center">Fac. Code</th>
+                        <th>Division</th>
+                        <th class="text-center">Dep. Code</th>
+                        <th>Major</th>
+                        <th class="text-center">Citizen Number</th> 
+                        <th>Passport</th>
+                        <th class="text-center">Gender</th>
+                        <th>Birth Date</th>
+                        <th>Phone Number</th>
+                        <th>E-mail</th>
+                        <th>Nationality</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null)
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@index</td>
+                                <td>@item.CreatedDate</td>
+                                <td>@item.Amount</td>
+                                <td>@item.StudentCode</td>
+                                <td>@item.Title</td>
+                                <td>@item.StudentName</td>
+                                <td>@item.FacultyCode</td>
+                                <td>@item.Faculty</td>
+                                <td>@item.DepartmentCode</td>
+                                <td>@item.Department</td>
+                                <td>@item.CitizenNumber</td>
+                                <td>@item.Passport</td>
+                                <td>@item.Gender</td>
+                                <td>@item.BirthDate</td>
+                                <td>@item.Phone</td>
+                                <td>@item.Email</td>
+                                <td>@item.Nationality</td>
+                            </tr>
+                            ++index;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td class="text-center" colspan="17">
+                                <i class="text-danger">No data</i>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

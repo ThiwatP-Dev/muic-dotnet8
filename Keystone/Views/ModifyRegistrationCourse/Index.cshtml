@@ -1,0 +1,172 @@
+@model ModifyRegistrationCourseViewModel
+@{ 
+    ViewData["Title"] = "Modify Registration Course";
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>@ViewData["Title"]</header>
+            </div>
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="ModifyRegistrationCourse" asp-action="Index" method="GET">
+                    <div class="row form-group mb-0">
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.Code" type="text">
+                            <label>Student Code<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3 align-self-end text-right text-nowrap">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <a id="js-reset-btn" class="btn btn-mw-120 btn--reset" asp-action="Index">Reset</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (Model != null && Model.CouresByTerms != null && Model.CouresByTerms.Any())
+{
+    <section class="row">
+        <div class="col-12"> 
+            <div class="block block--underline">
+                <div class="block__body">
+                    <div class="d-flex align-items-center justify-content-sm-between">
+                        <div class="media m-b-10">
+                            <div class="d-flex m-r-20">
+                                <img class="img-h100 img-cover" src="@Model.Student.ProfileImageURL" alt="Image Not Found" onerror="this.onerror=null;this.src='/images/default-profile-m.png';">
+                            </div>
+                            <div class="media-body">
+                                <h3 class="mb-1 text-uppercase text-truncate">@($"{ Model.Student.StudentCode } - { Model.Student.FullNameEn }")</h3>
+                                <div class="d-block">
+                                    <span class="color-primary font-size-14">Curriculum Version: @($"{ Model.Student.CurriculumVersionCodeAndName } ( { Model.Student.FacultyNameEn }, { Model.Student.DepartmentNameEn } )")</span>
+                                </div>
+                                <div class="d-block">
+                                    <span class="color-primary font-size-14 text-uppercase mr-2">gpa:</span> @Model.Student.GPAString
+                                    <span class="color-primary font-size-14 text-uppercase mx-3">Credit:</span> @Model.Student.CreditComp
+                                    <span class="color-primary font-size-14 text-uppercase mx-3">Status:</span> <span class='@Model.Student.StudentStatusText.Equals("Delete") || @Model.Student.StudentStatusText.Equals("Blacklist") ? "text-danger" : "")'>@Model.Student.StudentStatusText</span>
+                                    <span class="color-primary font-size-14 text-uppercase mx-3"><partial name="_BooleanActive" model="@Model.Student.IsActive"></span>
+                                </div>
+                                <div class="d-block">
+                                    <span class="color-primary font-size-14 text-uppercase mx-0">Scholarship:</span> @Model.Student.CurrentScholarshipNameEn
+                                    @if (!string.IsNullOrEmpty(Model.Student.AdvisorFullNameEn))
+                                    {
+                                        <span class="color-primary font-size-14 text-uppercase mx-3">Advisor:</span> @Model.Student.AdvisorFullNameEn
+                                    }
+
+                                    <span class="text-danger font-size-14 text-uppercase mx-3">@(Model.Student.IsCurrentStudentProbation.Equals(true) ? "Probation" : "")</span>
+                                    <span class="text-danger font-size-14 text-uppercase mx-3">@(Model.Student.IsStudentExtended.Equals(true) ? "Extended Student" : "")</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    foreach (var item in Model.CouresByTerms)
+    {
+        <section class="row">
+            <div class="col-12">
+                <div class="block block--underline">
+                    <div class="block__title">
+                        <header>@item.TermText</header>
+                    </div>
+                    <div class="block__body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover w-100x">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">Code</th>
+                                        <th>Course</th>
+                                        <th class="text-center">Credit</th>
+                                        <th class="text-center">Section</th>
+                                        <th class="text-center">Grade</th>
+                                        <th class="text-center">Grade Published</th>
+                                        <th class="text-center">Paid</th>
+                                        <th class="text-center">Star</th>
+                                        <th class="text-center">Transfered</th>
+                                        <th class="text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (item.Courses != null && item.Courses.Any())
+                                    {
+                                        foreach (var course in item.Courses)
+                                        {
+                                            <tr>
+                                                <td>@course.Code</td>
+                                                <td>@course.NameEn</td>
+                                                <td>@course.CreditText</td>
+                                                <td>@course.SectionNumber</td>
+                                                <td>@course.GradeName</td>
+                                                <td>
+                                                    <partial name="_BooleanResult" model="@course.IsGradePublished"></partial>
+                                                </td>
+                                                <td>
+                                                    <partial name="_BooleanResult" model="@course.IsPaid"></partial>
+                                                </td>
+                                                <td>
+                                                    <partial name="_BooleanResult" model="@course.IsStarCourse"></partial>
+                                                </td>
+                                                <td>
+                                                    <partial name="_BooleanResult" model="@course.IsTransfer"></partial>
+                                                </td>
+                                                <td class="text-nowrap td-actions">
+                                                    <a data-toggle="modal"
+                                                        data-target="#change-course-log-modal"
+                                                        data-value="@course.RegistrationCourseId">
+                                                        <i class="la la-info info"></i>
+                                                    </a>
+                                                    <a asp-controller="ModifyRegistrationCourse" 
+                                                        asp-action="Edit" 
+                                                        asp-route-id="@course.RegistrationCourseId"
+                                                        asp-route-returnUrl="@contextPath">
+                                                        <i class="la la-edit edit"></i>
+                                                    </a>
+                                                    @if (course.IsTransfer)
+                                                    {
+                                                        <a data-toggle="modal" 
+                                                           data-target="#delete-confirm-modal" 
+                                                           data-controller="ModifyRegistrationCourse" 
+                                                           data-action="Delete" 
+                                                           data-value="@course.RegistrationCourseId"
+                                                           data-return-url="@contextPath">
+                                                            <i class="la la-trash delete"></i>
+                                                        </a>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td class="text-center" colspan="9">
+                                                <i class="text-danger">No data</i>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+}
+
+@section Modals {
+    <partial name="_DeleteConfirmModals">
+    <partial name="_LogsModal" model="null">
+}
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/modify-registration-course.js"></script>
+}

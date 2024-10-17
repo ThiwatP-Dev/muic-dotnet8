@@ -1,0 +1,138 @@
+@model PagedResult<TotalWithdrawalReportViewModel>;
+@{ 
+    ViewData["Title"] = "Total Withdrawal Report";
+    var recordNumber = Model?.FirstRowOnPage;
+}
+
+<section class="row">
+    <div class="col-12">
+        <div id="total-withdrawal-accordion1" class="panel-group">
+            <div class="block block--underline d-print-none">
+                <div class="block__title collapsed" data-toggle="collapse" data-parent="#total-withdrawal-accordion1" data-target="#total-withdrawal-accordion1-1">
+                    <header>@ViewData["Title"]</header>
+                    <div class="tools">
+                        <a class="btn btn--white btn--circle">
+                            <i class="la la-angle-down"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="total-withdrawal-accordion1-1" class="collapse show" aria-expanded="true">
+                    <div class="block__body">
+                        <form class="form-horizontal" asp-action="Index" asp-controller="TotalWithdrawalReport" method="GET">
+                            @Html.AntiForgeryToken()
+                            <div class="row form-group m-b-30">
+                                <div class="col-4">
+                                    <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="@ViewBag.AcademicLevels">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Academic Level<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-4">
+                                    <select class="chosen-select form-control js-cascade-term" asp-for="Criteria.TermId" asp-items="@ViewBag.Terms">
+                                        <option selected disabled>Select</option>
+                                    </select>
+                                    <label>Term<span class="text-danger">*</span></label>
+                                </div>
+                                <div class="col-4 align-self-end text-right text-nowrap">
+                                    <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">
+                                        <i class="la la-search mr-2"></i>
+                                        <span class="bold">Search</span>
+                                    </button>
+                                    <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                        Reset
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="row form-group">
+                                <div class="col-12">
+                                    <h4 class="font-size-default m-y-4">Courses</h4>
+                                    <select class="chosen-select form-control js-cascade-course" asp-for="Criteria.CourseIds"
+                                            asp-items="@ViewBag.Courses" data-placeholder="Select" multiple></select>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (Model != null)
+        {
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="block block--underline">
+                        <div class="block__title">
+                            <header>Total Withdrawal by Course</header>
+                            <div class="tools">
+                                <a id="withdrawal-file-name" hidden></a>
+                                <input class="withdrawal-worksheet-name" value="Total Withdrawal Report @DateTime.Now.ToString(StringFormat.ShortDate).Replace("/", "-")" hidden>
+                                <button class="btn btn-mw-120 btn--primary mb-0 js-export-excel">Export Excel</button>
+                            </div>
+                        </div>
+    
+                        <div class="block__body">
+                            <div class="table-responsive">
+                                <table id="withdrawal-report-export" class="table table-bordered m-0">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">#</th>
+                                            <th>Course Code</th>
+                                            <th>Course Name</th>
+                                            <th class="text-center">Course Credit</th>
+                                            <th class="text-center">Section</th>
+                                            <th>Lecturer</th>
+                                            <th class="text-center">Enrollment</th>
+                                            <th class="text-center">Widthdrawl</th>
+                                            <th class="text-center">Student Left</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (Model.Results.Any()) 
+                                        {
+                                            foreach (var item in Model.Results)
+                                            {
+                                                <tr>
+                                                    <td>@recordNumber</td>
+                                                    <td>@item.CourseCode</td>
+                                                    <td>@item.CourseNameEn</td>
+                                                    <td>@item.CourseCredit</td>
+                                                    <td>@item.SectionNumber</td>
+                                                    <td>@item.Instructor</td>
+                                                    <td>@item.EnrollmentStudent</td>
+                                                    <td>@item.WithdrawalStudent</td>
+                                                    <td>@item.LeftOverStudent</td>
+                                                </tr>
+                                                recordNumber++;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td class="text-center" colspan="7">NO DATA</td>
+                                            </tr>
+                                        }
+                                    </tbody>   
+                                    <tfoot>
+                                        <tr> 
+                                            <td class="text-center" colspan="6">Total</td>
+                                            <td class="text-center">@ViewBag.TotalEnrollmentStudent</td>
+                                            <td class="text-center">@ViewBag.TotalWithdrawalStudent</td>
+                                            <td class="text-center">@ViewBag.TotalLeftOverStudent</td>
+                                        </tr>
+                                    </tfoot> 
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @(await Component.InvokeAsync<PagerViewComponent>(Model))
+        }
+    </div>
+</section>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/total-withdrawal-report.js"></script>
+}

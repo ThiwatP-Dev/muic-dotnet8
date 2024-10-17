@@ -1,0 +1,13 @@
+@model ReportViewModel
+@{ 
+    ViewData["Title"] = "Substitute ID Card Preview";
+    var detail = Model.Body as StudentIdCardDetail;
+}
+<img id="js-default-student" src="@(detail.ProfileImageURL == null ? "/images/default-profile-m.png" : detail.ProfileImageURL)" onerror="this.src = '/images/default-profile-m.png'" hidden>
+<img id="js-default-logo" src="~/images/logo-muic.png" hidden>
+
+<partial name="Preview/_PreviewHeader" model="@Model">
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/pdf-render/student-id-card-substitute.js"></script>
+}

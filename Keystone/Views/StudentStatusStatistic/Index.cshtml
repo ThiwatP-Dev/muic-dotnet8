@@ -1,0 +1,180 @@
+@model StudentStatusStatisticViewModel
+@{
+    ViewData["Title"] = "Student Status Statistic";
+    var index = 1;
+}
+
+<div class="row">
+    <div class="ks-page-header col-lg-12">
+        <h2 class="ks-page-header__title">@ViewData["Title"]</h2>
+    </div>
+</div>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <form asp-controller="StudentStatusStatistic" asp-action="Index" class="form-horizontal" method="GET">
+                @Html.AntiForgeryToken()
+                <div class="block__body">
+                    <div class="row form-group m-b-30">
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId" asp-items="ViewBag.AcademicLevels" data-placeholder="Select">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Academic Level<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId" asp-items="ViewBag.Faculties" data-placeholder="Select">
+                                <option selected>Select</option>
+                            </select>
+                            <label>Division</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentId" asp-items="ViewBag.Departments" data-placeholder="Select">
+                                <option selected>Select</option>
+                            </select>
+                            <label>Major</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.Status" asp-items="ViewBag.StudentStatuses" data-placeholder="Select">
+                                <option selected disabled>Select</option> 
+                            </select>
+                            <label>Student Status<span class="text-danger">*</span></label>
+                        </div>
+                    </div>
+                    
+                    <div class="row form-group">
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-admission-term" asp-for="Criteria.StartTermId" asp-items="ViewBag.AdmissionTerms" data-placeholder="Select">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Admission Term From<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-admission-term" asp-for="Criteria.EndTermId" asp-items="ViewBag.AdmissionTerms" data-placeholder="Select">
+                                <option selected disabled>Select</option>
+                            </select>
+                            <label>Admission Term To<span class="text-danger">*</span></label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.Active" asp-items="ViewBag.ActiveStatuses"></select>
+                            <label>Status</label>
+                        </div>
+                        <div class="col-3 align-self-center text-right">
+                            <button class="btn btn-mw-120 btn--primary m-r-5 mb-0" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button type="reset" class="btn btn-mw-120 btn--reset mb-0 js-reset-btn">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        @if (Model != null && Model.Students.Any())
+        {
+            var termReport = Model ?? null;
+            <div class="block block--underline">
+                <div class="block__title">
+                    <header>Search Result (@(Model?.Students?.Count() ?? 0))</header>
+                </div>
+
+                <div class="block__body">
+                    <table class="table table-bordered m-0 js-report-table w-100x">
+                        <thead>
+                            <tr>
+                                <th class="text-center" rowspan="2">#</th>
+                                <th rowspan="2">Division</th>
+                                <th class="text-center" rowspan="2">Code</th>
+                                <th rowspan="2">Major</th>
+                                @foreach (var item in termReport.TermHeader)
+                                {
+                                    <th class="text-center" colspan="@item.Terms.Count">@item.Year</th>
+                                }
+                                <th class="text-center" rowspan="2"><b>Total</b></th>
+                            </tr>
+                            <tr>
+                                @foreach (var item in termReport.TermHeader)
+                                {
+                                    foreach (var detail in item.Terms)
+                                    {
+                                        <th class="text-center">@detail</th>
+                                    }
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Students.Any())
+                            {
+                                var currentRow = 1;
+                                foreach (var item in Model.Students)
+                                {
+                                    foreach (var department in item.StudentStatusStatisticDepartments)
+                                    {
+                                        <tr>
+                                            @if (currentRow == 1)
+                                            {
+                                                <td rowspan="@(item.StudentStatusStatisticDepartments.Count + 1)">@index</td>
+                                                <td rowspan="@(item.StudentStatusStatisticDepartments.Count + 1)">@item.Faculty</td>
+                                            }
+                                            
+                                            <td>@department.Code</td>
+                                            <td>@department.Department</td>
+                                            @foreach (var detail in termReport.TermHeader)
+                                            {
+                                                for (int i = 0; i < detail.Terms.Count; i++)
+                                                {
+                                                    var isEqual = false;
+                                                    for (int j = 0; j < department.StudentStatusStatisticReportCounts.Count; j++)
+                                                    {
+                                                        if (department.StudentStatusStatisticReportCounts[j].Year == @detail.Year && department.StudentStatusStatisticReportCounts[j].Term == @detail.Terms[i])
+                                                        {
+                                                            <td class="text-center">@department.StudentStatusStatisticReportCounts[j].NumberOfStudent</td>
+                                                            isEqual = true;
+                                                        }
+                                                    } 
+                                                    if (!isEqual) {
+                                                        <td class="text-center">0</td>
+                                                    }
+                                                }
+                                            }
+                                            <td class="text-center"><b>@department.NumberOfStudentInDepartment</b></td>
+                                        </tr>
+                                        ++currentRow;
+                                    }
+                                    <tr class="table-active">
+                                        <td colspan="2" class="text-center"><b>Total</b></td>
+                                        @foreach (var detail in termReport.TermHeader)
+                                        {
+                                            for (int i = 0; i < detail.Terms.Count; i++)
+                                            {
+                                                var isEqual = false;
+                                                for (int j = 0; j < item.TotalStudentInTerm.Count; j++)
+                                                {
+                                                    if (item.TotalStudentInTerm[j].Year == @detail.Year && item.TotalStudentInTerm[j].Term == @detail.Terms[i])
+                                                    {
+                                                        <td class="text-center"><b>@item.TotalStudentInTerm[j].NumberOfStudent</b></td>
+                                                        isEqual = true;
+                                                    }
+                                                } 
+                                                if (!isEqual) {
+                                                    <td class="text-center"><b>0</b></td>
+                                                }
+                                            }
+                                        }
+                                        <td class="text-center"><b>@item.NumberOfStudentInFaculty</b></td>
+                                    </tr>
+                                    ++index;
+                                    currentRow = 1;
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                @(await Component.InvokeAsync<PagerViewComponent>(Model))
+            </div>
+        }
+    </div>
+</section>

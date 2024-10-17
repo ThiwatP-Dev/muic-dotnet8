@@ -1,0 +1,73 @@
+@model GradingReportByCurriculumViewModel
+@{
+    ViewData["Title"] = "Grading Report By Curriculum";
+}
+
+<section class="d-print-none">
+    <div class="block block--underline">
+        <div class="block__title">
+            <header>@ViewData["Title"]</header>
+        </div>
+        <form class="form-horizontal" asp-controller="GradingReportByCurriculum" asp-action="Index" method="GET">
+            @Html.AntiForgeryToken()
+            <div class="block__body">
+                <div class="row form-group mb-0">
+                    <div class="col-3">
+                        <input class="form-control" asp-for="Criteria.Code" type="text">
+                        <label>Student Code</label>
+                    </div>
+                        
+                    <div class="col-9 align-self-end text-right text-nowrap">
+                        <button class="btn btn--primary btn-mw-120 m-r-5" type="submit">
+                            <i class="la la-search mr-2"></i>Search
+                        </button>
+                        <button class="btn btn-mw-120 btn--reset js-reset-btn" type="reset">
+                            Reset
+                        </button>
+                    </div>
+                </div>       
+            </div>
+        </form>
+    </div>
+</section>
+
+<section>
+    <div class="block pt-3 px-2">
+        <div class="tabs-scroller float-left"><i class="la la-angle-double-left"></i></div>
+        <div class="tabs-scroller float-right"><i class="la la-angle-double-right"></i></div>
+        <div class="nav-tabs-wrapper">
+            <ul class="nav nav-tabs ks-tabs" role="tablist">
+                <li class="nav-item">
+                    <a id="nav-link-0" class="nav-link active" href="#nav-tab-0" data-toggle="tab">
+                        Curriculum
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a id="nav-link-1" class="nav-link" href="#nav-tab-1" data-toggle="tab">
+                        Grade
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="tab-content">
+            <div id="nav-tab-0" class="tab-pane fadeIn faster animated show active" role="tabpanel">
+                @if (Model != null)
+                {
+                    <partial name="~/Views/GraduatingRequest/_CurriculumVerification.cshtml" model="Model.GraduatingRequest"></partial>
+                }
+                
+            </div>
+            <div id="nav-tab-1" class="tab-pane fadeIn faster animated" role="tabpanel">
+                @if (Model != null)
+                {
+                    <partial name="~/Views/Student/_Registration.cshtml" model="Model.StudentRegistrationCoursesViewModels"></partial>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/grading-curriculum.js"></script>
+    <script type="text/javascript" src="~/js/pages/grading-curriculum-export.js"></script>
+}

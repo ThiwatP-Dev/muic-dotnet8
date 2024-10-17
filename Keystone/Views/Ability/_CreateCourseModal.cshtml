@@ -1,0 +1,26 @@
+
+@{
+    var searchReturnUrl = ViewBag.ReturnUrl;
+}
+
+<div id="ability-course-modal-create" class="modal fadeIn animated js-details-modal" tabindex="-1" role="dialog"
+    aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="block block--underline mb-0">
+                <div class="block__title">
+                    <header>Create Course in Ability</header>
+                </div>
+                <div class="block__body">
+                    <section class="row">
+                        <form class="ks-form container py-0" asp-controller="Ability" asp-action="CreateCourse" 
+                              asp-route-returnUrl="@searchReturnUrl" method="POST">
+                            @Html.AntiForgeryToken()
+                            <partial name="_Course.cshtml" model="new AbilityCourseViewModel();"/>
+                        </form>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,161 @@
+@model Curriculum
+@{
+	ViewData["Title"] = @Model.NameEn;
+    var index = 1;
+	var searchReturnUrl = ViewBag.ReturnUrl;
+}
+<section>
+	<div class="row">
+		<div class="ks-page-header col-lg-12">
+			<h2 class="ks-page-header__title">
+				<a class="btn-back" href="@searchReturnUrl">
+					<i class="la la-angle-double-left mr-1"></i>Back
+				</a>
+			</h2>
+		</div>
+	</div>
+
+	<div class="block block--underline">
+		<div class="block__title">
+			<header>
+				<h3 class="ks-page-header__title">@Model.NameEn</h3>
+			</header>
+		</div>
+		<div class="block__body">
+			<div class="row form-group m-b-30">
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Reference Code</div>
+					<div class="form-control-plaintext">@Model.ReferenceCode</div>
+				</div>
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Academic Level</div>
+					<div class="form-control-plaintext">@Model.AcademicLevel?.NameEn</div>
+				</div>
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">English Abbreviation</div>
+					<div class="form-control-plaintext">@Model.AbbreviationEn</div>
+				</div>
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Thai Abbreviation</div>
+					<div class="form-control-plaintext">@Model.AbbreviationTh</div>
+				</div>
+			</div>
+
+			<div class="row form-group m-b-30">
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Division</div>
+					<div class="form-control-plaintext">@Model.Faculty?.NameEn</div>
+				</div>
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Major</div>
+					<div class="form-control-plaintext">@Model.Department?.NameEn</div>
+				</div>
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Type</div>
+					<div class="form-control-plaintext">@Model.TermTypeText</div>
+				</div>
+				<div class="col-3">
+					<div class="form-control-label d-flex align-items-center">Minimun GPA</div>
+					<div class="form-control-plaintext">@Model.MinimumGPAText</div>
+				</div>
+			</div>
+
+			<div class="row form-group mb-0">
+				<div class="col-12 m-b-30">
+					<div class="form-control-label d-flex align-items-center">English Description</div>
+					<div class="form-control-plaintext">@Model.DescriptionEn</div>
+				</div>
+				<div class="col-12">
+					<div class="form-control-label d-flex align-items-center">Thai Description</div>
+					<div class="form-control-plaintext">@Model.DescriptionTh</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<!--end main info -->
+
+<section id="curriculum-detail">
+	<div class="block block--underline">
+		<div class="block__title">
+			<header>
+				<h3 class="ks-page-header__title">Curriculum Version</h3>
+			</header>
+			<div class="tools">
+				<a class="btn btn--primary mb-0" asp-controller="CurriculumVersion" asp-action="Create" asp-route-curriculumId="@Model.Id" asp-route-returnUrl="@ViewBag.ReturnUrl">
+					<i class="la la-plus mr-1 font-weight-800"></i>Add Version
+				</a>
+				<a class="btn btn--primary mb-0" asp-controller="CurriculumVersion" asp-action="CreateCopyVersion" asp-route-curriculumId="@Model.Id" asp-route-masterCurriculumId="@Model.Id" asp-route-academicLevelId="@Model.AcademicLevelId" asp-route-returnUrl="@ViewBag.ReturnUrl">
+					<i class="la la-plus mr-1 font-weight-800"></i>Copy Curriculum Version
+				</a>
+			</div>
+		</div>
+		<div class="block__body">
+        	<table id="js-curriculum-search" class="table table-bordered m-0">
+        	    <thead>
+        	        <tr>
+        	            <th class="text-center">#</th>
+						<th>Curriculum ID</th>
+        	            <th>English Name</th>
+						<th>Thai Name</th>
+						<th>Open Term</th>
+						<th>Total Credit</th>
+        	            <th>Approved Date</th>
+        	            <th class="text-center">Lumpsum</th>
+        	            <th class="text-center">Status</th>
+        	            <th class="text-center">Action</th>
+        	        </tr>
+        	    </thead>
+        	    <tbody>
+        	        @foreach(var item in Model.CurriculumVersions) 
+        	        {
+        	            <tr>
+							<td>@index</td>
+							<td>@item.Code</td>
+        	                <td>@item.NameEn</td>
+							<td>@item.NameTh</td>
+							<td>@item.OpenedTerm?.TermText</td>
+							<td>@item.TotalCredit</td>
+							<td>@item.ApprovedDateText</td>
+                            <td>
+                                <partial name="_BooleanResult" model="@item.IsLumpsumPayment">
+                            </td>
+        	                <td>
+        	                    <partial name="_BooleanActive" model="@item.IsActive">
+        	                </td>
+	
+        	                <td class="text-nowrap td-actions">
+        	                    <a asp-controller="CurriculumVersion"
+        	                       asp-action="Details"
+        	                       asp-route-id="@item.Id"
+								   asp-route-returnUrl="@searchReturnUrl">
+        	                        <i class="la la-info info"></i>
+        	                    </a>
+								<a asp-controller="CurriculumVersion" 
+                                   asp-action="Edit" 
+								   asp-route-Id="@item.Id"
+								   asp-route-returnUrl="@ViewBag.ReturnUrl">
+                                    <i class="la la-edit edit"></i>
+                                </a>
+								<a data-toggle="modal" 
+                                   data-target="#delete-confirm-modal" 
+                                   data-controller="CurriculumVersion" 
+                                   data-action="Delete" 
+                                   data-value="@item.Id"
+								   data-return-url="@ViewBag.ReturnUrl">
+						            <i class="la la-trash delete"></i>
+					            </a>
+        	                </td>
+        	            </tr>
+        	            ++index;
+        	        }
+        	    </tbody>
+        	</table>
+		</div>
+	</div>
+</section>
+<!--end tab info -->
+
+@section Modals {
+	<partial name="_DeleteConfirmModals">
+}

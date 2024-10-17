@@ -1,0 +1,68 @@
+<div class="row form-group">
+    <div class="col-6">
+        <input class="form-control">
+        <label>Plan Name<span class="text-danger">*</span></label>
+    </div>
+</div>
+
+<hr>
+
+<div class="row form-group">
+    <div class="col-10 d-flex">
+        <div class="col-2 p-0 align-self-center">
+            <header class="color-primary font-size-17 font-weight-700">Course List</header>
+        </div>
+        <div class="col-10 pr-0">
+            <select id="ajax-course" asp-items="@ViewBag.Courses" class="chosen-select form-control" data-placeholder="Select">
+                <option selected disabled>Select</option>
+            </select>
+            <label>Course</label>
+        </div>
+    </div>
+    
+    <div class="col-2 align-self-center text-right">
+        <a id="js-add-course" class="btn btn-mw-120 btn--primary">
+            <i class="la la-plus mr-1"></i>Add
+        </a>
+    </div>
+</div>
+
+<div class="table-responsive mb-3">
+    <table id="js-plan-courses" class="table table-bordered m-0">
+        <thead>
+            <tr>
+                <th class="w-75">Code</th>
+                <th class="w-150">Course</th>
+                <th class="text-center w-75">Credit</th>
+                <th class="text-center w-75">Registration Credit</th>
+                <th class="text-center w-100">Selected Section</th>
+                <th class="text-center w-75">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <partial name="_CourseList"/>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td class="text-right border-right-0" colspan="2">Total : </td>
+                <td id="js-total-credit" class="text-center border-right-0 border-left-0">0</td>
+                <td id="js-total-registration-credit" class="text-center border-right-0 border-left-0">0</td>
+                <td class="border-left-0" colspan="2"></td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+<div class="d-flex justify-content-between">
+    <div class="align-self-center">
+        <b>Selected Schedule:</b>
+        <span id="js-selected-schedule"><i class="color-danger">No selected schedule</i></span>
+    </div>
+    <div class="block__action-row pr-0">
+        <input id="filter-seat-available" class="form-check-input" type="checkbox" value="0"/>
+        <label class="enable-item mr-3" for="filter-seat-available">Only Available Seat</label>
+        <a id="js-generate-schedule" class="btn btn-mw-120 btn--primary mr-2" asp-action="ScheduleList">
+            <i class="la la-calendar-o mr-1"></i>Generate Schedule
+        </a>
+    </div>
+</div>

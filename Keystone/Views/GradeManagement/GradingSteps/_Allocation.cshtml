@@ -1,0 +1,122 @@
+@model GradeManagementViewModel
+
+<div class="block block--underline mb-0">
+    <div class="block__body">
+        <div class="row form-group mb-3">
+            <div class="col-9">
+                <div class="row form-group mb-3">
+                    <div class="col-4">
+                        @* <input id="js-score-limit" class="form-control" value='@(Model.Allocations == null || !Model.Allocations.Any() ? String.Empty : Model.Allocations.Sum(x => x.FullScore).ToString("#,##0.00"))'> *@
+                        <label>Max Score</label>
+                    </div>
+                    
+                    <div class="col-8 d-flex align-items-end justify-content-end">
+                        <a class="btn btn-mw-120 btn--primary mr-2 mb-0 text-nowrap" href="#!" 
+                        data-toggle="modal"
+                        data-target="#allocation-template-modal">
+                            <i class="la la-list-alt mr-2"></i>Allocation Template
+                        </a>
+                        <a class="btn btn-mw-120 btn--primary js-add-row mb-0" href="#!" data-target="#js-allocation-table">
+                            <i class="la la-plus mr-2"></i>Add Allocation
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="row form-group mb-3">
+                    <div class="col-12">
+                        <table id="js-allocation-table" class="table table-bordered m-0">
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th class="text-center w-200">Abbreviation</th>
+                                    <th class="text-center text-nowrap w-400">Full Score (<span id="js-display-limit"></span>)</th>
+                                    <th class="text-center w-200">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.Allocations == null || !Model.Allocations.Any()) 
+                                {
+                                    <tr>
+                                        <td class="suggestion-parent">
+                                            <input class="form-control__table js-suggestion js-allocation-type" name="Allocations[0].Type">
+                                            <ul class="suggestion-box js-suggestion-list">
+                                                @foreach (var item in ViewBag.ExaminationTypes)
+                                                {
+                                                    <li class="suggestion-result js-suggestion-item" data-abbr="@item.Abbreviation">@item.NameEn</li>
+                                                }
+                                            </ul>
+                                        </td>
+                                        <td>
+                                            <input class="form-control__table js-type-abbr" name="Allocations[0].Abbreviation">
+                                        </td>
+                                        <td>
+                                            <input class="form-control__table js-type-score" name="Allocations[0].FullScore" autocomplete="off">
+                                        </td>
+                                        <td class="td-actions text-nowrap">
+                                            <a href="#!" class="js-move-up">
+                                                <i class="la la-angle-up info"></i>
+                                            </a>
+                                            <a href="#!" class="js-move-down">
+                                                <i class="la la-angle-down info"></i>
+                                            </a>
+                                            <a href="#!" class="js-del-row" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                                <i class="la la-trash delete"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    for (int i = 0 ; i < Model.Allocations.Count ; ++i)
+                                    {
+                                        <tr>
+                                            <td class="suggestion-parent">
+                                                <input class="form-control__table js-suggestion js-allocation-type" asp-for="Allocations[i].Type">
+                                                <ul class="suggestion-box js-suggestion-list">
+                                                    @foreach (var item in ViewBag.ExaminationTypes)
+                                                    {
+                                                        <li class="suggestion-result js-suggestion-item" data-abbr="@item.Abbreviation">@item.NameEn</li>
+                                                    }
+                                                </ul>
+                                            </td>
+                                            <td>
+                                                <input class="form-control__table js-type-abbr" asp-for="Allocations[i].Abbreviation">
+                                            </td>
+                                            <td>
+                                                <input class="form-control__table js-type-score" asp-for="Allocations[i].FullScore">
+                                            </td>
+                                            <td class="td-actions text-nowrap">
+                                                <a href="#!" class="js-move-up">
+                                                    <i class="la la-angle-up info"></i>
+                                                </a>
+                                                <a href="#!" class="js-move-down">
+                                                    <i class="la la-angle-down info"></i>
+                                                </a>
+                                                <a href="#!" class="js-del-row" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                                    <i class="la la-trash delete"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td class="text-right border-right-0" colspan="2">Total : </td>
+                                    <td id="js-total-score" class="text-center font-weight-700 border-right-0 border-left-0">0</td>
+                                    <td class="border-left-0"></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-3">
+                <div id="grading-allocation" class="table-responsive">
+                    <partial name="~/Views/GradeManagement/GradingSteps/_GradeTemplateAllocation.cshtml" model="@Model">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

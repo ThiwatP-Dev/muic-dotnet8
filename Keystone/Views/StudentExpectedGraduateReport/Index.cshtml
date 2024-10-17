@@ -1,0 +1,191 @@
+@model StudentExpectedGraduateReportViewModel
+@{
+	ViewData["Title"] = "Student Expected Graduate Report";
+    var index = 1;
+}
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>@ViewData["Title"]</header>
+            </div>
+
+            <div class="block__body">
+                <form class="form-horizontal" asp-controller="StudentExpectedGraduateReport" asp-action="Index" method="GET">
+                    @Html.AntiForgeryToken()
+                    <div class="row form-group m-b-30">
+                        <div class="col-3">
+    						<select class="chosen-select form-control js-cascade-academic-level" asp-for="Criteria.AcademicLevelId"
+                                    asp-items="ViewBag.AcademicLevels" data-placeholder="Select">
+    							<option selected disabled>Select</option>
+    						</select>
+    						<label for="AcademicLevelId">Academic Level<span class="text-danger">*</span></label>
+    					</div>
+                        <div class="col-3">
+    						<select class="chosen-select form-control js-cascade-faculty" asp-for="Criteria.FacultyId"
+                                    asp-items="ViewBag.Faculties" data-placeholder="Select">
+    							<option selected value="">Select</option>
+    						</select>
+    						<label for="DivisionId">Division</label>
+    					</div>
+                        <div class="col-3">
+    						<select class="chosen-select form-control js-cascade-department" asp-for="Criteria.DepartmentId"
+                                    asp-items="ViewBag.Departments" data-placeholder="Select">
+    							<option selected value="">Select</option>
+    						</select>
+    						<label for="MajorId">Major</label>
+    					</div>
+                        <div class="col-3">
+    						<select class="chosen-select form-control js-cascade-curriculum" asp-for="Criteria.CurriculumId"
+                                    asp-items="ViewBag.Curriculums" data-placeholder="Select">
+    							<option selected value="">Select</option>
+    						</select>
+    						<label for="CurriculumId">Curriculum</label>
+    					</div>
+                    </div>
+
+                    <div class="row form-group m-b-30">
+                        <div class="col-3">
+    						<select class="chosen-select form-control js-cascade-curriculum-version" asp-for="Criteria.CurriculumVersionId"
+                                    asp-items="ViewBag.CurriculumVersions" data-placeholder="Select">
+    							<option selected value="">Select</option>
+    						</select>
+    						<label for="CurriculumVersionId">Curriculum Version</label>
+    					</div>
+    					@* <div class="col-3">
+    						<select class="chosen-select form-control js-cascade-term" asp-for="Criteria.ExpectedGraduationTermId"
+                                    asp-items="ViewBag.Terms" data-placeholder="Select">
+    							<option selected value="">Select</option>
+    						</select>
+                            <label>Expected Graduation Term</label>
+                        </div> *@
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-grad-year" asp-for="Criteria.ExpectedGraduationYear" asp-items="ViewBag.ExpectedGraduationYears" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Expected Academic Year</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control js-cascade-grad-term" asp-for="Criteria.ExpectedGraduationTerm" asp-items="ViewBag.ExpectedGraduationTerms" data-placeholder="Select">
+                                <option selected value="">Select</option>
+                            </select>
+                            <label>Expected Academic Term</label>
+                        </div>
+                        <div class="col-3">
+                            <select class="chosen-select form-control" asp-for="Criteria.IsRequested" asp-items="ViewBag.YesNoAnswer" data-placeholder="Select">
+                                <option selected value="">All</option>
+                            </select>
+                            <label>Request</label>
+                        </div>
+                    </div>
+
+                    <div class="row form-group mb-0">
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.StartStudentBatch" type="number">
+                            <label>Batch</label>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" asp-for="Criteria.Code" type="text">
+                            <label>Student ID</label>
+                        </div>
+                        <div class="col-6 align-self-end text-right text-nowrap">
+                           <button class="btn btn-mw-120 btn--primary mb-0 m-r-5" type="submit">
+                                <i class="la la-search mr-2"></i>Search
+                            </button>
+                            <button class="btn btn-mw-120 btn--reset mb-0 js-reset-btn" type="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="row">
+    <div class="col-12">
+        <div class="block block--underline">
+            <div class="block__title">
+                <header>Search Result (@(Model?.Results?.Count() ?? 0))</header>
+            </div>
+
+            <div class="block__body">
+                <div class="table-responsive unset-overflow">
+                    <table id="js-student-graduate-report" class="table table-bordered w-100x">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th>ID</th>
+                                <th>Title En</th>
+                                <th>First Name En</th>
+                                <th>Mid Name En</th>
+                                <th>Last Name En</th>
+                                <th>Title Th</th>
+                                <th>First Name Th</th>
+                                <th>Mid Name Th</th>
+                                <th>Last Name Th</th>
+                                <th>Division En</th>
+                                <th>Division Th</th>
+                                <th>Major En</th>
+                                <th>Major Th</th>
+                                <th>Curriculum Version</th>
+                                <th class="text-center">Credit</th>
+                                <th class="text-center">GPA</th>
+                                <th class="text-center">Student Status</th>
+                                <th class="text-center">Request</th>
+                                <th class="text-center">Request Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Results.Any())
+                            {
+                                foreach (var item in Model.Results) 
+                                {
+                                    <tr>
+                                        <td>@index</td>
+                                        <td>@item.Code</td>
+                                        <td>@item.TitleEn</td>
+                                        <td>@item.FirstNameEn</td>
+                                        <td>@item.MidNameEn</td>
+                                        <td>@item.LastNameEn</td>
+                                        <td>@item.TitleTh</td>
+                                        <td>@item.FirstNameTh</td>
+                                        <td>@item.MidNameTh</td>
+                                        <td>@item.LastNameTh</td>
+                                        <td>@item.FacultyName</td>
+                                        <td>@item.FacultyNameTh</td>
+                                        <td>@item.DepartmentName</td>
+                                        <td>@item.DepartmentNameTh</td>
+                                        <td>@item.CurriculumVersionName</td>
+                                        <td>@item.CreditText</td>
+                                        <td>@item.GPAText</td>
+                                        <td>@item.StudentStatusText</td>
+                                        <td>
+                                            <partial name="_BooleanResult" model="@item.IsRequested"></partial>
+                                        </td>
+                                        <td>@item.RequestedAtText</td>
+                                    </tr>
+                                    ++index;
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="20">
+                                        <i class="text-danger">No Data</i>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script type="text/javascript" src="~/js/pages/student-expected-graduate-report.js"></script>
+}

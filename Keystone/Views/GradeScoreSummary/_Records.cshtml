@@ -1,0 +1,99 @@
+@model List<GradingScoreSummaryDetailViewModel>
+@{
+    var i = 1;
+    var contextPath =  $"{ Context.Request.Path }{ Context.Request.QueryString }";
+}
+<div class="block block--underline mb-0">
+    <div class="block__title">
+        <header class="color-primary">
+            Records
+        </header>
+    </div>
+    <div class="block__body">
+        <div class="form-group mb-0">
+            <div class="table-responsive">
+                <table class="table table-bordered m-0">
+                    <thead>
+                        <tr>
+                            <th rowspan="2" class="w-50">#</th>
+                            <th class="text-left">Course</th>
+                            <th class="text-center">Section</th>
+                            <th class="text-center w-75">Allocation</th>
+                            <th class="text-center w-75">Scoring</th>
+                            <th class="text-center w-75">Withdrawal</th>
+                            <th class="text-center w-75">Grade Published</th>
+                            <th class="text-center w-75">Skip</th>
+                            <th class="text-center w-75">Total</th>
+                            <th class="text-center w-125">Barcode Number</th>
+                            @* <th>Last Update</th> *@
+                            <th class="text-center w-75">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Any())
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td rowspan="2" class="text-center">@i</td>
+                                    <td>
+                                        <span class="text-nowrap"><b>@item.CourseNames</b></span>
+                                    </td>
+                                    <td>
+                                        <span class="text-nowrap">@item.SectionNumbers</span>
+                                    </td>
+                                    <td>
+                                        <partial name="_BooleanResult" model="@item.IsAllocated">
+                                    </td>
+                                    <td>@item.TotalStudentScoring</td>
+                                    <td>@item.Withdrawal</td>
+                                    <td>@item.Published</td>
+                                    <td>@item.SkipGrading</td>
+                                    <td>@item.TotalStudent</td>
+                                    <td>@item.Barcode</td>
+                                    @* <td class="text-nowrap">@item.LastUpdate</td> *@
+                                    <td class="text-nowrap td-actions">
+                                        @if(item.IsAllocated && item.IsScored && item.IsBarcodeGenereated)
+                                        {
+                                            <a asp-controller="GradeScoreSummary"  
+                                               asp-action="Report"
+                                               asp-route-termId="@item.TermId"
+                                               asp-route-courseId="@item.CourseId"
+                                               asp-route-returnUrl="@contextPath">
+                                                <i class="la la-print info"></i>
+                                            </a>
+                                        }
+                                        @if (item.IsAllocated && item.IsScored)
+                                        {
+                                            <a asp-controller="GradeScoreSummary"
+                                               asp-action="Edit"
+                                               asp-route-returnUrl="@contextPath"
+                                               asp-route-termId="@item.TermId"
+                                               asp-route-courseId="@item.CourseId">
+                                               <i class="la la-edit edit"></i>
+                                            </a>
+                                        }
+                                    </td>
+                                </tr>
+                                <tr class="text-left">
+                                    <td colspan="10">
+                                        <i><b>Joint Sections :</b> @item.JointSections</i>
+                                    </td>
+                                </tr>
+                                ++i;
+                            }
+                        }
+                        else
+                        {
+                            <tr class="text-center">
+                                <td colspan="11">
+                                    <i class="text-danger">No Data</i>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

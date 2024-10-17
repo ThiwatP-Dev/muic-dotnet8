@@ -1,0 +1,114 @@
+@model StandardGradingGroup
+
+<div class="block__title text-left height-3">
+    <header>@ViewData["Title"]</header>
+</div>
+
+<div class="block__body text-left height-3">
+    <div class="row form-group">
+        <div class="col-3">
+            <input class="form-control" asp-for="Name" type="text">
+            <label for="Name">Name<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-2">
+            <input class="form-control js-minimum-score js-default-zero js-click-highlight" asp-for="Minimum" type="text">
+            <label for="Minimum">Minimum<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-2">
+            <input class="form-control js-maximum-score js-default-zero js-click-highlight" asp-for="Maximum" type="text">
+            <label for="Maximum">Maximum<span class="text-danger">*</span></label>
+        </div>
+        <div class="col-2">
+            <select class="chosen-select form-control" asp-items="ViewBag.StandardGradingScoreTypes" asp-for="Type"></select>
+            <label>Type<span class="text-danger">*</span></label>
+        </div>
+
+        @if (Model.Id != 0)
+        {
+            <div class="col-3">
+				<div class="form-control-label d-flex align-items-center">Grade Template</div>
+				<div class="form-control-plaintext">@Model.GradeTemplate?.Name</div>
+			</div>
+        }
+        else
+        {
+            <div class="col-3">
+                <select class="chosen-select form-control js-select-grade-template" asp-items="ViewBag.GradeTemplates" asp-for="GradeTemplateId">
+                    <option selected disabled>Select</option>
+                </select>
+                <label>Grade Template<span class="text-danger">*</span></label>
+            </div>
+        }
+    </div>
+
+    <div class="form-group">
+        <table id="js-standard-grading-score" class="table table-bordered m-0">
+            <thead>
+                <tr>
+                    <th class="text-center w-50">#</th>
+                    <th class="text-center w-100">Min</th>
+                    <th class="text-center w-100">Max</th>  
+                    <th>Grade</th>
+                    <th class="text-nowrap text-center w-50">Action</th>
+                </tr>
+            </thead>
+            <tbody class="js-standard-grading-group-body">
+            @if (Model.StandardGradingScores != null && Model.StandardGradingScores.Any())
+            {
+                for (int i = 0; i < Model.StandardGradingScores.Count(); i++)
+                {
+                    <tr>
+                        <td>@(i+1)</td>
+                        <td>
+                            <input class="form-control__table js-grade-score" asp-for="@Model.StandardGradingScores[i].Minimum" data-score="min" disabled>
+                            <input class="form-control__table js-grade-score" asp-for="@Model.StandardGradingScores[i].Minimum" data-score="min" hidden>
+                        </td>
+                        <td>
+                            <input class="form-control__table js-grade-score" asp-for="@Model.StandardGradingScores[i].Maximum" data-score="max">
+                        </td>
+                        <td>
+                            <select class="chosen-select form-control__table"
+                                    asp-for="@Model.StandardGradingScores[i].GradeId" asp-items="@ViewBag.Grades">
+                            </select>
+                        </td>
+                        <td class="text-nowrap td-actions">
+                            <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                                <i class="la la-trash delete"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td>1</td>
+                    <td>
+                        <input class="form-control__table js-grade-score" name="StandardGradingScores[0].Minimum" data-score="min" disabled>
+                    </td>
+                    <td>
+                        <input class="form-control__table js-grade-score" name="StandardGradingScores[0].Maximum" data-score="max">
+                    </td>
+                    <td>
+                        <select class="chosen-select form-control__table" name="StandardGradingScores[0].GradeId" asp-items="@ViewBag.Grades">
+                            <option selected disabled value="">Select</option>
+                        </select>
+                    </td>
+                    <td class="text-nowrap td-actions">
+                        <a class="js-del-row" href="#" data-toggle="modal" data-target="#delete-row-confirm-modal">
+                            <i class="la la-trash delete"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="block__action container">
+    <div class="block__action-row">
+        <button class="btn btn-mw-120 btn--primary" type="submit">Save</button>
+        <a class="btn btn-mw-120 btn--cancel" asp-action="Index">Cancel</a>
+    </div>
+</div>
